@@ -1,0 +1,345 @@
+@import url('tailwindcss/base');
+@import url('tailwindcss/components');
+@import url('tailwindcss/utilities');
+
+@font-face {
+  font-family: Header;
+  src: url('/fonts/Berthold Akzidenz Grotesk Medium Extended.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+
+  --bg-color-light: white;
+  --bg-color-dark: #0A0A0A;
+  
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #F5F5F5 inset !important;
+  -webkit-text-fill-color: #525252 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px #111827 inset !important;
+    -webkit-text-fill-color: #E5E5E5 !important;
+  }
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+    scrollbar-width: none;
+
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: black;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar styles */
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent rgb(0 0 0 / 10%);
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px; /* Adjust the scrollbar width as needed */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Set the background color of the thumb */
+  border-radius: 4px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(0 0 0 / 30%); /* Set the hover background color of the thumb */
+}
+
+/* ----------------------- AUDIO STYLE --------------------------- */
+.volume-bar {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* ----------------------- SCREEN STYLE --------------------------- */
+.main-width {
+  width: calc(100% - 2.7rem);
+}
+
+.main-height {
+  height: calc(100vh - 1rem);
+}
+
+.app-width {
+  width: calc(100% - 27rem);
+}
+
+.app-header-width {
+  width: calc(100% - 29rem);
+}
+
+.app-height {
+  height: calc(100vh - 6rem);
+}
+
+.right-height {
+  height: calc(100vh - 5.0rem);
+}
+
+
+.page-header-width {
+  width: calc(100% - 1rem);
+}
+
+.rightbar-width {
+  width: 24rem;
+}
+
+.mobile-filter-width {
+  width: calc(100% - 11rem);
+}
+
+.mobile-filter-height {
+  height: calc(100vh - 5rem);
+}
+
+@media (width <= 1024px) {
+  .page-width {
+    width: 100%;
+  }
+
+  .app-header-width {
+    width: calc(100% - 5.5rem);
+  }
+  
+  .app-width {
+    width: calc(100% - 3rem);
+  }
+
+  .mobile-filter-width {
+    width: 100%;
+  }
+
+  .mobile-filter-height {
+    height: calc(100vh - 5.0rem);
+  }
+}
+
+
+@media (width <= 768px) {
+  .main-width {
+    width: 100%;
+  }
+
+  .main-height {
+    height: 100vh;
+  }
+
+  .app-header-width {
+    width: 100%;
+  }
+
+  .app-width {
+    width: 100%;
+  }
+
+  .app-height {
+    height: 100vh;
+  }
+
+
+  .page-width {
+    width: 100%;
+  }
+  
+  .page-height {
+    height: 100vh;
+  }
+
+  .main-page-height {
+    height: calc(100vh - 2rem);
+  }
+
+  .right-width {
+    width: 0;
+    display: none;
+  }
+
+  .right-height {
+    height: 100vh;
+  }
+
+  .mobile-filter-width {
+    width: 100%;
+  }
+
+  .mobile-filter-height {
+    height: 100vh;
+  }
+}
+
+
+
+.search-input,
+.search-icon {
+  transition: border-color 0.3s ease-in-out;
+}
+
+.group:hover .search-input::placeholder {
+  color: white !important;
+}
+
+.group:hover .search-icon {
+  color: #a0aec0;
+}
+
+.search-input:focus {
+  border-color: #2363EB;
+}
+
+.search-input:hover {
+  outline: none;
+}
+
+.animating .search-input {
+  animation: expand 0.4s ease-in-out forwards;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+input::placeholder {
+  color: #525252;
+}
+
+@media (prefers-color-scheme: dark) {
+  input::placeholder {
+    color: #E5E5E5;
+  }
+}
+
+@keyframes expand {
+  0% {
+    width: 15rem;
+  }
+
+  30% {
+    width: 27.5rem;
+  }
+
+  70% {
+    width: 25rem;
+  }
+}
+
+@keyframes shrink {
+  0% {
+    width: 25rem;
+  }
+
+  10% {
+    width: 27.5rem;
+  }
+
+  70% {
+    width: 15rem;
+  }
+}
+
+@keyframes expandMobile {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes shrinkMobile {
+  0% {
+    width: 100%;
+  }
+
+  100% {
+    width: 10%;
+  }
+
+}
+
+/* Waveform Styling */
+
+.canvas {
+  transform: scaleY(-1);
+}
+
+.visible {
+  opacity: 1;
+}
+
+/* Loading Icon */
+.loading-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-icon-circle {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #ffffff80; 
+  margin: 0 3px;
+  animation: loading-animation 1s ease-in-out infinite;
+}
+
+@keyframes loading-animation {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

@@ -1,50 +1,64 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import authPool from '../../../../../server/db/auth';
 import bcrypt from 'bcrypt';
-import { serialize, CookieSerializeOptions } from 'cookie';
+import { setHttpOnlyCookie } from '../../../../../server/utils/cookie';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, response: NextResponse) {
+  console.log("Request received:", request.method, request.url);
+
   const { email, password } = await request.json();
 
   if (!email || !password) {
-    return new Response(JSON.stringify({ message: 'Email and password are required' }), { status: 400 });
+    console.log("Email or password missing in request body");
+    return new NextResponse(JSON.stringify({ message: 'Email and password are required' }), { status: 400 });
   }
 
   try {
-    const userResult = await authPool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const userResult = await authPool.query('SELECT * FROM auth.users WHERE email = $1', [email]);
+    
     if (userResult.rows.length === 0) {
-      return new Response(JSON.stringify({ message: 'Invalid credentials' }), { status: 401 });
+      console.log("User not found for email:", email);
+      return new NextResponse(JSON.stringify({ message: 'Invalid credentials' }), { status: 401 });
     }
+    
     const user = userResult.rows[0];
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return new Response(JSON.stringify({ message: 'Invalid credentials' }), { status: 401 });
+      console.log("Invalid password for email:", email);
+      return new NextResponse(JSON.stringify({ message: 'Invalid credentials' }), { status: 401 });
     }
 
-    // Generate a session identifier
-    const sessionId = generateSessionId(); // Implement this according to your needs
+    console.log("User logged in successfully:", email);
+    
+    // Generate session and refresh tokens
+    const sessionToken = uuidv4();
+    const refreshToken = uuidv4();
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30); // Example: expires in 30 days
 
-    // Adjusting the type of sameSite to match the expected type
-    const cookieOptions: CookieSerializeOptions = {
+    // Insert new session into auth.sessions
+    await authPool.query(
+      'INSERT INTO auth.sessions (user_id, session_token, refresh_token, ip_address, user_agent, status, expires_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [user.uuid, sessionToken, refreshToken, request.ip, request.headers.get('user-agent') || '', 'active', expiresAt]
+    );
+
+    // Create the NextResponse with the login successful message
+    const response = new NextResponse(JSON.stringify({ message: 'Login successful' }), { status: 200 });
+
+    // Set the session cookie using setHttpOnlyCookie function
+    setHttpOnlyCookie(response, 'sessionToken', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'strict', // Correctly typed as 'strict', 'lax', or 'none'
       path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 1 week
-    };
-    const serializedCookie = serialize('sessionId', sessionId, cookieOptions);
+      expires: expiresAt,
+    });
 
-    // Use NextResponse to set cookie and return response
-    const newResponse = new NextResponse(JSON.stringify({ message: 'Login successful' }));
-    newResponse.headers.set('Set-Cookie', serializedCookie);
-    return newResponse;
+    console.log("Response:", response.status);
+
+    return response;
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'An error occurred' }), { status: 500 });
+    console.error("An error occurred during login:", error);
+    return new NextResponse(JSON.stringify({ message: 'An unexpected error occurred' }), { status: 500 });
   }
-}
-
-function generateSessionId() {
-  // This could be a random string, a UUID, or any other method you prefer
-  return 'randomSessionId123'; // Placeholder, replace with actual logic
-}
+};

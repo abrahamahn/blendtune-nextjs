@@ -1,28 +1,26 @@
 import { NextResponse } from 'next/server';
-import cookie from 'cookie';
 
 /**
- * Sets an httpOnly cookie on the response object.
+ * Sets an httpOnly cookie on the response object with more flexible options.
  *
- * @param {NextApiResponse} res - The Next.js response object.
+ * @param {NextResponse} response - The Next.js response object.
  * @param {string} name - The name of the cookie.
  * @param {string} value - The value of the cookie.
- * @param {number} maxAge - The maximum age of the cookie in seconds.
+ * @param {Object} options - The options for the cookie.
+ * @param {boolean} [options.httpOnly=true] - Marks the cookie to be accessible only by the web server.
+ * @param {string} [options.path="/"] - Path where the cookie is usable.
+ * @param {Date} options.expires - Expiration date of the cookie.
+ * @returns {NextResponse}
  */
-export function setHttpOnlyCookie(response: NextResponse, name: string, value: string, maxAge = 60 * 60 * 24 * 7) {
-    const serializedCookie = cookie.serialize(name, value, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', 
-        sameSite: 'strict',
-        path: '/',
-        maxAge,
-    });
+export function setHttpOnlyCookie(response: NextResponse, name: string, value: string, options: { httpOnly?: boolean, path?: string, expires: Date }): NextResponse {
+    // Construct the cookie string with options
+    let cookieValue = `${name}=${value}; Path=${options.path ?? '/'}; Expires=${options.expires.toUTCString()}`;
+    if (options.httpOnly !== false) {
+        cookieValue += '; HttpOnly';
+    }
+    cookieValue += '; Secure; SameSite=Strict';
 
-    return new NextResponse(response.body, {
-        status: response.status,
-        headers: {
-            ...response.headers,
-            'Set-Cookie': serializedCookie
-        }
-    });
+    response.headers.append('Set-Cookie', cookieValue);
+
+    return response;
 }

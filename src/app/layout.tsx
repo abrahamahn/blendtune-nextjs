@@ -35,7 +35,7 @@ export default async function RootLayout({
               <body className={inter.className}>
                 <main>
                   <div className="page-width bg-neutral-200 dark:bg-black md:p-2 p-0">
-                    <div className="dark:bg-blue-950 bg-white w-full md:rounded-xl">
+                    <div className="dark:bg-neutral-900 bg-neutral-200 w-full md:rounded-xl">
                       {children}
                     </div>
                   </div>

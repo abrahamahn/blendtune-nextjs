@@ -1,7 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-
+import React, { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
@@ -10,14 +8,14 @@ import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
 interface SignUpProps {
   openSignIn: () => void;
-  openConfirmSignUp: () => void;
+  openConfirmEmail: () => void;
   email: string;
   setEmail: (email: string) => void;
 }
 
 const SignUp: React.FC<SignUpProps> = ({
   openSignIn,
-  openConfirmSignUp,
+  openConfirmEmail,
   email,
   setEmail,
 }) => {
@@ -29,7 +27,6 @@ const SignUp: React.FC<SignUpProps> = ({
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const [agreePolicy, setAgreePolicy] = useState(false);
@@ -37,6 +34,8 @@ const SignUp: React.FC<SignUpProps> = ({
   const togglePolicyButton = () => {
     setAgreePolicy(!agreePolicy);
   };
+
+  const handleSignUpWithGoogle = async () => {};
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,7 +93,6 @@ const SignUp: React.FC<SignUpProps> = ({
       setErrorMessage("You must agree to the terms and policies to sign up.");
       return;
     }
-
     setIsLoading(true);
     try {
       const response = await fetch("/api/auth/signup", {
@@ -108,13 +106,11 @@ const SignUp: React.FC<SignUpProps> = ({
       const data = await response.json();
       if (response.ok) {
         if (data.redirectToVerifyEmail) {
-          openConfirmSignUp();
-        } else {
-          openConfirmSignUp();
+          openConfirmEmail();
         }
       } else {
         if (data.message === "Email already exists") {
-          openConfirmSignUp();
+          openConfirmEmail();
         } else {
           setErrorMessage(data.message || "An unexpected error occurred.");
         }
@@ -139,7 +135,10 @@ const SignUp: React.FC<SignUpProps> = ({
               Create your free account
             </h1>
           </div>
-          <button className="mt-4 flex items-center w-full bg-transparent border border-neutral-600 dark:border-gray-500 text-black dark:text-white p-3 rounded-md cursor-pointer mb-2">
+          <button
+            onClick={handleSignUpWithGoogle}
+            className="mt-4 flex items-center w-full bg-transparent border border-neutral-600 dark:border-gray-500 text-black dark:text-white p-3 rounded-md cursor-pointer mb-2"
+          >
             <FcGoogle className="mr-3" />
             <p className="text-sm text-neutral-600 dark:text-gray-500">
               Continue with Google

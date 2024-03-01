@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import authPool from '../../../../../../server/db/auth';
-import { setHttpOnlyCookie } from '../../../../../../server/utils/cookie';
+import authPool from '../../../../../../../server/db/auth';
 import { randomBytes } from 'crypto';
 
 export async function GET(request: NextRequest) {
@@ -53,30 +52,11 @@ export async function GET(request: NextRequest) {
             [user.uuid]
         );
 
-        // Generate session and refresh tokens
-        const sessionToken = randomBytes(16).toString('hex');
-        const refreshToken = randomBytes(16).toString('hex');
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + 30);
-
-        // Insert session into auth.sessions
-        await authPool.query(
-            'INSERT INTO auth.sessions (user_id, session_token, refresh_token, ip_address, user_agent, status, expires_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [user.uuid, sessionToken, refreshToken, request.ip, request.headers.get('user-agent') || '', 'active', expiresAt]
-        );
-
-        await authPool.query('COMMIT');
-        console.log("Email confirmed and session created.");
-
         const response = new NextResponse(JSON.stringify({ success: true, message: 'Email confirmed successfully.' }), {
             status: 201,
             headers: { 'Content-Type': 'application/json' },
         });
-        return setHttpOnlyCookie(response, 'sessionToken', sessionToken, {
-            httpOnly: true,
-            path: '/',
-            expires: expiresAt,
-        });
+        return response;
 
     } catch (error) {
         console.error("Error during email confirmation:", error);

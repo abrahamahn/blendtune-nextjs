@@ -23,9 +23,13 @@ const sessionSlice = createSlice({
     setOnline: (state, action) => {
       state.status = action.payload;
     },
+    setOffline: (state) => {
+      state.authenticated = false;
+      state.status = false;
+    },
   },
 });
 
-export const { setAuthenticated, setUnauthenticated, setOnline } = sessionSlice.actions;
+export const { setAuthenticated, setUnauthenticated, setOnline, setOffline } = sessionSlice.actions;
 
 export default sessionSlice.reducer;

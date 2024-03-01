@@ -1,20 +1,33 @@
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import {
+  setAuthenticated,
+  setUnauthenticated,
+} from "@/redux/userSlices/session";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Logo from "@/components/shared/common/Logo";
+import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
 interface SignInProps {
   openSignUp: () => void;
   openResetPassword: () => void;
+  openConfirmEmail: () => void;
+  closeAuthModal: () => void;
 }
 
-const SignIn: React.FC<SignInProps> = ({ openSignUp, openResetPassword }) => {
+const SignIn: React.FC<SignInProps> = ({
+  openSignUp,
+  openResetPassword,
+  openConfirmEmail,
+  closeAuthModal,
+}) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -22,7 +35,38 @@ const SignIn: React.FC<SignInProps> = ({ openSignUp, openResetPassword }) => {
 
   const signInWithGoogle = async () => {};
 
-  const handleSignIn = async () => {};
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        dispatch(setAuthenticated());
+        closeAuthModal();
+      } else {
+        const data = await response.json();
+        alert(data.message);
+
+        if (data.message === "ConfirmSignUp required") {
+          openConfirmEmail();
+        }
+      }
+    } catch (error) {
+      dispatch(setUnauthenticated());
+      console.error("Error during login:", error);
+      alert("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
@@ -89,9 +133,9 @@ const SignIn: React.FC<SignInProps> = ({ openSignUp, openResetPassword }) => {
             </div>
             <button
               onClick={handleSignIn}
-              className="w-full bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-700"
+              className="w-full h-10 bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-700"
             >
-              Continue
+              {isLoading ? <LoadingIcon /> : "Continue"}
             </button>
           </form>
           <div className="flex items-center justify-start w-full text-sm py-2 mt-1">
@@ -102,7 +146,7 @@ const SignIn: React.FC<SignInProps> = ({ openSignUp, openResetPassword }) => {
               onClick={openSignUp}
               className="text-blue-500 ml-1 text-xs cursor-pointer hover:opacity-80"
             >
-              Sign up
+              Sign Up
             </a>
           </div>
           <div className="text-xs text-center text-neutral-500 dark:gray-500 py-6 px-4">

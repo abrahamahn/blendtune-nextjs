@@ -19,12 +19,14 @@ const ConfirmEmail = () => {
     console.log("Token:", token);
 
     if (token) {
-      fetch(`/api/auth/security/confirm-email?token=${token}`)
+      const actionType = searchParams.get("action");
+
+      const apiUrl = `/api/auth/security/confirm-email?token=${token}`;
+      fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           console.log("Confirmation response:", data);
           if (data.success) {
-            console.log("Dispatching session satate");
             dispatch(setAuthenticated());
             console.log("Redirecting to welcome page");
             router.push("/welcome");
@@ -44,7 +46,7 @@ const ConfirmEmail = () => {
           );
         });
     }
-  }, [dispatch, router, token]);
+  }, [searchParams, dispatch, router, token]);
 
   return (
     <div className="h-screen w-full flex">

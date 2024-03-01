@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
                     await authPool.query('UPDATE auth.users SET email_token = $1, email_token_expire = $2 WHERE email = $3', [confirmationToken, emailTokenExpire, email]);
 
                     console.log("Resending confirmation email...");
-                    await sendConfirmationEmail(email, confirmationToken);
+                    await sendConfirmationEmail(email, confirmationToken, 'signup');
 
                     return new NextResponse(JSON.stringify({ redirectToVerifyEmail: true }), {
                         status: 200,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
                         },
                     });
                 } else {
-                    return new NextResponse(JSON.stringify({ message: 'Email already confirmed, please login.' }), {
+                    return new NextResponse(JSON.stringify({ message: 'Email already exists. Please log in.' }), {
                         status: 409,
                         headers: {
                             'Content-Type': 'application/json',
@@ -58,13 +58,12 @@ export async function POST(req: NextRequest) {
             const emailTokenExpire = new Date(new Date().getTime() + 15 * 60000);
 
             const result = await authPool.query(
-                'INSERT INTO auth.users (first_name, last_name, email, password, created_at, email_confirmed, email_token, last_email_sent, email_token_expire) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, uuid',
-                [firstName, lastName, email, hashedPassword, createdAt, false, confirmationToken, createdAt, emailTokenExpire]
+                'INSERT INTO auth.users (first_name, last_name, email, password, created_at, email_confirmed, email_token, last_email_sent, email_token_expire, signup_method) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, uuid',
+                [firstName, lastName, email, hashedPassword, createdAt, false, confirmationToken, createdAt, emailTokenExpire, 'email']
             );
 
-            console.log("Sending confirmation email...");
             // Send the confirmation email with the token
-            await sendConfirmationEmail(email, confirmationToken);
+            await sendConfirmationEmail(email, confirmationToken,'signup');
 
             return new NextResponse(JSON.stringify({ message: 'User created successfully', userId: result.rows[0].id }), {
                 status: 201,

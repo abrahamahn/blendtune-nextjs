@@ -1,19 +1,25 @@
 // Welcome component
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/context/SessionContext";
 
 const Welcome = () => {
+  const router = useRouter();
   const { authenticated, status, userEmail, userFirstName, userLastName } =
     useSession();
 
-  // Determine the online/offline status message
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/sounds");
+    }
+  }, [authenticated, router]);
+
   let statusMessage = "offline";
   if (status) {
     statusMessage = "online";
   }
 
-  // Determine the authentication status message
   let authMessage = "not authenticated";
   if (authenticated) {
     authMessage = "authenticated";

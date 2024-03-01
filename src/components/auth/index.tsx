@@ -3,12 +3,17 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import ResetPassword from "./ResetPassword";
 import VerifyEmail from "./VerifyEmail";
-import ConfirmSignUp from "./ConfirmSignUp";
 
 interface AuthModalProps {
   closeAuthModal: () => void;
   form?: string;
   setForm: (form: string) => void;
+}
+
+export interface EmailApiProps {
+  mode: "signup" | "resetPassword";
+  apiEndpoint: string;
+  initialMessage: string;
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({
@@ -30,26 +35,44 @@ const AuthModal: React.FC<AuthModalProps> = ({
     setForm("resetpassword");
   };
 
-  const openVerifyEmail = () => {
-    setForm("verifyemail");
+  const openConfirmEmail = () => {
+    setForm("confirmsignup");
   };
 
-  const openConfirmSignUp = () => {
-    setForm("confirmsignup");
+  const openVerifyEmail = () => {
+    setForm("confirmresetpw");
   };
 
   const handleModalContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
+  const verifyEmailSignupProps: EmailApiProps = {
+    mode: "signup",
+    apiEndpoint: "/api/auth/security/confirm-email",
+    initialMessage:
+      "Please confirm your email by going to your inbox and clicking on the confirmation link.",
+  };
+
+  const verifyEmailResetPasswordProps: EmailApiProps = {
+    mode: "resetPassword",
+    apiEndpoint: "/api/auth/security/reset-password/verify",
+    initialMessage: "Please check your email to reset your password.",
+  };
+
   const modalMap: Record<string, React.ReactElement> = {
     signin: (
-      <SignIn openSignUp={openSignUp} openResetPassword={openResetPassword} />
+      <SignIn
+        openSignUp={openSignUp}
+        openResetPassword={openResetPassword}
+        openConfirmEmail={openConfirmEmail}
+        closeAuthModal={closeAuthModal}
+      />
     ),
     signup: (
       <SignUp
         openSignIn={openSignIn}
-        openConfirmSignUp={openConfirmSignUp}
+        openConfirmEmail={openConfirmEmail}
         email={userEmail}
         setEmail={setUserEmail}
       />
@@ -60,14 +83,18 @@ const AuthModal: React.FC<AuthModalProps> = ({
         openVerifyEmail={openVerifyEmail}
       />
     ),
-    verifyemail: <VerifyEmail />,
-    confirmsignup: <ConfirmSignUp userEmail={userEmail} />,
+    confirmsignup: (
+      <VerifyEmail userEmail={userEmail} {...verifyEmailSignupProps} />
+    ),
+    confirmresetpw: (
+      <VerifyEmail userEmail={userEmail} {...verifyEmailResetPasswordProps} />
+    ),
   };
 
   const modalContent = modalMap[form] || (
     <SignUp
       openSignIn={openSignIn}
-      openConfirmSignUp={openConfirmSignUp}
+      openConfirmEmail={openConfirmEmail}
       email={userEmail}
       setEmail={setUserEmail}
     />

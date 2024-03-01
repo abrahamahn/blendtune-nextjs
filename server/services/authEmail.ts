@@ -1,15 +1,18 @@
-
 import nodemailer from 'nodemailer';
 import pool from '../db/auth';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function sendConfirmationEmail(userEmail: string, confirmationToken: string): Promise<{ success: boolean; message: string; }> {
+async function sendConfirmationEmail(
+    userEmail: string, 
+    confirmationToken: string, 
+    actionType: 'signup' | 'resetpassword'
+): Promise<{ success: boolean; message: string; }> {
     console.log("Sending confirmation email to:", userEmail, "Token:", confirmationToken);
 
     const websiteDomain = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://${process.env.WEBSITE_DOMAIN}`;
-    
+
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -18,11 +21,23 @@ async function sendConfirmationEmail(userEmail: string, confirmationToken: strin
         },
     });
 
+    const confirmationUrl = actionType === 'signup' 
+        ? `${websiteDomain}/auth/security/confirm-email?token=${confirmationToken}`
+        : `${websiteDomain}/auth/security/new-password?token=${confirmationToken}`;
+
+    const emailContent = actionType === 'signup'
+        ? `<b>Please click the link to confirm your email address:</b> <a href="${confirmationUrl}">Confirm Email</a>`
+        : `<b>You requested to reset your password. Please click the link to set a new password:</b> <a href="${confirmationUrl}">Reset Password</a>`;
+
+    const subject = actionType === 'signup' 
+        ? 'Email Confirmation' 
+        : 'Password Reset Request';
+
     let mailOptions = {
         from: `"${process.env.WEBSITE_NAME}" <${process.env.EMAIL_USERNAME}>`,
         to: userEmail,
-        subject: 'Email Confirmation',
-        html: `<b>Please click the link to confirm your email address:</b> <a href="${websiteDomain}/auth/confirm-email?token=${confirmationToken}">Confirm Email</a>`,
+        subject: subject,
+        html: emailContent,
     };
 
     try {

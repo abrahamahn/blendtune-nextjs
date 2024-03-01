@@ -1,16 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Logo from "@/components/shared/common/Logo";
 import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
-interface ConfirmSignUpProps {
-  userEmail: string;
-}
-
-const ConfirmSignUp: React.FC<ConfirmSignUpProps> = ({ userEmail }) => {
+const VerifyEmail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cooldown, setCooldown] = useState(60);
   const [resendStatus, setResendStatus] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail") || "";
+    setUserEmail(email);
+  }, []);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -102,4 +106,4 @@ const ConfirmSignUp: React.FC<ConfirmSignUpProps> = ({ userEmail }) => {
   );
 };
 
-export default ConfirmSignUp;
+export default VerifyEmail;

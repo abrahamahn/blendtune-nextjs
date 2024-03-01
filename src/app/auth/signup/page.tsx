@@ -1,12 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Logo from "@/components/shared/common/Logo";
+import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
 const SignUp: React.FC = () => {
+  const router = useRouter();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,14 +19,14 @@ const SignUp: React.FC = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const [agreePolicy, setAgreePolicy] = useState(false);
 
   const togglePolicyButton = () => {
     setAgreePolicy(!agreePolicy);
   };
+
+  const handleSignUpWithGoogle = async () => {};
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,11 +94,10 @@ const SignUp: React.FC = () => {
         },
         body: JSON.stringify({ firstName, lastName, email, password }),
       });
-
-      const data = await response.json();
       if (response.ok) {
-      } else {
-        setErrorMessage(data.message || "An unexpected error occurred.");
+        console.log("Navigating to verify-email page");
+        localStorage.setItem("userEmail", email);
+        router.push("/auth/security/verify-email");
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -117,44 +119,62 @@ const SignUp: React.FC = () => {
               Create your free account
             </h1>
           </div>
-          <button className="mt-4 flex items-center w-full bg-transparent border border-gray-500 text-black dark:text-white p-3 rounded-md cursor-pointer mb-2">
+          <button
+            onClick={handleSignUpWithGoogle}
+            className="mt-4 flex items-center w-full bg-transparent border border-neutral-600 dark:border-gray-500 text-black dark:text-white p-3 rounded-md cursor-pointer mb-2"
+          >
             <FcGoogle className="mr-3" />
-            <p className="text-sm">Continue with Google</p>
+            <p className="text-sm text-neutral-600 dark:text-gray-500">
+              Continue with Google
+            </p>
           </button>
           <div className="divider-container flex py-2 items-center justify-center w-full">
-            <div className="border-t border-gray-500 w-1/4 mb-2"></div>
-            <span className="text-gray-500 text-xs lg:text-sm mb-2 mx-2">
+            <div className="border-t border-neutral-500 dark:border-gray-500 w-1/4 mb-2"></div>
+            <span className="text-neutral-500 dark:text-gray-500 text-xs lg:text-sm mb-2 mx-2">
               or sign in using email
             </span>
-            <div className="border-t border-gray-500 w-1/4 mb-2"></div>
+            <div className="border-t border-neutral-500 dark:border-gray-500 w-1/4 mb-2"></div>
           </div>
-          <div className="flex flex-col items-center w-full">
+          <form
+            className="flex flex-col items-center w-full"
+            onSubmit={handleSignUp}
+          >
             <div className="flex flex-col">
               <div className="flex flex-row items-center w-full">
                 <input
                   type="text"
+                  onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
                   placeholder="First Name"
-                  className="w-full bg-transparent text-gray-400 text-sm border-gray-500 p-3 rounded-md  mr-3"
+                  className="w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md mr-3"
                 />
                 <input
                   type="text"
+                  onChange={(e) => setLastName(e.target.value)}
+                  value={lastName}
                   placeholder="Last Name"
-                  className="w-full bg-transparent text-gray-400 text-sm border-gray-500 p-3 rounded-md "
+                  className="w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
                 />
               </div>
               <input
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 placeholder="Email Address"
-                className="mt-4 w-full bg-transparent text-gray-400 text-sm border-gray-500 p-3 rounded-md "
+                autoComplete="new-password"
+                className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
               />
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
-                  className="mt-4 w-full bg-transparent text-gray-400 text-sm border-gray-500 p-3 rounded-md "
+                  className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
+                  autoComplete="new-password"
                 />
                 <div
-                  className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                  className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-neutral-600 dark:text-gray-500"
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
@@ -163,63 +183,83 @@ const SignUp: React.FC = () => {
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm Password"
-                  className="mt-4 w-full bg-transparent text-gray-400 text-sm border-gray-500 p-3 rounded-md "
+                  className={`mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md ${
+                    !passwordMatch ? "border-red-500" : ""
+                  }`}
+                  autoComplete="new-password"
                 />
                 <div
-                  className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-gray-400"
+                  className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-neutral-600 dark:text-gray-500"
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
                 </div>
               </div>
             </div>
-          </div>
-          <p className="text-gray-500 text-2xs mt-3">
-            Must be 8+ characters, with 1+ number and special character.
-          </p>
-          <div className="flex items-center w-full mt-3">
-            <div
-              onClick={togglePolicyButton}
-              className={`${
-                agreePolicy ? "bg-blue-600" : "bg-white border border-gray-400"
-              } w-10 h-4 rounded-full p-1 flex items-center cursor-pointer mr-2 transition-colors duration-300`}
-            >
-              <div
-                className={`${
-                  agreePolicy ? "bg-white" : "bg-gray-500"
-                } w-4 h-2.5 rounded-full transition-all duration-300 transform ${
-                  agreePolicy ? "translate-x-4" : "translate-x-0"
-                }`}
-              ></div>
-            </div>
-            <div>
-              <p className="text-neutral-600 dark:text-white text-xs">
-                I agree to the{" "}
-                <Link
-                  href="/terms"
-                  className="text-blue-500 hover:text-blue-800"
-                >
-                  Terms
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="/privacy-policy"
-                  className="text-blue-500 hover:text-blue-800"
-                >
-                  Privacy Policy
-                </Link>
+            {errorMessage ? (
+              <p className="texts-left text-red-500 text-xs mt-2">
+                {errorMessage}
               </p>
+            ) : (
+              <p className="text-left text-neutral-500 dark:text-gray-500 text-2xs mt-3">
+                Must be 8+ characters, with 1+ number and special character.
+              </p>
+            )}
+            <div className="flex items-center w-full mt-3">
+              <div
+                onClick={togglePolicyButton}
+                className={`${
+                  agreePolicy
+                    ? "bg-blue-600"
+                    : "bg-white border border-gray-400"
+                } w-10 h-4 rounded-full p-1 flex items-center cursor-pointer mr-2 transition-colors duration-300`}
+              >
+                <div
+                  className={`${
+                    agreePolicy ? "bg-white" : "bg-gray-500"
+                  } w-4 h-2.5 rounded-full transition-all duration-300 transform ${
+                    agreePolicy ? "translate-x-4" : "translate-x-0"
+                  }`}
+                ></div>
+              </div>
+              <div>
+                <p className="text-neutral-500 dark:text-white text-xs">
+                  I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    className="text-blue-500 hover:text-blue-800"
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="text-blue-500 hover:text-blue-800"
+                  >
+                    Privacy Policy
+                  </Link>
+                </p>
+              </div>
             </div>
-          </div>
-          <button className="mt-4 w-full bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-700">
-            Create Account
-          </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="mt-4 h-10 w-full bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-700"
+            >
+              {isLoading ? <LoadingIcon /> : "Create Account"}
+            </button>
+          </form>
+
           <div className="flex items-center justify-center w-full text-xs p-6">
-            <p className="text-gray-500">Already have an account?</p>
+            <p className="text-neutral-500 dark:text-gray-500">
+              Already have an account?
+            </p>
             <Link
               href="/auth/signin"
-              className="text-blue-500 ml-1 cursor-pointer hover:opacity-80"
+              className="h-10 text-blue-500 flex justify-center items-center ml-1 cursor-pointer hover:opacity-80"
             >
               Sign in
             </Link>

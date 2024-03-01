@@ -5,6 +5,8 @@ import { getTracks } from "@/lib/api/getTracks";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { selectCategory, removeAllGenres } from "@/redux/trackSlices/keyword";
+import { setOffline } from "@/redux/userSlices/session";
+import { setNoUser } from "@/redux/userSlices/user";
 import { uniqueKeywords } from "@/lib/tracks/filter/uniqueKeywords";
 import { useSession } from "@/context/SessionContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,6 +36,7 @@ const Header: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { authenticated, checkSession } = useSession();
+
   /* Desktop Functionality */
   // Auth Modal
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -49,10 +52,33 @@ const Header: React.FC = () => {
     setAuthModalOpen(false);
     setForm("signup");
     setAuthModalOpen(true);
+    console.log("Auth modal opened: ", authModalOpen);
   };
 
   const closeAuthModal = () => {
+    setAuthModalOpen(true);
     setAuthModalOpen(false);
+
+    console.log("Auth modal closed: ", !authModalOpen);
+  };
+
+  const handleLogOut = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        dispatch(setOffline());
+        dispatch(setNoUser());
+        router.push("/sounds");
+      } else {
+        console.error("Logout failed:", data.message);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   const navigateToProfile = () => {};
@@ -148,27 +174,54 @@ const Header: React.FC = () => {
               <SearchBar keywords={keywords} />
             </div>
             <div className="flex items-center space-x-2 lg:space-x-2">
-              <button
-                onClick={openSignInModal}
-                className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
-              >
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
-                />
-                <p className="hidden xl:block">Log In</p>
-              </button>
-              <button
-                onClick={openSignUpModal}
-                className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
-              >
-                <FontAwesomeIcon
-                  icon={faGreaterThan}
-                  size="xs"
-                  className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
-                />
-                <p className="hidden xl:block">Get Started</p>
-              </button>
+              {authenticated ? (
+                <button
+                  onClick={openSignInModal}
+                  className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
+                >
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
+                  />
+                  <p className="hidden xl:block">Profile</p>
+                </button>
+              ) : (
+                <button
+                  onClick={openSignInModal}
+                  className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
+                >
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
+                  />
+                  <p className="hidden xl:block">Log In</p>
+                </button>
+              )}
+              {authenticated ? (
+                <button
+                  onClick={handleLogOut}
+                  className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
+                >
+                  <FontAwesomeIcon
+                    icon={faGreaterThan}
+                    size="xs"
+                    className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
+                  />
+                  <p className="hidden xl:block">Log Out</p>
+                </button>
+              ) : (
+                <button
+                  onClick={openSignUpModal}
+                  className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
+                >
+                  <FontAwesomeIcon
+                    icon={faGreaterThan}
+                    size="xs"
+                    className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
+                  />
+                  <p className="hidden xl:block">Get Started</p>
+                </button>
+              )}
             </div>
           </div>
         </nav>
@@ -273,7 +326,7 @@ const Header: React.FC = () => {
                   )}
                   {authenticated ? (
                     <button
-                      onClick={openSignUpModal}
+                      onClick={handleLogOut}
                       className="flex-1 m-1 py-3 bg-blue-600 rounded-3xl hover:bg-blue-700 dark:text-neutral-200 text-neutral-200"
                       data-testid="mobile-menu-signup"
                     >

@@ -1,14 +1,25 @@
 "use client";
-import React, { useState, useEffect, useRef, RefObject } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import AudioContext from "@/context/AudioContext";
+import TracksContext from "@/context/TracksContext";
 
 import {
   setIsPlaying,
+  setCurrentTrack,
+  setIsLoopEnabled,
   setIsVolumeVisible,
   setCurrentTime,
   setTrackDuration,
+  setTrackInfo,
 } from "@/redux/audioSlices/playback";
 
 import { Track } from "@/types/track";
@@ -28,19 +39,6 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 import Waveform from "@/components/shared/visualizer/Waveform";
 
-export interface MusicPlayerProps {
-  audioRef: RefObject<HTMLAudioElement>;
-  currentTrack?: Track | undefined;
-  isPlaying: boolean;
-  isVolumeVisible: boolean;
-  previousTrack: () => void;
-  nextTrack: () => void;
-  openTrackInfo: () => void;
-  togglePlayPause: () => void;
-  isLoopEnabled: boolean;
-  loopTrack: () => void;
-}
-
 function formatTime(timeInSeconds: number | undefined) {
   if (typeof timeInSeconds !== "number" || isNaN(timeInSeconds)) {
     return "0:00";
@@ -51,19 +49,22 @@ function formatTime(timeInSeconds: number | undefined) {
   return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 }
 
-const MusicPlayer: React.FC<MusicPlayerProps> = ({
-  audioRef,
-  currentTrack,
-  isPlaying,
-  isVolumeVisible,
-  previousTrack,
-  nextTrack,
-  togglePlayPause,
-  loopTrack,
-  isLoopEnabled,
-  openTrackInfo,
-}) => {
+const MusicPlayer: React.FC = () => {
   const dispatch = useDispatch();
+  const { audioRef } = useContext(AudioContext);
+  const { tracks } = useContext(TracksContext);
+  const currentTrack = useSelector(
+    (state: RootState) => state.audio.playback.currentTrack as Track | undefined
+  );
+  const isPlaying = useSelector(
+    (state: RootState) => state.audio.playback.isPlaying
+  );
+  const isVolumeVisible = useSelector(
+    (state: RootState) => state.audio.playback.isVolumeVisible
+  );
+  const isLoopEnabled = useSelector(
+    (state: RootState) => state.audio.playback.isLoopEnabled
+  );
 
   const currentTime = useSelector(
     (state: RootState) => state.audio.playback.currentTime
@@ -73,6 +74,55 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   );
   const waveformContainerRef = useRef(null);
   const [waveformWidth, setWaveformWidth] = useState(0);
+
+  const togglePlayPause = useCallback(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.volume = 0;
+        audioRef.current.pause();
+      } else {
+        audioRef.current.volume = 1;
+        audioRef.current
+          .play()
+          .catch((error) => console.error("Error playing the track:", error));
+      }
+    }
+  }, [audioRef, isPlaying]);
+
+  const previousTrack = useCallback(() => {
+    const currentIndex = tracks.findIndex(
+      (track: Track) => track.id === currentTrack?.id
+    );
+    if (currentIndex > 0) {
+      const previousTrack = tracks[currentIndex - 1];
+      dispatch(setCurrentTrack(previousTrack));
+      setIsPlaying(true);
+    }
+  }, [tracks, currentTrack?.id, dispatch]);
+
+  const nextTrack = useCallback(() => {
+    const currentIndex = tracks.findIndex(
+      (track) => track.id === currentTrack?.id
+    );
+    if (currentIndex < tracks.length - 1) {
+      const nextTrack = tracks[currentIndex + 1];
+      dispatch(setCurrentTrack(nextTrack));
+      setIsPlaying(true);
+    }
+  }, [tracks, currentTrack?.id, dispatch]);
+
+  const loopTrack = useCallback(() => {
+    const newLoopState = !isLoopEnabled;
+    dispatch(setIsLoopEnabled(newLoopState));
+    if (audioRef.current) {
+      audioRef.current.loop = newLoopState;
+    }
+    console.log("Loop State:", newLoopState);
+  }, [audioRef, dispatch, isLoopEnabled]);
+
+  const openTrackInfo = () => {
+    dispatch(setTrackInfo(true));
+  };
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
@@ -107,8 +157,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   // Track Time Update
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      dispatch(setCurrentTime(audioRef.current.currentTime));
+    if (audioRef?.current) {
+      dispatch(setCurrentTime(audioRef?.current.currentTime));
     }
   };
 
@@ -139,11 +189,11 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
   };
 
   useEffect(() => {
-    const currentAudioRef = audioRef.current;
+    const currentAudioRef = audioRef?.current;
 
     const handleLoadedMetadata = () => {
       if (currentAudioRef) {
-        dispatch(setTrackDuration(currentAudioRef.duration));
+        dispatch(setTrackDuration(currentAudioRef?.duration));
         currentAudioRef.loop = isLoopEnabled;
       }
     };
@@ -167,7 +217,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
   // Keyboard Events
   useEffect(() => {
-    const currentAudioRef = audioRef.current;
+    const currentAudioRef = audioRef?.current;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === " " || event.key === "Spacebar") {

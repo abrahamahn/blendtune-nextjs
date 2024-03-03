@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AudioContext from "@/context/AudioContext";
+import TracksContext from "@/context/TracksContext";
 
 import {
   setCurrentTrack,
@@ -16,13 +17,11 @@ import {
   setIsLoopEnabled,
 } from "@/redux/audioSlices/playback";
 import { RootState } from "@/redux/store";
-import { getTracks } from "@/lib/api/getTracks";
 import {
   Hero,
   Category,
   MobileCatalog,
   DesktopCatalog,
-  MusicPlayer,
   SoundFilter,
   TrackInfo,
   NewTracks,
@@ -40,45 +39,27 @@ import {
 } from "@/lib/tracks/filter/searchFilters";
 
 import { Track } from "@/types/track";
+
 const Sounds: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
-  useEffect(() => {
-    const fetchTrackData = async () => {
-      try {
-        const trackList = await getTracks();
-        setTracks(trackList);
-        if (trackList.length > 0) {
-          dispatch(setCurrentTrack(trackList[0]));
-        }
-      } catch (error) {
-        console.error("Error fetching tracks:", error);
-      }
-    };
-
-    fetchTrackData();
-  }, [dispatch]);
-
   // PLAYBACK CONTROLS
+
+  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const { audioRef } = useContext(AudioContext);
+  const { tracks } = useContext(TracksContext);
+
   const currentTrack = useSelector(
-    (state: RootState) =>
-      state.audio.playback.currentTrack as Track | undefined,
+    (state: RootState) => state.audio.playback.currentTrack as Track | undefined
   );
   const isPlaying = useSelector(
-    (state: RootState) => state.audio.playback.isPlaying,
+    (state: RootState) => state.audio.playback.isPlaying
   );
-  const isVolumeVisible = useSelector(
-    (state: RootState) => state.audio.playback.isVolumeVisible,
-  );
-
   const trackInfo = useSelector(
-    (state: RootState) => state.audio.playback.trackInfo,
+    (state: RootState) => state.audio.playback.trackInfo
   );
 
-  const togglePlayPause = () => {
+  const togglePlayPause = useCallback(() => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.volume = 0;
@@ -90,7 +71,7 @@ const Sounds: React.FC = () => {
           .catch((error) => console.error("Error playing the track:", error));
       }
     }
-  };
+  }, [audioRef, isPlaying]);
 
   const playTrack = useCallback(
     (selectedTrack: Track) => {
@@ -103,7 +84,7 @@ const Sounds: React.FC = () => {
             audioRef.current
               .play()
               .catch((error) =>
-                console.error("Error playing the track:", error),
+                console.error("Error playing the track:", error)
               );
             dispatch(setIsPlaying(true));
           }
@@ -119,54 +100,19 @@ const Sounds: React.FC = () => {
                 audioRef.current
                   .play()
                   .catch((error) =>
-                    console.error("Error playing the track:", error),
+                    console.error("Error playing the track:", error)
                   );
                 dispatch(setIsPlaying(true));
               }
             },
-            { once: true },
+            { once: true }
           );
           audioRef.current.load();
         }
       }
     },
-    [currentTrack, isPlaying, dispatch, audioRef],
+    [currentTrack, isPlaying, dispatch, audioRef]
   );
-
-  const previousTrack = () => {
-    const currentIndex = tracks.findIndex(
-      (track: Track) => track.id === currentTrack?.id,
-    );
-    if (currentIndex > 0) {
-      const previousTrack = tracks[currentIndex - 1];
-      dispatch(setCurrentTrack(previousTrack));
-      setIsPlaying(true);
-    }
-  };
-
-  const nextTrack = () => {
-    const currentIndex = tracks.findIndex(
-      (track) => track.id === currentTrack?.id,
-    );
-    if (currentIndex < tracks.length - 1) {
-      const nextTrack = tracks[currentIndex + 1];
-      dispatch(setCurrentTrack(nextTrack));
-      setIsPlaying(true);
-    }
-  };
-
-  const isLoopEnabled = useSelector(
-    (state: RootState) => state.audio.playback.isLoopEnabled,
-  );
-
-  const loopTrack = () => {
-    const newLoopState = !isLoopEnabled;
-    dispatch(setIsLoopEnabled(newLoopState));
-    if (audioRef.current) {
-      audioRef.current.loop = newLoopState;
-    }
-    console.log("Loop State:", newLoopState);
-  };
 
   const openTrackInfo = () => {
     dispatch(setTrackInfo(true));
@@ -180,11 +126,11 @@ const Sounds: React.FC = () => {
 
   /* Genre Control */
   const selectedGenres = useSelector(
-    (state: RootState) => state.tracks.selected.genres,
+    (state: RootState) => state.tracks.selected.genres
   );
 
   const selectedCategory = useSelector(
-    (state: RootState) => state.tracks.selected.category,
+    (state: RootState) => state.tracks.selected.category
   );
 
   /* BPM Control */
@@ -206,7 +152,7 @@ const Sounds: React.FC = () => {
 
   /* Keyword Control */
   const selectedKeywords = useSelector(
-    (state: RootState) => state.tracks.selected.keywords,
+    (state: RootState) => state.tracks.selected.keywords
   );
 
   const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
@@ -226,7 +172,7 @@ const Sounds: React.FC = () => {
         minTempo,
         maxTempo,
         includeHalfTime,
-        includeDoubleTime,
+        includeDoubleTime
       );
 
       const keyPass = keyFilter(track, keyFilterCombinations);
@@ -298,7 +244,7 @@ const Sounds: React.FC = () => {
           sensitivity: "base",
         }),
     }),
-    [],
+    []
   );
 
   const handleSortChange = useCallback(
@@ -310,18 +256,18 @@ const Sounds: React.FC = () => {
         shuffleArray(sortedTracks);
       } else {
         sortedTracks.sort(
-          sortByCriteria[option as keyof typeof sortByCriteria],
+          sortByCriteria[option as keyof typeof sortByCriteria]
         );
       }
 
       setFilteredTracks(sortedTracks);
     },
-    [filteredTracks, sortByCriteria],
+    [filteredTracks, sortByCriteria]
   );
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="md:h-full pt-8 pb-28  md:pt-0 md:pb-4 overflow-y-scroll ">
+      <div className="md:h-full pt-8 pb-28 md:pt-0 md:pb-4 overflow-y-scroll rounded-t-xl">
         <Hero
           audioRef={audioRef}
           currentTrack={currentTrack}
@@ -373,18 +319,6 @@ const Sounds: React.FC = () => {
         />
       </div>
 
-      <MusicPlayer
-        audioRef={audioRef}
-        currentTrack={currentTrack}
-        isPlaying={isPlaying}
-        isVolumeVisible={isVolumeVisible}
-        previousTrack={previousTrack}
-        nextTrack={nextTrack}
-        togglePlayPause={togglePlayPause}
-        loopTrack={loopTrack}
-        isLoopEnabled={isLoopEnabled}
-        openTrackInfo={openTrackInfo}
-      />
       {trackInfo && currentTrack && (
         <TrackInfo
           audioRef={audioRef}

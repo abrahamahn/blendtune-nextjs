@@ -5,7 +5,7 @@ import Footer from "@/components/layouts/footer";
 import RightBar from "@/components/layouts/rightbar";
 import SideBar from "@/components/layouts/sidebar/";
 
-export default function SoundsLayout({
+export default function TermsLayout({
   children,
 }: {
   children: React.ReactNode;

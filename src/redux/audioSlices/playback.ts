@@ -1,7 +1,6 @@
 // currentTrackReducer.js
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-
 interface Track {
   id: number;
   file: string;
@@ -117,4 +116,5 @@ export const {
   setCurrentTime,
   setTrackDuration,
 } = playbackSlice.actions;
+
 export default playbackSlice.reducer;

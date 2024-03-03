@@ -96,7 +96,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
                 </button>
               </div>
               {displayedTracks?.map((track, index) => (
-                <button
+                <div
                   key={index}
                   onMouseEnter={() => setHoverIndex(index)}
                   onMouseLeave={() => setHoverIndex(null)}
@@ -142,7 +142,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
                   <p className="text-left text-neutral-500 dark:text-neutral-400 text-xs hover:underline hover:cursor-pointer overflow-x-auto w-28 mt-0 md:mx-4 mb-4">
                     {renderValue(track.info.relatedartist[1])}
                   </p>
-                </button>
+                </div>
               ))}
               <div className="flex justify-center items-center ">
                 <button

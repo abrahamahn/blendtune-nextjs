@@ -13,10 +13,10 @@ const Terms: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="w-4/5 p-10 mt-16 text-black dark:text-white rounded-lg">
+    <div className="w-full h-full overflow-scroll z-auto bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
+      <div className="w-4/5 h-full pt-20 text-black dark:text-white">
         <div
-          className="w-full overflow-scroll z-auto text-black dark:text-white"
+          className="w-full"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         ></div>
       </div>

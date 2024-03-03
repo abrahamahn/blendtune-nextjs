@@ -21,6 +21,7 @@ const SignUp: React.FC<SignUpProps> = ({
 }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,15 @@ const SignUp: React.FC<SignUpProps> = ({
     // Reset states
     setPasswordMatch(true);
     setErrorMessage("");
+
+    // Username validation
+    const usernamePattern = /^[a-z0-9_.]{3,}$/;
+    if (!usernamePattern.test(username)) {
+      setErrorMessage(
+        "Username must be at least 3 characters long and can only contain lowercase letters, numbers, underscore (_), and period (.)"
+      );
+      return;
+    }
 
     // Name validation
     const namePattern = /^[A-Z][a-z]*$/;
@@ -100,20 +110,21 @@ const SignUp: React.FC<SignUpProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          username,
+          password,
+        }),
       });
 
       const data = await response.json();
+
       if (response.ok) {
-        if (data.redirectToVerifyEmail) {
-          openConfirmEmail();
-        }
+        openConfirmEmail();
       } else {
-        if (data.message === "Email already exists") {
-          openConfirmEmail();
-        } else {
-          setErrorMessage(data.message || "An unexpected error occurred.");
-        }
+        setErrorMessage(data.message || "An unexpected error occurred.");
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -141,7 +152,7 @@ const SignUp: React.FC<SignUpProps> = ({
           >
             <FcGoogle className="mr-3" />
             <p className="text-sm text-neutral-600 dark:text-gray-500">
-              Continue with Google
+              Continue with Google [Coming Soon]
             </p>
           </button>
           <div className="divider-container flex py-2 items-center justify-center w-full">
@@ -172,14 +183,25 @@ const SignUp: React.FC<SignUpProps> = ({
                   className="w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
                 />
               </div>
-              <input
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                placeholder="Email Address"
-                autoComplete="new-password"
-                className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
-              />
+              <div className="flex flex-row items-center w-full">
+                <input
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  placeholder="Email Address"
+                  autoComplete="new-password"
+                  className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
+                />
+              </div>
+              <div className="relative w-full">
+                <input
+                  type="username"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  placeholder="User Name"
+                  className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border border-neutral-600 dark:border-gray-500 p-3 rounded-md"
+                />
+              </div>
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}

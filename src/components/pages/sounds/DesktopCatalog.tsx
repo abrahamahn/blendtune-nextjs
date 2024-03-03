@@ -82,7 +82,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
     <div className="hidden xl:block w-full pt-4 justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-4 mx-auto flex-col relative">
         {tracks.map((track: Track, index: number) => (
-          <button
+          <div
             key={track.id}
             className="flex p-1 border-neutral-300 hover:bg-neutral-100  dark:hover:bg-neutral-900 dark:border-neutral-900 group border-b justify-center items-center rounded-lg relative h-18"
             onClick={(e) => {
@@ -253,7 +253,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                 </div>
               </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>

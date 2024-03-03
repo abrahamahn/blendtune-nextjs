@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getTracks } from "@/lib/api/getTracks";
-
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { selectCategory, removeAllGenres } from "@/redux/trackSlices/keyword";
@@ -26,8 +26,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
-import SearchBar from "@/components/layouts/app-header/SearchBar";
-import SearchBarMobile from "@/components/layouts/app-header/SearchBarMobile";
+import SearchBar from "@/components/layouts/header/SearchBar";
+import SearchBarMobile from "@/components/layouts/header/SearchBarMobile";
 import AuthModal from "@/components/auth";
 
 import Logo from "@/components/shared/common/Logo";
@@ -175,8 +175,8 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2 lg:space-x-2">
               {authenticated ? (
-                <button
-                  onClick={openSignInModal}
+                <Link
+                  href="/"
                   className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
                 >
                   <FontAwesomeIcon
@@ -184,7 +184,7 @@ const Header: React.FC = () => {
                     className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
                   />
                   <p className="hidden xl:block">Profile</p>
-                </button>
+                </Link>
               ) : (
                 <button
                   onClick={openSignInModal}

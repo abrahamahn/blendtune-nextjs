@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef, RefObject } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause, faMusic } from "@fortawesome/free-solid-svg-icons";

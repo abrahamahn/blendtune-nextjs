@@ -86,7 +86,7 @@ const SignIn: React.FC<SignInProps> = ({
           >
             <FcGoogle className="mr-3" />
             <p className=" text-neutral-600 dark:text-gray-500 text-sm">
-              Continue with Google
+              Continue with Google [Coming Soon]
             </p>
           </button>
           <div className="divider-container flex py-2 items-center justify-center w-full">

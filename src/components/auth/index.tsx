@@ -10,7 +10,7 @@ interface AuthModalProps {
   setForm: (form: string) => void;
 }
 
-export interface EmailApiProps {
+interface EmailApiProps {
   mode: "signup" | "resetPassword";
   apiEndpoint: string;
   initialMessage: string;
@@ -103,7 +103,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div
       onClick={closeAuthModal}
-      className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-opacity-60 bg-black z-20"
+      className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-opacity-60 bg-black z-40"
     >
       <div
         onClick={handleModalContentClick}

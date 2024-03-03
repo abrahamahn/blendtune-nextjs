@@ -32,22 +32,18 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     console.log("User logged in successfully:", email);
     
-    // Generate session and refresh tokens
     const sessionToken = uuidv4();
     const refreshToken = uuidv4();
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30); // Example: expires in 30 days
+    expiresAt.setDate(expiresAt.getDate() + 30);
 
-    // Insert new session into auth.sessions
     await authPool.query(
       'INSERT INTO auth.sessions (user_id, session_token, refresh_token, ip_address, user_agent, status, expires_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [user.user_id, sessionToken, refreshToken, request.ip, request.headers.get('user-agent') || '', 'active', expiresAt]
+      [user.uuid, sessionToken, refreshToken, request.ip, request.headers.get('user-agent') || '', 'active', expiresAt]
     );
 
-    // Create the NextResponse with the login successful message
     const response = new NextResponse(JSON.stringify({ message: 'Login successful' }), { status: 200 });
 
-    // Set the session cookie using setHttpOnlyCookie function
     setHttpOnlyCookie(response, 'sessionToken', sessionToken, {
       httpOnly: true,
       path: '/',

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     try {
         console.log("Request body:", req.body);
 
-        const { firstName, lastName, email, password } = await req.json();
+        const { firstName, lastName, email, username, password } = await req.json();
         console.log("Received data:", { firstName, lastName, email });
 
         const emailCheckResult = await authPool.query('SELECT * FROM auth.users WHERE email = $1', [email]);
@@ -58,9 +58,10 @@ export async function POST(req: NextRequest) {
             const emailTokenExpire = new Date(new Date().getTime() + 15 * 60000);
 
             const result = await authPool.query(
-                'INSERT INTO auth.users (first_name, last_name, email, password, created_at, email_confirmed, email_token, last_email_sent, email_token_expire, signup_method) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, uuid',
-                [firstName, lastName, email, hashedPassword, createdAt, false, confirmationToken, createdAt, emailTokenExpire, 'email']
+                'INSERT INTO auth.users (first_name, last_name, email, username, password, created_at, email_confirmed, email_token, last_email_sent, email_token_expire, signup_method) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id, uuid',
+                [firstName, lastName, email, username, hashedPassword, createdAt, false, confirmationToken, createdAt, emailTokenExpire, 'email']
             );
+
 
             // Send the confirmation email with the token
             await sendConfirmationEmail(email, confirmationToken,'signup');

@@ -49,7 +49,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
   return (
     <div>
       {/* Desktop Filter */}
-      <div className="hidden md:block top-12 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs">
+      <div className="hidden md:block top-16 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs">
         <div className="grid grid-cols-2 gap-2">
           {genreItems.map((item, index) => (
             <button

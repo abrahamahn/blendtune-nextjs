@@ -67,7 +67,7 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
 
   return (
     <div>
-      <div className="hidden md:block z-10 absolute top-12 bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-8 shadow rounded-lg text-neutral-300 text-xs">
+      <div className="hidden md:block z-10 absolute top-16 bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-8 shadow rounded-lg text-neutral-300 text-xs">
         <Slider
           min={40}
           max={200}

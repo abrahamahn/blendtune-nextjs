@@ -1,44 +1,64 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import {
+  setArtistCreatorName,
+  setGender,
+  setUserType,
+  setOccupation,
+  setDateOfBirth,
+  setMarketingConsent,
+} from "@/redux/userSlices/user";
 import { useSession } from "@/context/SessionContext";
 import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
 const Welcome = () => {
   const router = useRouter();
-  const { userFirstName } = useSession();
-  const [artistCreatorName, setArtistCreatorName] = useState("");
-  const [userType, setUserType] = useState("");
-  const [occupation, setOccupation] = useState("");
-  const [gender, setGender] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState({
-    day: "",
-    month: "",
-    year: "",
-  });
+  const dispatch = useDispatch();
+  const {
+    userArtistCreatorName,
+    userGender,
+    userDateOfBirth,
+    userType,
+    userOccupation,
+    userMarketingConsent,
+  } = useSession();
+  const [dob, setDob] = useState({ month: "", day: "", year: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  const [agreeMarketing, setAgreeMarketing] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const marketingConsent = useSelector(
+    (state: RootState) => state.auth.user.marketing_consent
+  );
 
   const toggleMarketingButton = () => {
-    setAgreeMarketing(!agreeMarketing);
+    dispatch(setMarketingConsent(!marketingConsent));
   };
 
-  const handleProfileUpdate = async () => {
+  const handleDobChange = (part: string, value: string) => {
+    setDob((prevDob) => ({ ...prevDob, [part]: value }));
+  };
+
+  const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
+    const dobString = `${dob.year}-${String(dob.month).padStart(2, "0")}-${String(dob.day).padStart(2, "0")}`;
+
     try {
+      dispatch(setDateOfBirth(dobString));
       const response = await fetch("/api/account/basic-profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          artistCreatorName,
+          userArtistCreatorName,
           userType,
-          occupation,
-          gender,
-          dateOfBirth,
-          agreeMarketing,
+          userOccupation,
+          userGender,
+          userDateOfBirth,
+          userMarketingConsent,
         }),
       });
       if (response.ok) {
@@ -77,9 +97,6 @@ const Welcome = () => {
           "Other",
         ];
 
-  const capitalizeFirstLetter = (string: string) =>
-    string.charAt(0).toUpperCase() + string.slice(1);
-
   return (
     <div className="w-full h-full bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
       <div className="w-96 rounded-lg bg-gray-500 dark:bg-gray-900 flex justify-center items-center">
@@ -99,8 +116,8 @@ const Welcome = () => {
             <div className="flex flex-row w-full justify-center items-center relative">
               <input
                 type="text"
-                value={artistCreatorName}
-                onChange={(e) => setArtistCreatorName(e.target.value)}
+                value={userArtistCreatorName || ""}
+                onChange={(e) => dispatch(setArtistCreatorName(e.target.value))}
                 placeholder=" "
                 required
                 className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
@@ -111,7 +128,7 @@ const Welcome = () => {
             </div>
             <div className="flex flex-row w-full justify-center items-center mt-3 relative">
               <select
-                onChange={(e) => setUserType(e.target.value)}
+                onChange={(e) => dispatch(setUserType(e.target.value))}
                 className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
                 required
               >
@@ -125,7 +142,7 @@ const Welcome = () => {
             </div>
             <div className="flex flex-row w-full justify-center items-center mt-3 relative">
               <select
-                onChange={(e) => setOccupation(e.target.value)}
+                onChange={(e) => dispatch(setOccupation(e.target.value))}
                 className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
                 required
               >
@@ -142,8 +159,8 @@ const Welcome = () => {
             </div>
             <div className="flex flex-row w-full justify-center items-center mt-3 relative">
               <select
-                onChange={(e) => setGender(e.target.value)}
-                value={gender}
+                onChange={(e) => dispatch(setGender(e.target.value))}
+                value={userGender || ""}
                 className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
                 required
               >
@@ -161,9 +178,7 @@ const Welcome = () => {
                 {/* Month */}
                 <div className="relative w-1/4 mr-3">
                   <select
-                    onChange={(e) =>
-                      setDateOfBirth({ ...dateOfBirth, month: e.target.value })
-                    }
+                    onChange={(e) => handleDobChange("month", e.target.value)}
                     className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
                     required
                   >
@@ -181,9 +196,7 @@ const Welcome = () => {
                 {/* Day */}
                 <div className="relative w-1/4 mr-3">
                   <select
-                    onChange={(e) =>
-                      setDateOfBirth({ ...dateOfBirth, day: e.target.value })
-                    }
+                    onChange={(e) => handleDobChange("day", e.target.value)}
                     className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
                     required
                   >
@@ -201,9 +214,7 @@ const Welcome = () => {
                 {/* Year */}
                 <div className="relative w-1/2">
                   <select
-                    onChange={(e) =>
-                      setDateOfBirth({ ...dateOfBirth, year: e.target.value })
-                    }
+                    onChange={(e) => handleDobChange("year", e.target.value)}
                     className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
                     required
                   >
@@ -224,16 +235,16 @@ const Welcome = () => {
               <div
                 onClick={toggleMarketingButton}
                 className={`${
-                  agreeMarketing
+                  userMarketingConsent
                     ? "bg-blue-600"
                     : "bg-white border border-gray-400"
                 } w-10 h-4 rounded-full p-1 flex items-center cursor-pointer mr-2 transition-colors duration-300`}
               >
                 <div
                   className={`${
-                    agreeMarketing ? "bg-white" : "bg-gray-500"
+                    userMarketingConsent ? "bg-white" : "bg-gray-500"
                   } w-4 h-2.5 rounded-full transition-all duration-300 transform ${
-                    agreeMarketing ? "translate-x-4" : "translate-x-0"
+                    userMarketingConsent ? "translate-x-4" : "translate-x-0"
                   }`}
                 ></div>
               </div>
@@ -244,10 +255,17 @@ const Welcome = () => {
               </div>
             </div>
             <div className="flex flex-row w-full justify-center items-center mt-3 relative">
-              <p className="mt-0 text-2xs  text-neutral-200 dark:text-neutral-400">
-                We promise that we will not share any information nor your email
-                with any third party person or organization! Pinky promise.
-              </p>
+              {errorMessage ? (
+                <p className="mt-0 text-2xs  text-neutral-200 dark:text-neutral-400">
+                  {errorMessage}
+                </p>
+              ) : (
+                <p className="mt-0 text-2xs  text-neutral-200 dark:text-neutral-400">
+                  These informations will be used to generate your personal
+                  profile page on our app, and for our application analytics
+                  purposes.
+                </p>
+              )}
             </div>
             <button
               type="submit"

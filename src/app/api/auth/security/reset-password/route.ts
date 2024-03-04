@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
+    
   } catch (error) {
     console.error('Reset password request failed:', error);
     return new NextResponse(JSON.stringify({ message: 'An error occurred while processing your request.' }), {

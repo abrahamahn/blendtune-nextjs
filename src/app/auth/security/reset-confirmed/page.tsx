@@ -7,16 +7,16 @@ import LoadingIcon from "@/components/shared/common/LoadingIcon";
 
 const PasswordReset: React.FC = () => {
   const router = useRouter();
-  const { authenticated } = useSession();
+  const { userAuthenticated } = useSession();
 
   useEffect(() => {
-    if (authenticated) {
+    if (userAuthenticated) {
       const timer = setTimeout(() => {
         router.push("/sounds");
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [authenticated, router]);
+  }, [userAuthenticated, router]);
 
   return (
     <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">

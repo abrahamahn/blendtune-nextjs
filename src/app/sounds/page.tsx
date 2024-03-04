@@ -14,7 +14,6 @@ import {
   setCurrentTrack,
   setIsPlaying,
   setTrackInfo,
-  setIsLoopEnabled,
 } from "@/redux/audioSlices/playback";
 import { RootState } from "@/redux/store";
 import {
@@ -42,8 +41,6 @@ import { Track } from "@/types/track";
 
 const Sounds: React.FC = () => {
   const dispatch = useDispatch();
-
-  // PLAYBACK CONTROLS
 
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const { audioRef } = useContext(AudioContext);

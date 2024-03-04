@@ -35,7 +35,7 @@ import Logo from "@/components/shared/common/Logo";
 const Header: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { authenticated, checkSession } = useSession();
+  const { userAuthenticated, userProfileCreated, checkSession } = useSession();
 
   /* Desktop Functionality */
   // Auth Modal
@@ -160,7 +160,10 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     checkSession();
-  }, [checkSession]);
+    if (userProfileCreated === false) {
+      router.push("/welcome");
+    }
+  }, [router, userProfileCreated, checkSession]);
 
   return (
     <header>
@@ -174,7 +177,7 @@ const Header: React.FC = () => {
               <SearchBar keywords={keywords} />
             </div>
             <div className="flex items-center space-x-2 lg:space-x-2">
-              {authenticated ? (
+              {userAuthenticated ? (
                 <Link
                   href="/"
                   className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
@@ -197,7 +200,7 @@ const Header: React.FC = () => {
                   <p className="hidden xl:block">Log In</p>
                 </button>
               )}
-              {authenticated ? (
+              {userAuthenticated ? (
                 <button
                   onClick={handleLogOut}
                   className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
@@ -307,7 +310,7 @@ const Header: React.FC = () => {
               <div>
                 {/* Second Row */}
                 <div className="flex justify-between p-2 font-semibold text-base text-neutral-900 dark:text-neutral-200">
-                  {authenticated ? (
+                  {userAuthenticated ? (
                     <button
                       onClick={navigateToProfile}
                       className="flex-1 m-1 py-3 border border-black dark:border-neutral-200 rounded-3xl hover:bg-neutral-300 dark:hover:bg-neutral-900 dark:text-neutral-200"
@@ -324,7 +327,7 @@ const Header: React.FC = () => {
                       Log In
                     </button>
                   )}
-                  {authenticated ? (
+                  {userAuthenticated ? (
                     <button
                       onClick={handleLogOut}
                       className="flex-1 m-1 py-3 bg-blue-600 rounded-3xl hover:bg-blue-700 dark:text-neutral-200 text-neutral-200"

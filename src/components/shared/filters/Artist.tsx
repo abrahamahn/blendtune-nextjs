@@ -38,7 +38,7 @@ const ArtistFilter: React.FC<ArtistFilterProps> = ({
   return (
     <div>
       {/* Desktop Filter */}
-      <div className="hidden md:block z-10 top-12 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs">
+      <div className="hidden md:block z-10 top-16 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs">
         <div className="w-full flex flex-row mb-4">
           <input
             type="text"

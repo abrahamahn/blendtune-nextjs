@@ -275,7 +275,7 @@ const KeyFilter: React.FC<KeyFilterProps> = ({
   return (
     <div>
       {/* Desktop Filter */}
-      <div className="hidden md:block z-10 absolute top-12 bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-8 shadow rounded-lg text-neutral-300 text-xs">
+      <div className="hidden md:block z-10 absolute top-16 bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-8 shadow rounded-lg text-neutral-300 text-xs">
         <div className="flex items-center mb-4 justify-center border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-800 rounded-md p-1 w-full">
           {accidentals.map((accidental: string) => (
             <div className="flex-1 w-full text-center" key={accidental}>

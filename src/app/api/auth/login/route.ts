@@ -6,13 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest, response: NextResponse) {
   console.log("Request received:", request.method, request.url);
-
   const { email, password } = await request.json();
 
   if (!email || !password) {
     console.log("Email or password missing in request body");
     return new NextResponse(JSON.stringify({ message: 'Email and password are required' }), { status: 400 });
-  }
+  };
 
   try {
     const userResult = await authPool.query('SELECT * FROM auth.users WHERE email = $1', [email]);
@@ -23,8 +22,9 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     
     const user = userResult.rows[0];
-
+    
     const isValid = await bcrypt.compare(password, user.password);
+    
     if (!isValid) {
       console.log("Invalid password for email:", email);
       return new NextResponse(JSON.stringify({ message: 'Invalid credentials' }), { status: 401 });
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const sessionToken = uuidv4();
     const refreshToken = uuidv4();
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30); // Example: expires in 30 days
+    expiresAt.setDate(expiresAt.getDate() + 30);
 
     // Insert new session into auth.sessions
     await authPool.query(

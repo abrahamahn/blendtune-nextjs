@@ -1,4 +1,3 @@
-// lib/slices/keywordSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface KeywordState {

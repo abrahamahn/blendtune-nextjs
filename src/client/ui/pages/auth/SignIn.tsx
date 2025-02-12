@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  setAuthenticated,
-  setUnauthenticated,
-} from "@/client/environment/redux/slices/session";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Logo from "@/client/ui/components/common/Logo";
 import LoadingIcon from "@/client/ui/components/common/LoadingIcon";
+import useAuth from "@/client/auth/useAuth"; // Import the useAuth hook
 
 interface SignInProps {
   openSignUp: () => void;
@@ -23,49 +19,18 @@ const SignIn: React.FC<SignInProps> = ({
   openConfirmEmail,
   closeAuthModal,
 }) => {
-  const dispatch = useDispatch();
+  const { handleSignIn, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const signInWithGoogle = async () => {};
-
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        dispatch(setAuthenticated());
-        closeAuthModal();
-      } else {
-        const data = await response.json();
-        alert(data.message);
-
-        if (data.message === "ConfirmSignUp required") {
-          openConfirmEmail();
-        }
-      }
-    } catch (error) {
-      dispatch(setUnauthenticated());
-      console.error("Error during login:", error);
-      alert("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
-    }
+    handleSignIn(email, password, closeAuthModal, openConfirmEmail);
   };
 
   return (
@@ -82,7 +47,6 @@ const SignIn: React.FC<SignInProps> = ({
           </div>
           <button
             className="mt-4 flex items-center w-full bg-transparent border border-neutral-600 dark:border-gray-500 text-black dark:text-white p-3 rounded-md cursor-pointer mb-2 hover:border-blue-500"
-            onClick={signInWithGoogle}
           >
             <FcGoogle className="mr-3" />
             <p className=" text-neutral-600 dark:text-gray-500 text-sm">
@@ -96,7 +60,7 @@ const SignIn: React.FC<SignInProps> = ({
             </span>
             <div className="border-t border-neutral-600 dark:border-gray-500 w-1/4 mb-2"></div>
           </div>
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
             <div className="flex flex-col items-center w-full mb-3 rounded">
               <input
                 type="email"
@@ -105,6 +69,7 @@ const SignIn: React.FC<SignInProps> = ({
                 value={email}
                 placeholder="Email Address"
                 className="w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
+                required
               />
               <div className="relative w-full">
                 <input
@@ -114,6 +79,7 @@ const SignIn: React.FC<SignInProps> = ({
                   value={password}
                   placeholder="Password"
                   className="mt-4 w-full bg-transparent text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
+                  required
                 />
                 <div
                   className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-neutral-600 dark:text-gray-500"
@@ -132,7 +98,7 @@ const SignIn: React.FC<SignInProps> = ({
               </a>
             </div>
             <button
-              onClick={handleSignIn}
+              type="submit"
               className="w-full h-10 bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-700"
             >
               {isLoading ? <LoadingIcon /> : "Continue"}

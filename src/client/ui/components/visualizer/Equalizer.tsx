@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useRef, useState, RefObject } from "react";
 import { Track } from "@/shared/types/track";
 
@@ -9,60 +10,50 @@ interface AudioElementWithSourceNode extends HTMLAudioElement {
 interface EqualizerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
   currentTrack?: Track;
-  width: number;
+  // ❌ width prop removed
 }
 
-const Equalizer: React.FC<EqualizerProps> = ({
-  audioRef,
-  currentTrack,
-  width,
-}) => {
+const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const animationFrameId = useRef<number>(undefined);
+  const animationFrameId = useRef<number | null>(null);
   const prefersDarkMode = useRef<boolean>(false);
-  const [canvasWidth, setCanvasWidth] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 767 ? 400 : 203;
-    } else {
-      return 203;
-    }
-  });
 
+  // 1️⃣ Start with a safe SSR default (203). Matches server & client initially.
+  const [canvasWidth, setCanvasWidth] = useState(203);
+
+  // 2️⃣ On client mount, check screen size & update to 400 if needed
   useEffect(() => {
-    const matchDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    prefersDarkMode.current = matchDarkMode;
+    if (typeof window !== "undefined") {
+      setCanvasWidth(window.innerWidth >= 767 ? 400 : 203);
+    }
+  }, []);
+
+  // 3️⃣ Watch the user's dark mode preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    prefersDarkMode.current = mediaQuery.matches;
 
     const handleChange = (e: MediaQueryListEvent) => {
       prefersDarkMode.current = e.matches;
     };
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addListener(handleChange);
 
-    return () => mediaQuery.removeListener(handleChange);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   const getBarColor = () => (prefersDarkMode.current ? "#ECECEC" : "#A9A9A9");
 
+  // 4️⃣ Set up audio analyser
   useEffect(() => {
-    const handleChange = (e: MediaQueryListEvent) => {
-      prefersDarkMode.current = e.matches;
-    };
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addListener(handleChange);
+    if (!audioRef.current) return; // No audio element yet
 
-    if (
-      audioRef.current &&
-      !(audioRef.current as AudioElementWithSourceNode).sourceNode
-    ) {
-      const audioCtx = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
-
+    const extendedAudioRef = audioRef.current as AudioElementWithSourceNode;
+    if (!extendedAudioRef.sourceNode) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const audioCtx = new AudioContextClass();
       const sourceNode = audioCtx.createMediaElementSource(audioRef.current);
       const analyser = audioCtx.createAnalyser();
 
-      const extendedAudioRef = audioRef.current as AudioElementWithSourceNode;
       extendedAudioRef.sourceNode = sourceNode;
       extendedAudioRef.analyser = analyser;
 
@@ -71,8 +62,7 @@ const Equalizer: React.FC<EqualizerProps> = ({
     }
 
     const setupEqualizer = () => {
-      const extendedAudioRef = audioRef.current as AudioElementWithSourceNode;
-      if (extendedAudioRef?.analyser && canvasRef.current) {
+      if (extendedAudioRef.analyser && canvasRef.current) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
         const analyser = extendedAudioRef.analyser;
@@ -83,18 +73,19 @@ const Equalizer: React.FC<EqualizerProps> = ({
           analyser.getByteFrequencyData(fbc_array);
 
           if (ctx) {
+            // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const barWidth = 2;
             const gap = 1;
             const barPlusGap = barWidth + gap;
 
+            // Use canvas.width for dynamic barCount
             const barCount = Math.floor(canvas.width / barPlusGap);
 
             for (let i = 0; i < barCount; i++) {
               const barHeight = -(fbc_array[i] / 2);
               const barPosX = i * barPlusGap;
-
               ctx.fillStyle = getBarColor();
               ctx.fillRect(barPosX, canvas.height, barWidth, barHeight);
             }
@@ -105,33 +96,24 @@ const Equalizer: React.FC<EqualizerProps> = ({
       }
     };
 
-    if (audioRef.current) {
-      setupEqualizer();
-    }
+    setupEqualizer();
 
     return () => {
+      // Cleanup animation frames
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
-      mediaQuery.removeListener(handleChange);
     };
   }, [audioRef, currentTrack]);
 
-  useEffect(() => {
-    // Instead of the previous handleResize
-    if (canvasRef.current) {
-      canvasRef.current.width = width; // Use the passed width prop
-      setCanvasWidth(width);
-    }
-  }, [width]);
-
   return (
     <canvas
-      className="flex items-center justify-center w-full h-full"
       ref={canvasRef}
+      className="flex items-center justify-center w-full h-full"
+      // 5️⃣ SSR & initial client width is 203, updated in useEffect if large screen
       width={canvasWidth}
       height={110}
-    ></canvas>
+    />
   );
 };
 

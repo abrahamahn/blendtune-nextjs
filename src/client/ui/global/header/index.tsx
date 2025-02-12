@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getTracks } from "@/client/utils/data/getTracks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -11,12 +10,6 @@ import {
   faTimes,
   faArrowRight,
   faMusic,
-  faStar,
-  faGem,
-  faWater,
-  faLeaf,
-  faPaw,
-  faBoltLightning,
   faGreaterThan,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
@@ -26,8 +19,8 @@ import SearchBar from "@/client/ui/global/header/SearchBar";
 import SearchBarMobile from "@/client/ui/global/header/SearchBarMobile";
 
 import AuthModal from "@/client/ui/pages/auth";
-import useAuthModal from "@/client/utils/auth/useAuthModal";
-import useAuth from "@/client/utils/auth/useAuth";
+import useAuthModal from "@/client/auth/useAuthModal";
+import useAuth from "@/client/auth/useAuth";
 import useGenreMenu from "@/client/utils/hooks/header/useGenreMenu";
 
 import useMobileSearch from "@/client/utils/hooks/header/useMobileSearch";
@@ -39,7 +32,7 @@ import Logo from "@/client/ui/components/common/Logo";
 const Header: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { userAuthenticated, userProfileCreated, checkSession } = useSession();
+  const { userAuthenticated } = useSession();
 
   /* Desktop Functionality */
   // Auth Modal

@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useRef,
   useCallback,
+  MouseEvent,
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +23,6 @@ import {
 
 import { Track } from "@/shared/types/track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   faBackwardStep,
   faForwardStep,
@@ -41,7 +41,6 @@ function formatTime(timeInSeconds: number | undefined) {
   if (typeof timeInSeconds !== "number" || isNaN(timeInSeconds)) {
     return "0:00";
   }
-
   const minutes = Math.floor(timeInSeconds / 60);
   const seconds = Math.floor(timeInSeconds % 60);
   return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
@@ -49,8 +48,10 @@ function formatTime(timeInSeconds: number | undefined) {
 
 const MusicPlayer: React.FC = () => {
   const dispatch = useDispatch();
-  const { audioRef } = useAudio();
+  const { audioRef } = useAudio(); // Grab your global audioRef
   const { tracks } = useTracks();
+
+  // Redux store states
   const currentTrack = useSelector(
     (state: RootState) => state.audio.playback.currentTrack as Track | undefined
   );
@@ -63,84 +64,194 @@ const MusicPlayer: React.FC = () => {
   const isLoopEnabled = useSelector(
     (state: RootState) => state.audio.playback.isLoopEnabled
   );
-
   const currentTime = useSelector(
     (state: RootState) => state.audio.playback.currentTime
   );
   const trackDuration = useSelector(
     (state: RootState) => state.audio.playback.trackDuration
   );
-  const waveformContainerRef = useRef(null);
-  const [waveformWidth, setWaveformWidth] = useState(0);
 
+  // Local states
+  const waveformContainerRef = useRef<HTMLDivElement>(null);
+  const [waveformWidth, setWaveformWidth] = useState<number>(0);
+
+  // Volume-related states
+  const [volume, setVolume] = useState(1);
+  const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+  const [initialVolumePosition, setInitialVolumePosition] = useState(0);
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 1) PLAY/PAUSE TOGGLE (Remove volume=0)
+  // ─────────────────────────────────────────────────────────────────────────────
   const togglePlayPause = useCallback(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.volume = 0;
-        audioRef.current.pause();
-      } else {
-        audioRef.current.volume = 1;
-        audioRef.current
-          .play()
-          .catch((error) => console.error("Error playing the track:", error));
-      }
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      console.log("Pausing track:", currentTrack?.file);
+      audioRef.current.pause();
+    } else {
+      console.log("Playing track:", currentTrack?.file);
+      audioRef.current.volume = volume; // keep user-set volume
+      audioRef.current
+        .play()
+        .catch((error) => console.error("Error playing the track:", error));
     }
-  }, [audioRef, isPlaying]);
+  }, [audioRef, isPlaying, currentTrack?.file, volume]);
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 2) PREVIOUS/NEXT TRACK
+  // ─────────────────────────────────────────────────────────────────────────────
   const previousTrack = useCallback(() => {
     const currentIndex = tracks.findIndex(
       (track: Track) => track.id === currentTrack?.id
     );
     if (currentIndex > 0) {
-      const previousTrack = tracks[currentIndex - 1];
-      dispatch(setCurrentTrack(previousTrack));
-      setIsPlaying(true);
+      const prev = tracks[currentIndex - 1];
+      console.log("Switching to previous track:", prev.file);
+      dispatch(setCurrentTrack(prev));
+      dispatch(setIsPlaying(true));
     }
   }, [tracks, currentTrack?.id, dispatch]);
 
   const nextTrack = useCallback(() => {
     const currentIndex = tracks.findIndex(
-      (track) => track.id === currentTrack?.id
+      (track: Track) => track.id === currentTrack?.id
     );
     if (currentIndex < tracks.length - 1) {
-      const nextTrack = tracks[currentIndex + 1];
-      dispatch(setCurrentTrack(nextTrack));
-      setIsPlaying(true);
+      const nxt = tracks[currentIndex + 1];
+      console.log("Switching to next track:", nxt.file);
+      dispatch(setCurrentTrack(nxt));
+      dispatch(setIsPlaying(true));
     }
   }, [tracks, currentTrack?.id, dispatch]);
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 3) LOOP
+  // ─────────────────────────────────────────────────────────────────────────────
   const loopTrack = useCallback(() => {
+    if (!audioRef.current) return;
     const newLoopState = !isLoopEnabled;
     dispatch(setIsLoopEnabled(newLoopState));
-    if (audioRef.current) {
-      audioRef.current.loop = newLoopState;
-    }
-    console.log("Loop State:", newLoopState);
+    audioRef.current.loop = newLoopState;
+    console.log("Loop state changed to:", newLoopState);
   }, [audioRef, dispatch, isLoopEnabled]);
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 4) OPEN TRACK INFO
+  // ─────────────────────────────────────────────────────────────────────────────
   const openTrackInfo = () => {
     dispatch(setTrackInfo(true));
   };
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 5) RESIZE OBSERVER (for Waveform width)
+  // ─────────────────────────────────────────────────────────────────────────────
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        // Assuming you want the width
+      for (const entry of entries) {
         const { width } = entry.contentRect;
         setWaveformWidth(width);
       }
     });
-
     if (waveformContainerRef.current) {
       resizeObserver.observe(waveformContainerRef.current);
     }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
+    return () => resizeObserver.disconnect();
   }, []);
 
-  // Play & Pause Track
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 6) AUDIO EVENT HANDLERS: onPlay, onPause, onTimeUpdate...
+  // ─────────────────────────────────────────────────────────────────────────────
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      dispatch(setCurrentTime(audioRef.current.currentTime));
+    }
+  };
+
+  useEffect(() => {
+    const currentAudio = audioRef.current;
+    if (!currentAudio) return;
+
+    // When audio metadata is loaded, set track duration & loop state
+    const handleLoadedMetadata = () => {
+      dispatch(setTrackDuration(currentAudio.duration));
+      currentAudio.loop = isLoopEnabled;
+    };
+
+    // Attach
+    currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      // Cleanup
+      currentAudio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [dispatch, audioRef, isLoopEnabled]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!audioRef.current) return;
+      switch (event.key) {
+        case " ":
+        case "Spacebar":
+          event.preventDefault();
+          togglePlayPause();
+          break;
+        case "ArrowLeft":
+          audioRef.current.currentTime = Math.max(
+            0,
+            audioRef.current.currentTime - 10
+          );
+          break;
+        case "ArrowRight":
+          audioRef.current.currentTime = Math.min(
+            audioRef.current.duration,
+            audioRef.current.currentTime + 10
+          );
+          break;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [audioRef, togglePlayPause]);
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // 7) VOLUME LOGIC
+  // ─────────────────────────────────────────────────────────────────────────────
+  const toggleVolume = () => {
+    dispatch(setIsVolumeVisible(!isVolumeVisible));
+  };
+
+  const handleVolumeMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    setIsDraggingVolume(true);
+    setInitialVolumePosition(e.clientY);
+    handleVolumeChange(e);
+  };
+
+  const handleVolumeMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (isDraggingVolume) {
+      handleVolumeChange(e);
+    }
+  };
+
+  const handleVolumeMouseUp = () => {
+    setIsDraggingVolume(false);
+  };
+
+  // Update volume based on mouse position
+  const handleVolumeChange = (e: React.MouseEvent) => {
+    if (!audioRef.current) return;
+    const volumeBar = e.currentTarget;
+    const rect = volumeBar.getBoundingClientRect();
+    const mouseY = e.clientY - rect.top;
+    let newVolume = 1 - mouseY / rect.height;
+    newVolume = Math.max(0, Math.min(1, newVolume));
+    audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // RENDER
+  // ─────────────────────────────────────────────────────────────────────────────
   const playPauseButton = isPlaying ? (
     <FontAwesomeIcon icon={faPause} className="text-white" />
   ) : (
@@ -153,98 +264,17 @@ const MusicPlayer: React.FC = () => {
     <FontAwesomeIcon icon={faPlay} size="lg" className="text-white" />
   );
 
-  // Track Time Update
-  const handleTimeUpdate = () => {
-    if (audioRef?.current) {
-      dispatch(setCurrentTime(audioRef?.current.currentTime));
-    }
-  };
-
-  // Volume Adjustments
-  const [volume, setVolume] = useState(1);
-  const [isDraggingVolume, setIsDraggingVolume] = useState(false);
-  const [initialVolumePosition, setInitialVolumePosition] = useState(0);
-
-  const toggleVolume = () => {
-    dispatch(setIsVolumeVisible(!isVolumeVisible));
-  };
-
-  const handleVolumeChange = (e: React.MouseEvent) => {
-    if (audioRef.current) {
-      const volumeBar = e.currentTarget;
-      const rect = volumeBar.getBoundingClientRect();
-      const mouseY = e.clientY - rect.top;
-      let newVolume = 1 - mouseY / rect.height;
-
-      newVolume = Math.max(0, Math.min(1, newVolume));
-
-      audioRef.current.volume = newVolume;
-
-      setVolume(newVolume);
-
-      setInitialVolumePosition(mouseY);
-    }
-  };
-
-  useEffect(() => {
-    const currentAudioRef = audioRef?.current;
-  
-    const handleLoadedMetadata = () => {
-      if (currentAudioRef) {
-        dispatch(setTrackDuration(currentAudioRef?.duration));
-        currentAudioRef.loop = isLoopEnabled;
-      }
-    };
-  
-    // Ensure audioRef.current exists before accessing properties
-    if (audioRef.current) {
-      audioRef.current.volume = 1;
-      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-    }
-  
-    return () => {
-      if (currentAudioRef) {
-        currentAudioRef.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      }
-    };
-  }, [dispatch, audioRef, isLoopEnabled]);
-  
-
-  // Keyboard Events
-  useEffect(() => {
-    const currentAudioRef = audioRef?.current;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === " " || event.key === "Spacebar") {
-        event.preventDefault();
-        togglePlayPause();
-      } else if (event.key === "ArrowLeft") {
-        if (currentAudioRef) {
-          currentAudioRef.currentTime -= 10;
-        }
-      } else if (event.key === "ArrowRight") {
-        if (currentAudioRef) {
-          currentAudioRef.currentTime += 10;
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [audioRef, previousTrack, nextTrack, togglePlayPause]);
-
   return (
     <div>
-      {/* Desktop Player */}
+      {/* ──────────────────────────────────────────────────────────────────────
+         DESKTOP PLAYER
+         ──────────────────────────────────────────────────────────────────── */}
       <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
-        {/* Navigation Bar */}
         <div className="flex w-full h-full items-center justify-center">
+          {/* The hidden <audio> tag */}
           <audio
             className="hidden"
-            src={`/api/audio/${currentTrack?.file}`}
+            src={`/api/audio/${currentTrack?.file || ""}`}
             ref={audioRef}
             autoPlay={isPlaying}
             onEnded={() => dispatch(setIsPlaying(false))}
@@ -254,9 +284,12 @@ const MusicPlayer: React.FC = () => {
             preload="auto"
           />
         </div>
+
         <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">
-          {/* Song Navigation Button */}
-          <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center ">
+          {/* ─────────────────────────────────────────────────────────────────
+             NAV BUTTONS (Prev, Play/Pause, Next, Loop)
+             ──────────────────────────────────────────────────────────────── */}
+          <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">
             <div className="items-center mr-4 p-2">
               <FontAwesomeIcon
                 icon={faBackwardStep}
@@ -265,7 +298,7 @@ const MusicPlayer: React.FC = () => {
                 className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
               />
             </div>
-            {/* Play Button */}
+            {/* Play/Pause Button */}
             <button
               className="flex bg-neutral-800 dark:bg-blue-600 rounded-full w-10 h-10 items-center justify-center user-select-none"
               onClick={(e) => {
@@ -278,6 +311,7 @@ const MusicPlayer: React.FC = () => {
                 {playPauseButton}
               </div>
             </button>
+
             <div className="items-center p-2 ml-4">
               <FontAwesomeIcon
                 icon={faForwardStep}
@@ -291,11 +325,18 @@ const MusicPlayer: React.FC = () => {
                 icon={faRepeat}
                 size="sm"
                 onClick={loopTrack}
-                className={`cursor-pointer hover:opacity-75 ${isLoopEnabled ? "text-blue-500" : "text-neutral-600 dark:text-white"}`}
+                className={`cursor-pointer hover:opacity-75 ${
+                  isLoopEnabled
+                    ? "text-blue-500"
+                    : "text-neutral-600 dark:text-white"
+                }`}
               />
             </button>
           </div>
-          {/* Song Playback */}
+
+          {/* ─────────────────────────────────────────────────────────────────
+             WAVEFORM & TIMESTAMP
+             ──────────────────────────────────────────────────────────────── */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
             <div ref={waveformContainerRef} className="w-full">
               {currentTrack?.file ? (
@@ -303,8 +344,8 @@ const MusicPlayer: React.FC = () => {
                   audioUrl={`/api/audio/${currentTrack.file}`}
                   audioRef={audioRef}
                   amplitude={0.5}
-                  currentTime={audioRef?.current?.currentTime}
-                  trackDuration={audioRef?.current?.duration}
+                  currentTime={audioRef.current?.currentTime || 0}
+                  trackDuration={audioRef.current?.duration || 0}
                   width={waveformWidth}
                   updateCurrentTime={(newTime: number) => {
                     if (audioRef.current) {
@@ -313,23 +354,21 @@ const MusicPlayer: React.FC = () => {
                   }}
                 />
               ) : (
-                <p></p>
+                <p />
               )}
             </div>
             {/* Timestamp */}
             <div className="hidden lg:flex text-xs mx-2 w-28 h-full items-center justify-center user-select-none">
-              {/* Apply user-select-none here */}
               <p className="text-neutral-600 dark:text-white">
-                {formatTime(audioRef?.current?.currentTime)}
+                {formatTime(audioRef.current?.currentTime)}
                 <span className="text-transparent"> / </span>
-                {/* Separate trackDuration */}
-                <span className="text-neutral-500">
-                  {formatTime(trackDuration)}
-                </span>{" "}
-                {/* Set different colors */}
+                <span className="text-neutral-500">{formatTime(trackDuration)}</span>{" "}
               </p>
             </div>
-            {/* Volume Icon */}
+
+            {/* ─────────────────────────────────────────────────────────────
+               VOLUME ICON & SLIDER
+               ──────────────────────────────────────────────────────────── */}
             <button
               className="relative flex justify-center md:mx-4 lg:mx-1"
               onClick={toggleVolume}
@@ -342,48 +381,40 @@ const MusicPlayer: React.FC = () => {
                 />
               </div>
               {isVolumeVisible && (
-                // Volume Bar
-                <button
-                  onMouseDown={(e) => {
-                    setIsDraggingVolume(true);
-                    setInitialVolumePosition(e.clientY);
-                    handleVolumeChange(e);
-                  }}
-                  onMouseMove={(e) => {
-                    if (isDraggingVolume) {
-                      handleVolumeChange(e);
-                    }
-                  }}
-                  onMouseUp={() => {
-                    setIsDraggingVolume(false);
-                  }}
+                <div
+                  onMouseDown={handleVolumeMouseDown}
+                  onMouseMove={handleVolumeMouseMove}
+                  onMouseUp={handleVolumeMouseUp}
                   onClick={handleVolumeChange}
                   className="volume-bar bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
                 >
-                  {/* Full Volume Bar */}
                   <div className="bg-blue-600 rounded-lg h-20 w-1 relativ cursor-pointer">
-                    {/* Threshold (currently set to full, with h-20) */}
+                    {/* Gray area above the volume level */}
                     <div
                       className="bg-neutral-200 dark:bg-neutral-500 rounded-lg w-1"
                       style={{ height: `${(1 - volume) * 100}%` }}
-                    ></div>
-                    {/* Volume Bar */}
+                    />
+                    {/* Volume handle/circle */}
                     <div
                       className="rounded-full h-3 w-3 bg-blue-600 absolute cursor-pointer"
                       style={{
                         bottom: `${volume * 70 + 10}%`,
                         left: "5px",
-                        zIndex: "50",
+                        zIndex: 50,
                       }}
-                    ></div>
+                    />
                   </div>
-                </button>
+                </div>
               )}
             </button>
           </div>
-          {/* Song Information */}
+
+          {/* ─────────────────────────────────────────────────────────────────
+             SONG INFO & ACTION BUTTONS
+             ──────────────────────────────────────────────────────────────── */}
           <div className="flex items-center h-full md:w-80 lg:w-100">
-            <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2 ">
+            {/* Album Art */}
+            <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2">
               <div className="flex items-center justify-center h-12 w-12 lg:h-16 lg:w-16 ml-0 rounded-md p-0.5 md:p-0.5">
                 <Image
                   src={`https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
@@ -398,6 +429,7 @@ const MusicPlayer: React.FC = () => {
               </div>
             </div>
 
+            {/* Track Metadata */}
             <div className="flex flex-col justify-center items-left p-4 w-40 lg:w-60 h-full">
               <div className="flex flex-col justify-left items-left">
                 <button
@@ -406,8 +438,7 @@ const MusicPlayer: React.FC = () => {
                 >
                   <p className="flex items-start justify-start text-left text-neutral-600 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
-                    {currentTrack?.info?.mood[1]},{" "}
-                    {currentTrack?.info?.relatedartist[0]}]
+                    {currentTrack?.info?.mood[1]}, {currentTrack?.info?.relatedartist[0]}]
                   </p>
                 </button>
               </div>
@@ -420,65 +451,58 @@ const MusicPlayer: React.FC = () => {
                   {currentTrack?.info?.bpm} BPM
                 </p>
                 <p className="hidden lg:flex justify-center items-center text-2xs bg-blue-600 dark:bg-blue-600 text-white rounded-md w-16 cursor-default">
-                  {currentTrack?.info?.genre[0].maingenre}
+                  {currentTrack?.info?.genre[0]?.maingenre}
                 </p>
               </div>
             </div>
+
             {/* Song Buttons */}
-            <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full ">
+            <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full">
               <div className="flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="text-neutral-500 dark:text-white"
-                />
+                <FontAwesomeIcon icon={faPlus} className="text-neutral-500 dark:text-white" />
               </div>
               <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className="text-neutral-500 dark:text-white"
-                />
+                <FontAwesomeIcon icon={faHeart} className="text-neutral-500 dark:text-white" />
               </div>
               <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 px-3.5 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faEllipsisVertical}
-                  className="text-neutral-500 dark:text-white"
-                />
+                <FontAwesomeIcon icon={faEllipsisVertical} className="text-neutral-500 dark:text-white" />
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/*Mobile Player */}
+
+      {/* ──────────────────────────────────────────────────────────────────────
+         MOBILE PLAYER
+         ──────────────────────────────────────────────────────────────────── */}
       <div className="fixed px-3 rounded-lg bottom-4 w-full h-18 z-0 block md:hidden">
-        <div className="border dark:border-neutral-800 flex flex-col justify-center items-center w-full  rounded-lg border-neutral-200 bg-neutral-100/90 dark:bg-black/90 overflow-hidden h-full backdrop-blur-md">
+        <div className="border dark:border-neutral-800 flex flex-col justify-center items-center w-full rounded-lg border-neutral-200 bg-neutral-100/90 dark:bg-black/90 overflow-hidden h-full backdrop-blur-md">
+          {/* Seek bar for mobile */}
           <div className="w-full" style={{ width: "calc(100% + 11px)" }}>
             <div
               className="w-full border-md bg-black/10 dark:bg-white/10 h-1 rounded-full shadow-xl overflow-hidden cursor-pointer"
               onClick={(e) => {
-                const durationBar = e.currentTarget;
-                const rect = durationBar.getBoundingClientRect();
+                if (!audioRef.current) return;
+                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
                 const mouseX = e.clientX - rect.left;
                 const newPercentage = (mouseX / rect.width) * 100;
-
-                const newPlaybackPosition =
-                  (newPercentage / 100) * trackDuration;
-
-                if (audioRef.current) {
-                  audioRef.current.currentTime = newPlaybackPosition;
-                }
+                const newPlaybackPosition = (newPercentage / 100) * (trackDuration || 0);
+                audioRef.current.currentTime = newPlaybackPosition;
               }}
             >
               <div
                 className="bg-black dark:bg-blue-600 h-1 rounded-md shadow-md w-full transition-width duration-100 ease-in-out"
                 style={{
                   width: `${
-                    (currentTime / (audioRef?.current?.duration ?? 1)) * 100
+                    ((currentTime || 0) / (audioRef.current?.duration || 1)) * 100
                   }%`,
                 }}
               />
             </div>
           </div>
+
           <div className="flex justify-center items-center w-full h-full">
+            {/* Mobile Artwork */}
             <div className="flex items-center justify-center w-28 h-auto">
               <Image
                 src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
@@ -490,16 +514,14 @@ const MusicPlayer: React.FC = () => {
                 height={70}
               />
             </div>
+
+            {/* Mobile Track Info */}
             <div className="flex flex-col items-start justify-start ml-3 w-full h-full">
               <div className="mb-1">
-                <button
-                  className="items-start justify-start  cursor-pointer"
-                  onClick={openTrackInfo}
-                >
+                <button className="items-start justify-start cursor-pointer" onClick={openTrackInfo}>
                   <p className="flex items-start justify-start text-left text-neutral-800 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
-                    {currentTrack?.info?.mood[1]},{" "}
-                    {currentTrack?.info?.relatedartist[0]}]
+                    {currentTrack?.info?.mood[1]}, {currentTrack?.info?.relatedartist[0]}]
                   </p>
                 </button>
               </div>
@@ -516,6 +538,8 @@ const MusicPlayer: React.FC = () => {
                 </p>
               </div>
             </div>
+
+            {/* Mobile Controls */}
             <div className="flex flex-row justify-center items-center h-full w-24 pr-8">
               <div className="items-center mr-2 p-2">
                 <FontAwesomeIcon
@@ -525,7 +549,6 @@ const MusicPlayer: React.FC = () => {
                   className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
                 />
               </div>
-              {/* Play Button */}
               <button
                 className="flex rounded-full w-10 h-10 items-center justify-center user-select-none bg-neutral-800 dark:bg-blue-700 p-4"
                 onClick={togglePlayPause}

@@ -1,7 +1,6 @@
 import React from "react";
 import { Hero } from "@/client/ui/pages/home";
 import type { Metadata } from "next";
-import Footer from "@/client/ui/global/footer";
 
 export const metadata: Metadata = {
   title: "Blendtune",

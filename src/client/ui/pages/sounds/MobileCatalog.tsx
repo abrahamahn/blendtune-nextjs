@@ -41,7 +41,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
     <div className="block xl:hidden w-full pt-0 md:pt-4 justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-2 mx-auto flex-col relative">
         {tracks.map((track: Track) => (
-          <button
+          <div
             key={track.id}
             className="flex p-1 border-neutral-300 hover:bg-neutral-100 dark:border-neutral-800 group dark:hover:bg-neutral-900 justify-center items-center rounded-lg pr-12 z-0"
             onClick={() => playTrack(track)}
@@ -157,7 +157,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </div>

@@ -19,7 +19,7 @@ const tracksConfig: DBConfig = {
 };
 
 const authConfig: DBConfig = {
-  user: process.env.NODE_ENV === 'production' ? process.env.PG_CLOUD_USER ?? '' : process.env.PG_LOCAL_USER ?? '',
+  user: process.env.NODE_ENV === 'production'? process.env.PG_CLOUD_USER ?? '' : process.env.PG_LOCAL_USER ?? '',
   host: process.env.NODE_ENV === 'production' ? process.env.PG_CLOUD_HOST ?? '' : process.env.PG_LOCAL_HOST ?? '',
   database: process.env.NODE_ENV === 'production' ? process.env.PG_CLOUD_DB_USERS ?? '' : process.env.PG_LOCAL_DB_USERS ?? '',
   password: process.env.NODE_ENV === 'production' ? process.env.PG_CLOUD_PW ?? '' : process.env.PG_LOCAL_PW ?? '',

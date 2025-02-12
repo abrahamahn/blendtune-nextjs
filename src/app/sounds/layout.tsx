@@ -1,5 +1,4 @@
-"use client";
-import React, { useRef } from "react";
+import React from "react";
 import Header from "@/client/ui/global/header";
 import Footer from "@/client/ui/global/footer";
 import RightBar from "@/client/ui/global/rightbar";

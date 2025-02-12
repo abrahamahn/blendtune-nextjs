@@ -57,9 +57,7 @@ const Header: React.FC = () => {
   /* Mobile Functionality */
   const { isMobileSearch, isAnimating, toggleSearchBar }
  = useMobileSearch();
-
-  /* Mobile Menu */
-  const { isMobileMenuOpen, openMobileMenu, closeMobileMenu, handleSoundsClick } = useMobileMenu();
+ const { isMobileMenuOpen, openMobileMenu, closeMobileMenu, handleSoundsClick } = useMobileMenu();
 
 
   /* Genre Menu */

@@ -1,10 +1,11 @@
-const path = require('path');
-const ESLintPlugin = require('eslint-webpack-plugin');
+import path from 'path';
+import type { NextConfig } from 'next';
+import ESLintPlugin from 'eslint-webpack-plugin';
 
+// Load environment variables
 require('./src/shared/config/loadEnv');
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -29,10 +30,15 @@ const nextConfig = {
         })
       );
     }
-    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
-    
+
+    // Alias @ to src
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+    };
+
     return config;
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

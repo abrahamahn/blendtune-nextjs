@@ -1,0 +1,133 @@
+/* ---------------------------------------------------------------- */
+
+/* ----------------------- HOME STYLE --------------------------- */
+
+/* ---------------------------------------------------------------- */
+.column {
+  z-index: 0;
+  flex: 1.5;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  animation-duration: 150s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  margin: 0 auto;
+}
+
+@media (width <= 676px) {
+  .column {
+    min-width: 110px;
+  }
+}
+
+.vintage-cover {
+  position: relative;
+}
+
+.up {
+  animation-name: moveup;
+}
+
+.down {
+  animation-name: movedown;
+}
+
+@keyframes moveup {
+  0% {
+    transform: translateY(60);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes movedown {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(0deg, white 100%, transparent 200%), radial-gradient(circle at top, transparent 50%, white 95%);
+}
+
+.vintage-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(rgb(224 211 211 / 20%), rgb(214 212 212 / 20%)),
+    radial-gradient(at center, rgb(0 0 0 / 20%), rgb(255 255 255 / 50%));
+  opacity: 0.7;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+.vintage-cover img {
+  filter: sepia(0.3) saturate(0.9) contrast(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(0deg, black 10%, transparent 100%),
+      radial-gradient(circle at top, transparent 50%, black 90%);
+  }
+
+    .vintage-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(rgb(18 16 16 / 20%), rgb(18 16 16 / 20%)),
+      radial-gradient(at center, rgb(255 255 255 / 20%), rgb(0 0 0 / 50%));
+    opacity: 0.7;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  .vintage-cover img {
+    filter: sepia(0.4) saturate(0.8) contrast(1.1);
+  }
+}
+
+/* CSS to hide the scrollbar on Firefox */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+/* fadeInUp class for the fade-in animation */
+.fadeInUp {
+  animation: fadeInUp 1s ease-in-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px); 
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

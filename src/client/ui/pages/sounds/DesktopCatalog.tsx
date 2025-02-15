@@ -79,7 +79,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
   }
 
   return (
-    <div className="hidden xl:block w-full pt-4 justify-center items-center mx-auto">
+    <div className="hidden xl:block w-full justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-4 mx-auto flex-col relative">
         {tracks.map((track: Track, index: number) => (
           <div

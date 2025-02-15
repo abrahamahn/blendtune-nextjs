@@ -23,27 +23,6 @@ const Hero: React.FC<HeroProps> = ({
   togglePlayPause,
 }) => {
   const equalizerContainerRef = useRef<HTMLDivElement>(null);
-  const [equalizerWidth, setEqualizerWidth] = useState(0);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        // Assuming you want the width
-        const { width } = entry.contentRect;
-        setEqualizerWidth(width);
-      }
-    });
-
-    if (equalizerContainerRef.current) {
-      resizeObserver.observe(equalizerContainerRef.current);
-      // Initialize equalizerWidth with the initial width
-      setEqualizerWidth(equalizerContainerRef.current.offsetWidth);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     const updateBackgroundColor = () => {
@@ -109,22 +88,22 @@ const Hero: React.FC<HeroProps> = ({
   }, [currentTrack]);
 
   return (
-    <div className="block lg:hidden pt-16 md:pt-0 xl:pt-0 w-full mx-auto md:pb-4">
+    <div className="block lg:hidden xl:pt-0 w-full mx-auto md:pb-4">
       <div
-        className="pt-8 sm:pt-4 md:pt-16 pb-0 h-full"
+        className="pb-0 h-full"
         style={{
           backgroundImage: `linear-gradient(to bottom, ${dominantColor}, var(--background-color))`,
         }}
       >
-        <div className="max-w-screen-xl flex flex-row justify-center items-center mx-auto p-0 sm:p-4 lg:p-4 pb-4 sm:pb-0 px-4 sm:px-4 md:px-4 lg:px-12 lg:pl-8 rounded-md m-0 ">
+        <div className="max-w-screen-xl flex flex-row justify-center items-center mx-auto p-4 pb-4 sm:pb-0 px-4 sm:px-4 md:px-4 lg:px-12 lg:pl-8 rounded-md m-0 ">
           <div className="w-full order-2 md:order-1 flex flex-col  justify-between p-0 lg:px-4 ml-4 md:ml-0 h-36 sm:h-44 md:h-56 lg:h-72 mt-[-10px]">
             <div className="w-full flex flex-col items-start justify-center h-full lg:pb-20">
               <div className="w-full flex flex-col text-left items-start justify-start">
                 <div className="w-full flex flex-row justify-between"></div>
                 <div className="flex flex-row justify-between items-center w-full">
-                  <div className="flex justify-start items-start mt-0 md:mt-[-45px]">
+                  <div className="flex justify-start items-start mt-0">
                     <button
-                      className="hidden sm:flex justify-center items-center duration-300 group-hover:opacity-100 cursor-pointer bg-black dark:bg-blue-700 rounded-full w-8 h-8 lg:w-10 lg:h-10 mr-2 md:mr-3 mt-1.5 lg:mt-0.5"
+                      className="hidden sm:flex justify-center items-center duration-300 group-hover:opacity-100 cursor-pointer bg-black dark:bg-blue-700 rounded-full w-10 h-10 lg:w-10 lg:h-10 mr-2 md:mr-3 mt-1.5 lg:mt-0.5"
                       onClick={togglePlayPause}
                     >
                       {isPlaying ? (
@@ -212,7 +191,6 @@ const Hero: React.FC<HeroProps> = ({
                 <Equalizer
                   audioRef={audioRef}
                   currentTrack={currentTrack}
-                  width={equalizerWidth}
                 />
               </div>
             </div>

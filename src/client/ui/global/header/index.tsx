@@ -52,7 +52,6 @@ const Header: React.FC = () => {
  = useMobileSearch();
  const { isMobileMenuOpen, openMobileMenu, closeMobileMenu, handleSoundsClick } = useMobileMenu();
 
-
   /* Genre Menu */
   const { genreItems, handleGenreItemClick } = useGenreMenu();
 
@@ -67,10 +66,12 @@ const Header: React.FC = () => {
   }, [router, userProfileCreated, checkSession]);
 */
   return (
-    <header>
+    <header className="w-full h-full">
       <div>
         {/* Desktop Menu */}
-        <nav className="hidden md:block items-center justify-between rounded-t-xl fixed top-2 app-header-width p-2 h-14 z-20 bg-neutral-100/80 dark:bg-neutral-950/50">
+        <nav className="hidden md:flex items-center justify-between 
+                      w-full h-full 
+                      xl:px-2 xl:py-4 lg:px-2 py-2">
           <div className="flex items-center justify-between mx-auto w-full px-6">
             <div className="flex items-center space-x-2 lg:space-x-4 h-full">
               <Logo />

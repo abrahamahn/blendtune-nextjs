@@ -57,8 +57,7 @@ const SideBar: React.FC = () => {
 
   return (
     <header>
-      <div className="hidden md:block fixed md:w-20 h-full bg-neutral-200 dark:bg-black text-white p-2">
-        <div className=" bg-white dark:bg-neutral-950 rounded-xl">
+        <div className="dark:bg-neutral-950 rounded-xl">
           <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
             <Link
               href="./"
@@ -86,7 +85,7 @@ const SideBar: React.FC = () => {
                   className="flex flex-col justify-center items-center py-3"
                 >
                   <FontAwesomeIcon icon={genre.icon} size="lg" />
-                  <p className="mt-2 text-2xs">{genre.text}</p>
+                  <p className="text-2xs">{genre.text}</p>
                 </button>
               ))}
             </div>
@@ -108,7 +107,6 @@ const SideBar: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
     </header>
   );
 };

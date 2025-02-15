@@ -34,7 +34,7 @@ const Category: React.FC = () => {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto md:px-2 lg:px-2 px-4 pb-4 pt-2 sm:pt-4 md:pt-0 md:pb-0 lg:pb-4 lg:pt-20">
+    <div className="max-w-screen-xl mx-auto md:px-2 lg:px-2 px-4 pb-4 sm:pt-4 md:pt-0 md:pb-0 lg:p-2">
       <div className="flex flex-row justify-start items-start w-full border-b border-neutral-200 dark:border-neutral-700 mb-2 overflow-x-scroll">
         {genreItems.map((genre) => (
           <button

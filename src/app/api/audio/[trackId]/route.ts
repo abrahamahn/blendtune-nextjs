@@ -16,11 +16,13 @@ function getContentType(extension: string): string {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { trackId?: string } }
+  context: { params: Promise<{ trackId: string }> } // <- Ensure params is awaited
 ) {
   try {
+    // Await the params to resolve the Promise (Next.js 15 change)
+    const { trackId } = await context.params;
+
     // 1. Validate trackId param
-    const trackId = params.trackId;
     if (!trackId) {
       console.error("No trackId provided in URL params.");
       return NextResponse.json(

@@ -21,7 +21,8 @@ import {
   Category,
   MobileCatalog,
   DesktopCatalog,
-  SoundFilter,
+  DesktopSoundFilter,
+  MobileSoundFilter,
   TrackInfo,
   NewTracks,
 } from "@/client/ui/pages/sounds";
@@ -263,8 +264,34 @@ const Sounds: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="md:h-full pt-8 pb-28 md:pt-0 md:pb-4 overflow-y-scroll rounded-t-xl">
+    <div className="flex flex-col h-full w-full bg-neutral-950">
+      <div className="md:h-full overflow-y-scroll rounded-t-xl">
+        <MobileSoundFilter
+          tracks={tracks}
+          minTempo={minTempo}
+          setMinTempo={setMinTempo}
+          maxTempo={maxTempo}
+          setMaxTempo={setMaxTempo}
+          includeHalfTime={includeHalfTime}
+          setIncludeHalfTime={setIncludeHalfTime}
+          includeDoubleTime={includeDoubleTime}
+          setIncludeDoubleTime={setIncludeDoubleTime}
+          selectedKeys={selectedKeys}
+          setSelectedKeys={setSelectedKeys}
+          selectedScale={selectedScale}
+          setSelectedScale={setSelectedScale}
+          setKeyFilterCombinations={setKeyFilterCombinations}
+          selectedGenres={selectedGenres}
+          selectedArtists={selectedArtists}
+          setSelectedArtists={setSelectedArtists}
+          selectedInstruments={selectedInstruments}
+          setSelectedInstruments={setSelectedInstruments}
+          selectedMoods={selectedMoods}
+          setSelectedMoods={setSelectedMoods}
+          selectedKeywords={selectedKeywords}
+          sortBy={sortBy}
+          handleSortChange={handleSortChange}
+        />
         <Hero
           audioRef={audioRef}
           currentTrack={currentTrack}
@@ -278,7 +305,7 @@ const Sounds: React.FC = () => {
           currentTrack={currentTrack}
           isPlaying={isPlaying}
         />
-        <SoundFilter
+        <DesktopSoundFilter
           tracks={tracks}
           minTempo={minTempo}
           setMinTempo={setMinTempo}

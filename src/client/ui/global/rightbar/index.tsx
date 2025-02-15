@@ -18,7 +18,7 @@ import { colorExtractor } from "@/client/utils/helpers/colorExtractor";
 
 import Watermark from "@/client/ui/components/common/Watermark";
 
-const RightBar: React.FC = () => {
+const Rightbar: React.FC = () => {
   const dispatch = useDispatch();
   const { audioRef } = useAudio();
 
@@ -146,29 +146,13 @@ const RightBar: React.FC = () => {
   }, [dispatch, audioRef]);
 
   return (
-    <div className="hidden lg:block fixed right-0 md:right-0 top-0 right-height w-96 z-10 mt-0 p-2 bg-neutral-200 dark:bg-black">
+    <div className="w-full h-full flex flex-col overflow-auto p-2">
       <div
         className="p-0 rounded-2xl h-full"
         style={{
           backgroundImage: `linear-gradient(to bottom, ${dominantColor}, ${themePreference === "light" ? "#ffffff" : "#000000"})`,
         }}
       >
-        <div className="flex flex-row justify-between w-full h-12 bg-neutral-50 dark:bg-black/50 rounded-t-2xl p-3">
-          <div className="flex justify-center items-center text-base text-neutral-600 dark:text-white">
-            <p className="text-neutral-800 dark:text-neutral-200 text-base font-semibold">
-              {currentTrack?.metadata.title.toUpperCase()} [
-              {currentTrack?.info?.mood[1]},{" "}
-              {currentTrack?.info?.relatedartist[0]}]
-            </p>
-          </div>
-          <button className="flex justify-center items-center w-4 h-4 p-4 cursor-pointer">
-            <FontAwesomeIcon
-              className="flex justify-center items-center mt-[-8px] text-neutral-400 dark:text-neutral-200"
-              size="sm"
-              icon={faX}
-            />
-          </button>
-        </div>
         <div className="flex flex-col p-8 pt-4 rounded-md m-0 mt-0 lg:mt-2">
           <div className="flex justify-center mt-0 p-0">
             <div className="w-56 h-56  bg-neutral-200/80 dark:bg-black/80 p-2 rounded-md relative">
@@ -226,7 +210,6 @@ const RightBar: React.FC = () => {
               <Equalizer
                 audioRef={audioRef}
                 currentTrack={currentTrack}
-                width={equalizerWidth}
               />
             </div>
           </div>
@@ -312,4 +295,4 @@ const RightBar: React.FC = () => {
   );
 };
 
-export default RightBar;
+export default Rightbar;

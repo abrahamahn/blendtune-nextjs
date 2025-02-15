@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef, RefObject } from "react";
-import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faMusic } from "@fortawesome/free-solid-svg-icons";
 import { Track } from "@/shared/types/track";
@@ -24,29 +23,6 @@ const TrackInfo: React.FC<TrackInfoProps> = ({
   audioRef,
 }) => {
   const equalizerContainerRef = useRef<HTMLDivElement>(null);
-
-  const [equalizerWidth, setEqualizerWidth] = useState(0);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        // Assuming you want the width
-        const { width } = entry.contentRect;
-        setEqualizerWidth(width);
-      }
-    });
-
-    if (equalizerContainerRef.current) {
-      resizeObserver.observe(equalizerContainerRef.current);
-      // Initialize equalizerWidth with the initial width
-      setEqualizerWidth(equalizerContainerRef.current.offsetWidth);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
   const [dominantColor, setDominantColor] = useState("#000000");
   const [currentTime, setCurrentTime] = useState(0);
   const [trackDuration, setTrackDuration] = useState(0);
@@ -188,7 +164,6 @@ const TrackInfo: React.FC<TrackInfoProps> = ({
               <Equalizer
                 audioRef={audioRef}
                 currentTrack={currentTrack}
-                width={equalizerWidth}
               />
             </div>
           </div>

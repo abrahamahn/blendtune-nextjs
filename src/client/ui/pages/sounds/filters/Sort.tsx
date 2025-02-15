@@ -2,10 +2,10 @@ import React from "react";
 
 interface SortFilterProps {
   openSortFilter: boolean;
-  mobileFilterOpen: boolean;
   sortBy: string | null;
   handleSortChange: (option: string) => void;
-  handleMobileSortChange: (option: string) => void;
+  mobileFilterOpen?: boolean;
+  handleMobileSortChange?: (option: string) => void;
 }
 
 const SortFilter: React.FC<SortFilterProps> = ({
@@ -65,30 +65,41 @@ const SortFilter: React.FC<SortFilterProps> = ({
             aria-labelledby="options-menu"
           >
             <button
-              className={`${sortBy === "Newest" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutal-300"} block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg hover:text-neutral-500`}
+              className={`${sortBy === "Newest" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutral-300"} 
+                          block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 
+                          rounded-lg hover:text-neutral-500`}
               role="menuitem"
-              onClick={() => handleMobileSortChange("Newest")}
+              onClick={() => handleMobileSortChange && handleMobileSortChange("Newest")} // ✅ Check if function exists
             >
               Newest
             </button>
+
             <button
-              className={`${sortBy === "Oldest" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutal-300"} block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg hover:text-neutral-500`}
+              className={`${sortBy === "Oldest" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutral-300"} 
+                          block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 
+                          rounded-lg hover:text-neutral-500`}
               role="menuitem"
-              onClick={() => handleMobileSortChange("Oldest")}
+              onClick={() => handleMobileSortChange && handleMobileSortChange("Oldest")} // ✅ Check before calling
             >
               Oldest
             </button>
+
             <button
-              className={`${sortBy === "Random" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutal-300"} block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg hover:text-neutral-500`}
+              className={`${sortBy === "Random" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutral-300"} 
+                          block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 
+                          rounded-lg hover:text-neutral-500`}
               role="menuitem"
-              onClick={() => handleMobileSortChange("Random")}
+              onClick={() => handleMobileSortChange && handleMobileSortChange("Random")} // ✅ Check before calling
             >
               Random
             </button>
+
             <button
-              className={`${sortBy === "A-Z" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutal-300"} block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg hover:text-neutral-500`}
+              className={`${sortBy === "A-Z" ? "text-neutral-600 dark:text-neutral-50" : "text-neutral-600 dark:text-neutral-300"} 
+                          block w-full text-left px-2 py-1.5 text-xs text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 
+                          rounded-lg hover:text-neutral-500`}
               role="menuitem"
-              onClick={() => handleMobileSortChange("A-Z")}
+              onClick={() => handleMobileSortChange && handleMobileSortChange("A-Z")} // ✅ Check before calling
             >
               A-Z
             </button>

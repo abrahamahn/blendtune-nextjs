@@ -10,7 +10,6 @@ interface AudioElementWithSourceNode extends HTMLAudioElement {
 interface EqualizerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
   currentTrack?: Track;
-  // ❌ width prop removed
 }
 
 const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {

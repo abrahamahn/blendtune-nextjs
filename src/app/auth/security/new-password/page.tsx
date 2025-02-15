@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import {
   setAuthenticated,
@@ -10,6 +10,7 @@ import {
 import Logo from "@/client/ui/components/common/Logo";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import LoadingIcon from "@/client/ui/components/common/LoadingIcon";
+import SearchParamsWrapper from "@/client/wrapper/SearchParamsWrapper";
 
 const NewPassword: React.FC = () => {
   const [password, setPassword] = useState("");
@@ -18,11 +19,10 @@ const NewPassword: React.FC = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [token, setToken] = useState<string | null>(null);
+  
   const dispatch = useDispatch();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
 
   useEffect(() => {
     if (token) {
@@ -40,7 +40,7 @@ const NewPassword: React.FC = () => {
           setErrorMessage("Confirmation link is invalid. Please try again.");
         });
     }
-  }, [router, token]);
+  }, [token]);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -88,6 +88,9 @@ const NewPassword: React.FC = () => {
 
   return (
     <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
+      <Suspense fallback={null}>
+        <SearchParamsWrapper onParamsReady={setToken} />
+      </Suspense>
       <div className="w-80 lg:w-96 rounded-lg  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
         <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 py-8">
           <div className="flex items-center pt-4 lg:pt-6 justify-center">

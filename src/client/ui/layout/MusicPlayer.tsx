@@ -442,7 +442,7 @@ const MusicPlayer: React.FC = () => {
                     <div
                       className="rounded-full h-3 w-3 bg-blue-600 absolute cursor-pointer"
                       style={{
-                        bottom: `${volume * 100}%`,
+                        bottom: `${volume * 100}% - [5px]`,
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         zIndex: 50,

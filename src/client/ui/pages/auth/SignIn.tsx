@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Logo from "@/client/ui/components/common/Logo";
 import LoadingIcon from "@/client/ui/components/common/LoadingIcon";
-import useAuth from "@/client/auth/useAuth"; // Import the useAuth hook
+import useAuth from "@/client/auth/useAuth";
 
 interface SignInProps {
   openSignUp: () => void;

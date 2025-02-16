@@ -1,4 +1,3 @@
-// Sounds.tsx
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +31,12 @@ import { Track } from "@/shared/types/track";
 import { useRightSidebar } from "@/client/utils/context/RightSidebarContext";
 
 const Sounds: React.FC = () => {
+  // Call all hooks unconditionally.
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const dispatch = useDispatch();
   const { audioRef } = useAudio();
   const { tracks } = useTracks();
@@ -43,74 +48,95 @@ const Sounds: React.FC = () => {
     (state: RootState) => state.audio.playback.isPlaying
   );
 
-  // Use our RightSidebar context
+  // Get sidebar controls from context.
   const { showSidebar, userClosed } = useRightSidebar();
 
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
+  const [isTransitioning, setIsTransitioning] = useState(false); // Throttle rapid clicks
 
-  // Toggle play/pause functionality
+  // Toggle play/pause with throttling and error handling.
   const togglePlayPause = useCallback(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        dispatch(setIsPlaying(false));
-      } else {
-        audioRef.current
-          .play()
-          .catch((error) => console.error("Error playing the track:", error));
-        dispatch(setIsPlaying(true));
-      }
-    }
-  }, [audioRef, isPlaying, dispatch]);
+    if (!audioRef.current || isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => setIsTransitioning(false), 300);
 
-  // Play a track. If the track is new (or toggled) and the user has not permanently closed the sidebar,
-  // we force–open the sidebar.
+    if (isPlaying) {
+      audioRef.current.pause();
+      dispatch(setIsPlaying(false));
+    } else {
+      audioRef.current
+        .play()
+        .catch((error) => {
+          if (error.name === "AbortError") {
+            console.warn("Play request aborted due to rapid clicking.");
+          } else {
+            console.error("Error playing the track:", error);
+          }
+        });
+      dispatch(setIsPlaying(true));
+    }
+  }, [audioRef, isPlaying, dispatch, isTransitioning]);
+
+  // Play a track (or toggle if same track) with throttling and error handling.
   const playTrack = useCallback(
     (selectedTrack: Track) => {
+      if (!audioRef.current || isTransitioning) return;
+      setIsTransitioning(true);
+      setTimeout(() => setIsTransitioning(false), 300);
+
       if (currentTrack && selectedTrack.id === currentTrack.id) {
         if (isPlaying) {
-          audioRef.current?.pause();
+          audioRef.current.pause();
           dispatch(setIsPlaying(false));
         } else {
           audioRef.current
-            ?.play()
-            .catch((error) => console.error("Error playing the track:", error));
+            .play()
+            .catch((error) => {
+              if (error.name === "AbortError") {
+                console.warn("Play request aborted due to rapid clicking.");
+              } else {
+                console.error("Error playing the track:", error);
+              }
+            });
           dispatch(setIsPlaying(true));
         }
       } else {
         dispatch(setCurrentTrack(selectedTrack));
-        if (audioRef.current) {
-          audioRef.current.src = `/audio/tracks/${selectedTrack.file}`;
-          audioRef.current.addEventListener(
+        const audioElement = audioRef.current;
+        if (audioElement) {
+          audioElement.src = `/audio/tracks/${selectedTrack.file}`;
+          audioElement.addEventListener(
             "loadeddata",
             () => {
-              if (audioRef.current) {
-                audioRef.current
-                  .play()
-                  .catch((error) =>
-                    console.error("Error playing the track:", error)
-                  );
-                dispatch(setIsPlaying(true));
-              }
+              audioElement
+                .play()
+                .catch((error) => {
+                  if (error.name === "AbortError") {
+                    console.warn("Play request aborted due to rapid clicking.");
+                  } else {
+                    console.error("Error playing the track:", error);
+                  }
+                });
+              dispatch(setIsPlaying(true));
             },
             { once: true }
           );
-          audioRef.current.load();
+          audioElement.load();
         }
       }
-      // Only force–open the sidebar if the user has not permanently closed it.
+      // Force–open the sidebar if the user hasn't permanently closed it.
       if (!userClosed) {
         showSidebar();
       }
     },
-    [currentTrack, isPlaying, dispatch, audioRef, showSidebar, userClosed]
+    [currentTrack, isPlaying, dispatch, audioRef, showSidebar, userClosed, isTransitioning]
   );
 
-  // When a track title is clicked from the catalog, force–open the sidebar (if not permanently closed)
+  // When a track title is clicked, force–open the sidebar and play the track.
   const handleTitleClick = useCallback(
     (selectedTrack: Track) => {
       if (!userClosed) {
-        showSidebar(); // This resets the close counter
+        showSidebar(); // This resets any close counter.
       }
       playTrack(selectedTrack);
     },
@@ -238,7 +264,8 @@ const Sounds: React.FC = () => {
     [filteredTracks, sortByCriteria]
   );
 
-  return (
+  // Now render conditionally based on mounting status.
+  return isMounted ? (
     <div className="flex flex-col h-full w-full">
       <div className="md:h-full overflow-y-scroll rounded-t-xl">
         <MobileSoundFilter
@@ -318,6 +345,8 @@ const Sounds: React.FC = () => {
         />
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import authPool from '@/server/db/auth';
 
+// Only log in development
+const log = (...args: any[]) => {
+  if (process.env.NODE_ENV === "development") {
+    console.log(...args);
+  }
+};
+
 export async function GET(request: NextRequest) {
-    console.log("Request received:", request.method, request.url);
+    log("Request received:", request.method, request.url);
 
     try {
         const cookieStore = await cookies();
@@ -12,7 +19,8 @@ export async function GET(request: NextRequest) {
         const sessionToken = sessionCookie?.value || authorizationHeader?.split('Bearer ')[1];
 
         if (!sessionToken) {
-            console.log("Unauthorized request");
+            // Do not log in production
+            log("Unauthorized request");
             return new NextResponse(JSON.stringify({ authenticated: false }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
@@ -20,28 +28,33 @@ export async function GET(request: NextRequest) {
         }
 
         const sessionCheckResult = await authPool.query(`
-            SELECT status, expires_at, u.email, u.first_name, u.last_name, u.username, u.profile_created, u.artist_creator_name, u.phone_number, u.gender, u.date_of_birth, u.city, u.state, u.country, u.user_type, u.occupation, u.preferred_language, u.marketing_consent FROM auth.sessions s JOIN users.profile u ON s.user_id = u.user_id
-            WHERE s.session_token = $1 AND s.status = 'active'`,
-            [sessionToken]
-        );
+            SELECT status, expires_at, u.email, u.first_name, u.last_name, u.username, u.profile_created, 
+                   u.artist_creator_name, u.phone_number, u.gender, u.date_of_birth, u.city, u.state, u.country, 
+                   u.user_type, u.occupation, u.preferred_language, u.marketing_consent 
+            FROM auth.sessions s 
+            JOIN users.profile u ON s.user_id = u.user_id
+            WHERE s.session_token = $1 AND s.status = 'active'
+        `, [sessionToken]);
 
         if (sessionCheckResult.rowCount === 0) {
-            console.log("Session token not found or inactive");
+            log("Session token not found or inactive");
             return new NextResponse(JSON.stringify({ authenticated: false }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
             });
         }
 
-        const { status, expires_at, email, first_name, last_name, username, profile_created, 
-        artist_creator_name, phone_number, gender, date_of_birth, city, state, country,
-        user_type, occupation, preferred_language, marketing_consent } = sessionCheckResult.rows[0];
+        const {
+          status, expires_at, email, first_name, last_name, username, profile_created,
+          artist_creator_name, phone_number, gender, date_of_birth, city, state, country,
+          user_type, occupation, preferred_language, marketing_consent
+        } = sessionCheckResult.rows[0];
 
         const currentTime = new Date();
         const expiresAt = new Date(expires_at);
 
         if (expiresAt < currentTime || status !== 'active') {
-            console.log("Session token has expired or session is inactive");
+            log("Session token has expired or session is inactive");
             return new NextResponse(JSON.stringify({ authenticated: false }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
@@ -49,22 +62,22 @@ export async function GET(request: NextRequest) {
         }
 
         // Session token is valid and not expired
-        console.log("Session token is valid and not expired");
+        log("Session token is valid and not expired");
         return new NextResponse(JSON.stringify({
             authenticated: true,
-            username: username,
-            email: email,
+            username,
+            email,
             firstName: first_name,
             lastName: last_name,
             artistCreatorName: artist_creator_name,
             phoneNumber: phone_number,
-            gender: gender,
+            gender,
             dateOfBirth: date_of_birth,
-            city: city,
-            state: state,
-            country: country,
+            city,
+            state,
+            country,
             userType: user_type,
-            occupation: occupation,
+            occupation,
             preferredLanguage: preferred_language,
             marketingConsent: marketing_consent,
             profileCreated: profile_created,

@@ -39,6 +39,14 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: '/audio/tracks/:file',
+        destination: '/api/audio/:file',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

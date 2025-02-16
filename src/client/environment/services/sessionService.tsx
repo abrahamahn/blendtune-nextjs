@@ -111,7 +111,18 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
 
   const checkSession = useCallback(() => {
     fetch("/api/auth/security/check-session", { credentials: "include" })
-      .then((response) => response.json())
+      .then((response) => {
+        // If the response status is 401, return a default response object.
+        if (response.status === 401) {
+          return { authenticated: false };
+        }
+        // For any other non-OK response, throw an error if needed.
+        if (!response.ok) {
+          throw new Error("Error checking session");
+        }
+        // Otherwise, parse the response as JSON.
+        return response.json();
+      })
       .then((data) => {
         if (data.authenticated) {
           dispatch(setAuthenticated());
@@ -140,7 +151,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
       .catch(() => {
         dispatch(setUnauthenticated());
       });
-  }, [dispatch]);
+  }, [dispatch]);  
 
   useEffect(() => {
     checkSession();

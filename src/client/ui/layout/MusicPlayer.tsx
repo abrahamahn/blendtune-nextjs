@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useRef,
   useCallback,
-  MouseEvent,
+  MouseEvent as ReactMouseEvent,
 } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -229,7 +229,7 @@ const MusicPlayer: React.FC = () => {
   };
 
   // When the user presses down on the volume bar.
-  const handleVolumeMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+  const handleVolumeMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
     setIsDraggingVolume(true);
     // Disable text selection and force pointer cursor globally
     document.body.style.userSelect = "none";
@@ -248,7 +248,7 @@ const MusicPlayer: React.FC = () => {
   // Attach a document-level mousemove listener when dragging so volume updates even if outside.
   useEffect(() => {
     if (isDraggingVolume) {
-      const handleDocumentMouseMove = (e: MouseEvent) => {
+      const handleDocumentMouseMove = (e: globalThis.MouseEvent) => {
         if (volumeBarRef.current) {
           const rect = volumeBarRef.current.getBoundingClientRect();
           const newVolume = calculateVolume(e.clientY, rect);
@@ -268,7 +268,7 @@ const MusicPlayer: React.FC = () => {
 
   // Listen on the document for mouseup to cancel dragging and reset global styles.
   useEffect(() => {
-    const handleDocumentMouseUp = () => {
+    const handleDocumentMouseUp = (e: globalThis.MouseEvent) => {
       if (isDraggingVolume) {
         setIsDraggingVolume(false);
         document.body.style.userSelect = "";
@@ -283,7 +283,7 @@ const MusicPlayer: React.FC = () => {
 
   // Hide volume slider if clicking outside the volume container.
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: globalThis.MouseEvent) => {
       if (
         volumeContainerRef.current &&
         !volumeContainerRef.current.contains(e.target as Node)
@@ -442,7 +442,7 @@ const MusicPlayer: React.FC = () => {
                     <div
                       className="rounded-full h-3 w-3 bg-blue-600 absolute cursor-pointer"
                       style={{
-                        bottom: `${volume * 100}% -[5px]`,
+                        bottom: `${volume * 100}%`,
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         zIndex: 50,

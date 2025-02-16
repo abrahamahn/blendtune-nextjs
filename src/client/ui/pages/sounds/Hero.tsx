@@ -88,16 +88,16 @@ const Hero: React.FC<HeroProps> = ({
   }, [currentTrack]);
 
   return (
-    <div className="block lg:hidden xl:pt-0 w-full mx-auto md:pb-4">
+    <div className="block lg:hidden mt-12 md:mt-0 w-full mx-auto md:pb-4">
       <div
-        className="pb-0 h-full"
+        className="pb-0 md:pb-4 h-full"
         style={{
           backgroundImage: `linear-gradient(to bottom, ${dominantColor}, var(--background-color))`,
         }}
       >
         <div className="max-w-screen-xl flex flex-row justify-center items-center mx-auto p-4 pb-4 sm:pb-0 px-4 sm:px-4 md:px-4 lg:px-12 lg:pl-8 rounded-md m-0 ">
-          <div className="w-full order-2 md:order-1 flex flex-col  justify-between p-0 lg:px-4 ml-4 md:ml-0 h-36 sm:h-44 md:h-56 lg:h-72 mt-[-10px]">
-            <div className="w-full flex flex-col items-start justify-center h-full lg:pb-20">
+          <div className="w-full order-2 md:order-1 flex flex-col  justify-between p-0 lg:px-4 ml-4 md:ml-0 h-36 sm:h-44 md:h-56 lg:h-72">
+            <div className="w-full flex flex-col items-start justify-center h-full md:pb-8">
               <div className="w-full flex flex-col text-left items-start justify-start">
                 <div className="w-full flex flex-row justify-between"></div>
                 <div className="flex flex-row justify-between items-center w-full">
@@ -121,7 +121,7 @@ const Hero: React.FC<HeroProps> = ({
                       )}
                     </button>
 
-                    <p className="mt-1.5 md:mt-0 text-black dark:text-neutral-200 text-base sm:text-xl md:text-3xl text-left font-semibold">
+                    <p className="md:mt-0 text-black dark:text-neutral-200 text-base sm:text-xl md:text-3xl text-left font-semibold">
                       {currentTrack?.metadata?.title.toUpperCase()} [
                       {currentTrack?.info?.mood[1]},{" "}
                       {currentTrack?.info?.mood[0]}]

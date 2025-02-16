@@ -4,6 +4,11 @@ import { ClientEnvironmentProvider } from "@/client/environment/ClientEnvironmen
 import MusicPlayer from "@/client/ui/layout/MusicPlayer";
 import { StrictMode } from "react";
 
+export const metadata = {
+  title: 'Blendtune',
+  description: 'Music for artists & creators.',
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <StrictMode>
@@ -22,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
 
               {/* MUSIC PLAYER (fixed height, e.g. h-16) */}
-              <div className="flex-none h-20">
+              <div className="flex-none md:h-20">
                 <MusicPlayer />
               </div>
             </div>

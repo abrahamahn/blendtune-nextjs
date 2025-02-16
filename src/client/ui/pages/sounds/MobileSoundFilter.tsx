@@ -413,7 +413,7 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
 
   return (
     <div className="block md:hidden w-full">
-      <div className="fixed top-16 left-0 w-full p-2 border-b border-neutral-200 dark:border-neutral-800 z-10">
+      <div className="fixed top-16 left-0 w-full p-2 border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-black/50 z-10">
         <button
           type="button"
           className="w-full text-sm p-1 font-semibold text-white bg-blue-500 hover:bg-blue-400 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-full"

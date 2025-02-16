@@ -73,7 +73,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   }, [currentPage, handlePrevious, handleNext]);
 
   return (
-    <div className="py-4 flex justify-center items-center max-w-screen-xl w-full mx-auto p-2">
+    <div className="py-4 flex justify-center items-center max-w-screen-xl w-full mx-auto p-2 pb-0 md:pb-2">
       <div className="flex flex-col mx-auto w-full max-w-screen-xl lg:px-2 items-center justify-between">
         <div className="w-full mx-auto">
           {/* Album Cover Cards */}
@@ -97,17 +97,18 @@ const TrackCard: React.FC<TrackCardProps> = ({
             </div>
 
             {/* Track List with Flex Grow */}
-            <div className="flex w-full justify-start space-x-4 px-0">
+            <div className="flex overflow-x-auto space-x-4 snap-x snap-mandatory">
+
               {displayedTracks?.map((track, index) => (
                 <div
                   key={index}
                   onMouseEnter={() => setHoverIndex(index)}
                   onMouseLeave={() => setHoverIndex(null)}
-                  className="flex-start md:w-44 md:h-44 rounded-lg md:bg-neutral-300 md:hover:bg-neutral-300 dark:md:bg-neutral-900 dark:md:hover:bg-neutral-800 relative snap-start"
+                  className="flex-start md:w-40 md:h-54 rounded-lg md:bg-neutral-300 md:hover:bg-neutral-300 dark:md:bg-neutral-900 dark:md:hover:bg-neutral-800 relative snap-start"
                 >
                   {/* Image and Play Button */}
-                  <div className="w-28 h-28 sm:h-36 sm:w-36 md:w-auto flex items-center justify-center relative m-0 mr-0 md:mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
-                    <div className="bg-black/80 dark:bg-black/80 p-2 rounded-lg">
+                  <div className="w-30 h-30 sm:h-36 sm:w-36 md:w-auto flex items-center justify-center relative m-0 mr-0 md:mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 bg-black/80 dark:bg-black/80 p-2 rounded-lg">
                       <Image
                         src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                           track?.metadata?.catalog ?? "default"

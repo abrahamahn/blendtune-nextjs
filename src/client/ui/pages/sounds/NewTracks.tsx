@@ -16,7 +16,7 @@ const NewTracks: React.FC<NewTracksProps> = ({
   playTrack,
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-auto">
       <TrackCard
         tracks={tracks}
         currentTrack={currentTrack}

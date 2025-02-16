@@ -146,7 +146,7 @@ const Rightbar: React.FC = () => {
   }, [dispatch, audioRef]);
 
   return (
-    <div className="w-full h-full flex flex-col overflow-auto p-2">
+    <div className="w-full h-full flex flex-col overflow-auto p-2 pl-1">
       <div
         className="p-0 rounded-2xl h-full"
         style={{

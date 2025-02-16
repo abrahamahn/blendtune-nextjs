@@ -88,7 +88,7 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
 
   return (
     <div
-      className="block md:hidden fixed top-0 right-0 w-full bg-black group h-16 z-30 animating border dark:border-neutral-800 border-neutral-200"
+      className="block md:hidden fixed top-0 right-0 w-full bg-white dark:bg-black group h-16 z-50 animating border dark:border-neutral-800 border-neutral-200"
       style={{
         animation: isAnimating
           ? "expandMobile 0.4s ease-in-out forwards"
@@ -108,7 +108,7 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
           onClick={(e) => e.stopPropagation()}
-          className={`focus:outline-none h-full w-full text-base rounded-2xl text-neutral-300 dark:text-neutral-200 bg-transparent border`}
+          className={`focus:outline-none h-full w-full text-base rounded-2xl text-neutral-800 dark:text-neutral-200 bg-transparent border`}
           placeholder="Search..."
           style={{
             outline: "none",
@@ -120,7 +120,7 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
           <FontAwesomeIcon
             icon={faTimes}
             size="lg"
-            className="text-neutral-200 dark:text-neutral-200 rounded-full pr-6"
+            className="text-neutral-700 dark:text-neutral-200 rounded-full pr-4"
           />
         </button>
         {/* Displaying filtered keywords only if a keyword is not selected */}

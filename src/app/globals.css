@@ -59,6 +59,13 @@ body {
 
 body {
   overflow-x: hidden;
+  background-color: rgb(215, 215, 215);
+}
+
+@media (width <= 1024px) {
+  body{
+    background-color: white;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

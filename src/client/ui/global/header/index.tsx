@@ -131,9 +131,8 @@ const Header: React.FC = () => {
           </div>
         </nav>
         {/* Mobile Menu */}
-        <nav className="md:hidden fixed top-0 z-30 w-full h-30 bg-neutral-200 dark:bg-black dark:border-neutral-900 border-b">
+        <nav className="md:hidden fixed top-0 z-50 w-full h-30 bg-neutral-200 dark:bg-black dark:border-neutral-900 border-b">
           <div className="flex flex-col items-center w-full px-1">
-            {/* First Row */}
             <div className="flex justify-between items-center w-full h-16">
               <div className="flex flex-center items-center justify-center">
                 <button
@@ -187,7 +186,7 @@ const Header: React.FC = () => {
           />
         )}
         {isMobileMenuOpen && (
-          <nav className="fixed bottom-0 left-0 w-full z-30 block lg:hidden">
+          <nav className="fixed bottom-0 left-0 w-full z-50 block lg:hidden">
             <div className="fixed inset-0 bg-neutral-700 opacity-40"></div>
             <div className="fixed bottom-0 left-0 w-full rounded-t-lg bg-neutral-200 dark:bg-black">
               <div className="p-4 pb-3 rounded-t-xl bg-neutral-200 dark:bg-black">

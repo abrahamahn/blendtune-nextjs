@@ -57,7 +57,7 @@ const SideBar: React.FC = () => {
 
   return (
     <header>
-        <div className="dark:bg-neutral-950 rounded-xl">
+        <div className="bg-neutral-200 dark:bg-neutral-950 rounded-xl">
           <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
             <Link
               href="./"

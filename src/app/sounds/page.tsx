@@ -264,7 +264,7 @@ const Sounds: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-full w-full bg-neutral-950">
+    <div className="flex flex-col h-full w-full">
       <div className="md:h-full overflow-y-scroll rounded-t-xl">
         <MobileSoundFilter
           tracks={tracks}

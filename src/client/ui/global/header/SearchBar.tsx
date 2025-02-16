@@ -131,7 +131,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ keywords }) => {
 
   return (
     <div
-      className={`relative group rounded-2xl ${isFocused ? "animating" : "bg-neutral-200 dark:bg-neutral-900/50"}`}
+      className={`relative group rounded-2xl ${isFocused ? "animating" : "bg-neutral-200 dark:bg-neutral-950"}`}
       style={{
         transition: "all 0.4s ease-in-out",
         width: isFocused ? "22.5rem" : "15rem",

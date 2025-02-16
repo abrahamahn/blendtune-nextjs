@@ -426,7 +426,7 @@ const MusicPlayer: React.FC = () => {
               {isVolumeVisible && (
                 <div
                   onMouseDown={handleVolumeMouseDown}
-                  className="volume-bar select-none bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
+                  className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
                 >
                   {/* Use volumeBarRef on the blue bar container */}
                   <div

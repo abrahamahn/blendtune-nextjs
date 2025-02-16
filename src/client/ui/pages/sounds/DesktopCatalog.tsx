@@ -84,7 +84,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
           return (
             <div
               key={track.id}
-              className="flex p-1 border-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 dark:border-neutral-900 group border-b justify-center items-center rounded-lg relative h-18"
+              className="cursor-pointer flex p-1 border-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 dark:border-neutral-900 group border-b justify-center items-center rounded-lg relative h-18"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

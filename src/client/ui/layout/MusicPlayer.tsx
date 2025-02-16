@@ -78,10 +78,13 @@ const MusicPlayer: React.FC = () => {
   // Volume-related states
   const [volume, setVolume] = useState(1);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
-  const [initialVolumePosition, setInitialVolumePosition] = useState(0);
+
+  // Refs for the volume container and the inner blue bar
+  const volumeContainerRef = useRef<HTMLDivElement>(null);
+  const volumeBarRef = useRef<HTMLDivElement>(null);
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // 1) PLAY/PAUSE TOGGLE (Remove volume=0)
+  // 1) PLAY/PAUSE TOGGLE
   // ─────────────────────────────────────────────────────────────────────────────
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
@@ -171,17 +174,14 @@ const MusicPlayer: React.FC = () => {
     const currentAudio = audioRef.current;
     if (!currentAudio) return;
 
-    // When audio metadata is loaded, set track duration & loop state
     const handleLoadedMetadata = () => {
       dispatch(setTrackDuration(currentAudio.duration));
       currentAudio.loop = isLoopEnabled;
     };
 
-    // Attach
     currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     return () => {
-      // Cleanup
       currentAudio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [dispatch, audioRef, isLoopEnabled]);
@@ -221,33 +221,81 @@ const MusicPlayer: React.FC = () => {
     dispatch(setIsVolumeVisible(!isVolumeVisible));
   };
 
+  // This function calculates the new volume based on the mouse Y position relative to the blue bar.
+  const calculateVolume = (clientY: number, rect: DOMRect) => {
+    const mouseY = clientY - rect.top;
+    let newVolume = 1 - mouseY / rect.height;
+    return Math.max(0, Math.min(1, newVolume));
+  };
+
+  // When the user presses down on the volume bar.
   const handleVolumeMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     setIsDraggingVolume(true);
-    setInitialVolumePosition(e.clientY);
-    handleVolumeChange(e);
-  };
-
-  const handleVolumeMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (isDraggingVolume) {
-      handleVolumeChange(e);
+    // Disable text selection and force pointer cursor globally
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "pointer";
+    if (volumeBarRef.current) {
+      const rect = volumeBarRef.current.getBoundingClientRect();
+      const newVolume = calculateVolume(e.clientY, rect);
+      if (audioRef.current) {
+        audioRef.current.volume = newVolume;
+      }
+      setVolume(newVolume);
     }
+    e.preventDefault();
   };
 
-  const handleVolumeMouseUp = () => {
-    setIsDraggingVolume(false);
-  };
+  // Attach a document-level mousemove listener when dragging so volume updates even if outside.
+  useEffect(() => {
+    if (isDraggingVolume) {
+      const handleDocumentMouseMove = (e: MouseEvent) => {
+        if (volumeBarRef.current) {
+          const rect = volumeBarRef.current.getBoundingClientRect();
+          const newVolume = calculateVolume(e.clientY, rect);
+          if (audioRef.current) {
+            audioRef.current.volume = newVolume;
+          }
+          setVolume(newVolume);
+        }
+        e.preventDefault();
+      };
+      document.addEventListener("mousemove", handleDocumentMouseMove);
+      return () => {
+        document.removeEventListener("mousemove", handleDocumentMouseMove);
+      };
+    }
+  }, [isDraggingVolume, audioRef]);
 
-  // Update volume based on mouse position
-  const handleVolumeChange = (e: React.MouseEvent) => {
-    if (!audioRef.current) return;
-    const volumeBar = e.currentTarget;
-    const rect = volumeBar.getBoundingClientRect();
-    const mouseY = e.clientY - rect.top;
-    let newVolume = 1 - mouseY / rect.height;
-    newVolume = Math.max(0, Math.min(1, newVolume));
-    audioRef.current.volume = newVolume;
-    setVolume(newVolume);
-  };
+  // Listen on the document for mouseup to cancel dragging and reset global styles.
+  useEffect(() => {
+    const handleDocumentMouseUp = () => {
+      if (isDraggingVolume) {
+        setIsDraggingVolume(false);
+        document.body.style.userSelect = "";
+        document.body.style.cursor = "";
+      }
+    };
+    document.addEventListener("mouseup", handleDocumentMouseUp);
+    return () => {
+      document.removeEventListener("mouseup", handleDocumentMouseUp);
+    };
+  }, [isDraggingVolume]);
+
+  // Hide volume slider if clicking outside the volume container.
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        volumeContainerRef.current &&
+        !volumeContainerRef.current.contains(e.target as Node)
+      ) {
+        dispatch(setIsVolumeVisible(false));
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dispatch]);
 
   // ─────────────────────────────────────────────────────────────────────────────
   // RENDER
@@ -266,12 +314,10 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <div>
-      {/* ──────────────────────────────────────────────────────────────────────
-         DESKTOP PLAYER
-         ──────────────────────────────────────────────────────────────────── */}
+      {/* DESKTOP PLAYER */}
       <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
         <div className="flex w-full h-full items-center justify-center">
-          {/* The hidden <audio> tag */}
+          {/* Hidden audio tag */}
           <audio
             className="hidden"
             src={`/api/audio/${currentTrack?.file || ""}`}
@@ -286,9 +332,7 @@ const MusicPlayer: React.FC = () => {
         </div>
 
         <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">
-          {/* ─────────────────────────────────────────────────────────────────
-             NAV BUTTONS (Prev, Play/Pause, Next, Loop)
-             ──────────────────────────────────────────────────────────────── */}
+          {/* Navigation Buttons */}
           <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">
             <div className="items-center mr-4 p-2">
               <FontAwesomeIcon
@@ -311,7 +355,6 @@ const MusicPlayer: React.FC = () => {
                 {playPauseButton}
               </div>
             </button>
-
             <div className="items-center p-2 ml-4">
               <FontAwesomeIcon
                 icon={faForwardStep}
@@ -334,9 +377,7 @@ const MusicPlayer: React.FC = () => {
             </button>
           </div>
 
-          {/* ─────────────────────────────────────────────────────────────────
-             WAVEFORM & TIMESTAMP
-             ──────────────────────────────────────────────────────────────── */}
+          {/* Waveform & Timestamp */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
             <div ref={waveformContainerRef} className="w-full">
               {currentTrack?.file ? (
@@ -362,56 +403,58 @@ const MusicPlayer: React.FC = () => {
               <p className="text-neutral-600 dark:text-white">
                 {formatTime(audioRef.current?.currentTime)}
                 <span className="text-transparent"> / </span>
-                <span className="text-neutral-500">{formatTime(trackDuration)}</span>{" "}
+                <span className="text-neutral-500">
+                  {formatTime(trackDuration)}
+                </span>{" "}
               </p>
             </div>
 
-            {/* ─────────────────────────────────────────────────────────────
-               VOLUME ICON & SLIDER
-               ──────────────────────────────────────────────────────────── */}
-            <button
+            {/* Volume Icon & Slider */}
+            <div
+              ref={volumeContainerRef}
               className="relative flex justify-center md:mx-4 lg:mx-1"
-              onClick={toggleVolume}
             >
-              <div className="cursor-pointer">
-                <FontAwesomeIcon
-                  icon={faVolumeLow}
-                  size="lg"
-                  className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
-                />
-              </div>
+              <button onClick={toggleVolume}>
+                <div className="cursor-pointer">
+                  <FontAwesomeIcon
+                    icon={faVolumeLow}
+                    size="lg"
+                    className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
+                  />
+                </div>
+              </button>
               {isVolumeVisible && (
                 <div
                   onMouseDown={handleVolumeMouseDown}
-                  onMouseMove={handleVolumeMouseMove}
-                  onMouseUp={handleVolumeMouseUp}
-                  onClick={handleVolumeChange}
-                  className="volume-bar bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
+                  className="volume-bar select-none bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
                 >
-                  <div className="bg-blue-600 rounded-lg h-20 w-1 relativ cursor-pointer">
+                  {/* Use volumeBarRef on the blue bar container */}
+                  <div
+                    ref={volumeBarRef}
+                    className="bg-blue-600 rounded-lg h-20 w-1 cursor-pointer relative"
+                  >
                     {/* Gray area above the volume level */}
                     <div
                       className="bg-neutral-200 dark:bg-neutral-500 rounded-lg w-1"
                       style={{ height: `${(1 - volume) * 100}%` }}
                     />
-                    {/* Volume handle/circle */}
+                    {/* Volume handle (circle) */}
                     <div
                       className="rounded-full h-3 w-3 bg-blue-600 absolute cursor-pointer"
                       style={{
-                        bottom: `${volume * 70 + 10}%`,
-                        left: "5px",
+                        bottom: `${volume * 100}% -[5px]`,
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
                         zIndex: 50,
                       }}
                     />
                   </div>
                 </div>
               )}
-            </button>
+            </div>
           </div>
 
-          {/* ─────────────────────────────────────────────────────────────────
-             SONG INFO & ACTION BUTTONS
-             ──────────────────────────────────────────────────────────────── */}
+          {/* Song Info & Action Buttons */}
           <div className="flex items-center h-full md:w-80 lg:w-100">
             {/* Album Art */}
             <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2">
@@ -428,7 +471,6 @@ const MusicPlayer: React.FC = () => {
                 />
               </div>
             </div>
-
             {/* Track Metadata */}
             <div className="flex flex-col justify-center items-left p-4 w-40 lg:w-60 h-full">
               <div className="flex flex-col justify-left items-left">
@@ -438,7 +480,8 @@ const MusicPlayer: React.FC = () => {
                 >
                   <p className="flex items-start justify-start text-left text-neutral-600 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
-                    {currentTrack?.info?.mood[1]}, {currentTrack?.info?.relatedartist[0]}]
+                    {currentTrack?.info?.mood[1]},{" "}
+                    {currentTrack?.info?.relatedartist[0]}]
                   </p>
                 </button>
               </div>
@@ -455,26 +498,32 @@ const MusicPlayer: React.FC = () => {
                 </p>
               </div>
             </div>
-
             {/* Song Buttons */}
             <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full">
               <div className="flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon icon={faPlus} className="text-neutral-500 dark:text-white" />
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="text-neutral-500 dark:text-white"
+                />
               </div>
               <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon icon={faHeart} className="text-neutral-500 dark:text-white" />
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className="text-neutral-500 dark:text-white"
+                />
               </div>
               <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 px-3.5 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon icon={faEllipsisVertical} className="text-neutral-500 dark:text-white" />
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className="text-neutral-500 dark:text-white"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ──────────────────────────────────────────────────────────────────────
-         MOBILE PLAYER
-         ──────────────────────────────────────────────────────────────────── */}
+      {/* MOBILE PLAYER */}
       <div className="fixed px-3 rounded-lg bottom-4 w-full h-18 z-0 block md:hidden">
         <div className="border dark:border-neutral-800 flex flex-col justify-center items-center w-full rounded-lg border-neutral-200 bg-neutral-100/90 dark:bg-black/90 overflow-hidden h-full backdrop-blur-md">
           {/* Seek bar for mobile */}
@@ -514,11 +563,13 @@ const MusicPlayer: React.FC = () => {
                 height={70}
               />
             </div>
-
             {/* Mobile Track Info */}
             <div className="flex flex-col items-start justify-start ml-3 w-full h-full">
               <div className="mb-1">
-                <button className="items-start justify-start cursor-pointer" onClick={openTrackInfo}>
+                <button
+                  className="items-start justify-start cursor-pointer"
+                  onClick={openTrackInfo}
+                >
                   <p className="flex items-start justify-start text-left text-neutral-800 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
                     {currentTrack?.info?.mood[1]}, {currentTrack?.info?.relatedartist[0]}]
@@ -538,7 +589,6 @@ const MusicPlayer: React.FC = () => {
                 </p>
               </div>
             </div>
-
             {/* Mobile Controls */}
             <div className="flex flex-row justify-center items-center h-full w-24 pr-8">
               <div className="items-center mr-2 p-2">

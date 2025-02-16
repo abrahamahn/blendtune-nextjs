@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAudio } from "@/client/environment/services/audioService";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -9,7 +9,7 @@ import {
 import { RootState } from "@/client/environment/redux/store";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX, faMusic } from "@fortawesome/free-solid-svg-icons";
+import { faMusic } from "@fortawesome/free-solid-svg-icons";
 import { Track } from "@/shared/types/track";
 import Image from "next/image";
 

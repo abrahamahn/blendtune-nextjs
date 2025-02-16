@@ -1,31 +1,31 @@
+// RightSidebar.tsx
 "use client";
 import React, { useState, useCallback, useEffect } from "react";
 import Rightbar from "@/client/ui/global/rightbar";
 import ResizableHandle from "./ResizableHandle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
-// If you want the min width to be 304px (19rem), for example:
-const MIN_WIDTH = 19 * 16;   // 304px
+const MIN_WIDTH = 19 * 16; // 304px
 const MAX_WIDTH = 22.5 * 16; // 360px
 
-const RightSidebar: React.FC = () => {
-  // Initialize to MIN_WIDTH to match the smallest allowed size
+interface RightSidebarProps {
+  onClose: () => void;
+}
+
+const RightSidebar: React.FC<RightSidebarProps> = ({ onClose }) => {
   const [rightBarWidth, setRightBarWidth] = useState<number>(MIN_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
 
-  // ✅ Use React.MouseEvent for component events
   const onResizeStart = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     setIsResizing(true);
     e.preventDefault();
   }, []);
 
-  // ✅ Use global `MouseEvent` for document events
   const onResize = useCallback(
-    (e: globalThis.MouseEvent) => {
+    (e: MouseEvent) => {
       if (!isResizing) return;
-      // Calculate how wide the sidebar should be based on mouse X
       let newWidth = document.body.clientWidth - e.clientX;
-
-      // Clamp within the min and max
       newWidth = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, newWidth));
       setRightBarWidth(newWidth);
     },
@@ -55,7 +55,17 @@ const RightSidebar: React.FC = () => {
       className="hidden lg:block flex-none relative h-full"
       style={{ width: `${rightBarWidth}px` }}
     >
+      {/* X Button to close the sidebar */}
+      <button
+        onClick={onClose}
+        className="absolute top-2 right-3 z-10 p-2 w-8 h-4"
+        aria-label="Close sidebar"
+      >
+        <FontAwesomeIcon icon={faX} size="sm" className="text-neutral-400 dark:text-neutral-300" />
+      </button>
+
       <ResizableHandle onResizeStart={onResizeStart} />
+
       <div className="w-full h-full overflow-auto">
         <Rightbar />
       </div>

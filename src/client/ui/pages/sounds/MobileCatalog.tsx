@@ -18,13 +18,13 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 export interface MobileCatalogProps {
   tracks: Track[];
   playTrack: (track: Track) => void;
-  openTrackInfo: () => void;
+  onTitleClick: (selectedTrack: Track) => void;
 }
 
 const MobileCatalog: React.FC<MobileCatalogProps> = ({
   tracks,
   playTrack,
-  openTrackInfo,
+  onTitleClick,
 }) => {
   const isPlaying = useSelector(
     (state: RootState) => state.audio.playback.isPlaying
@@ -80,7 +80,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
             <div className="flex flex-row justify-between w-full ml-2">
               <div className="flex-start flex-col cursor-pointer dark:border-neutral-800 pt-1">
                 <div className="md:ml-1 text-left text-xs md:text-sm text-neutral-800 dark:text-neutral-300 font-semibold">
-                  <button onClick={openTrackInfo}>
+                  <button key={track.id} onClick={() => onTitleClick(track)}>
                     {renderValue(track.metadata.title)}
                   </button>
                 </div>

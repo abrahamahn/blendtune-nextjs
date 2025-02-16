@@ -19,14 +19,14 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 export interface DesktopCatalogProps {
   tracks: Track[];
-  playTrack: (track: Track) => void;
-  openTrackInfo: () => void;
+  playTrack: (selectedTrack: Track) => void;
+  onTitleClick: (selectedTrack: Track) => void;
 }
 
 const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
   tracks,
   playTrack,
-  openTrackInfo,
+  onTitleClick,
 }) => {
   const currentTrack = useSelector(
     (state: RootState) => state.audio.playback.currentTrack as Track | undefined
@@ -113,8 +113,9 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
             {/* Artwork */}
             <div className="relative w-16 h-16 dark:bg-black/70 bg-neutral-200/70 rounded-md">
               <button
+                key={track.id}
                 className="w-16 h-16 md:p-1.5 duration-300 ease-in-out rounded-md group-hover:scale-105 cursor-pointer"
-                onClick={openTrackInfo}
+                onClick={() => onTitleClick(track)}
               >
                 <Image
                   src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
@@ -140,7 +141,8 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                 <div className="flex-start flex-col justify-center items-center cursor-pointer  dark:border-neutral-800 ml-1">
                   <div className="mt-2 text-left text-2xs md:text-sm text-neutral-800 dark:text-neutral-300 font-semibold w-60">
                     <button
-                      onClick={openTrackInfo}
+                      key={track.id}
+                      onClick={() => onTitleClick(track)}
                       className="hover:underline "
                     >
                       <p className="text-neutral-600 dark:text-neutral-200 text-sm font-semibold cursor-pointer hover:underline user-select-none mb-1">

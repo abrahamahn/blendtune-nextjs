@@ -103,20 +103,20 @@ const TrackCard: React.FC<TrackCardProps> = ({
                   key={index}
                   onMouseEnter={() => setHoverIndex(index)}
                   onMouseLeave={() => setHoverIndex(null)}
-                  className="flex-start md:w-44 rounded-lg md:bg-neutral-300 md:hover:bg-neutral-300 dark:md:bg-neutral-900 dark:md:hover:bg-neutral-800 relative snap-start"
+                  className="flex-start md:w-44 md:h-44 rounded-lg md:bg-neutral-300 md:hover:bg-neutral-300 dark:md:bg-neutral-900 dark:md:hover:bg-neutral-800 relative snap-start"
                 >
                   {/* Image and Play Button */}
-                  <div className="w-28 sm:w-36 md:w-auto flex items-center justify-center relative m-0 mr-0 md:mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
+                  <div className="w-28 h-28 sm:h-36 sm:w-36 md:w-auto flex items-center justify-center relative m-0 mr-0 md:mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
                     <div className="bg-black/80 dark:bg-black/80 p-2 rounded-lg">
-                    <Image
-                      src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                        track?.metadata?.catalog ?? "default"
-                      }.jpg`}
-                      alt={track.metadata.title}
-                      width={160}  // Ensures a fixed width
-                      height={160} // Ensures a fixed height
-                      className="w-32 h-32 object-cover rounded-md user-select-none" // Fixed size + Crop/stretch behavior
-                    />
+                      <Image
+                        src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
+                          track?.metadata?.catalog ?? "default"
+                        }.jpg`}
+                        alt={track.metadata.title}
+                        width={160}  // Ensures a fixed width
+                        height={160} // Ensures a fixed height
+                        className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md user-select-none" // Fixed size + Crop/stretch behavior
+                      />
                       <button
                         className={`absolute w-8 h-8 bottom-3 right-3 rounded-full p-2 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-neutral-900 hover:bg-neutral-900 dark:bg-blue-700 dark:hover:bg-blue-600 ${
                           hoverIndex === index ? "opacity-100" : "opacity-0"

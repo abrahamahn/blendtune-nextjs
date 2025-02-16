@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -29,9 +28,7 @@ import useMobileMenu from "@/client/utils/hooks/header/useMobileMenu";
 
 import Logo from "@/client/ui/components/common/Logo";
 
-const Header: React.FC = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
+const Header: React.FC = () => {;
   const { userAuthenticated } = useSession();
 
   /* Desktop Functionality */

@@ -199,6 +199,7 @@ const Pack: React.FC<PackProps> = ({ tracks }) => {
                 >
                   <div className="w-36 md:w-auto flex items-center justify-center relative m-0 mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
                     <Image
+                      crossOrigin="anonymous"
                       src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                         track?.metadata?.catalog ?? "default"
                       }.jpg`}

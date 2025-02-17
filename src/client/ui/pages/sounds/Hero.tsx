@@ -199,6 +199,7 @@ const Hero: React.FC<HeroProps> = ({
             <div className="w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-72 lg:h-auto bg-neutral-200/80 dark:bg-black/80 p-1 sm:p-2 rounded-md relative">
               <div className="relative w-full h-full">
                 <Image
+                  crossOrigin="anonymous"
                   src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                     currentTrack?.metadata?.catalog ?? "default"
                   }.jpg`}

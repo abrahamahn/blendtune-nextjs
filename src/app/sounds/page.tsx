@@ -31,7 +31,7 @@ import { Track } from "@/shared/types/track";
 import { useRightSidebar } from "@/client/utils/context/RightSidebarContext";
 
 const Sounds: React.FC = () => {
-  // Call all hooks unconditionally.
+  // Local mounting state.
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
@@ -48,13 +48,13 @@ const Sounds: React.FC = () => {
     (state: RootState) => state.audio.playback.isPlaying
   );
 
-  // Get sidebar controls from context.
+  // Sidebar controls.
   const { showSidebar, userClosed } = useRightSidebar();
 
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false); // Throttle rapid clicks
 
-  // Toggle play/pause with throttling and error handling.
+  // Toggle play/pause with throttling.
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current || isTransitioning) return;
     setIsTransitioning(true);
@@ -77,7 +77,7 @@ const Sounds: React.FC = () => {
     }
   }, [audioRef, isPlaying, dispatch, isTransitioning]);
 
-  // Play a track (or toggle if same track) with throttling and error handling.
+  // Play a track (or toggle if same track) with throttling.
   const playTrack = useCallback(
     (selectedTrack: Track) => {
       if (!audioRef.current || isTransitioning) return;
@@ -124,7 +124,7 @@ const Sounds: React.FC = () => {
           audioElement.load();
         }
       }
-      // Force–open the sidebar if the user hasn't permanently closed it.
+      // Open the sidebar if the user hasn’t permanently closed it.
       if (!userClosed) {
         showSidebar();
       }
@@ -132,11 +132,11 @@ const Sounds: React.FC = () => {
     [currentTrack, isPlaying, dispatch, audioRef, showSidebar, userClosed, isTransitioning]
   );
 
-  // When a track title is clicked, force–open the sidebar and play the track.
+  // When a track title is clicked, open the sidebar and play the track.
   const handleTitleClick = useCallback(
     (selectedTrack: Track) => {
       if (!userClosed) {
-        showSidebar(); // This resets any close counter.
+        showSidebar();
       }
       playTrack(selectedTrack);
     },
@@ -264,7 +264,7 @@ const Sounds: React.FC = () => {
     [filteredTracks, sortByCriteria]
   );
 
-  // Now render conditionally based on mounting status.
+  // Render only after mounting.
   return isMounted ? (
     <div className="flex flex-col h-full w-full">
       <div className="md:h-full overflow-y-scroll rounded-t-xl">

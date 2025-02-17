@@ -49,6 +49,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
             <div className="relative justify-center items-center flex w-16 h-16 dark:bg-black/70 bg-neutral-200/70 rounded-md">
               <div className="w-16 h-16 p-1.5 rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105">
                 <Image
+                  crossOrigin="anonymous"
                   src={`https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
                     track?.metadata?.catalog ?? "default"
                   }.jpg`}

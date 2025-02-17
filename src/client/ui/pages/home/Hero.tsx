@@ -41,6 +41,7 @@ const Hero: React.FC = () => {
                     {/* Div for Mobile View */}
                     <div className="block sm:hidden">
                       <Image
+                        crossOrigin="anonymous"
                         src={art}
                         alt="artwork"
                         width={300}
@@ -51,6 +52,7 @@ const Hero: React.FC = () => {
                     {/* Div for Desktop View */}
                     <div className="hidden sm:block">
                       <Image
+                        crossOrigin="anonymous"
                         src={art}
                         alt="artwork"
                         width={200}

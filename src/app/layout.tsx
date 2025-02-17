@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <StrictMode>
       <ClientEnvironmentProvider>
         <html lang="en">
-          <body>
+          <body suppressHydrationWarning={true}>
             {/* 
               A 2-row flex layout:
                 1) The "main content" region (flex-auto) 

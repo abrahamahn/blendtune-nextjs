@@ -9,6 +9,8 @@ function getContentType(extension: string): string {
       return "audio/ogg";
     case "flac":
       return "audio/flac";
+    case "webm":
+      return "audio/webm";
     default:
       return "application/octet-stream";
   }
@@ -16,13 +18,13 @@ function getContentType(extension: string): string {
 
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ trackId: string }> } // <- Ensure params is awaited
+  context: { params: Promise<{ trackId: string }> }
 ) {
   try {
     // Await the params to resolve the Promise (Next.js 15 change)
     const { trackId } = await context.params;
 
-    // 1. Validate trackId param
+    // Validate trackId param
     if (!trackId) {
       console.error("No trackId provided in URL params.");
       return NextResponse.json(
@@ -31,7 +33,7 @@ export async function GET(
       );
     }
 
-    // 2. Extract file extension to set Content-Type
+    // Extract file extension to set Content-Type
     const fileExtension = trackId.split(".").pop();
     if (!fileExtension) {
       console.error(`Cannot parse file extension from trackId: ${trackId}`);
@@ -43,22 +45,20 @@ export async function GET(
 
     const contentType = getContentType(fileExtension);
 
-    // 3. Handle Range requests (partial content)
+    // Handle Range requests (partial content)
     const range = req.headers.get("Range");
     const fetchOptions: RequestInit = range
       ? { headers: { Range: range } }
       : {};
 
-    // 4. Construct remote URL on DO Spaces (or S3)
-    const remoteUrl = `https://blendtune-public.nyc3.digitaloceanspaces.com/tracks/${trackId}`;
-
+    // Construct remote URL on DO Spaces (or S3)
+    const remoteUrl = `https://blendtune-public.nyc3.digitaloceanspaces.com/streaming/${trackId}`;
     console.log("Fetching remote audio:", remoteUrl);
 
-    // 5. Fetch from DigitalOcean Spaces
+    // Fetch from DigitalOcean Spaces (this supports streaming & range requests)
     const response = await fetch(remoteUrl, fetchOptions);
 
     if (!response.ok) {
-      // e.g. 404 if file not found, or 403, etc.
       console.error(
         `Failed to fetch from DO Spaces: [${response.status}] ${response.statusText}`
       );
@@ -70,14 +70,15 @@ export async function GET(
       );
     }
 
-    // 6. Set up headers
+    // Set up response headers
     const headers = new Headers({
       "Content-Type": contentType,
       "Access-Control-Allow-Origin": "*",
-      // you can set more headers if needed
+      // In production you might set a longer max-age or adjust caching per your needs:
+      "Cache-Control": "public, max-age=31536000, immutable",
     });
 
-    // Copy over any range-related headers if present
+    // Copy over any range-related headers if present from the remote response
     for (const headerName of ["Content-Length", "Content-Range", "Accept-Ranges"]) {
       const value = response.headers.get(headerName);
       if (value !== null) {
@@ -85,9 +86,8 @@ export async function GET(
       }
     }
 
-    // If it’s a Range request, respond with HTTP 206 Partial Content
+    // Determine status: 206 for Range requests, 200 otherwise
     const status = range ? 206 : 200;
-
     console.log(`Returning audio: [${status}] for track ${trackId}`);
 
     return new NextResponse(response.body, {

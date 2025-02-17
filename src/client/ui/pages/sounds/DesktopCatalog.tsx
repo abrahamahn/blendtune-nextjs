@@ -32,6 +32,13 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
     (state: RootState) =>
       state.audio.playback.currentTrack as Track | undefined
   );
+  const isPlaying = useSelector(
+    (state: RootState) => state.audio.playback.isPlaying
+  );
+
+  // Local state for the right bar window. Replace this with your actual implementation if needed.
+  const [rightBarOpen, setRightBarOpen] = useState(false);
+
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState(0);
 
@@ -51,10 +58,6 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
       resizeObserver.disconnect();
     };
   }, []);
-
-  const isPlaying = useSelector(
-    (state: RootState) => state.audio.playback.isPlaying
-  );
 
   function renderValue(value: string) {
     return value && value !== "n/a" && value !== "" ? value : null;
@@ -76,6 +79,22 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
     return null;
   }
 
+  // New function to handle title clicks with the exception for the currently playing track.
+  const handleTitleClick = (selectedTrack: Track) => {
+    // If clicking on the currently playing track:
+    if (currentTrack?.id === selectedTrack.id) {
+      // If the right bar is not open, open it and load the track info
+      if (!rightBarOpen) {
+        setRightBarOpen(true);
+        onTitleClick(selectedTrack);
+      }
+      // If it's already open, do nothing.
+      return;
+    }
+    // For any other track, switch playback immediately.
+    playTrack(selectedTrack);
+  };
+
   return (
     <div className="hidden xl:block w-full justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-4 mx-auto flex-col relative">
@@ -94,7 +113,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
               {/* Numbering / Equalizer / Play-Pause Icon */}
               <div className="relative text-neutral-500 mr-4 w-8 h-8 flex justify-center items-center">
                 {isCurrentTrack && isPlaying ? (
-                  // Always render EqualizerIcon; use opacity transition so that its animation state is preserved.
+                  // Always render EqualizerIcon with an opacity transition so that its animation state is preserved.
                   <div className="transition-opacity duration-300 group-hover:opacity-0">
                     <EqualizerIcon />
                   </div>
@@ -123,9 +142,14 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                 <button
                   key={track.id}
                   className="w-16 h-16 md:p-1.5 duration-300 ease-in-out rounded-md group-hover:scale-105 cursor-pointer"
-                  onClick={() => onTitleClick(track)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleTitleClick(track);
+                  }}
                 >
                   <Image
+                    crossOrigin="anonymous"
                     src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                       track?.metadata?.catalog ?? "default"
                     }.jpg`}
@@ -150,7 +174,11 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                     <div className="mt-2 text-left text-2xs md:text-sm text-neutral-800 dark:text-neutral-300 font-semibold w-60">
                       <button
                         key={track.id}
-                        onClick={() => onTitleClick(track)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleTitleClick(track);
+                        }}
                         className="hover:underline"
                       >
                         <p className="text-neutral-600 dark:text-neutral-200 text-sm font-semibold cursor-pointer hover:underline user-select-none mb-1">

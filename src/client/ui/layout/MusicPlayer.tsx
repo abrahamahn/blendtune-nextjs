@@ -367,15 +367,24 @@ const MusicPlayer: React.FC = () => {
           {/* Always use MSEAudioPlayer since it now includes fallback logic */}
           <audio
             className="hidden"
-            src={`/api/audio/${currentTrack?.file || ""}`}
             ref={audioRef}
             autoPlay={isPlaying}
             onEnded={() => dispatch(setIsPlaying(false))}
             onPause={() => dispatch(setIsPlaying(false))}
             onPlay={() => dispatch(setIsPlaying(true))}
             onTimeUpdate={handleTimeUpdate}
-            preload="auto"
-          />
+            preload="none" // Delays loading until play is pressed
+          >
+            {currentTrack?.file && (
+              <>
+                <source
+                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${currentTrack.file}`}
+                  type="audio/webm"
+                />
+              </>
+            )}
+          </audio>
+
         </div>
 
         <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">

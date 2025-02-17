@@ -456,7 +456,7 @@ const MusicPlayer: React.FC = () => {
                   className="w-full h-full object-cover rounded-md shadow-md cursor-pointer hover:opacity-75"
                   width={64}
                   height={64}
-                  priority
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -540,7 +540,6 @@ const MusicPlayer: React.FC = () => {
             <div className="flex items-center justify-center w-28 h-auto">
               <Image
                 crossOrigin="anonymous"
-
                 src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                   currentTrack?.metadata?.catalog ?? "default"
                 }.jpg`}
@@ -548,6 +547,7 @@ const MusicPlayer: React.FC = () => {
                 className="h-full object-cover shadow-md"
                 width={70}
                 height={70}
+                loading="lazy"
               />
             </div>
             <div className="flex flex-col items-start justify-start ml-3 w-full h-full">

@@ -207,6 +207,7 @@ const Pack: React.FC<PackProps> = ({ tracks }) => {
                       width={160}
                       height={160}
                       className="rounded-md user-select-none"
+                      loading="lazy"
                     />
                     <button
                       className={`absolute w-10 h-10 bottom-2 right-2 rounded-full p-2 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-blue-600 hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-500 ${

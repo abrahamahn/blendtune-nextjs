@@ -34,7 +34,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import Waveform from "@/client/ui/components/visualizer/Waveform";
-import MSEAudioPlayer from "@/client/utils/data/MSEAudioPlayer";
 
 function formatTime(timeInSeconds: number | undefined) {
   if (typeof timeInSeconds !== "number" || isNaN(timeInSeconds)) {
@@ -75,9 +74,11 @@ const MusicPlayer: React.FC = () => {
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
   const [volume, setVolume] = useState(1);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
-
   const volumeContainerRef = useRef<HTMLDivElement>(null);
   const volumeBarRef = useRef<HTMLDivElement>(null);
+
+  // Shared blob URL state for the audio file
+  const [sharedAudioUrl, setSharedAudioUrl] = useState<string>("");
 
   // Decide whether to use MSE based on MediaSource availability.
   const [useMSE, setUseMSE] = useState(false);
@@ -87,6 +88,29 @@ const MusicPlayer: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!currentTrack?.file) return;
+  
+    const sourceUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${currentTrack.file}`;
+    console.log("Fetching audio from:", sourceUrl);
+    fetch(sourceUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        console.log("Created blob URL:", blobUrl);
+        setSharedAudioUrl(blobUrl);
+      })
+      .catch((error) => console.error("Error fetching audio:", error));
+  
+    // Cleanup: revoke the blob URL when the current track changes or component unmounts.
+    return () => {
+      if (sharedAudioUrl) {
+        URL.revokeObjectURL(sharedAudioUrl);
+        console.log("Revoked blob URL:", sharedAudioUrl);
+      }
+    };
+  }, [sharedAudioUrl, currentTrack]);
+  
   // ───────────────────────────────
   // PLAY/PAUSE TOGGLE
   // ───────────────────────────────
@@ -175,45 +199,37 @@ const MusicPlayer: React.FC = () => {
       localStorage.setItem(`track-${currentTrack.id}-time`, time.toString());
     }
   };
-  
-  // Wait for the audio to have loaded data, then restore saved time
+
+  // Restore saved playback time when audio loads data
   useEffect(() => {
     if (!audioRef.current || !currentTrack?.id) return;
-  
+
     const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
     if (!savedTime) return;
     const parsedTime = parseFloat(savedTime);
     if (isNaN(parsedTime)) return;
-  
-    // Capture the current audio element reference
+
     const audioEl = audioRef.current;
-  
     const handleLoadedData = () => {
-      // Check if duration exists and the saved time is within bounds
       if (audioEl.duration && parsedTime < audioEl.duration) {
         audioEl.currentTime = parsedTime;
         console.log(`Resumed track ${currentTrack.id} from ${parsedTime}s`);
       }
     };
-  
+
     audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
     return () => {
-      // Use the captured reference here
       audioEl.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [audioRef, currentTrack]);
-  
 
   useEffect(() => {
     const currentAudio = audioRef.current;
     if (!currentAudio || !currentTrack?.id) return;
-  
+
     const handleLoadedMetadata = () => {
-      // Set track duration and loop state
       dispatch(setTrackDuration(currentAudio.duration));
       currentAudio.loop = isLoopEnabled;
-  
-      // Retrieve and set the saved playback position, if it exists and is within duration
       const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
       if (savedTime) {
         const parsedTime = parseFloat(savedTime);
@@ -223,19 +239,17 @@ const MusicPlayer: React.FC = () => {
         }
       }
     };
-  
-    // If metadata is already loaded, set immediately; otherwise, wait for the event
+
     if (currentAudio.readyState >= 1) {
       handleLoadedMetadata();
     } else {
       currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
     }
-  
+
     return () => {
       currentAudio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, [dispatch, audioRef, isLoopEnabled, currentTrack]);
-  
 
   // ───────────────────────────────
   // KEYBOARD SHORTCUTS
@@ -250,10 +264,7 @@ const MusicPlayer: React.FC = () => {
           togglePlayPause();
           break;
         case "ArrowLeft":
-          audioRef.current.currentTime = Math.max(
-            0,
-            audioRef.current.currentTime - 10
-          );
+          audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
           break;
         case "ArrowRight":
           audioRef.current.currentTime = Math.min(
@@ -364,7 +375,6 @@ const MusicPlayer: React.FC = () => {
       {/* DESKTOP PLAYER */}
       <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
         <div className="flex w-full h-full items-center justify-center">
-          {/* Always use MSEAudioPlayer since it now includes fallback logic */}
           <audio
             className="hidden"
             ref={audioRef}
@@ -373,18 +383,12 @@ const MusicPlayer: React.FC = () => {
             onPause={() => dispatch(setIsPlaying(false))}
             onPlay={() => dispatch(setIsPlaying(true))}
             onTimeUpdate={handleTimeUpdate}
-            preload="none" // Delays loading until play is pressed
+            preload="none"
           >
-            {currentTrack?.file && (
-              <>
-                <source
-                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${currentTrack.file}`}
-                  type="audio/webm"
-                />
-              </>
+            {sharedAudioUrl && (
+              <source src={sharedAudioUrl} type="audio/webm" />
             )}
           </audio>
-
         </div>
 
         <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">
@@ -424,9 +428,7 @@ const MusicPlayer: React.FC = () => {
                 size="sm"
                 onClick={loopTrack}
                 className={`cursor-pointer hover:opacity-75 ${
-                  isLoopEnabled
-                    ? "text-blue-500"
-                    : "text-neutral-600 dark:text-white"
+                  isLoopEnabled ? "text-blue-500" : "text-neutral-600 dark:text-white"
                 }`}
               />
             </button>
@@ -435,9 +437,9 @@ const MusicPlayer: React.FC = () => {
           {/* Waveform & Timestamp */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
             <div ref={waveformContainerRef} className="w-full">
-              {currentTrack?.file ? (
+              {currentTrack?.file && sharedAudioUrl ? (
                 <Waveform
-                  audioUrl={`/api/audio/${currentTrack.file}`}
+                  audioUrl={sharedAudioUrl}
                   audioRef={audioRef}
                   amplitude={0.5}
                   currentTime={audioRef.current?.currentTime || 0}

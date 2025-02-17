@@ -1,11 +1,9 @@
 "use client";
-
 import React, { useEffect, useRef, useState, RefObject } from "react";
 
-// Props for the Waveform component
 interface WaveformProps {
-  audioUrl: string;                    // URL of the audio file to visualize
-  audioRef: RefObject<HTMLAudioElement | null>;
+  audioUrl: string;                    // Shared blob URL
+  audioRef: RefObject<HTMLAudioElement | null>; 
   amplitude: number;                   // Multiplier for waveform height
   currentTime: number | undefined;     // Current playback position (in seconds)
   trackDuration: number | undefined;   // Total duration of the track (in seconds)
@@ -22,114 +20,80 @@ const Waveform: React.FC<WaveformProps> = ({
   width,
   updateCurrentTime,
 }) => {
-  // Refs for canvas and overlay elements
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const lineRef = useRef<HTMLDivElement | null>(null);
-
-  // State for computed waveform data (array of bar heights)
-  const [waveformData, setWaveformData] = useState<number[] | null>(null);
-  // State for decoded channel data (optional, if you need it elsewhere)
-  // const [decodedChannelData, setDecodedChannelData] = useState<Float32Array | null>(null);
-
-  // Hover UI state
+  const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [hoverTime, setHoverTime] = useState<string>("");
   const [hoverPosition, setHoverPosition] = useState<number>(0);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Constants for waveform bars
   const barWidth = 2;
   const gapWidth = 1;
   const numBars = Math.floor((width + gapWidth) / (barWidth + gapWidth));
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // 1) Decode the audio file on the main thread and offload RMS computation to worker
-  // ─────────────────────────────────────────────────────────────────────────────
+  // Fetch & decode the audio offline
   useEffect(() => {
-    const fetchAndDecode = async () => {
+    const fetchDataAndDecode = async () => {
       try {
-        // Fetch the audio file
         const response = await fetch(audioUrl);
         const arrayBuffer = await response.arrayBuffer();
 
-        // Get the OfflineAudioContext constructor (or fallback to AudioContext)
-        const OfflineAudioContextClass =
+        let OfflineAudioContextClass =
           (window as any).OfflineAudioContext ||
-          (window as any).webkitOfflineAudioContext ||
-          window.AudioContext;
+          (window as any).webkitOfflineAudioContext;
+
         if (!OfflineAudioContextClass) {
-          throw new Error("OfflineAudioContext is not supported in this environment.");
+          OfflineAudioContextClass =
+            window.AudioContext || (window as any).webkitAudioContext;
         }
 
-        // Create an offline context.
-        // We assume 2 channels, 44100 sample rate, and enough length for 10 minutes.
         const offlineCtx = new OfflineAudioContextClass(2, 44100 * 600, 44100);
-
-        // Decode the audio
         const decodedBuffer = await offlineCtx.decodeAudioData(arrayBuffer);
-        console.log("[Waveform] Audio decoded");
-
-        // Extract left channel data
-        const channelData = decodedBuffer.getChannelData(0);
-        // Optionally: setDecodedChannelData(new Float32Array(channelData));
-        
-        // Offload RMS calculation to the worker:
-        const worker = new Worker("/waveformWorker.mjs", { type: "module" });
-        // Transfer the underlying buffer for efficiency
-        worker.postMessage(
-          { channelDataBuffer: channelData.buffer, numBars, amplitude },
-          [channelData.buffer]
-        );
-        worker.onmessage = (event) => {
-          const { waveformData, error } = event.data;
-          if (error) {
-            console.error("[Waveform] Worker error:", error);
-          } else {
-            console.log("[Waveform] Received waveformData:", waveformData);
-            setWaveformData(waveformData);
-          }
-          worker.terminate();
-        };
+        setAudioBuffer(decodedBuffer);
       } catch (error) {
-        console.error("Error in fetchAndDecode (Waveform):", error);
+        console.error("Error loading audio (Waveform):", error);
       }
     };
 
-    fetchAndDecode();
-  }, [audioUrl, numBars, amplitude]);
+    fetchDataAndDecode();
+  }, [audioUrl]);
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // 2) Draw the waveform on the canvas when waveformData or related state changes
-  // ─────────────────────────────────────────────────────────────────────────────
+  // Draw the waveform bars
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !waveformData) return;
+    if (!canvas || !audioBuffer) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     canvas.width = width;
-    canvas.height = 50; // Fixed height
-
+    canvas.height = 50;
+    const data = audioBuffer.getChannelData(0);
+    const sampleSize = Math.floor(data.length / numBars);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < numBars; i++) {
-      const barHeight = waveformData[i] || 0;
-      const offsetY = (canvas.height - barHeight) / 2;
+      let sumSquared = 0;
+      for (let j = 0; j < sampleSize; j++) {
+        const sample = data[i * sampleSize + j] || 0;
+        sumSquared += sample * sample;
+      }
+      const rms = Math.sqrt(sumSquared / sampleSize);
+      const baseBarHeight = rms * amplitude * canvas.height * 6;
+      const offsetY = (canvas.height - baseBarHeight) / 2;
       const barPosition = i * (barWidth + gapWidth);
-
       const barEndTime = trackDuration
-        ? ((barPosition + barWidth) * trackDuration) / (numBars * (barWidth + gapWidth))
+        ? ((barPosition + barWidth) * trackDuration) /
+          (numBars * (barWidth + gapWidth))
         : 0;
       const passed = barEndTime < (currentTime || 0);
-
       ctx.fillStyle = passed ? "#2563EB" : "#848484";
-      ctx.fillRect(barPosition, offsetY, barWidth, barHeight);
+      ctx.fillRect(barPosition, offsetY, barWidth, baseBarHeight);
     }
-  }, [width, waveformData, numBars, barWidth, gapWidth, currentTime, trackDuration]);
+  }, [width, audioBuffer, amplitude, currentTime, trackDuration, numBars]);
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // 3) Hover and click interactions for seeking
-  // ─────────────────────────────────────────────────────────────────────────────
+  // Hover & click interactions for seeking
   const handleMouseEnter = () => setIsHovering(true);
   const handleMouseLeave = () => setIsHovering(false);
 
@@ -144,19 +108,16 @@ const Waveform: React.FC<WaveformProps> = ({
     const offsetY = event.clientY - rect.top;
 
     if (offsetX >= 0 && offsetX <= rect.width && offsetY >= 0 && offsetY <= rect.height) {
-      const percentage = offsetX / rect.width;
-      const timeInSeconds = (trackDuration || 0) * percentage;
+      const percentage = (offsetX / rect.width) * 100;
+      const timeInSeconds = (trackDuration || 0) * (percentage / 100);
       const minutes = Math.floor(timeInSeconds / 60);
       const seconds = Math.floor(timeInSeconds % 60);
       const hoverTimeString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-
       setHoverPosition(offsetX);
       setHoverTime(hoverTimeString);
-
       line.style.left = `${offsetX}px`;
       line.style.visibility = "visible";
       line.style.opacity = "1";
-
       if (event.type === "click") {
         updateCurrentTime(timeInSeconds);
         if (audioRef.current) {
@@ -176,17 +137,19 @@ const Waveform: React.FC<WaveformProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <canvas ref={canvasRef} style={{ display: "block" }} />
+      <canvas ref={canvasRef} />
       <div
         ref={overlayRef}
         className="absolute top-0 bottom-0 left-0 right-0 pointer-events-none"
         onMouseMove={handleMouseMove}
         onClick={handleMouseMove}
       />
-      {waveformData && currentTime !== undefined && (
+      {audioBuffer && currentTime !== undefined && (
         <div
           className="absolute top-0 bottom-0 border-l border-white pointer-events-none"
-          style={{ left: `${(currentTime / (trackDuration || 1)) * 100}%` }}
+          style={{
+            left: `${(currentTime / (trackDuration || 1)) * 100}%`,
+          }}
         />
       )}
       {isHovering && (

@@ -207,7 +207,6 @@ const Hero: React.FC<HeroProps> = ({
                   className="w-36 sm:w-40 md:w-56 lg:w-72 lg:h-72 h-auto object-cover rounded-md shadow-md cursor-pointer hover:opacity-90 dark:hover:opacity-75"
                   width={150}
                   height={150}
-                  priority
                 />
                 <Watermark size="lg" />
                 <button

@@ -157,6 +157,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                     className="transition-transform rounded-md object-center object-cover w-full h-full"
                     width={100}
                     height={100}
+                    priority
                   />
                 </button>
                 <div className="absolute bottom-0 right-0">

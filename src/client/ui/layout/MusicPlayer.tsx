@@ -169,23 +169,73 @@ const MusicPlayer: React.FC = () => {
   // AUDIO EVENT HANDLERS
   // ───────────────────────────────
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      dispatch(setCurrentTime(audioRef.current.currentTime));
+    if (audioRef.current && currentTrack?.id) {
+      const time = audioRef.current.currentTime;
+      dispatch(setCurrentTime(time));
+      localStorage.setItem(`track-${currentTrack.id}-time`, time.toString());
     }
   };
+  
+  // Wait for the audio to have loaded data, then restore saved time
+  useEffect(() => {
+    if (!audioRef.current || !currentTrack?.id) return;
+  
+    const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
+    if (!savedTime) return;
+    const parsedTime = parseFloat(savedTime);
+    if (isNaN(parsedTime)) return;
+  
+    // Capture the current audio element reference
+    const audioEl = audioRef.current;
+  
+    const handleLoadedData = () => {
+      // Check if duration exists and the saved time is within bounds
+      if (audioEl.duration && parsedTime < audioEl.duration) {
+        audioEl.currentTime = parsedTime;
+        console.log(`Resumed track ${currentTrack.id} from ${parsedTime}s`);
+      }
+    };
+  
+    audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
+    return () => {
+      // Use the captured reference here
+      audioEl.removeEventListener("loadeddata", handleLoadedData);
+    };
+  }, [audioRef, currentTrack]);
+  
 
   useEffect(() => {
     const currentAudio = audioRef.current;
-    if (!currentAudio) return;
+    if (!currentAudio || !currentTrack?.id) return;
+  
     const handleLoadedMetadata = () => {
+      // Set track duration and loop state
       dispatch(setTrackDuration(currentAudio.duration));
       currentAudio.loop = isLoopEnabled;
+  
+      // Retrieve and set the saved playback position, if it exists and is within duration
+      const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
+      if (savedTime) {
+        const parsedTime = parseFloat(savedTime);
+        if (!isNaN(parsedTime) && parsedTime < currentAudio.duration) {
+          currentAudio.currentTime = parsedTime;
+          console.log(`Resumed track ${currentTrack.id} from ${parsedTime}s`);
+        }
+      }
     };
-    currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata);
+  
+    // If metadata is already loaded, set immediately; otherwise, wait for the event
+    if (currentAudio.readyState >= 1) {
+      handleLoadedMetadata();
+    } else {
+      currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
+    }
+  
     return () => {
       currentAudio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
-  }, [dispatch, audioRef, isLoopEnabled]);
+  }, [dispatch, audioRef, isLoopEnabled, currentTrack]);
+  
 
   // ───────────────────────────────
   // KEYBOARD SHORTCUTS

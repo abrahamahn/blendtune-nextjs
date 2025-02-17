@@ -1,81 +1,44 @@
-const CACHE_NAME = "audio-cache-v1";
-const MAX_CACHE_ITEMS = 30;
+// public/sw.js
 
-// Optionally, add assets to pre-cache.
-const ASSETS_TO_CACHE = [
-  // e.g., '/audio/tracks/some-default-track.mp3'
-];
+const CACHE_NAME = 'audio-cache-v1';
+// This regex pattern matches URLs that hit your audio API route
+const AUDIO_URL_PATTERN = /\/api\/audio\/.*/;
 
-// Install event: Pre-cache known assets.
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installed');
+  // Immediately take control of the page
+  event.waitUntil(self.skipWaiting());
 });
 
-// Activate event: Clean up old caches.
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      );
-    })
-  );
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activated');
+  // Claim control so that the SW starts handling requests immediately
+  event.waitUntil(self.clients.claim());
 });
 
-// Utility: Limit cache size.
-async function limitCacheSize(cacheName, maxItems) {
-  const cache = await caches.open(cacheName);
-  const keys = await cache.keys();
-  if (keys.length > maxItems) {
-    await cache.delete(keys[0]);
-    await limitCacheSize(cacheName, maxItems);
-  }
-}
-
-// Fetch event: Cache responses for HTTP/HTTPS requests only.
-self.addEventListener("fetch", (event) => {
-  // Only process requests with an HTTP or HTTPS scheme.
-  if (!event.request.url.startsWith("http")) {
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then((cacheRes) => {
-      // Return cached response if available, otherwise fetch from network.
-      return (
-        cacheRes ||
-        fetch(event.request)
-          .then((fetchRes) => {
-            // Only cache valid, basic responses.
-            if (
-              !fetchRes ||
-              fetchRes.status !== 200 ||
-              fetchRes.type !== "basic"
-            ) {
-              return fetchRes;
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  
+  // Only intercept requests that match our audio API
+  if (AUDIO_URL_PATTERN.test(new URL(request.url).pathname)) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(request).then((cachedResponse) => {
+          if (cachedResponse) {
+            console.log('Serving audio from cache:', request.url);
+            return cachedResponse;
+          }
+          console.log('Fetching and caching audio:', request.url);
+          return fetch(request).then((networkResponse) => {
+            // Only cache if the response is valid
+            if (networkResponse.ok) {
+              cache.put(request, networkResponse.clone());
             }
-
-            // Clone the response to put into cache.
-            const responseClone = fetchRes.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache
-                .put(event.request, responseClone)
-                .catch((err) => console.error("Cache put failed:", err));
-              limitCacheSize(CACHE_NAME, MAX_CACHE_ITEMS);
-            });
-
-            return fetchRes;
-          })
-          .catch(() => {
-            // Optionally, you can return a fallback response if fetch fails.
-          })
-      );
-    })
-  );
+            return networkResponse;
+          });
+        });
+      })
+    );
+  }
+  // For all other requests, do the default behavior
 });

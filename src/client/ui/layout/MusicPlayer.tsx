@@ -80,36 +80,16 @@ const MusicPlayer: React.FC = () => {
   // Shared blob URL state for the audio file
   const [sharedAudioUrl, setSharedAudioUrl] = useState<string>("");
 
-  // Decide whether to use MSE based on MediaSource availability.
-  const [useMSE, setUseMSE] = useState(false);
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.MediaSource) {
-      setUseMSE(true);
-    }
-  }, []);
-
   useEffect(() => {
     if (!currentTrack?.file) return;
-  
+    
     const sourceUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${currentTrack.file}`;
-    console.log("Fetching audio from:", sourceUrl);
-    fetch(sourceUrl)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const blobUrl = URL.createObjectURL(blob);
-        console.log("Created blob URL:", blobUrl);
-        setSharedAudioUrl(blobUrl);
-      })
-      .catch((error) => console.error("Error fetching audio:", error));
+    console.log("Using audio source URL:", sourceUrl);
+    setSharedAudioUrl(sourceUrl);
   
-    // Cleanup: revoke the blob URL when the current track changes or component unmounts.
-    return () => {
-      if (sharedAudioUrl) {
-        URL.revokeObjectURL(sharedAudioUrl);
-        console.log("Revoked blob URL:", sharedAudioUrl);
-      }
-    };
-  }, [sharedAudioUrl, currentTrack]);
+    // No blob creation, so no cleanup is necessary.
+  }, [currentTrack?.file]);
+  
   
   // ───────────────────────────────
   // PLAY/PAUSE TOGGLE

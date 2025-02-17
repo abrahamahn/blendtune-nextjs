@@ -36,7 +36,7 @@ const Rightbar: React.FC = () => {
       setThemePreference(prefersDarkMode ? "dark" : "light");
 
       if (currentTrack) {
-        const imageUrl = `https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
+        const imageUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
           currentTrack?.metadata?.catalog ?? "default"
         }.jpg`;
 
@@ -107,7 +107,7 @@ const Rightbar: React.FC = () => {
       return;
     }
 
-    const imageUrl = `https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
+    const imageUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
       currentTrack?.metadata?.catalog ?? "default"
     }.jpg`;
 

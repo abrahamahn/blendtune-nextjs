@@ -50,7 +50,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
               <div className="w-16 h-16 p-1.5 rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105">
                 <Image
                   crossOrigin="anonymous"
-                  src={`https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
+                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                     track?.metadata?.catalog ?? "default"
                   }.jpg`}
                   alt={track.metadata.title}

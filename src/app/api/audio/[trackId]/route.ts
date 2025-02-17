@@ -52,7 +52,7 @@ export async function GET(
       : {};
 
     // Construct remote URL on DO Spaces (or S3)
-    const remoteUrl = `https://blendtune-public.nyc3.digitaloceanspaces.com/streaming/${trackId}`;
+    const remoteUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${trackId}`;
     console.log("Fetching remote audio:", remoteUrl);
 
     // Fetch from DigitalOcean Spaces (this supports streaming & range requests)

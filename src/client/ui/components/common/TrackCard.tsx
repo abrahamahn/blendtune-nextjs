@@ -13,7 +13,7 @@ import {
 
 // Helper function defined outside the component.
 function getImageUrl(track: Track): string {
-  return `https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${track?.metadata?.catalog ?? "default"}.jpg`;
+  return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${track?.metadata?.catalog ?? "default"}.jpg`;
 }
 
 interface TrackCardProps {

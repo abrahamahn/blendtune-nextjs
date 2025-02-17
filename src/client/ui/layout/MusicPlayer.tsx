@@ -499,7 +499,7 @@ const MusicPlayer: React.FC = () => {
               <div className="flex items-center justify-center h-12 w-12 lg:h-16 lg:w-16 ml-0 rounded-md p-0.5 md:p-0.5">
                 <Image
                   crossOrigin="anonymous"
-                  src={`https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/${
+                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
                     currentTrack?.metadata?.catalog ?? "default"
                   }.jpg`}
                   alt={currentTrack?.metadata?.title ?? ""}

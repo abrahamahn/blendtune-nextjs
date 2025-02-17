@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
   const artworks = Array.from(
     { length: 999 },
     (_, i) =>
-      `https://blendtune-public.nyc3.digitaloceanspaces.com/artwork/mkh${String(i + 1).padStart(3, "0")}.jpg`
+      `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/mkh${String(i + 1).padStart(3, "0")}.jpg`
   );
 
   const chunks = [

@@ -484,37 +484,35 @@ const MusicPlayer: React.FC = () => {
           </div>
 
           {/* Waveform & Timestamp */}
-          <div className="flex flex-row w-1/2 h-full items-center px-4">
-            <div ref={waveformContainerRef} className="w-full">
-              {currentTrack?.file && sharedAudioUrl ? (
-                <Waveform
-                  audioUrl={sharedAudioUrl}
-                  audioRef={audioRef}
-                  amplitude={0.5}
-                  currentTime={audioRef.current?.currentTime || 0}
-                  trackDuration={audioRef.current?.duration || 0}
-                  width={waveformWidth}
-                  updateCurrentTime={(newTime: number) => {
-                    if (audioRef.current) {
-                      audioRef.current.currentTime = newTime;
-                      dispatch(setCurrentTime(newTime));
-                    }
-                  }}
-                />
-              ) : (
-                <p />
-              )}
-            </div>
-            <div className="hidden lg:flex text-xs mx-2 w-28 h-full items-center justify-center user-select-none">
-              <p className="text-neutral-600 dark:text-white">
-                {formatTime(audioRef.current?.currentTime)}
-                <span className="text-transparent"> / </span>
-                <span className="text-neutral-500">
+          <div className="relative flex flex-row w-1/2 h-full items-center px-4">
+              <div ref={waveformContainerRef} className="relative">
+                {currentTrack?.file && sharedAudioUrl ? (
+                  <Waveform
+                    audioUrl={sharedAudioUrl}
+                    audioRef={audioRef}
+                    amplitude={0.5}
+                    currentTime={audioRef.current?.currentTime || 0}
+                    trackDuration={audioRef.current?.duration || 0}
+                    width={waveformWidth}
+                    updateCurrentTime={(newTime: number) => {
+                      if (audioRef.current) {
+                        audioRef.current.currentTime = newTime;
+                        dispatch(setCurrentTime(newTime));
+                      }
+                    }}
+                  />
+                ) : (
+                  <p />
+                )}
+                {/* Current time, slightly pushed left by 3px */}
+                <div className="absolute left-[-12px] bottom-[-12px] transform -translate-y-1/2 text-xs text-blue-600 dark:text-neutral-200 bg-white/10 px-1">
+                  {formatTime(audioRef.current?.currentTime)}
+                </div>
+                {/* Track duration, slightly pushed right by 3px */}
+                <div className="absolute right-[-6px] bottom-[-12px] transform -translate-y-1/2 text-xs text-neutral-600 dark:text-neutral-200 bg-white/10 px-1">
                   {formatTime(trackDuration)}
-                </span>
-              </p>
-            </div>
-
+                </div>
+              </div>
             {/* Volume Icon & Slider */}
             <div ref={volumeContainerRef} className="relative flex justify-center md:mx-4 lg:mx-1">
               <button onClick={toggleVolume}>

@@ -1,14 +1,20 @@
 "use client";
-import React, { useEffect, useRef, useState, RefObject } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  RefObject,
+} from "react";
 
 interface WaveformProps {
-  audioUrl: string;                    // Shared blob URL
-  audioRef: RefObject<HTMLAudioElement | null>; 
-  amplitude: number;                   // Multiplier for waveform height
-  currentTime: number | undefined;     // Current playback position (in seconds)
-  trackDuration: number | undefined;   // Total duration of the track (in seconds)
-  width: number;                       // Width of the waveform canvas
-  updateCurrentTime: (newTime: number) => void;  // Callback for seeking
+  audioUrl: string;
+  audioRef: RefObject<HTMLAudioElement | null>;
+  amplitude: number;
+  currentTime: number | undefined;
+  trackDuration: number | undefined;
+  width: number;
+  updateCurrentTime: (newTime: number) => void;
 }
 
 const Waveform: React.FC<WaveformProps> = ({
@@ -23,16 +29,36 @@ const Waveform: React.FC<WaveformProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const lineRef = useRef<HTMLDivElement | null>(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
+  // New refs for the fixed currentTime indicator while dragging.
+  const currentLineRef = useRef<HTMLDivElement | null>(null);
+  const currentTextRef = useRef<HTMLDivElement | null>(null);
+
+  // Refs for fade-out timers.
+  const fadeDelayTimeoutRef = useRef<number | null>(null);
+  const fadeHideTimeoutRef = useRef<number | null>(null);
+
+  // States
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
-  const [hoverTime, setHoverTime] = useState<string>("");
+  const [hoverTime, setHoverTime] = useState<string | null>(null);
+  // Used only while dragging; after mouseUp we rely on currentTime.
   const [hoverPosition, setHoverPosition] = useState<number>(0);
-  const [isHovering, setIsHovering] = useState(false);
+  const [hoverTimeVisible, setHoverTimeVisible] = useState(false);
+  // This opacity state now affects the hover overlay text/line.
+  const [hoverOpacity, setHoverOpacity] = useState(1);
+  // New state for the fixed currentTime overlay opacity.
+  const [fixedOpacity, setFixedOpacity] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  // When true the CSS transition is disabled so that the overlay appears immediately.
+  const [disableTransition, setDisableTransition] = useState(false);
 
   const barWidth = 2;
   const gapWidth = 1;
   const numBars = Math.floor((width + gapWidth) / (barWidth + gapWidth));
+  // Define a transition width (in pixels) for the spatial blending effect.
+  const transitionWidth = 5;
 
-  // Fetch & decode the audio offline
+  // Fetch & decode the audio offline.
   useEffect(() => {
     const fetchDataAndDecode = async () => {
       try {
@@ -59,7 +85,7 @@ const Waveform: React.FC<WaveformProps> = ({
     fetchDataAndDecode();
   }, [audioUrl]);
 
-  // Draw the waveform bars
+  // Draw the waveform bars.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !audioBuffer) return;
@@ -73,6 +99,11 @@ const Waveform: React.FC<WaveformProps> = ({
     const sampleSize = Math.floor(data.length / numBars);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Determine positions in pixels.
+    const playbackPosition = (currentTime! / (trackDuration || 1)) * canvas.width;
+    const activePosition = isDragging ? hoverPosition : playbackPosition;
+
+    // Loop over each bar.
     for (let i = 0; i < numBars; i++) {
       let sumSquared = 0;
       for (let j = 0; j < sampleSize; j++) {
@@ -82,91 +113,283 @@ const Waveform: React.FC<WaveformProps> = ({
       const rms = Math.sqrt(sumSquared / sampleSize);
       const baseBarHeight = rms * amplitude * canvas.height * 6;
       const offsetY = (canvas.height - baseBarHeight) / 2;
-      const barPosition = i * (barWidth + gapWidth);
-      const barEndTime = trackDuration
-        ? ((barPosition + barWidth) * trackDuration) /
-          (numBars * (barWidth + gapWidth))
-        : 0;
-      const passed = barEndTime < (currentTime || 0);
-      ctx.fillStyle = passed ? "#2563EB" : "#848484";
-      ctx.fillRect(barPosition, offsetY, barWidth, baseBarHeight);
-    }
-  }, [width, audioBuffer, amplitude, currentTime, trackDuration, numBars]);
+      const barX = i * (barWidth + gapWidth);
 
-  // Hover & click interactions for seeking
-  const handleMouseEnter = () => setIsHovering(true);
-  const handleMouseLeave = () => setIsHovering(false);
+      // Create a vertical gradient (color B) for a fully played bar.
+      const gradient = ctx.createLinearGradient(0, offsetY, 0, offsetY + baseBarHeight);
+      // (Note: we reverse the color stops so that when blended, the alpha “fades in”—
+      // adjust as desired.)
+      gradient.addColorStop(1, "rgb(0,60,255)");
+      gradient.addColorStop(0, "rgb(0,120,255)");
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const overlay = overlayRef.current;
-    const line = lineRef.current;
-    const canvas = canvasRef.current;
-    if (!overlay || !line || !canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const offsetX = event.clientX - rect.left;
-    const offsetY = event.clientY - rect.top;
-
-    if (offsetX >= 0 && offsetX <= rect.width && offsetY >= 0 && offsetY <= rect.height) {
-      const percentage = (offsetX / rect.width) * 100;
-      const timeInSeconds = (trackDuration || 0) * (percentage / 100);
-      const minutes = Math.floor(timeInSeconds / 60);
-      const seconds = Math.floor(timeInSeconds % 60);
-      const hoverTimeString = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-      setHoverPosition(offsetX);
-      setHoverTime(hoverTimeString);
-      line.style.left = `${offsetX}px`;
-      line.style.visibility = "visible";
-      line.style.opacity = "1";
-      if (event.type === "click") {
-        updateCurrentTime(timeInSeconds);
-        if (audioRef.current) {
-          audioRef.current.currentTime = timeInSeconds;
+      // We'll draw each bar differently based on whether we're dragging.
+      if (!isDragging) {
+        // Not dragging: smoothly blend from played (gradient) to unplayed (grey)
+        if (barX < playbackPosition - transitionWidth) {
+          // Fully played.
+          ctx.fillStyle = gradient;
+          ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+        } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
+          // In the transition region: first draw grey, then overlay gradient with alpha.
+          ctx.fillStyle = "#848484";
+          ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          const alpha = (playbackPosition - barX) / transitionWidth; // goes 0->1 as barX goes from playbackPosition to playbackPosition-transitionWidth
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = gradient;
+          ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          ctx.globalAlpha = 1;
+        } else {
+          // Unplayed.
+          ctx.fillStyle = "#848484";
+          ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+        }
+      } else {
+        // Dragging: we also show a highlight region.
+        if (hoverPosition > playbackPosition) {
+          // Dragging forward:
+          if (barX < playbackPosition - transitionWidth) {
+            ctx.fillStyle = gradient;
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
+            ctx.fillStyle = "#848484";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+            const alpha = (playbackPosition - barX) / transitionWidth;
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = gradient;
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+            ctx.globalAlpha = 1;
+          } else if (barX >= playbackPosition && barX < hoverPosition) {
+            // Highlighted (tertiary) region.
+            ctx.fillStyle = "rgba(0,120,255,0.5)";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          } else {
+            ctx.fillStyle = "#848484";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          }
+        } else if (hoverPosition < playbackPosition) {
+          // Dragging backward:
+          if (barX < hoverPosition) {
+            if (barX < playbackPosition - transitionWidth) {
+              ctx.fillStyle = gradient;
+              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+            } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
+              ctx.fillStyle = "#848484";
+              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+              const alpha = (playbackPosition - barX) / transitionWidth;
+              ctx.globalAlpha = alpha;
+              ctx.fillStyle = gradient;
+              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+              ctx.globalAlpha = 1;
+            }
+          } else if (barX >= hoverPosition && barX < playbackPosition) {
+            ctx.fillStyle = "rgba(0,120,255,0.5)";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          } else {
+            ctx.fillStyle = "#848484";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          }
+        } else {
+          // hoverPosition equals playbackPosition – use non-dragging logic.
+          if (barX < playbackPosition - transitionWidth) {
+            ctx.fillStyle = gradient;
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
+            ctx.fillStyle = "#848484";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+            const alpha = (playbackPosition - barX) / transitionWidth;
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = gradient;
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+            ctx.globalAlpha = 1;
+          } else {
+            ctx.fillStyle = "#848484";
+            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          }
         }
       }
-    } else {
-      setHoverTime("");
-      line.style.visibility = "hidden";
-      line.style.opacity = "0";
+    }
+  }, [
+    width,
+    audioBuffer,
+    amplitude,
+    currentTime,
+    trackDuration,
+    numBars,
+    isDragging,
+    hoverPosition,
+    transitionWidth,
+  ]);
+
+  // Cancel any pending fade-out timers.
+  const cancelPendingFade = () => {
+    if (fadeDelayTimeoutRef.current) {
+      clearTimeout(fadeDelayTimeoutRef.current);
+      fadeDelayTimeoutRef.current = null;
+    }
+    if (fadeHideTimeoutRef.current) {
+      clearTimeout(fadeHideTimeoutRef.current);
+      fadeHideTimeoutRef.current = null;
     }
   };
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!canvasRef.current) return;
+    // Cancel any fade (even if one is in progress).
+    cancelPendingFade();
+    setIsDragging(true);
+    setHoverTimeVisible(true);
+    setDisableTransition(true);
+    setHoverOpacity(1);
+    setFixedOpacity(1);
+    handleMouseMove(event); // Immediate response.
+  };
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+      if (!canvasRef.current || !trackDuration) return;
+      const rect = canvasRef.current.getBoundingClientRect();
+      let offsetX = event.clientX - rect.left;
+      offsetX = Math.max(0, Math.min(offsetX, rect.width));
+      setHoverPosition(offsetX);
+
+      const percentage = offsetX / rect.width;
+      const newTime = trackDuration * percentage;
+      setHoverTime(
+        `${Math.floor(newTime / 60)}:${Math.floor(newTime % 60)
+          .toString()
+          .padStart(2, "0")}`
+      );
+
+      if (lineRef.current) {
+        // Update the hover line position (that follows the mouse).
+        lineRef.current.style.left = `${offsetX}px`;
+      }
+      if (textRef.current) {
+        textRef.current.style.left = `${offsetX + 5}px`;
+      }
+    },
+    [trackDuration]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (!isDragging || !canvasRef.current || !trackDuration) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const percentage = hoverPosition / rect.width;
+    const finalTime = trackDuration * percentage;
+
+    // Update playback immediately.
+    updateCurrentTime(finalTime);
+    setIsDragging(false);
+
+    // Start fade-out: remain fully opaque for 2 seconds,
+    // then fade opacity to 0 over 2 seconds (a total of 4 seconds).
+    cancelPendingFade();
+    fadeDelayTimeoutRef.current = window.setTimeout(() => {
+      setDisableTransition(false);
+      setHoverOpacity(0);
+      setFixedOpacity(0);
+      fadeHideTimeoutRef.current = window.setTimeout(() => {
+        setHoverTimeVisible(false);
+        setHoverTime(null);
+        // Reset for next interaction.
+        setHoverOpacity(1);
+        setFixedOpacity(1);
+      }, 2000);
+    }, 2000);
+  }, [isDragging, hoverPosition, trackDuration, updateCurrentTime]);
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
+  // Compute positions and formatted times.
+  const playbackPositionPx = (currentTime ?? 0) / (trackDuration || 1) * width;
+  const activePosition = isDragging ? hoverPosition : playbackPositionPx;
+  const activeTimeText = isDragging
+    ? hoverTime
+    : `${Math.floor((currentTime ?? 0) / 60)}:${Math.floor((currentTime ?? 0) % 60)
+        .toString()
+        .padStart(2, "0")}`;
 
   return (
     <div
       className="relative w-full h-full cursor-pointer"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
     >
       <canvas ref={canvasRef} />
       <div
         ref={overlayRef}
         className="absolute top-0 bottom-0 left-0 right-0 pointer-events-none"
-        onMouseMove={handleMouseMove}
-        onClick={handleMouseMove}
       />
-      {audioBuffer && currentTime !== undefined && (
-        <div
-          className="absolute top-0 bottom-0 border-l border-white pointer-events-none"
-          style={{
-            left: `${(currentTime / (trackDuration || 1)) * 100}%`,
-          }}
-        />
-      )}
-      {isHovering && (
+      {/* During dragging, render two overlays:
+          1. The hover indicator (line and text) following the mouse (at ~75% opacity).
+          2. A fixed currentTime indicator at playbackPosition (with its text 5px to the right).
+          Both sets will fade out together after mouseUp.
+      */}
+      {hoverTimeVisible && (
         <>
+          {/* Hover indicator (following mouse) */}
           <div
             ref={lineRef}
-            className="absolute top-0 bottom-0 border-l border-black dark:border-white pointer-events-none transition-opacity duration-300"
-            style={{ left: `${hoverPosition}px`, opacity: 0 }}
+            className="absolute top-0 bottom-0 border-l border-black dark:border-white pointer-events-none"
+            style={{
+              left: `${activePosition}px`,
+              opacity: hoverOpacity,
+              transition: disableTransition
+                ? "none"
+                : "opacity 2s ease-in-out",
+            }}
           />
-          {hoverTime && (
-            <div
-              className="absolute top-0 left-0 mt-1 ml-1 text-black dark:text-white text-2xs pointer-events-none transition-opacity"
-              style={{ top: "0", left: `${hoverPosition + 5}px` }}
-            >
-              {hoverTime}
-            </div>
-          )}
+          <div
+            ref={textRef}
+            className="absolute top-0 mt-1 text-black dark:text-white text-2xs pointer-events-none"
+            style={{
+              left: `${activePosition + 5}px`,
+              opacity: hoverOpacity,
+              transition: disableTransition
+                ? "none"
+                : "opacity 2s ease-in-out",
+            }}
+          >
+            {activeTimeText}
+          </div>
+
+          {/* Fixed currentTime indicator */}
+          <div
+            ref={currentLineRef}
+            className="absolute top-0 bottom-0 border-l border-white/50 pointer-events-none"
+            style={{
+              left: `${playbackPositionPx}px`,
+              opacity: fixedOpacity,
+              transition: disableTransition
+                ? "none"
+                : "opacity 2s ease-in-out",
+            }}
+          />
+          <div
+            ref={currentTextRef}
+            className="absolute top-0 mt-1 text-white/50 text-2xs pointer-events-none"
+            style={{
+              left: `${playbackPositionPx + 5}px`,
+              opacity: fixedOpacity,
+              transition: disableTransition
+                ? "none"
+                : "opacity 2s ease-in-out",
+            }}
+          >
+            {`${Math.floor((currentTime ?? 0) / 60)}:${Math.floor(
+              (currentTime ?? 0) % 60
+            )
+              .toString()
+              .padStart(2, "0")}`}
+          </div>
         </>
       )}
     </div>

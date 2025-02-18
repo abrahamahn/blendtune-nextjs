@@ -497,6 +497,7 @@ const MusicPlayer: React.FC = () => {
                   updateCurrentTime={(newTime: number) => {
                     if (audioRef.current) {
                       audioRef.current.currentTime = newTime;
+                      dispatch(setCurrentTime(newTime));
                     }
                   }}
                 />

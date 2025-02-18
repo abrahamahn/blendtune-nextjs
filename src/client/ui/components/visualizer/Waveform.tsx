@@ -117,30 +117,33 @@ const Waveform: React.FC<WaveformProps> = ({
 
       // Create a vertical gradient (color B) for a fully played bar.
       const gradient = ctx.createLinearGradient(0, offsetY, 0, offsetY + baseBarHeight);
-      // (Note: we reverse the color stops so that when blended, the alpha “fades in”—
-      // adjust as desired.)
+      // (Note: we reverse the color stops so that when blended, the alpha “fades in”—adjust as desired.)
       gradient.addColorStop(1, "rgb(0,60,255)");
       gradient.addColorStop(0, "rgb(0,120,255)");
 
-      // We'll draw each bar differently based on whether we're dragging.
+      // Create a grey gradient for the unplayed region.
+      const greyGradient = ctx.createLinearGradient(0, offsetY, 0, offsetY + baseBarHeight);
+      greyGradient.addColorStop(1, "rgb(100,100,100)");
+      greyGradient.addColorStop(0, "rgb(150,150,150)");
+
       if (!isDragging) {
-        // Not dragging: smoothly blend from played (gradient) to unplayed (grey)
+        // Not dragging: smoothly blend from played (gradient) to unplayed (greyGradient)
         if (barX < playbackPosition - transitionWidth) {
           // Fully played.
           ctx.fillStyle = gradient;
           ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
         } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
-          // In the transition region: first draw grey, then overlay gradient with alpha.
-          ctx.fillStyle = "#848484";
+          // In the transition region: first draw greyGradient, then overlay gradient with alpha.
+          ctx.fillStyle = greyGradient;
           ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-          const alpha = (playbackPosition - barX) / transitionWidth; // goes 0->1 as barX goes from playbackPosition to playbackPosition-transitionWidth
+          const alpha = (playbackPosition - barX) / transitionWidth; // goes 0->1 as barX goes from playbackPosition to playbackPosition - transitionWidth
           ctx.globalAlpha = alpha;
           ctx.fillStyle = gradient;
           ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           ctx.globalAlpha = 1;
         } else {
           // Unplayed.
-          ctx.fillStyle = "#848484";
+          ctx.fillStyle = greyGradient;
           ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
         }
       } else {
@@ -151,7 +154,7 @@ const Waveform: React.FC<WaveformProps> = ({
             ctx.fillStyle = gradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
-            ctx.fillStyle = "#848484";
+            ctx.fillStyle = greyGradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
             const alpha = (playbackPosition - barX) / transitionWidth;
             ctx.globalAlpha = alpha;
@@ -163,7 +166,7 @@ const Waveform: React.FC<WaveformProps> = ({
             ctx.fillStyle = "rgba(0,120,255,0.5)";
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           } else {
-            ctx.fillStyle = "#848484";
+            ctx.fillStyle = greyGradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           }
         } else if (hoverPosition < playbackPosition) {
@@ -173,7 +176,7 @@ const Waveform: React.FC<WaveformProps> = ({
               ctx.fillStyle = gradient;
               ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
             } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
-              ctx.fillStyle = "#848484";
+              ctx.fillStyle = greyGradient;
               ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
               const alpha = (playbackPosition - barX) / transitionWidth;
               ctx.globalAlpha = alpha;
@@ -185,16 +188,16 @@ const Waveform: React.FC<WaveformProps> = ({
             ctx.fillStyle = "rgba(0,120,255,0.5)";
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           } else {
-            ctx.fillStyle = "#848484";
+            ctx.fillStyle = greyGradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           }
         } else {
-          // hoverPosition equals playbackPosition – use non-dragging logic.
+          // hoverPosition equals playbackPosition.
           if (barX < playbackPosition - transitionWidth) {
             ctx.fillStyle = gradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           } else if (barX >= playbackPosition - transitionWidth && barX < playbackPosition) {
-            ctx.fillStyle = "#848484";
+            ctx.fillStyle = greyGradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
             const alpha = (playbackPosition - barX) / transitionWidth;
             ctx.globalAlpha = alpha;
@@ -202,7 +205,7 @@ const Waveform: React.FC<WaveformProps> = ({
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
             ctx.globalAlpha = 1;
           } else {
-            ctx.fillStyle = "#848484";
+            ctx.fillStyle = greyGradient;
             ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           }
         }
@@ -310,7 +313,7 @@ const Waveform: React.FC<WaveformProps> = ({
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
   // Compute positions and formatted times.
-  const playbackPositionPx = (currentTime ?? 0) / (trackDuration || 1) * width;
+  const playbackPositionPx = ((currentTime ?? 0) / (trackDuration || 1)) * width;
   const activePosition = isDragging ? hoverPosition : playbackPositionPx;
   const activeTimeText = isDragging
     ? hoverTime

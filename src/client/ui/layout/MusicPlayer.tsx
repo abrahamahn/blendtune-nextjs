@@ -94,6 +94,7 @@ const MusicPlayer: React.FC = () => {
   // ───────────────────────────────
   // PLAY/PAUSE TOGGLE
   // ───────────────────────────────
+  
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
     if (isPlaying) {

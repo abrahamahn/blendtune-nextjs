@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, ReactNode, useEffect, createContext, useContext } from "react";
 import { useDispatch } from "react-redux";
-import { setCurrentTrack, setTrackList } from "@/client/environment/redux/slices/playback"; // 🔥 Import new action
+import { setCurrentTrack, setTrackList } from "@/client/environment/redux/slices/playback";
 import { getTracks } from "@/client/utils/data/getTracks";
 import { Track } from "@/shared/types/track";
 

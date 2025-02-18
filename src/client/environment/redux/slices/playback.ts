@@ -58,33 +58,26 @@ interface Track {
   };
 }
 
-
 interface PlaybackState {
   currentTrack: Track | undefined;
   isPlaying: boolean;
   trackList: Track[];
+  loopedTrackList: Track[];
   isLoopEnabled: boolean;
   isVolumeVisible: boolean;
   currentTime: number;
   trackDuration: number;
-  audioSource: string; // 🔥 Stores the audio URL
 }
 
 const initialState: PlaybackState = {
   currentTrack: undefined,
   isPlaying: false,
   trackList: [],
+  loopedTrackList: [],
   isLoopEnabled: false,
   isVolumeVisible: false,
   currentTime: 0,
   trackDuration: 0,
-  audioSource: "", // Default to empty string
-};
-
-// ✅ Helper function for fetching the audio source
-const getAudioSource = (track: Track | undefined) => {
-  if (!track?.file) return "";
-  return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${track.file}`;
 };
 
 const playbackSlice = createSlice({
@@ -93,13 +86,15 @@ const playbackSlice = createSlice({
   reducers: {
     setCurrentTrack: (state, action: PayloadAction<Track | undefined>) => {
       state.currentTrack = action.payload;
-      state.audioSource = getAudioSource(action.payload); // 🔥 Update source
     },
     setIsPlaying: (state, action: PayloadAction<boolean>) => {
       state.isPlaying = action.payload;
     },
     setTrackList: (state, action: PayloadAction<Track[]>) => {
       state.trackList = action.payload;
+    },
+    setLoopedTrackList: (state, action: PayloadAction<Track[]>) => {
+      state.loopedTrackList = action.payload;
     },
     setIsLoopEnabled: (state, action: PayloadAction<boolean>) => {
       state.isLoopEnabled = action.payload;
@@ -120,6 +115,7 @@ export const {
   setCurrentTrack,
   setIsPlaying,
   setTrackList,
+  setLoopedTrackList,
   setIsLoopEnabled,
   setIsVolumeVisible,
   setCurrentTime,

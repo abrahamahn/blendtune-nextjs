@@ -17,6 +17,7 @@ import {
   setIsVolumeVisible,
   setCurrentTime,
   setTrackDuration,
+  setLoopedTrackList,
 } from "@/client/environment/redux/slices/playback";
 import { Track } from "@/shared/types/track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,7 +48,7 @@ const MusicPlayer: React.FC = () => {
   const { audioRef } = useAudio(); // Global audioRef
 
   const trackList = useSelector((state: RootState) => state.audio.playback.trackList);
-
+  const loopedTrackList = useSelector((state: RootState) => state.audio.playback.loopedTrackList);
   // Redux states
   const currentTrack = useSelector(
     (state: RootState) => state.audio.playback.currentTrack as Track | undefined
@@ -68,36 +69,32 @@ const MusicPlayer: React.FC = () => {
     (state: RootState) => state.audio.playback.trackDuration
   );
 
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
   // LOG: Track Updates
   useEffect(() => {
-    console.log("🎵 Current Track Updated:", currentTrack);
-    console.log("Audio Ref: ", audioRef?.current?.src);
   }, [currentTrack, audioRef]);
 
   useEffect(() => {
     if (!audioRef.current || !currentTrack) return;
-
+  
+    const audioElement = audioRef.current;
     const newSrc = `/audio/tracks/${currentTrack.file}`;
-    console.log("🎶 Setting Audio Source:", newSrc);
-
-    audioRef.current.pause();
-    audioRef.current.src = newSrc;
-    audioRef.current.load();
-
+  
+    audioElement.pause();
+    audioElement.src = newSrc;
+    audioElement.load();
+  
     const handleLoadedData = () => {
-      console.log("✅ Audio Loaded:", newSrc);
-      audioRef.current?.play().catch(error => console.error("❌ Error Playing:", error));
+      audioElement.play().catch(error => console.error("Error Playing:", error));
       dispatch(setIsPlaying(true));
     };
-
-    audioRef.current.addEventListener("loadeddata", handleLoadedData, { once: true });
-
+  
+    audioElement.addEventListener("loadeddata", handleLoadedData, { once: true });
+  
     return () => {
-      audioRef.current?.removeEventListener("loadeddata", handleLoadedData);
+      audioElement.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [currentTrack, audioRef, dispatch]);
+  
 
 
   // Local states
@@ -115,7 +112,6 @@ const MusicPlayer: React.FC = () => {
     if (!currentTrack?.file) return;
     
     const sourceUrl = `/audio/tracks/${currentTrack.file}`;
-    console.log("Using audio source URL:", sourceUrl);
     setSharedAudioUrl(sourceUrl);
 
     // No blob creation, so no cleanup is necessary.
@@ -135,42 +131,66 @@ const MusicPlayer: React.FC = () => {
     }
   }, [audioRef, isPlaying, dispatch]);
 
+  const savePlaybackTime = useCallback(() => {
+    if (!audioRef.current || !currentTrack?.id) return;
+  
+    const time = audioRef.current.currentTime;
+    const duration = audioRef.current.duration;
+    const remainingTime = duration - time;
+  
+    // 🔥 If user switches tracks with ≤ 45 seconds left, treat it as `onEnded`
+    if (!isNaN(duration) && isFinite(duration) && time > 0) {
+      if (remainingTime <= 45) {
+        localStorage.setItem(`track-${currentTrack.id}-time`, "0");
+      } else {
+        localStorage.setItem(`track-${currentTrack.id}-time`, time.toString());
+      }
+    }
+  }, [audioRef, currentTrack]);
+  
+  
   // ⏭️ **Next Track Handling**
   const nextTrack = useCallback(() => {
     if (!trackList.length) return;
-
+  
+    savePlaybackTime(); // ✅ Save playback time before switching
     const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
     if (currentIndex < trackList.length - 1) {
       const next = trackList[currentIndex + 1];
-      console.log("⏭️ Switching to Next Track:", next.file);
       dispatch(setCurrentTrack(next));
     }
-  }, [trackList, currentTrack, dispatch]);
-
+  }, [trackList, currentTrack, dispatch, savePlaybackTime]);
+  
   // ⏮️ **Previous Track Handling**
   const previousTrack = useCallback(() => {
     if (!trackList.length) return;
-
+  
+    savePlaybackTime(); // ✅ Save playback time before switching
     const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
     if (currentIndex > 0) {
       const prev = trackList[currentIndex - 1];
-      console.log("⏮️ Switching to Previous Track:", prev.file);
       dispatch(setCurrentTrack(prev));
     }
-  }, [trackList, currentTrack, dispatch]);
+  }, [trackList, currentTrack, dispatch, savePlaybackTime]);
 
   // 🔁 Loop Toggle
   const loopTrack = useCallback(() => {
-    if (!audioRef.current) return;
-
+    if (!audioRef.current || !currentTrack) return;
+  
     const newLoopState = !isLoopEnabled;
-    dispatch(setIsPlaying(newLoopState));
-    if (audioRef.current) {
-      audioRef.current.loop = newLoopState;
+    dispatch(setIsLoopEnabled(newLoopState));
+  
+    if (newLoopState) {
+      // ✅ Store a temporary trackList for looping, without affecting trackList
+      dispatch(setLoopedTrackList([currentTrack]));
+    } else {
+      // ✅ Clear tempTrackList when loop mode is disabled
+      dispatch(setLoopedTrackList([]));
     }
-    console.log("🔁 Loop Enabled:", newLoopState);
-  }, [audioRef, dispatch, isLoopEnabled]);
-
+  
+  }, [audioRef, dispatch, isLoopEnabled, currentTrack]);
+  
+  
   // ───────────────────────────────
   // RESIZE OBSERVER (for waveform width)
   // ───────────────────────────────
@@ -190,6 +210,35 @@ const MusicPlayer: React.FC = () => {
   // ───────────────────────────────
   // AUDIO EVENT HANDLERS
   // ───────────────────────────────
+
+  const handleTrackEnd = useCallback(() => {
+    // 🔥 Reset saved time when the track naturally ends
+    if (currentTrack?.id) {
+      localStorage.setItem(`track-${currentTrack.id}-time`, "0");
+    }
+  
+    if (isLoopEnabled && loopedTrackList.length) {
+      dispatch(setCurrentTrack(loopedTrackList[0]));
+  
+      // ✅ Ensure immediate restart without delay
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
+      return;
+    }
+  
+    const activeTrackList = isLoopEnabled ? loopedTrackList : trackList;
+    if (!activeTrackList.length) return;
+  
+    const currentIndex = activeTrackList.findIndex(track => track.id === currentTrack?.id);
+    if (currentIndex < activeTrackList.length - 1) {
+      dispatch(setCurrentTrack(activeTrackList[currentIndex + 1]));
+    } else {
+    }
+  }, [trackList, loopedTrackList, isLoopEnabled, currentTrack, dispatch, audioRef]);  
+
+  
   const handleTimeUpdate = () => {
     if (audioRef.current && currentTrack?.id) {
       const time = audioRef.current.currentTime;
@@ -198,56 +247,29 @@ const MusicPlayer: React.FC = () => {
     }
   };
 
-  // Restore saved playback time when audio loads data
   useEffect(() => {
     if (!audioRef.current || !currentTrack?.id) return;
-
-    const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
-    if (!savedTime) return;
-    const parsedTime = parseFloat(savedTime);
-    if (isNaN(parsedTime)) return;
-
+  
     const audioEl = audioRef.current;
+    const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
+  
+    // 🔥 Only restore playback time if track was changed **before** reaching onEnded
+    if (!savedTime || savedTime === "0") return; 
+  
+    const parsedTime = parseFloat(savedTime);
+    if (isNaN(parsedTime) || parsedTime >= audioEl.duration) return;
+  
     const handleLoadedData = () => {
-      if (audioEl.duration && parsedTime < audioEl.duration) {
-        audioEl.currentTime = parsedTime;
-        console.log(`Resumed track ${currentTrack.id} from ${parsedTime}s`);
-      }
+      audioEl.currentTime = parsedTime;
     };
-
+  
     audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
+  
     return () => {
       audioEl.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [audioRef, currentTrack]);
-
-  useEffect(() => {
-    const currentAudio = audioRef.current;
-    if (!currentAudio || !currentTrack?.id) return;
-
-    const handleLoadedMetadata = () => {
-      dispatch(setTrackDuration(currentAudio.duration));
-      currentAudio.loop = isLoopEnabled;
-      const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
-      if (savedTime) {
-        const parsedTime = parseFloat(savedTime);
-        if (!isNaN(parsedTime) && parsedTime < currentAudio.duration) {
-          currentAudio.currentTime = parsedTime;
-          console.log(`Resumed track ${currentTrack.id} from ${parsedTime}s`);
-        }
-      }
-    };
-
-    if (currentAudio.readyState >= 1) {
-      handleLoadedMetadata();
-    } else {
-      currentAudio.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
-    }
-
-    return () => {
-      currentAudio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [dispatch, audioRef, isLoopEnabled, currentTrack]);
+  
 
   // ───────────────────────────────
   // KEYBOARD SHORTCUTS
@@ -255,6 +277,9 @@ const MusicPlayer: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!audioRef.current) return;
+  
+      const audioElement = audioRef.current; // ✅ Store ref in a local variable
+  
       switch (event.key) {
         case " ":
         case "Spacebar":
@@ -262,19 +287,43 @@ const MusicPlayer: React.FC = () => {
           togglePlayPause();
           break;
         case "ArrowLeft":
-          audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+          if (event.shiftKey) {
+            event.preventDefault();
+            previousTrack(); // ⏮ Shift + Left => Previous Track
+          } else if (!isNaN(audioElement.duration) && isFinite(audioElement.duration)) {
+            audioElement.currentTime = Math.max(0, audioElement.currentTime - 10); // ⏪ Seek -10s
+          }
           break;
         case "ArrowRight":
-          audioRef.current.currentTime = Math.min(
-            audioRef.current.duration,
-            audioRef.current.currentTime + 10
-          );
+          if (event.shiftKey) {
+            event.preventDefault();
+            nextTrack(); // ⏭ Shift + Right => Next Track
+          } else if (!isNaN(audioElement.duration) && isFinite(audioElement.duration)) {
+            audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 10); // ⏩ Seek +10s
+          }
+          break;
+        case "ArrowUp":
+          event.preventDefault();
+          setVolume((prevVolume) => {
+            const newVolume = event.shiftKey ? 1 : Math.min(1, prevVolume + 0.02); // 🔼 Shift + Up → 100%, Up → +2%
+            if (audioElement) audioElement.volume = newVolume;
+            return newVolume;
+          });
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          setVolume((prevVolume) => {
+            const newVolume = event.shiftKey ? 0 : Math.max(0, prevVolume - 0.02); // 🔽 Shift + Down → 0%, Down → -2%
+            if (audioElement) audioElement.volume = newVolume;
+            return newVolume;
+          });
           break;
       }
     };
+  
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [audioRef, togglePlayPause]);
+  }, [audioRef, togglePlayPause, previousTrack, nextTrack]);  
 
   // ───────────────────────────────
   // VOLUME LOGIC
@@ -377,7 +426,7 @@ const MusicPlayer: React.FC = () => {
             className="hidden"
             ref={audioRef}
             autoPlay={isPlaying}
-            onEnded={() => dispatch(setIsPlaying(false))}
+            onEnded={handleTrackEnd}  // 🔥 Automatically move to next track
             onPause={() => dispatch(setIsPlaying(false))}
             onPlay={() => dispatch(setIsPlaying(true))}
             onTimeUpdate={handleTimeUpdate}
@@ -420,11 +469,13 @@ const MusicPlayer: React.FC = () => {
                 className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
               />
             </div>
-            <button className="items-center p-2 ml-4 text-neutral-400 dark:text-white cursor-pointer">
+            <button 
+              className="items-center p-2 ml-4 text-neutral-400 dark:text-white cursor-pointer focus:outline-none focus:ring-0"
+              onClick={loopTrack}  
+            >
               <FontAwesomeIcon
                 icon={faRepeat}
                 size="sm"
-                onClick={loopTrack}
                 className={`cursor-pointer hover:opacity-75 ${
                   isLoopEnabled ? "text-blue-500" : "text-neutral-600 dark:text-white"
                 }`}

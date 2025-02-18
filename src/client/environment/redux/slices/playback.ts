@@ -58,44 +58,54 @@ interface Track {
   };
 }
 
+
 interface PlaybackState {
   currentTrack: Track | undefined;
   isPlaying: boolean;
-  trackInfo: boolean;
+  trackList: Track[];
   isLoopEnabled: boolean;
   isVolumeVisible: boolean;
   currentTime: number;
   trackDuration: number;
+  audioSource: string; // 🔥 Stores the audio URL
 }
 
 const initialState: PlaybackState = {
   currentTrack: undefined,
   isPlaying: false,
-  trackInfo: false,
+  trackList: [],
   isLoopEnabled: false,
   isVolumeVisible: false,
   currentTime: 0,
   trackDuration: 0,
+  audioSource: "", // Default to empty string
+};
+
+// ✅ Helper function for fetching the audio source
+const getAudioSource = (track: Track | undefined) => {
+  if (!track?.file) return "";
+  return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${track.file}`;
 };
 
 const playbackSlice = createSlice({
-  name: 'playback',
+  name: "playback",
   initialState,
   reducers: {
     setCurrentTrack: (state, action: PayloadAction<Track | undefined>) => {
       state.currentTrack = action.payload;
+      state.audioSource = getAudioSource(action.payload); // 🔥 Update source
     },
     setIsPlaying: (state, action: PayloadAction<boolean>) => {
       state.isPlaying = action.payload;
+    },
+    setTrackList: (state, action: PayloadAction<Track[]>) => {
+      state.trackList = action.payload;
     },
     setIsLoopEnabled: (state, action: PayloadAction<boolean>) => {
       state.isLoopEnabled = action.payload;
     },
     setIsVolumeVisible: (state, action: PayloadAction<boolean>) => {
       state.isVolumeVisible = action.payload;
-    },
-    setTrackInfo: (state, action: PayloadAction<boolean>) => {
-      state.trackInfo = action.payload;
     },
     setCurrentTime: (state, action: PayloadAction<number>) => {
       state.currentTime = action.payload;
@@ -106,11 +116,11 @@ const playbackSlice = createSlice({
   },
 });
 
-export const { 
-  setCurrentTrack, 
-  setIsPlaying, 
-  setIsLoopEnabled, 
-  setTrackInfo, 
+export const {
+  setCurrentTrack,
+  setIsPlaying,
+  setTrackList,
+  setIsLoopEnabled,
   setIsVolumeVisible,
   setCurrentTime,
   setTrackDuration,

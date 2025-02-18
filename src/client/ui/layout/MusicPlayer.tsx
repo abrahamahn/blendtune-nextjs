@@ -10,7 +10,6 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/client/environment/redux/store";
 import { useAudio } from "@/client/environment/services/audioService";
-import { useTracks } from "@/client/environment/services/trackService";
 import {
   setIsPlaying,
   setCurrentTrack,
@@ -18,7 +17,6 @@ import {
   setIsVolumeVisible,
   setCurrentTime,
   setTrackDuration,
-  setTrackInfo,
 } from "@/client/environment/redux/slices/playback";
 import { Track } from "@/shared/types/track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -47,7 +45,8 @@ function formatTime(timeInSeconds: number | undefined) {
 const MusicPlayer: React.FC = () => {
   const dispatch = useDispatch();
   const { audioRef } = useAudio(); // Global audioRef
-  const { tracks } = useTracks();
+
+  const trackList = useSelector((state: RootState) => state.audio.playback.trackList);
 
   // Redux states
   const currentTrack = useSelector(
@@ -69,6 +68,38 @@ const MusicPlayer: React.FC = () => {
     (state: RootState) => state.audio.playback.trackDuration
   );
 
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // LOG: Track Updates
+  useEffect(() => {
+    console.log("🎵 Current Track Updated:", currentTrack);
+    console.log("Audio Ref: ", audioRef?.current?.src);
+  }, [currentTrack, audioRef]);
+
+  useEffect(() => {
+    if (!audioRef.current || !currentTrack) return;
+
+    const newSrc = `/audio/tracks/${currentTrack.file}`;
+    console.log("🎶 Setting Audio Source:", newSrc);
+
+    audioRef.current.pause();
+    audioRef.current.src = newSrc;
+    audioRef.current.load();
+
+    const handleLoadedData = () => {
+      console.log("✅ Audio Loaded:", newSrc);
+      audioRef.current?.play().catch(error => console.error("❌ Error Playing:", error));
+      dispatch(setIsPlaying(true));
+    };
+
+    audioRef.current.addEventListener("loadeddata", handleLoadedData, { once: true });
+
+    return () => {
+      audioRef.current?.removeEventListener("loadeddata", handleLoadedData);
+    };
+  }, [currentTrack, audioRef, dispatch]);
+
+
   // Local states
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
@@ -83,76 +114,62 @@ const MusicPlayer: React.FC = () => {
   useEffect(() => {
     if (!currentTrack?.file) return;
     
-    const sourceUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${currentTrack.file}`;
+    const sourceUrl = `/audio/tracks/${currentTrack.file}`;
     console.log("Using audio source URL:", sourceUrl);
     setSharedAudioUrl(sourceUrl);
-  
+
     // No blob creation, so no cleanup is necessary.
   }, [currentTrack?.file]);
   
-  
-  // ───────────────────────────────
-  // PLAY/PAUSE TOGGLE
-  // ───────────────────────────────
-  
+    
+  // Play/Pause Toggle
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
+
     if (isPlaying) {
-      console.log("Pausing track:", currentTrack?.file);
       audioRef.current.pause();
+      dispatch(setIsPlaying(false));
     } else {
-      console.log("Playing track:", currentTrack?.file);
-      audioRef.current.volume = volume;
-      audioRef.current
-        .play()
-        .catch((error) => console.error("Error playing the track:", error));
-    }
-  }, [audioRef, isPlaying, currentTrack?.file, volume]);
-
-  // ───────────────────────────────
-  // PREVIOUS/NEXT TRACK
-  // ───────────────────────────────
-  const previousTrack = useCallback(() => {
-    const currentIndex = tracks.findIndex(
-      (track: Track) => track.id === currentTrack?.id
-    );
-    if (currentIndex > 0) {
-      const prev = tracks[currentIndex - 1];
-      console.log("Switching to previous track:", prev.file);
-      dispatch(setCurrentTrack(prev));
+      audioRef.current.play().catch(error => console.error("❌ Error Playing:", error));
       dispatch(setIsPlaying(true));
     }
-  }, [tracks, currentTrack?.id, dispatch]);
+  }, [audioRef, isPlaying, dispatch]);
 
+  // ⏭️ **Next Track Handling**
   const nextTrack = useCallback(() => {
-    const currentIndex = tracks.findIndex(
-      (track: Track) => track.id === currentTrack?.id
-    );
-    if (currentIndex < tracks.length - 1) {
-      const nxt = tracks[currentIndex + 1];
-      console.log("Switching to next track:", nxt.file);
-      dispatch(setCurrentTrack(nxt));
-      dispatch(setIsPlaying(true));
-    }
-  }, [tracks, currentTrack?.id, dispatch]);
+    if (!trackList.length) return;
 
-  // ───────────────────────────────
-  // LOOP
-  // ───────────────────────────────
+    const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
+    if (currentIndex < trackList.length - 1) {
+      const next = trackList[currentIndex + 1];
+      console.log("⏭️ Switching to Next Track:", next.file);
+      dispatch(setCurrentTrack(next));
+    }
+  }, [trackList, currentTrack, dispatch]);
+
+  // ⏮️ **Previous Track Handling**
+  const previousTrack = useCallback(() => {
+    if (!trackList.length) return;
+
+    const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
+    if (currentIndex > 0) {
+      const prev = trackList[currentIndex - 1];
+      console.log("⏮️ Switching to Previous Track:", prev.file);
+      dispatch(setCurrentTrack(prev));
+    }
+  }, [trackList, currentTrack, dispatch]);
+
+  // 🔁 Loop Toggle
   const loopTrack = useCallback(() => {
     if (!audioRef.current) return;
-    const newLoopState = !isLoopEnabled;
-    dispatch(setIsLoopEnabled(newLoopState));
-    audioRef.current.loop = newLoopState;
-    console.log("Loop state changed to:", newLoopState);
-  }, [audioRef, dispatch, isLoopEnabled]);
 
-  // ───────────────────────────────
-  // OPEN TRACK INFO
-  // ───────────────────────────────
-  const openTrackInfo = () => {
-    dispatch(setTrackInfo(true));
-  };
+    const newLoopState = !isLoopEnabled;
+    dispatch(setIsPlaying(newLoopState));
+    if (audioRef.current) {
+      audioRef.current.loop = newLoopState;
+    }
+    console.log("🔁 Loop Enabled:", newLoopState);
+  }, [audioRef, dispatch, isLoopEnabled]);
 
   // ───────────────────────────────
   // RESIZE OBSERVER (for waveform width)
@@ -506,7 +523,6 @@ const MusicPlayer: React.FC = () => {
               <div className="flex flex-col justify-left items-left">
                 <button
                   className="items-start justify-start cursor-pointer"
-                  onClick={openTrackInfo}
                 >
                   <p className="flex items-start justify-start text-left text-neutral-600 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
@@ -596,7 +612,6 @@ const MusicPlayer: React.FC = () => {
               <div className="mb-1">
                 <button
                   className="items-start justify-start cursor-pointer"
-                  onClick={openTrackInfo}
                 >
                   <p className="flex items-start justify-start text-left text-neutral-800 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [

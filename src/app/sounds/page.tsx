@@ -29,6 +29,7 @@ import {
 } from "@/client/utils/helpers/filters";
 import { Track } from "@/shared/types/track";
 import { useRightSidebar } from "@/client/utils/context/RightSidebarContext";
+import { setTrackList } from "@/client/environment/redux/slices/playback";
 
 const Sounds: React.FC = () => {
   // Local mounting state.
@@ -82,7 +83,7 @@ const Sounds: React.FC = () => {
     (selectedTrack: Track) => {
       if (!audioRef.current || isTransitioning) return;
       setIsTransitioning(true);
-      setTimeout(() => setIsTransitioning(false), 300);
+      setTimeout(() => setIsTransitioning(false), 100);
 
       if (currentTrack && selectedTrack.id === currentTrack.id) {
         if (isPlaying) {
@@ -263,6 +264,12 @@ const Sounds: React.FC = () => {
     },
     [filteredTracks, sortByCriteria]
   );
+
+  useEffect(() => {
+    if (filteredTracks.length > 0) {
+      dispatch(setTrackList(filteredTracks));
+    }
+  }, [filteredTracks, dispatch]);
 
   // Render only after mounting.
   return isMounted ? (

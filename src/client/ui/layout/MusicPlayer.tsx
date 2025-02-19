@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 import React, {
   useState,
   useEffect,
@@ -13,10 +13,11 @@ import { useAudio } from "@/client/environment/services/audioService";
 import {
   setIsPlaying,
   setCurrentTrack,
-  setIsLoopEnabled,
+  setLoopedTrackList,
+  setLoopMode,
   setIsVolumeVisible,
   setCurrentTime,
-  setLoopedTrackList,
+  setTrackDuration,
 } from "@/client/environment/redux/slices/playback";
 import { Track } from "@/shared/types/track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -55,9 +56,9 @@ const MusicPlayer: React.FC = () => {
   );
   const isPlaying = useSelector((state: RootState) => state.audio.playback.isPlaying);
   const isVolumeVisible = useSelector((state: RootState) => state.audio.playback.isVolumeVisible);
-  const isLoopEnabled = useSelector((state: RootState) => state.audio.playback.isLoopEnabled);
   const currentTime = useSelector((state: RootState) => state.audio.playback.currentTime);
   const trackDuration = useSelector((state: RootState) => state.audio.playback.trackDuration);
+  const loopMode = useSelector((state: RootState) => state.audio.playback.loopMode);
 
   useEffect(() => {}, [currentTrack, audioRef]);
 
@@ -149,14 +150,20 @@ const MusicPlayer: React.FC = () => {
 
   const loopTrack = useCallback(() => {
     if (!audioRef.current || !currentTrack) return;
-    const newLoopState = !isLoopEnabled;
-    dispatch(setIsLoopEnabled(newLoopState));
-    if (newLoopState) {
+  
+    // Cycle through the loop modes: off → one → all → off
+    if (loopMode === "off") {
+      dispatch(setLoopMode("one"));
       dispatch(setLoopedTrackList([currentTrack]));
-    } else {
+    } else if (loopMode === "one") {
+      dispatch(setLoopMode("all"));
+      dispatch(setLoopedTrackList([]));
+    } else if (loopMode === "all") {
+      dispatch(setLoopMode("off"));
       dispatch(setLoopedTrackList([]));
     }
-  }, [audioRef, dispatch, isLoopEnabled, currentTrack]);
+  }, [audioRef, currentTrack, loopMode, dispatch]);
+  
 
   // Resize observer for waveform width
   useEffect(() => {
@@ -176,24 +183,45 @@ const MusicPlayer: React.FC = () => {
     if (currentTrack?.id) {
       localStorage.setItem(`track-${currentTrack.id}-time`, "0");
     }
-    if (isLoopEnabled && loopedTrackList.length) {
-      dispatch(setCurrentTrack(loopedTrackList[0]));
+    if (loopMode === "one") {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play();
+        audioRef.current.play().catch((error) => {
+          if (error.name !== "AbortError") {
+            console.error("Error playing audio:", error);
+          }
+        });
       }
       return;
+    } else if (loopMode === "all") {
+      const currentIndex = trackList.findIndex(
+        (track) => track.id === currentTrack?.id
+      );
+      if (currentIndex === trackList.length - 1) {
+        dispatch(setCurrentTrack(trackList[0]));
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch((error) => {
+            if (error.name !== "AbortError") {
+              console.error("Error playing audio:", error);
+            }
+          });
+        }
+      } else {
+        dispatch(setCurrentTrack(trackList[currentIndex + 1]));
+      }
+      return;
+    } else {
+      // loopMode === "off"
+      const currentIndex = trackList.findIndex(
+        (track) => track.id === currentTrack?.id
+      );
+      if (currentIndex < trackList.length - 1) {
+        dispatch(setCurrentTrack(trackList[currentIndex + 1]));
+      }
     }
-    const activeTrackList = isLoopEnabled ? loopedTrackList : trackList;
-    if (!activeTrackList.length) return;
-    const currentIndex = activeTrackList.findIndex(
-      (track) => track.id === currentTrack?.id
-    );
-    if (currentIndex < activeTrackList.length - 1) {
-      dispatch(setCurrentTrack(activeTrackList[currentIndex + 1]));
-    }
-  }, [trackList, loopedTrackList, isLoopEnabled, currentTrack, dispatch, audioRef]);
-
+  }, [trackList, loopMode, currentTrack, dispatch, audioRef]);
+  
   const handleTimeUpdate = () => {
     if (audioRef.current && currentTrack?.id) {
       const time = audioRef.current.currentTime;
@@ -363,7 +391,6 @@ const MusicPlayer: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
       const wheelEvent = e as WheelEvent;
-      // If already at an extreme, further scrolling closes the volume bar.
       if (volume === 1 && wheelEvent.deltaY < 0) {
         dispatch(setIsVolumeVisible(false));
         return;
@@ -388,10 +415,8 @@ const MusicPlayer: React.FC = () => {
   }, [isVolumeVisible, audioRef, dispatch, volume]);
 
   // --- MOUSE WHEEL ON MUSIC PLAYER ---
-  // This handler is attached to the outer container and updates volume when hovering over MusicPlayer.
   const handleMusicPlayerWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // If the volume bar is visible and we're at an extreme, close it.
     if (isVolumeVisible) {
       if (volume === 1 && e.deltaY < 0) {
         dispatch(setIsVolumeVisible(false));
@@ -410,9 +435,7 @@ const MusicPlayer: React.FC = () => {
     });
   };
 
-  // ───────────────────────────────
   // RENDER
-  // ───────────────────────────────
   const playPauseButton = isPlaying ? (
     <FontAwesomeIcon icon={faPause} className="text-white" />
   ) : (
@@ -425,7 +448,6 @@ const MusicPlayer: React.FC = () => {
   );
 
   return (
-    // Wrap MusicPlayer in a container that captures wheel events.
     <div onWheelCapture={handleMusicPlayerWheel}>
       {/* DESKTOP PLAYER */}
       <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
@@ -445,7 +467,6 @@ const MusicPlayer: React.FC = () => {
             )}
           </audio>
         </div>
-
         <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">
           {/* Navigation Buttons */}
           <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">
@@ -478,19 +499,21 @@ const MusicPlayer: React.FC = () => {
               />
             </div>
             <button
-              className="items-center p-2 ml-4 text-neutral-400 dark:text-white cursor-pointer focus:outline-none focus:ring-0"
+              className="relative items-center p-2 ml-4 cursor-pointer focus:outline-none focus:ring-0"
               onClick={loopTrack}
             >
               <FontAwesomeIcon
                 icon={faRepeat}
                 size="sm"
-                className={`cursor-pointer hover:opacity-75 ${
-                  isLoopEnabled ? "text-blue-500" : "text-neutral-600 dark:text-white"
-                }`}
+                className={`cursor-pointer hover:opacity-75 ${loopMode !== "off" ? "text-blue-500" : "text-white"}`}
               />
+              {loopMode !== "off" && (
+                <p className="absolute bottom-1 right-0 text-2xs text-blue-500">
+                  {loopMode === "one" ? "1" : "all"}
+                </p>
+              )}
             </button>
           </div>
-
           {/* Waveform & Timestamp */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
             <div ref={waveformContainerRef} className="w-full">
@@ -565,16 +588,13 @@ const MusicPlayer: React.FC = () => {
               )}
             </div>
           </div>
-
           {/* Song Info & Action Buttons */}
           <div className="flex items-center h-full md:w-80 lg:w-100">
             <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2">
               <div className="flex items-center justify-center h-12 w-12 lg:h-16 lg:w-16 ml-0 rounded-md p-0.5 md:p-0.5">
                 <Image
                   crossOrigin="anonymous"
-                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                    currentTrack?.metadata?.catalog ?? "default"
-                  }.jpg`}
+                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${currentTrack?.metadata?.catalog ?? "default"}.jpg`}
                   alt={currentTrack?.metadata?.title ?? ""}
                   className="w-full h-full object-cover rounded-md shadow-md cursor-pointer hover:opacity-75"
                   width={64}
@@ -629,7 +649,6 @@ const MusicPlayer: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* MOBILE PLAYER */}
       <div className="fixed px-3 rounded-lg bottom-4 w-full h-18 z-0 block md:hidden">
         <div className="border dark:border-neutral-800 flex flex-col justify-center items-center w-full rounded-lg border-neutral-200 bg-neutral-100/90 dark:bg-black/90 overflow-hidden h-full backdrop-blur-md">
@@ -655,14 +674,11 @@ const MusicPlayer: React.FC = () => {
               />
             </div>
           </div>
-
           <div className="flex justify-center items-center w-full h-full">
             <div className="flex items-center justify-center w-28 h-auto">
               <Image
                 crossOrigin="anonymous"
-                src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                  currentTrack?.metadata?.catalog ?? "default"
-                }.jpg`}
+                src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${currentTrack?.metadata?.catalog ?? "default"}.jpg`}
                 alt={currentTrack?.metadata?.title ?? ""}
                 className="h-full object-cover shadow-md"
                 width={70}

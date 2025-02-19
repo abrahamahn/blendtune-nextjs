@@ -20,35 +20,35 @@ interface Track {
       note: string;
       scale: string;
     };
-    genre: [{
+    genre: {
       maingenre: string;
       subgenre: string;
-    }];
+    }[];
     relatedartist: string[];
     mood: string[];
     tag: string[];
   };
-  arrangement: [{
+  arrangement: {
     time: string;
     section: string;
-  }];
-  instruments: [{
+  }[];
+  instruments: {
     main: string;
     sub: string;
-  }];
+  }[];
   sample: {
     file: string;
     samplepack: string;
     author: string;
     clearance: string;
   };
-  creator: [{
+  creator: {
     name: string;
     producer: boolean;
     songwriter: boolean;
     ipi: string;
     splits: string;
-  }];
+  }[];
   exclusive: {
     artistname: string;
     email: string;
@@ -63,7 +63,7 @@ interface PlaybackState {
   isPlaying: boolean;
   trackList: Track[];
   loopedTrackList: Track[];
-  isLoopEnabled: boolean;
+  loopMode: "off" | "one" | "all";
   isVolumeVisible: boolean;
   currentTime: number;
   trackDuration: number;
@@ -74,7 +74,7 @@ const initialState: PlaybackState = {
   isPlaying: false,
   trackList: [],
   loopedTrackList: [],
-  isLoopEnabled: false,
+  loopMode: "all",
   isVolumeVisible: false,
   currentTime: 0,
   trackDuration: 0,
@@ -96,8 +96,8 @@ const playbackSlice = createSlice({
     setLoopedTrackList: (state, action: PayloadAction<Track[]>) => {
       state.loopedTrackList = action.payload;
     },
-    setIsLoopEnabled: (state, action: PayloadAction<boolean>) => {
-      state.isLoopEnabled = action.payload;
+    setLoopMode: (state, action: PayloadAction<"off" | "one" | "all">) => {
+      state.loopMode = action.payload;
     },
     setIsVolumeVisible: (state, action: PayloadAction<boolean>) => {
       state.isVolumeVisible = action.payload;
@@ -116,7 +116,7 @@ export const {
   setIsPlaying,
   setTrackList,
   setLoopedTrackList,
-  setIsLoopEnabled,
+  setLoopMode,
   setIsVolumeVisible,
   setCurrentTime,
   setTrackDuration,

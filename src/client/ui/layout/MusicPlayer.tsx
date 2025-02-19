@@ -16,7 +16,6 @@ import {
   setIsLoopEnabled,
   setIsVolumeVisible,
   setCurrentTime,
-  setTrackDuration,
   setLoopedTrackList,
 } from "@/client/environment/redux/slices/playback";
 import { Track } from "@/shared/types/track";
@@ -26,6 +25,8 @@ import {
   faForwardStep,
   faRepeat,
   faVolumeLow,
+  faVolumeXmark,
+  faVolumeHigh,
   faPlay,
   faPause,
   faEllipsisVertical,
@@ -45,100 +46,74 @@ function formatTime(timeInSeconds: number | undefined) {
 
 const MusicPlayer: React.FC = () => {
   const dispatch = useDispatch();
-  const { audioRef } = useAudio(); // Global audioRef
+  const { audioRef } = useAudio();
 
   const trackList = useSelector((state: RootState) => state.audio.playback.trackList);
   const loopedTrackList = useSelector((state: RootState) => state.audio.playback.loopedTrackList);
-  // Redux states
   const currentTrack = useSelector(
     (state: RootState) => state.audio.playback.currentTrack as Track | undefined
   );
-  const isPlaying = useSelector(
-    (state: RootState) => state.audio.playback.isPlaying
-  );
-  const isVolumeVisible = useSelector(
-    (state: RootState) => state.audio.playback.isVolumeVisible
-  );
-  const isLoopEnabled = useSelector(
-    (state: RootState) => state.audio.playback.isLoopEnabled
-  );
-  const currentTime = useSelector(
-    (state: RootState) => state.audio.playback.currentTime
-  );
-  const trackDuration = useSelector(
-    (state: RootState) => state.audio.playback.trackDuration
-  );
+  const isPlaying = useSelector((state: RootState) => state.audio.playback.isPlaying);
+  const isVolumeVisible = useSelector((state: RootState) => state.audio.playback.isVolumeVisible);
+  const isLoopEnabled = useSelector((state: RootState) => state.audio.playback.isLoopEnabled);
+  const currentTime = useSelector((state: RootState) => state.audio.playback.currentTime);
+  const trackDuration = useSelector((state: RootState) => state.audio.playback.trackDuration);
 
-  // LOG: Track Updates
-  useEffect(() => {
-  }, [currentTrack, audioRef]);
+  useEffect(() => {}, [currentTrack, audioRef]);
 
   useEffect(() => {
     if (!audioRef.current || !currentTrack) return;
-  
     const audioElement = audioRef.current;
     const newSrc = `/audio/tracks/${currentTrack.file}`;
-  
     audioElement.pause();
     audioElement.src = newSrc;
     audioElement.load();
-  
     const handleLoadedData = () => {
-      audioElement.play().catch(error => console.error("Error Playing:", error));
+      audioElement
+        .play()
+        .catch((error) => console.error("Error Playing:", error));
       dispatch(setIsPlaying(true));
     };
-  
     audioElement.addEventListener("loadeddata", handleLoadedData, { once: true });
-  
     return () => {
       audioElement.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [currentTrack, audioRef, dispatch]);
-  
 
-
-  // Local states
+  // Local states and refs
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
   const [volume, setVolume] = useState(1);
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
   const volumeContainerRef = useRef<HTMLDivElement>(null);
   const volumeBarRef = useRef<HTMLDivElement>(null);
-
-  // Shared blob URL state for the audio file
   const [sharedAudioUrl, setSharedAudioUrl] = useState<string>("");
 
   useEffect(() => {
     if (!currentTrack?.file) return;
-    
     const sourceUrl = `/audio/tracks/${currentTrack.file}`;
     setSharedAudioUrl(sourceUrl);
-
-    // No blob creation, so no cleanup is necessary.
   }, [currentTrack?.file]);
-  
-    
-  // Play/Pause Toggle
+
+  // Play/Pause toggle
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
-
     if (isPlaying) {
       audioRef.current.pause();
       dispatch(setIsPlaying(false));
     } else {
-      audioRef.current.play().catch(error => console.error("❌ Error Playing:", error));
+      audioRef.current
+        .play()
+        .catch((error) => console.error("❌ Error Playing:", error));
       dispatch(setIsPlaying(true));
     }
   }, [audioRef, isPlaying, dispatch]);
 
   const savePlaybackTime = useCallback(() => {
     if (!audioRef.current || !currentTrack?.id) return;
-  
     const time = audioRef.current.currentTime;
     const duration = audioRef.current.duration;
     const remainingTime = duration - time;
-  
-    // 🔥 If user switches tracks with ≤ 45 seconds left, treat it as `onEnded`
     if (!isNaN(duration) && isFinite(duration) && time > 0) {
       if (remainingTime <= 45) {
         localStorage.setItem(`track-${currentTrack.id}-time`, "0");
@@ -147,58 +122,47 @@ const MusicPlayer: React.FC = () => {
       }
     }
   }, [audioRef, currentTrack]);
-  
-  
-  // ⏭️ **Next Track Handling**
+
   const nextTrack = useCallback(() => {
     if (!trackList.length) return;
-  
-    savePlaybackTime(); // ✅ Save playback time before switching
-    const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
+    savePlaybackTime();
+    const currentIndex = trackList.findIndex(
+      (track) => track.id === currentTrack?.id
+    );
     if (currentIndex < trackList.length - 1) {
       const next = trackList[currentIndex + 1];
       dispatch(setCurrentTrack(next));
     }
   }, [trackList, currentTrack, dispatch, savePlaybackTime]);
-  
-  // ⏮️ **Previous Track Handling**
+
   const previousTrack = useCallback(() => {
     if (!trackList.length) return;
-  
-    savePlaybackTime(); // ✅ Save playback time before switching
-    const currentIndex = trackList.findIndex(track => track.id === currentTrack?.id);
+    savePlaybackTime();
+    const currentIndex = trackList.findIndex(
+      (track) => track.id === currentTrack?.id
+    );
     if (currentIndex > 0) {
       const prev = trackList[currentIndex - 1];
       dispatch(setCurrentTrack(prev));
     }
   }, [trackList, currentTrack, dispatch, savePlaybackTime]);
 
-  // 🔁 Loop Toggle
   const loopTrack = useCallback(() => {
     if (!audioRef.current || !currentTrack) return;
-  
     const newLoopState = !isLoopEnabled;
     dispatch(setIsLoopEnabled(newLoopState));
-  
     if (newLoopState) {
-      // ✅ Store a temporary trackList for looping, without affecting trackList
       dispatch(setLoopedTrackList([currentTrack]));
     } else {
-      // ✅ Clear tempTrackList when loop mode is disabled
       dispatch(setLoopedTrackList([]));
     }
-  
   }, [audioRef, dispatch, isLoopEnabled, currentTrack]);
-  
-  
-  // ───────────────────────────────
-  // RESIZE OBSERVER (for waveform width)
-  // ───────────────────────────────
+
+  // Resize observer for waveform width
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        const { width } = entry.contentRect;
-        setWaveformWidth(width);
+        setWaveformWidth(entry.contentRect.width);
       }
     });
     if (waveformContainerRef.current) {
@@ -207,38 +171,29 @@ const MusicPlayer: React.FC = () => {
     return () => resizeObserver.disconnect();
   }, []);
 
-  // ───────────────────────────────
-  // AUDIO EVENT HANDLERS
-  // ───────────────────────────────
-
+  // Audio event handlers
   const handleTrackEnd = useCallback(() => {
-    // 🔥 Reset saved time when the track naturally ends
     if (currentTrack?.id) {
       localStorage.setItem(`track-${currentTrack.id}-time`, "0");
     }
-  
     if (isLoopEnabled && loopedTrackList.length) {
       dispatch(setCurrentTrack(loopedTrackList[0]));
-  
-      // ✅ Ensure immediate restart without delay
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
       }
       return;
     }
-  
     const activeTrackList = isLoopEnabled ? loopedTrackList : trackList;
     if (!activeTrackList.length) return;
-  
-    const currentIndex = activeTrackList.findIndex(track => track.id === currentTrack?.id);
+    const currentIndex = activeTrackList.findIndex(
+      (track) => track.id === currentTrack?.id
+    );
     if (currentIndex < activeTrackList.length - 1) {
       dispatch(setCurrentTrack(activeTrackList[currentIndex + 1]));
-    } else {
     }
-  }, [trackList, loopedTrackList, isLoopEnabled, currentTrack, dispatch, audioRef]);  
+  }, [trackList, loopedTrackList, isLoopEnabled, currentTrack, dispatch, audioRef]);
 
-  
   const handleTimeUpdate = () => {
     if (audioRef.current && currentTrack?.id) {
       const time = audioRef.current.currentTime;
@@ -249,37 +204,25 @@ const MusicPlayer: React.FC = () => {
 
   useEffect(() => {
     if (!audioRef.current || !currentTrack?.id) return;
-  
     const audioEl = audioRef.current;
     const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
-  
-    // 🔥 Only restore playback time if track was changed **before** reaching onEnded
-    if (!savedTime || savedTime === "0") return; 
-  
+    if (!savedTime || savedTime === "0") return;
     const parsedTime = parseFloat(savedTime);
     if (isNaN(parsedTime) || parsedTime >= audioEl.duration) return;
-  
     const handleLoadedData = () => {
       audioEl.currentTime = parsedTime;
     };
-  
     audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
-  
     return () => {
       audioEl.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [audioRef, currentTrack]);
-  
 
-  // ───────────────────────────────
-  // KEYBOARD SHORTCUTS
-  // ───────────────────────────────
+  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!audioRef.current) return;
-  
-      const audioElement = audioRef.current; // ✅ Store ref in a local variable
-  
+      const audioElement = audioRef.current;
       switch (event.key) {
         case " ":
         case "Spacebar":
@@ -289,23 +232,23 @@ const MusicPlayer: React.FC = () => {
         case "ArrowLeft":
           if (event.shiftKey) {
             event.preventDefault();
-            previousTrack(); // ⏮ Shift + Left => Previous Track
+            previousTrack();
           } else if (!isNaN(audioElement.duration) && isFinite(audioElement.duration)) {
-            audioElement.currentTime = Math.max(0, audioElement.currentTime - 10); // ⏪ Seek -10s
+            audioElement.currentTime = Math.max(0, audioElement.currentTime - 10);
           }
           break;
         case "ArrowRight":
           if (event.shiftKey) {
             event.preventDefault();
-            nextTrack(); // ⏭ Shift + Right => Next Track
+            nextTrack();
           } else if (!isNaN(audioElement.duration) && isFinite(audioElement.duration)) {
-            audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 10); // ⏩ Seek +10s
+            audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 10);
           }
           break;
         case "ArrowUp":
           event.preventDefault();
           setVolume((prevVolume) => {
-            const newVolume = event.shiftKey ? 1 : Math.min(1, prevVolume + 0.02); // 🔼 Shift + Up → 100%, Up → +2%
+            const newVolume = event.shiftKey ? 1 : Math.min(1, prevVolume + 0.02);
             if (audioElement) audioElement.volume = newVolume;
             return newVolume;
           });
@@ -313,29 +256,46 @@ const MusicPlayer: React.FC = () => {
         case "ArrowDown":
           event.preventDefault();
           setVolume((prevVolume) => {
-            const newVolume = event.shiftKey ? 0 : Math.max(0, prevVolume - 0.02); // 🔽 Shift + Down → 0%, Down → -2%
+            const newVolume = event.shiftKey ? 0 : Math.max(0, prevVolume - 0.02);
             if (audioElement) audioElement.volume = newVolume;
             return newVolume;
           });
           break;
       }
     };
-  
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [audioRef, togglePlayPause, previousTrack, nextTrack]);  
+  }, [audioRef, togglePlayPause, previousTrack, nextTrack]);
 
-  // ───────────────────────────────
-  // VOLUME LOGIC
-  // ───────────────────────────────
+  // --- VOLUME LOGIC ---
+  const volPercent = Math.round(volume * 100);
+  const iconTransform =
+    volPercent === 0 ? "translateX(2.5px)" :
+    volPercent === 100 ? "translateX(3.5px)" :
+    "translateX(0)";
+  const volumeIcon = (() => {
+    if (volPercent === 0) return faVolumeXmark;
+    if (volPercent === 100) return faVolumeHigh;
+    return faVolumeLow;
+  })();
+
   const toggleVolume = () => {
     dispatch(setIsVolumeVisible(!isVolumeVisible));
   };
 
   const calculateVolume = (clientY: number, rect: DOMRect) => {
-    const mouseY = clientY - rect.top;
-    let newVolume = 1 - mouseY / rect.height;
+    const newVolume = 1 - (clientY - rect.top) / rect.height;
     return Math.max(0, Math.min(1, newVolume));
+  };
+
+  const handleVolumeWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const step = 0.08;
+    setVolume((prevVolume) => {
+      const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(e.deltaY) * step));
+      if (audioRef.current) audioRef.current.volume = newVolume;
+      return newVolume;
+    });
   };
 
   const handleVolumeMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
@@ -345,9 +305,7 @@ const MusicPlayer: React.FC = () => {
     if (volumeBarRef.current) {
       const rect = volumeBarRef.current.getBoundingClientRect();
       const newVolume = calculateVolume(e.clientY, rect);
-      if (audioRef.current) {
-        audioRef.current.volume = newVolume;
-      }
+      if (audioRef.current) audioRef.current.volume = newVolume;
       setVolume(newVolume);
     }
     e.preventDefault();
@@ -359,17 +317,13 @@ const MusicPlayer: React.FC = () => {
         if (volumeBarRef.current) {
           const rect = volumeBarRef.current.getBoundingClientRect();
           const newVolume = calculateVolume(e.clientY, rect);
-          if (audioRef.current) {
-            audioRef.current.volume = newVolume;
-          }
+          if (audioRef.current) audioRef.current.volume = newVolume;
           setVolume(newVolume);
         }
         e.preventDefault();
       };
       document.addEventListener("mousemove", handleDocumentMouseMove);
-      return () => {
-        document.removeEventListener("mousemove", handleDocumentMouseMove);
-      };
+      return () => document.removeEventListener("mousemove", handleDocumentMouseMove);
     }
   }, [isDraggingVolume, audioRef]);
 
@@ -382,9 +336,7 @@ const MusicPlayer: React.FC = () => {
       }
     };
     document.addEventListener("mouseup", handleDocumentMouseUp);
-    return () => {
-      document.removeEventListener("mouseup", handleDocumentMouseUp);
-    };
+    return () => document.removeEventListener("mouseup", handleDocumentMouseUp);
   }, [isDraggingVolume]);
 
   useEffect(() => {
@@ -397,10 +349,66 @@ const MusicPlayer: React.FC = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dispatch]);
+
+  // Global wheel handler when volume bar is visible
+  useEffect(() => {
+    if (!isVolumeVisible) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+    const handleGlobalWheel: EventListener = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const wheelEvent = e as WheelEvent;
+      // If already at an extreme, further scrolling closes the volume bar.
+      if (volume === 1 && wheelEvent.deltaY < 0) {
+        dispatch(setIsVolumeVisible(false));
+        return;
+      }
+      if (volume === 0 && wheelEvent.deltaY > 0) {
+        dispatch(setIsVolumeVisible(false));
+        return;
+      }
+      const step = 0.05;
+      setVolume((prevVolume) => {
+        const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(wheelEvent.deltaY) * step));
+        if (audioRef.current) audioRef.current.volume = newVolume;
+        return newVolume;
+      });
+    };
+    const wheelOptions = { passive: false, capture: true } as AddEventListenerOptions;
+    document.addEventListener("wheel", handleGlobalWheel, wheelOptions);
+    return () => {
+      document.removeEventListener("wheel", handleGlobalWheel, wheelOptions);
+      document.body.style.overflow = "";
+    };
+  }, [isVolumeVisible, audioRef, dispatch, volume]);
+
+  // --- MOUSE WHEEL ON MUSIC PLAYER ---
+  // This handler is attached to the outer container and updates volume when hovering over MusicPlayer.
+  const handleMusicPlayerWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    // If the volume bar is visible and we're at an extreme, close it.
+    if (isVolumeVisible) {
+      if (volume === 1 && e.deltaY < 0) {
+        dispatch(setIsVolumeVisible(false));
+        return;
+      }
+      if (volume === 0 && e.deltaY > 0) {
+        dispatch(setIsVolumeVisible(false));
+        return;
+      }
+    }
+    const step = 0.05;
+    setVolume((prevVolume) => {
+      const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(e.deltaY) * step));
+      if (audioRef.current) audioRef.current.volume = newVolume;
+      return newVolume;
+    });
+  };
 
   // ───────────────────────────────
   // RENDER
@@ -410,7 +418,6 @@ const MusicPlayer: React.FC = () => {
   ) : (
     <FontAwesomeIcon icon={faPlay} className="ml-0.5 text-white" />
   );
-
   const playPauseButtonMobile = isPlaying ? (
     <FontAwesomeIcon icon={faPause} size="lg" className="text-white" />
   ) : (
@@ -418,7 +425,8 @@ const MusicPlayer: React.FC = () => {
   );
 
   return (
-    <div>
+    // Wrap MusicPlayer in a container that captures wheel events.
+    <div onWheelCapture={handleMusicPlayerWheel}>
       {/* DESKTOP PLAYER */}
       <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
         <div className="flex w-full h-full items-center justify-center">
@@ -426,7 +434,7 @@ const MusicPlayer: React.FC = () => {
             className="hidden"
             ref={audioRef}
             autoPlay={isPlaying}
-            onEnded={handleTrackEnd}  // 🔥 Automatically move to next track
+            onEnded={handleTrackEnd}
             onPause={() => dispatch(setIsPlaying(false))}
             onPlay={() => dispatch(setIsPlaying(true))}
             onTimeUpdate={handleTimeUpdate}
@@ -469,9 +477,9 @@ const MusicPlayer: React.FC = () => {
                 className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
               />
             </div>
-            <button 
+            <button
               className="items-center p-2 ml-4 text-neutral-400 dark:text-white cursor-pointer focus:outline-none focus:ring-0"
-              onClick={loopTrack}  
+              onClick={loopTrack}
             >
               <FontAwesomeIcon
                 icon={faRepeat}
@@ -505,7 +513,7 @@ const MusicPlayer: React.FC = () => {
                 <p />
               )}
             </div>
-            <div className="hidden lg:flex text-xs mx-2 w-28 h-full items-center justify-center user-select-none">
+            <div className="hidden lg:flex text-xs mx-2 w-20 h-full items-center justify-center user-select-none">
               <p className="text-neutral-600 dark:text-white">
                 {formatTime(audioRef.current?.currentTime)}
                 <span className="text-transparent"> / </span>
@@ -514,14 +522,17 @@ const MusicPlayer: React.FC = () => {
                 </span>
               </p>
             </div>
-
             {/* Volume Icon & Slider */}
-            <div ref={volumeContainerRef} className="relative flex justify-center md:mx-4 lg:mx-1">
-              <button onClick={toggleVolume}>
-                <div className="cursor-pointer">
+            <div ref={volumeContainerRef} className="relative flex justify-center">
+              <button
+                onClick={toggleVolume}
+                className="focus:outline-none focus:ring-0 inline-block w-10 h-10"
+              >
+                <div className="w-full h-full flex items-center justify-center">
                   <FontAwesomeIcon
-                    icon={faVolumeLow}
+                    icon={volumeIcon}
                     size="lg"
+                    style={{ transform: iconTransform }}
                     className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
                   />
                 </div>
@@ -529,7 +540,8 @@ const MusicPlayer: React.FC = () => {
               {isVolumeVisible && (
                 <div
                   onMouseDown={handleVolumeMouseDown}
-                  className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[-3px] transform z-10 flex justify-center items-center"
+                  onWheel={handleVolumeWheel}
+                  className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[5px] transform z-10 flex justify-center items-center"
                 >
                   <div
                     ref={volumeBarRef}
@@ -573,9 +585,7 @@ const MusicPlayer: React.FC = () => {
             </div>
             <div className="flex flex-col justify-center items-left p-4 w-40 lg:w-60 h-full">
               <div className="flex flex-col justify-left items-left">
-                <button
-                  className="items-start justify-start cursor-pointer"
-                >
+                <button className="items-start justify-start cursor-pointer">
                   <p className="flex items-start justify-start text-left text-neutral-600 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
                     {currentTrack?.info?.mood[1]},{" "}
@@ -662,9 +672,7 @@ const MusicPlayer: React.FC = () => {
             </div>
             <div className="flex flex-col items-start justify-start ml-3 w-full h-full">
               <div className="mb-1">
-                <button
-                  className="items-start justify-start cursor-pointer"
-                >
+                <button className="items-start justify-start cursor-pointer">
                   <p className="flex items-start justify-start text-left text-neutral-800 dark:text-neutral-200 text-sm font-semibold mb-1">
                     {currentTrack?.metadata?.title.toUpperCase()} [
                     {currentTrack?.info?.mood[1]}, {currentTrack?.info?.relatedartist[0]}]
@@ -684,7 +692,7 @@ const MusicPlayer: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-row justify-center items-center h-full w-24 pr-8">
+            <div className="flex flex-row justify-center items-center w-24 pr-8">
               <div className="items-center mr-2 p-2">
                 <FontAwesomeIcon
                   icon={faBackwardStep}

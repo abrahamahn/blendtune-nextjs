@@ -57,7 +57,7 @@ const SideBar: React.FC = () => {
 
   return (
     <header>
-        <div className="bg-neutral-200 dark:bg-neutral-950 rounded-xl">
+        <div className="bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
           <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
             <Link
               href="./"
@@ -68,7 +68,7 @@ const SideBar: React.FC = () => {
             </Link>
           </div>
         </div>
-        <div className="mt-2 bg-white dark:bg-neutral-950 rounded-xl">
+        <div className="mt-2 bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
           <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
             <div className="flex flex-col justify-center items-center pt-1 text-neutral-600 dark:text-neutral-300">
               <button
@@ -91,7 +91,7 @@ const SideBar: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-2 bg-white dark:bg-neutral-950 rounded-xl">
+        <div className="mt-2 bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
           <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
             <div className="flex flex-col justify-center items-center pt-1 text-neutral-600 dark:text-neutral-300">
               {pageItems.map((page) => (

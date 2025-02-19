@@ -120,11 +120,23 @@ const Waveform: React.FC<WaveformProps> = ({
       // (Note: we reverse the color stops so that when blended, the alpha “fades in”—adjust as desired.)
       gradient.addColorStop(1, "rgb(0,60,255)");
       gradient.addColorStop(0, "rgb(0,120,255)");
-
       // Create a grey gradient for the unplayed region.
       const greyGradient = ctx.createLinearGradient(0, offsetY, 0, offsetY + baseBarHeight);
-      greyGradient.addColorStop(1, "rgb(100,100,100)");
-      greyGradient.addColorStop(0, "rgb(150,150,150)");
+
+      // Check if the user prefers dark mode.
+      const isDarkMode =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      if (isDarkMode) {
+        // Use your current dark mode colors.
+        greyGradient.addColorStop(1, "rgb(100,100,100)");
+        greyGradient.addColorStop(0, "rgb(150,150,150)");
+      } else {
+        // Lighter colors for light mode (adjust these values as desired).
+        greyGradient.addColorStop(1, "rgb(180,180,180)");
+        greyGradient.addColorStop(0, "rgb(190,190,190)");
+      }
+
 
       if (!isDragging) {
         // Not dragging: smoothly blend from played (gradient) to unplayed (greyGradient)

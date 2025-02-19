@@ -112,16 +112,27 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
             >
               {/* Numbering / Equalizer / Play-Pause Icon */}
               <div className="relative text-neutral-500 mr-4 w-8 h-8 flex justify-center items-center">
-                {isCurrentTrack && isPlaying ? (
-                  // Always render EqualizerIcon with an opacity transition so that its animation state is preserved.
-                  <div className="transition-opacity duration-300 group-hover:opacity-0">
-                    <EqualizerIcon />
+                
+                {/* Equalizer Icon (Always rendered, perfectly centered) */}
+                {isCurrentTrack && (
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+                      isPlaying ? "opacity-100" : "opacity-70"
+                    } group-hover:opacity-0`}
+                  >
+                    <EqualizerIcon isPlaying={isPlaying} />
                   </div>
-                ) : (
-                  <p className="text-xs group-hover:opacity-0">{index + 1}</p>
                 )}
-                {/* Overlay Play/Pause Icon on hover */}
-                <div className="absolute z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 cursor-pointer">
+
+                {/* Track Number (Only shows when not current track) */}
+                {!isCurrentTrack && (
+                  <p className="text-xs transition-opacity duration-300 group-hover:opacity-0">
+                    {index + 1}
+                  </p>
+                )}
+
+                {/* Play/Pause Icon (Takes priority on hover) */}
+                <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 cursor-pointer">
                   {isCurrentTrack && isPlaying ? (
                     <FontAwesomeIcon
                       icon={faPause}

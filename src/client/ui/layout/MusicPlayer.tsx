@@ -17,7 +17,6 @@ import {
   setLoopMode,
   setIsVolumeVisible,
   setCurrentTime,
-  setTrackDuration,
 } from "@/client/environment/redux/slices/playback";
 import { Track } from "@/shared/types/track";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -437,9 +436,9 @@ const MusicPlayer: React.FC = () => {
 
   // RENDER
   const playPauseButton = isPlaying ? (
-    <FontAwesomeIcon icon={faPause} className="text-white" />
+    <FontAwesomeIcon icon={faPause} size="xl" className="text-black dark:text-white" />
   ) : (
-    <FontAwesomeIcon icon={faPlay} className="ml-0.5 text-white" />
+    <FontAwesomeIcon icon={faPlay} size="xl"className="ml-0.5 text-black dark:text-white" />
   );
   const playPauseButtonMobile = isPlaying ? (
     <FontAwesomeIcon icon={faPause} size="lg" className="text-white" />
@@ -450,8 +449,7 @@ const MusicPlayer: React.FC = () => {
   return (
     <div onWheelCapture={handleMusicPlayerWheel}>
       {/* DESKTOP PLAYER */}
-      <div className="fixed bottom-0 left-0 w-full z-10 hidden md:block">
-        <div className="flex w-full h-full items-center justify-center">
+      <div className="fixed bottom-0 left-0 w-full flex justify-center items-center">
           <audio
             className="hidden"
             ref={audioRef}
@@ -466,9 +464,8 @@ const MusicPlayer: React.FC = () => {
               <source src={sharedAudioUrl} type="audio/webm" />
             )}
           </audio>
-        </div>
-        <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md px-6">
-          {/* Navigation Buttons */}
+        <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md lg:px-6 px-0">
+          {/* Playback Buttons */}
           <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">
             <div className="items-center mr-4 p-2">
               <FontAwesomeIcon
@@ -479,7 +476,7 @@ const MusicPlayer: React.FC = () => {
               />
             </div>
             <button
-              className="flex bg-neutral-800 dark:bg-blue-600 rounded-full w-10 h-10 items-center justify-center user-select-none"
+              className="flex rounded-full w-10 h-10 items-center justify-center user-select-none"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -516,7 +513,7 @@ const MusicPlayer: React.FC = () => {
           </div>
           {/* Waveform & Timestamp */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
-            <div ref={waveformContainerRef} className="w-full">
+          <div ref={waveformContainerRef} className="flex-1 min-w-0 overflow-hidden">
               {currentTrack?.file && sharedAudioUrl ? (
                 <Waveform
                   audioUrl={sharedAudioUrl}
@@ -536,7 +533,7 @@ const MusicPlayer: React.FC = () => {
                 <p />
               )}
             </div>
-            <div className="hidden lg:flex text-xs mx-2 w-20 h-full items-center justify-center user-select-none">
+            <div className="hidden lg:flex text-xs ml-2 w-20 h-full shrink-0 items-center justify-center user-select-none">
               <p className="text-neutral-600 dark:text-white">
                 {formatTime(audioRef.current?.currentTime)}
                 <span className="text-transparent"> / </span>
@@ -546,7 +543,7 @@ const MusicPlayer: React.FC = () => {
               </p>
             </div>
             {/* Volume Icon & Slider */}
-            <div ref={volumeContainerRef} className="relative flex justify-center">
+            <div ref={volumeContainerRef} className="relative shrink-0 flex justify-center md:w-12 mr-3">
               <button
                 onClick={toggleVolume}
                 className="focus:outline-none focus:ring-0 inline-block w-10 h-10"
@@ -554,7 +551,7 @@ const MusicPlayer: React.FC = () => {
                 <div className="w-full h-full flex items-center justify-center">
                   <FontAwesomeIcon
                     icon={volumeIcon}
-                    size="lg"
+                    size="sm"
                     style={{ transform: iconTransform }}
                     className="cursor-pointer hover:opacity-75 text-neutral-800 dark:text-white"
                   />
@@ -564,7 +561,7 @@ const MusicPlayer: React.FC = () => {
                 <div
                   onMouseDown={handleVolumeMouseDown}
                   onWheel={handleVolumeWheel}
-                  className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[5px] transform z-10 flex justify-center items-center"
+                  className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[9px] transform z-10 flex justify-center items-center"
                 >
                   <div
                     ref={volumeBarRef}
@@ -589,7 +586,9 @@ const MusicPlayer: React.FC = () => {
             </div>
           </div>
           {/* Song Info & Action Buttons */}
-          <div className="flex items-center h-full md:w-80 lg:w-100">
+          <div className="flex items-center h-full w-full max-w-90 justify-center">
+
+            {/* Album Art */}
             <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2">
               <div className="flex items-center justify-center h-12 w-12 lg:h-16 lg:w-16 ml-0 rounded-md p-0.5 md:p-0.5">
                 <Image
@@ -603,47 +602,47 @@ const MusicPlayer: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col justify-center items-left p-4 w-40 lg:w-60 h-full">
-              <div className="flex flex-col justify-left items-left">
-                <button className="items-start justify-start cursor-pointer">
-                  <p className="flex items-start justify-start text-left text-neutral-600 dark:text-neutral-200 text-sm font-semibold mb-1">
-                    {currentTrack?.metadata?.title.toUpperCase()} [
-                    {currentTrack?.info?.mood[1]},{" "}
-                    {currentTrack?.info?.relatedartist[0]}]
+
+            {/* Song Info */}
+            <div className="flex flex-col justify-center p-4 min-w-40 max-w-40 lg:min-w-60 lg:max-w-60 h-full">
+              <div className="flex flex-col">
+                <button className="cursor-pointer text-left">
+                  <p
+                    className="text-neutral-600 dark:text-neutral-200 text-xs lg:text-sm font-semibold mb-2 whitespace-nowrap overflow-hidden text-ellipsis"
+                  >
+                    {currentTrack?.metadata?.title.toUpperCase()}
+                    {/* Extra details only show on medium screens and above */}
+                    <span className="hidden md:inline">
+                      {" ["}
+                      {currentTrack?.info?.mood?.[1]}, {currentTrack?.info?.relatedartist?.[0]}
+                      {"]"}
+                    </span>
                   </p>
                 </button>
               </div>
-              <div className="flex items-left flex-row justify-left m-0 p-0 mr-auto">
-                <p className="flex items-center text-2xs text-neutral-500 dark:text-white px-2 mr-1 border border-neutral-500 dark:border-neutral-500 rounded-md cursor-default">
-                  {currentTrack?.info?.key?.note}{" "}
-                  {currentTrack?.info?.key?.scale.substring(0, 3).toLowerCase()}
+              <div className="flex flex-row space-x-2">
+                <p className="text-2xs text-neutral-500 dark:text-white px-2 border border-neutral-500 dark:border-neutral-500 rounded-md">
+                  {currentTrack?.info?.key?.note} {currentTrack?.info?.key?.scale.substring(0, 3).toLowerCase()}
                 </p>
-                <p className="flex justify-center items-center text-2xs text-neutral-500 dark:text-neutral-600 mr-1 bg-transparent dark:bg-neutral-500 rounded-md w-12 cursor-default border border-neutral-500 dark:border-transparent">
+                <p className="text-2xs text-neutral-500 dark:text-neutral-200 bg-transparent dark:bg-neutral-500/50 rounded-md w-14 text-center border border-neutral-500 dark:border-transparent">
                   {currentTrack?.info?.bpm} BPM
                 </p>
-                <p className="hidden lg:flex justify-center items-center text-2xs bg-blue-600 dark:bg-blue-600 text-white rounded-md w-16 cursor-default">
+                <p className="hidden lg:flex items-center justify-center text-2xs bg-blue-600 dark:bg-blue-600 text-white rounded-md w-12 text-center">
                   {currentTrack?.info?.genre[0]?.maingenre}
                 </p>
               </div>
             </div>
-            <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full">
-              <div className="flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="text-neutral-500 dark:text-white"
-                />
+
+            {/* Action Buttons */}
+            <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full space-x-2">
+              <div className="w-8 h-8 flex items-center justify-center bg-neutral-100 dark:bg-black p-2 rounded-full cursor-pointer hover:opacity-75">
+                <FontAwesomeIcon icon={faPlus} className="text-neutral-500 dark:text-white" />
               </div>
-              <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className="text-neutral-500 dark:text-white"
-                />
+              <div className="w-8 h-8 flex items-center justify-center bg-neutral-100 dark:bg-black p-2 rounded-full cursor-pointer hover:opacity-75">
+                <FontAwesomeIcon icon={faHeart} className="text-neutral-500 dark:text-white" />
               </div>
-              <div className="ml-2 flex items-center justify-center mx-auto bg-neutral-100 dark:bg-black p-2 px-3.5 rounded-full relative cursor-pointer hover:opacity-75">
-                <FontAwesomeIcon
-                  icon={faEllipsisVertical}
-                  className="text-neutral-500 dark:text-white"
-                />
+              <div className="w-8 h-8 flex items-center justify-center bg-neutral-100 dark:bg-black p-2 rounded-full cursor-pointer hover:opacity-75">
+                <FontAwesomeIcon icon={faEllipsisVertical} className="text-neutral-500 dark:text-white" />
               </div>
             </div>
           </div>

@@ -42,7 +42,7 @@ export default function ClientSoundsLayout({ children }: { children: React.React
             </div>
             {/* MAIN CONTENT AREA */}
             <div className="p-0 m-0 flex-auto relative overflow-hidden">
-              <div className="absolute top-0 sm:top-2 lg:top-2 left-0 right-0 md:right-2 lg:right-1 bottom-0 md:bottom-2   rounded-xl overflow-auto bg-neutral-200 dark:bg-neutral-950">
+              <div className="absolute top-0 sm:top-2 lg:top-2 left-0 right-0 md:right-2 lg:right-1 bottom-0 md:bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
                 {children}
               </div>
             </div>

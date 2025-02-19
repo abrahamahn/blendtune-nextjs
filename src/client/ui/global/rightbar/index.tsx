@@ -148,7 +148,7 @@ const Rightbar: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col overflow-auto p-2 pl-1">
       <div
-        className="p-0 rounded-2xl h-full"
+        className="p-0 rounded-2xl h-full border dark:border-0"
         style={{
           backgroundImage: `linear-gradient(to bottom, ${dominantColor}, ${themePreference === "light" ? "#ffffff" : "#000000"})`,
         }}

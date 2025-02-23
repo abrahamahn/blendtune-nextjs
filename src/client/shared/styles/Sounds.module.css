@@ -1,0 +1,43 @@
+/* src\client\shared\styles\Sounds.module.css */
+/* ---------------------------------------------------------------- */
+
+/* ----------------------- SOUNDS STYLE --------------------------- */
+
+/* ---------------------------------------------------------------- */
+
+.chevron-up {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.chevron-down {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.placeholder-style::placeholder {
+  color: #b4b4b4;
+  opacity: 1;
+  font-size: 0.85rem;
+  font: normal;
+}

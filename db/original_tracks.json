@@ -1,0 +1,8282 @@
+[
+  {
+    "id": 1,
+    "file": "CRB001_Enemy_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB001",
+      "isrc": "QZK6Q2167820 ",
+      "iswc": "T-930.805.700-3",
+      "title": "Enemy",
+      "release": "6/1/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "1",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:25",
+      "bpm": "75",
+      "key": {
+        "note": "E",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Drake",
+        "2": "Blocboy JB",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dirty",
+        "mood2": "Energetic",
+        "mood3": "Evil",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:13",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:40",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:56",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:08",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:36",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:03",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:30",
+        "section8": "Chorus 2"
+      },
+      "9": {
+        "time9": "0:02:58",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "Drum",
+        "sub-category": "Analog"
+      },
+      "2": {
+        "main-category": "Percussion",
+        "sub-category": "Analog"
+      },
+      "3": {
+        "main-category": "Keyboard",
+        "sub-category": "Rhodes"
+      },
+      "4": {
+        "main-category": "Synth",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "BPM070TrapMan_Em_Piano / Bedroom Beats & Lofi Hip-Hop Vol. 2",
+      "samplepack": "Bedroom Beats & Lofi Hip-Hop Vol. 2 / Dirty South Wars 2",
+      "author": "Prime Loops",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 2,
+    "file": "CRB002_Trapped_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB002",
+      "isrc": "QZK6Q2167821",
+      "iswc": "T-926.904.396-1",
+      "title": "Trapped",
+      "release": "5/29/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "2",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:22",
+      "bpm": "90",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Juice WRLD",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Sentimental",
+        "mood3": "Sad",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:09",
+        "section2": "Chorus 1B"
+      },
+      "3": {
+        "time3": "0:00:30",
+        "section3": "Chorus 1B"
+      },
+      "4": {
+        "time4": "0:00:52",
+        "section4": "Verse 1A"
+      },
+      "5": {
+        "time5": "0:01:12",
+        "section5": "Verse 1B"
+      },
+      "6": {
+        "time6": "0:01:34",
+        "section6": "Chorus 2A"
+      },
+      "7": {
+        "time7": "0:01:55",
+        "section7": "Chorus 2B"
+      },
+      "8": {
+        "time8": "0:02:16",
+        "section8": "Bridge"
+      },
+      "9": {
+        "time9": "0:02:38",
+        "section9": "Chorus 3"
+      },
+      "10": {
+        "time10": "0:03:00",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 3,
+    "file": "CRB003_Overdose_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB003",
+      "isrc": "QZK6Q2167822",
+      "iswc": "T-926.904.397-2",
+      "title": "Overdose",
+      "release": "5/30/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "3",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:08",
+      "bpm": "80",
+      "key": {
+        "note": "C#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Post Malone",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Sentimental",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:28",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:55",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:20",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:47",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:12",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:30",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 4,
+    "file": "CRB004_Higher_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB004",
+      "isrc": "QZK6Q2167823 ",
+      "iswc": "T-305.315.716-3",
+      "title": "Higher",
+      "release": "5/31/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "4",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:24",
+      "bpm": "80",
+      "key": {
+        "note": "G",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": "Trap"
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "A$AP Rocky",
+        "2": "Skepta",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dirty",
+        "mood2": "Energetic",
+        "mood3": "Celebration",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:34",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:58",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:01:21",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:45",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:02:09",
+        "section7": "Verse 3"
+      },
+      "8": {
+        "time8": "0:02:33",
+        "section8": "Chorus 4A"
+      },
+      "9": {
+        "time9": "0:02:57",
+        "section9": "Chorus 4B"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "CHS_93_Gm_Flute.wav / Dl1_75_Cm_Orch_Filter_Skanks",
+      "samplepack": "Hip Hop Shadows Vol. 1 / Dubmatrix Presents - Dub Invaders",
+      "author": "Loopmasters",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 5,
+    "file": "CRB005_Dream_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB005",
+      "isrc": "QZK6Q2167824",
+      "iswc": "T-926.904.406-6",
+      "title": "Dream",
+      "release": "5/28/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "5",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:28",
+      "bpm": "90",
+      "key": {
+        "note": "G#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Drake",
+        "2": "Lil Baby",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Ambient",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:34",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:58",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:01:21",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:45",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:02:09",
+        "section7": "Verse 3"
+      },
+      "8": {
+        "time8": "0:02:33",
+        "section8": "Chorus 4A"
+      },
+      "9": {
+        "time9": "0:02:57",
+        "section9": "Chorus 4B"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "OSHI_melody_loop_out_of_place_98_G#",
+      "samplepack": "OSHI's Care Package",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 6,
+    "file": "CRB006_Hustle_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB006",
+      "isrc": "QZK6Q2167825 ",
+      "iswc": "T-305.320.376-8",
+      "title": "Hustle",
+      "release": "6/2/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "6",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:28",
+      "bpm": "95",
+      "key": {
+        "note": "G",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "RIch The Kid",
+        "2": "Rich The Kid",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Relaxed",
+        "mood3": "Epic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:08",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:28",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:48",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:08",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:29",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:59",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:08",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:30",
+        "section9": "Chorus 3B"
+      },
+      "10": {
+        "time10": "0:02:50",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "420_V2_Melodic_Loop_90_WordsCantSay_All_Gm",
+      "samplepack": "4:20 The Smokers Kit Vol. 2",
+      "author": "CAPSUN ProAudio",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 7,
+    "file": "CRB007_Dive_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB007",
+      "isrc": "QZK6Q2167826 ",
+      "iswc": "T-305.315.736-7",
+      "title": "Dive",
+      "release": "6/13/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "7",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:04:00",
+      "bpm": "100",
+      "key": {
+        "note": "A",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Reggaeton",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "French Montana",
+        "2": "Karl Wolf",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Bouncy",
+        "mood3": "Happy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:08",
+        "section2": "Verse"
+      },
+      "3": {
+        "time3": "0:00:27",
+        "section3": "Pre-Chorus"
+      },
+      "4": {
+        "time4": "0:00:46",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:05",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:43",
+        "section6": "Pre-Chorus 2"
+      },
+      "7": {
+        "time7": "0:02:02",
+        "section7": "Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:22",
+        "section8": "Birdge"
+      },
+      "9": {
+        "time9": "0:02:42",
+        "section9": "Pre-Chorus"
+      },
+      "10": {
+        "time10": "0:03:00",
+        "section10": "Chorus 3"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "NAS_90_Emaj7_Ocean_Choir_a",
+      "samplepack": "Natural Selection",
+      "author": "Loopmasters",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 8,
+    "file": "CRB008_Quitter_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB008",
+      "isrc": "QZK6Q2167827 ",
+      "iswc": "T-926.904.395-0\n",
+      "title": "Quitter",
+      "release": "6/14/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "8",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:42",
+      "bpm": "83",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Lil Yachty",
+        "2": "YBNBA",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dirty",
+        "mood2": "Energetic",
+        "mood3": "Dark",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:26",
+        "section3": "Verse 1A"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Verse 1B"
+      },
+      "5": {
+        "time5": "0:01:14",
+        "section5": "Verse 1C"
+      },
+      "6": {
+        "time6": "0:01:24",
+        "section6": "Hook 2"
+      },
+      "7": {
+        "time7": "0:01:48",
+        "section7": "Verse 2"
+      },
+      "8": {
+        "time8": "0:02:22",
+        "section8": "Outro"
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "DBM_SDT_DOINGTHEMOST_GUZHENG_100BPM_A-MINOR",
+      "samplepack": "Sonic Dope Trap 1",
+      "author": "DopeBoyzMuzic",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 9,
+    "file": "CRB009_Crown_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB009",
+      "isrc": "QZK6Q2167828",
+      "iswc": "T-925.311.846-6",
+      "title": "Crown",
+      "release": "6/15/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "9",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:28",
+      "bpm": "69",
+      "key": {
+        "note": "D",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Post Malone",
+        "2": "Nicki Minaj",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:11",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:39",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:07",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:21",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:48",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:18",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:32",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:46",
+        "section9": "Chorus 3B"
+      },
+      "10": {
+        "time10": "0:03:11",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 10,
+    "file": "CRB010_Fly_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB010",
+      "isrc": "QZK6Q2167829 ",
+      "iswc": "T-305.320.372-4",
+      "title": "Fly",
+      "release": "6/16/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "10",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:34",
+      "bpm": "69",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "ZAYN",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Peaceful",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:09",
+        "section2": "Verse 1"
+      },
+      "3": {
+        "time3": "0:00:31",
+        "section3": "Pre-Chorus 1"
+      },
+      "4": {
+        "time4": "0:00:53",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:17",
+        "section5": "Verse 2A"
+      },
+      "6": {
+        "time6": "0:01:40",
+        "section6": "Verse 2B"
+      },
+      "7": {
+        "time7": "0:02:02",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:23",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:44",
+        "section9": "Chorus 3B"
+      },
+      "10": {
+        "time10": "0:03:07",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "PL_CEDMV3_02_Muted_Guitar_C#_128_Wet / Melody 056 - 85 bpm (F)",
+      "samplepack": "Commercial EDM Vocals Vol. 3",
+      "author": "Producer Loops",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 11,
+    "file": "CRB011_Dragon_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB011",
+      "isrc": "QZK6Q2167830 ",
+      "iswc": "T-925.311.850-2",
+      "title": "Dragon",
+      "release": "6/16/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "11",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:03",
+      "bpm": "100",
+      "key": {
+        "note": "Eb",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Baauer",
+        "2": "G-Dragon",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Aggressive",
+        "mood2": "Energetic",
+        "mood3": "Dirty",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:20",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:30",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:00:40",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:00:58",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:09",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:01:18",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:01:38",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 12,
+    "file": "CRB012_Dope_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB012",
+      "isrc": "QZK6Q2167831",
+      "iswc": "T-305.315.604-6",
+      "title": "Dope",
+      "release": "6/16/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "12",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:05",
+      "bpm": "70",
+      "key": {
+        "note": "D",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Diplo, Lil Xan",
+        "2": "Lil Xan",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Aggressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Verse 1A"
+      },
+      "3": {
+        "time3": "0:00:31",
+        "section3": "Verse 1B"
+      },
+      "4": {
+        "time4": "0:00:58",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:13",
+        "section5": "Chorus 1"
+      },
+      "6": {
+        "time6": "0:01:40",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:08",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:21",
+        "section8": "Chorus 2"
+      },
+      "9": {
+        "time9": "0:02:49",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "MYRNE_synth_loop_redux_sines_140_D#maj",
+      "samplepack": "MYRNE: Myrcury Sample Pack",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 13,
+    "file": "CRB013_Silence_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB013",
+      "isrc": "QZK6Q2167832 ",
+      "iswc": "T-305.315.616-0",
+      "title": "Silence",
+      "release": "7/28/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "13",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:12",
+      "bpm": "70",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Juice WRLD",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Aggressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:39",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:05",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:20",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:45",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:15",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:28",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:55",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "CRNKN_guitar_loop_shoe_gaze_01_145_Amin",
+      "samplepack": "CRNKN: Sounds Across the Board",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 14,
+    "file": "CRB014_Astroworld_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB014",
+      "isrc": "QZK6Q2167833",
+      "iswc": "T-305.315.631-9",
+      "title": "Astroworld",
+      "release": "8/20/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "14",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:59",
+      "bpm": "75",
+      "key": {
+        "note": "F#",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Travis Scott",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Aggressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:37",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:02",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:15",
+        "section5": "Chorus 2A"
+      },
+      "6": {
+        "time6": "0:01:38",
+        "section6": "Chorus 2B"
+      },
+      "7": {
+        "time7": "0:02:05",
+        "section7": "Verse 2"
+      },
+      "8": {
+        "time8": "0:02:33",
+        "section8": "Outro"
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "OSHI_melody_loop_dreamzzz_141_F#",
+      "samplepack": "OSHI's Care Package",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 15,
+    "file": "CRB015_Kiki_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB015",
+      "isrc": "QZK6Q2167834 ",
+      "iswc": "T-926.931.205-2",
+      "title": "Kiki",
+      "release": "8/21/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "15",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:59",
+      "bpm": "91",
+      "key": {
+        "note": "C",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Drake",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Energetic",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:08",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:29",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:12",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:33",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:53",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:15",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:36",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 16,
+    "file": "CRB016_Sicko_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB016",
+      "isrc": "QZK6Q2167835 ",
+      "iswc": "T-926.931.203-0",
+      "title": "Sicko",
+      "release": "8/22/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "16",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:03",
+      "bpm": "80",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Travis Scott",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dirty",
+        "mood2": "Energetic",
+        "mood3": "Aggressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:08",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:29",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:10",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:30",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:52",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:12",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:32",
+        "section9": "Bridge"
+      },
+      "10": {
+        "time10": "0:02:50",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 17,
+    "file": "CRB017_God_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB017",
+      "isrc": "QZK6Q2167836 ",
+      "iswc": "T-305.315.653-5",
+      "title": "God",
+      "release": "8/23/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "17",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:39",
+      "bpm": "70",
+      "key": {
+        "note": "F#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Travis Scott",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Ambient",
+        "mood3": "Moody",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:11",
+        "section2": "Pre-Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:41",
+        "section3": "Chorus 1"
+      },
+      "4": {
+        "time4": "0:01:05",
+        "section4": "Verse 2"
+      },
+      "5": {
+        "time5": "0:01:34",
+        "section5": "Pre-Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:45",
+        "section6": "Chorus 2"
+      },
+      "7": {
+        "time7": "0:02:15",
+        "section7": "Bridge"
+      },
+      "8": {
+        "time8": "0:02:41",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:03:09",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "1) CLF_90_LoFi_PrayerKeys_F#m 2) RS1_Cryer_Stem_Lead_Guitar_F#m_120",
+      "samplepack": "1) Lo-Fi Soul & Future Beats / 2) Roseway Studio Sessions Vol. 1 - Future Electronica",
+      "author": "CAPSUN ProAudio",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 18,
+    "file": "CRB018_Gang_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB018",
+      "isrc": "QZK6Q2167837 ",
+      "iswc": "",
+      "title": "Gang",
+      "release": "8/25/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "18",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:18",
+      "bpm": "80",
+      "key": {
+        "note": "E",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Trap",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Smokepurpp",
+        "2": "Lil Pump",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dirty",
+        "mood2": "Energetic",
+        "mood3": "Agreesive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:35",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:48",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:00",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:25",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:38",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:01:49",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:01",
+        "section9": "Verse 3"
+      },
+      "10": {
+        "time10": "0:02:26",
+        "section10": "Pre-Chorus 3"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "GNEALZ_melodic_loop_smoke_purpp_layer_150_Amin",
+      "samplepack": "Gnealz: That's It Right There Sample Pack",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 19,
+    "file": "CRB019_Hard_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB019",
+      "isrc": "QZK6Q2167838",
+      "iswc": "T-926.931.303-3",
+      "title": "Hard",
+      "release": "8/28/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "19",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:22",
+      "bpm": "83",
+      "key": {
+        "note": "C",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Goldlink",
+        "2": "Tay-K",
+        "3": "Lil Skies"
+      },
+      "mood": {
+        "mood1": "Happy",
+        "mood2": "Moody",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:26",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:13",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:36",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:59",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:22",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:45",
+        "section9": "Chorus 3B"
+      },
+      "10": {
+        "time10": "0:03:09",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 20,
+    "file": "CRB020_Bed_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB020",
+      "isrc": "QZK6Q2167839 ",
+      "iswc": "T-926.931.188-8",
+      "title": "Bed",
+      "release": "8/24/2018",
+      "album": "Cashrollie Beats, Vol. 1",
+      "track-number": "20",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:23",
+      "bpm": "80",
+      "key": {
+        "note": "G#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Chris Brown",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Moody",
+        "mood2": "Chill",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:08",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:29",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:10",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:30",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:52",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:12",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:32",
+        "section9": "Bridge"
+      },
+      "10": {
+        "time10": "0:02:50",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 21,
+    "file": "CRB021_Mango_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB021",
+      "isrc": "QZK6Q2187106 ",
+      "iswc": "T-926.931.309-9",
+      "title": "Mango",
+      "release": "8/29/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "1",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:24",
+      "bpm": "115",
+      "key": {
+        "note": "F#",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Drake, Goldlink, Logic, SZA",
+        "2": "Goldlink",
+        "3": "Logic"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Mellow",
+        "mood3": "Moody",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:03",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:34",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:51",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:01:26",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:42",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:02:16",
+        "section7": "Bridge"
+      },
+      "8": {
+        "time8": "0:02:32",
+        "section8": "Chorus 4"
+      },
+      "9": {
+        "time9": "0:03:26",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 22,
+    "file": "CRB022_Summer_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB022",
+      "isrc": "QZK6Q2187107 ",
+      "iswc": "T-926.931.299-4",
+      "title": "Summer",
+      "release": "9/7/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "2",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:29",
+      "bpm": "85",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Childish Gambino",
+        "3": "Lil Baby"
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Grateful",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:03",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:25",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:48",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:10",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:32",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:55",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:20",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:40",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 23,
+    "file": "CRB023_Buddha_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB023",
+      "isrc": "QZK6Q2187108 ",
+      "iswc": "T-305.315.594-1",
+      "title": "Buddha",
+      "release": "9/13/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "3",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:19",
+      "bpm": "65",
+      "key": {
+        "note": "E",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Gucci Mane",
+        "3": "Drake"
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Dirty",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:05",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:20",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:04",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:19",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:02",
+        "section7": "Chorus 3"
+      },
+      "8": {
+        "time8": "0:02:18",
+        "section8": "Verse 3"
+      },
+      "9": {
+        "time9": "0:02:47",
+        "section9": "Chorus 4"
+      },
+      "10": {
+        "time10": "",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 24,
+    "file": "CRB024_Weekend_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB024",
+      "isrc": "QZK6Q2187109",
+      "iswc": "T-305.320.367-7",
+      "title": "Weekend",
+      "release": "09/14/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "4",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:50",
+      "bpm": "98",
+      "key": {
+        "note": "C#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Bryson Tiller",
+        "2": "PARTYNEXTDOOR",
+        "3": "Drake"
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Dirty",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:48",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:28",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:02:06",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:02:47",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:03:28",
+        "section7": "Outro"
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "SWD_Guitar_120_Sunken_C#m",
+      "samplepack": "Soulful Waves & Dream Trap",
+      "author": "Splice",
+      "clearance": "royalty-free "
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 25,
+    "file": "CRB025_Ocean_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB025",
+      "isrc": "QZK6Q2187110 ",
+      "iswc": "T-305.315.644-4",
+      "title": "Ocean",
+      "release": "10/11/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "5",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:46",
+      "bpm": "70",
+      "key": {
+        "note": "E",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Ty Dolla Sign",
+        "2": "24Hrs",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Ambient",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:18",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:43",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:00:57",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:26",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:53",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:07",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:36",
+        "section9": "Bridge"
+      },
+      "10": {
+        "time10": "0:03:02",
+        "section10": "Chorus 4"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "BLUE_HAWAII_chord_loop_rising_124_Emin",
+      "samplepack": "Blue Hawaii: Very Emotional Sounds",
+      "author": "Splice",
+      "clearance": "royalty-free "
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 26,
+    "file": "CRB026_Coca_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB026",
+      "isrc": "QZK6Q2187111 ",
+      "iswc": "T-926.931.267-6",
+      "title": "Coca",
+      "release": "10/13/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "6",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:05",
+      "bpm": "70",
+      "key": {
+        "note": "F",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Post Malone",
+        "2": "Ty Dolla Sign",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Aggressive",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:34",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:01",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:15",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:42",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:10",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:24",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:51",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": "royalty-free "
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 27,
+    "file": "CRB027_Blossom_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB027",
+      "isrc": "QZK6Q2187112",
+      "iswc": "T-926.931.272-3",
+      "title": "Blossom",
+      "release": "10/16/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "7",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:25",
+      "bpm": "89",
+      "key": {
+        "note": "G",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Jay-Z",
+        "2": "Jay-Z",
+        "3": "Asian"
+      },
+      "mood": {
+        "mood1": "Aggressive",
+        "mood2": "Energetic",
+        "mood3": "Epic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:11",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:32",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:54",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:15",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:37",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:58",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:20",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:03:02",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "LOOP - 90BPM - Ally Strings 2\nOSKAR_FLOOD_melody_loop_guitar_drunk_95bpm_F#min\nRARE_percussion_Zither_Asia_dope_Amin_94_loop7\nAcolyte_-_Welcome_Sensei_",
+      "samplepack": "Unknown\nOskar Flood Sample Pack\nKaran Kanchan Presents J-Trap\nMelody Rhythmix Vol. 2",
+      "author": "Unknown\nSplice\nAcolyte\nRare Percussion",
+      "clearance": "royalty-free "
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 28,
+    "file": "CRB028_Karma_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB028",
+      "isrc": "QZK6Q2187113 ",
+      "iswc": "T-926.931.317-9",
+      "title": "Karma",
+      "release": "10/17/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "8",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:12",
+      "bpm": "70",
+      "key": {
+        "note": "E",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "24Hrs",
+        "2": "Ty Dolla Sign",
+        "3": "Tory Lanez"
+      },
+      "mood": {
+        "mood1": "Love",
+        "mood2": "Mellow",
+        "mood3": "Bouncy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:13",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:41",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:09",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:22",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:49",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:16",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:30",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:58",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "ALEX_LUSTIG_synth_loop_deep_so_smooth_rhodes_90_Dbmin\nWCG_70_guitar_stack_the_greatest_dancer_bass_Em",
+      "samplepack": "Ale Lustig: Lost Sounds Sample Pack\nOcean Ave: West Coast Guitars",
+      "author": "Splice\nCapsun ProAudio",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 29,
+    "file": "CRB029_Millionaire_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB029",
+      "isrc": "QZK6Q2187114 ",
+      "iswc": "T-305.315.629-5\n",
+      "title": "Millionaire",
+      "release": "10/18/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "9",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:05",
+      "bpm": "70",
+      "key": {
+        "note": "G",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Lil Pump",
+        "2": "Lil Uzi Vert",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Aggressive",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:34",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:01",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:15",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:42",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:10",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:24",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:51",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "DUBBEL_DUTCH_synth_loop_dark_matter_100_Gmin / SLIINK_vocal_loop_siren_G#min",
+      "samplepack": "Dubbell Dutch: Rare Earth Elements / Dj Sliink: Deep From Jersey",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 30,
+    "file": "CRB030_Versace_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB030",
+      "isrc": "QZK6Q2187115 ",
+      "iswc": "T-926.931.301-1",
+      "title": "Versace",
+      "release": "10/19/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "10",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:50",
+      "bpm": "96",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "The Weeknd",
+        "2": "Daft Punk",
+        "3": "Gesaffelstein"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Aggressive",
+        "mood3": "Confident",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:10",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:30",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Bridge 1"
+      },
+      "5": {
+        "time5": "0:01:10",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:30",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:50",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:10",
+        "section8": "Chorus 3"
+      },
+      "9": {
+        "time9": "0:02:30",
+        "section9": "Bridge 3"
+      },
+      "10": {
+        "time10": "0:02:50",
+        "section10": "Chorus 4A"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "JOSH_J_guitar_loop_stizzy_105_Gm",
+      "samplepack": "Josh J.: Guitar is Dead Sample Pack",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 31,
+    "file": "CRB031_Rhythm_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB031",
+      "isrc": "QZK6Q2187116",
+      "iswc": "T-305.315.615-9",
+      "title": "Rhythm",
+      "release": "10/21/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "11",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:33",
+      "bpm": "108",
+      "key": {
+        "note": "B",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Reggaeton",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Wizkid",
+        "2": "Mystro",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Groovy",
+        "mood2": "Mellow",
+        "mood3": "Relaxed",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:17",
+        "section2": "Verse 1"
+      },
+      "3": {
+        "time3": "0:00:53",
+        "section3": "Pre-Chorus 1"
+      },
+      "4": {
+        "time4": "0:01:10",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:29",
+        "section5": "Interlude 1"
+      },
+      "6": {
+        "time6": "0:01:46",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:20",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:40",
+        "section8": "Chorus 2"
+      },
+      "9": {
+        "time9": "0:03:15",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "KRS_chord_loop_construction_riddim_06_chord_110_Cmin",
+      "samplepack": "krs.: Build a Vybz Drum Kit",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 32,
+    "file": "CRB032_Origin_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB032",
+      "isrc": "QZK6Q2187117 ",
+      "iswc": "T-305.315.644-4",
+      "title": "Origin",
+      "release": "10/22/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "12",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:44",
+      "bpm": "77",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "The Weeknd",
+        "2": "Flume",
+        "3": "icytwat"
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Agressive",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:12",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:37",
+        "section3": "Verse 1A"
+      },
+      "4": {
+        "time4": "0:01:02",
+        "section4": "Verse 1B"
+      },
+      "5": {
+        "time5": "0:01:14",
+        "section5": "Pre-Chorus 1"
+      },
+      "6": {
+        "time6": "0:01:25",
+        "section6": "Chorus 2"
+      },
+      "7": {
+        "time7": "0:01:50",
+        "section7": "Verse 2A"
+      },
+      "8": {
+        "time8": "0:02:17",
+        "section8": "Verse 2B"
+      },
+      "9": {
+        "time9": "0:02:29",
+        "section9": "Pre-Chorus 2"
+      },
+      "10": {
+        "time10": "0:02:42",
+        "section10": "Chorus 3A"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "CT2_140_Fm_Pad_Lick",
+      "samplepack": "CAPSUN Presents Chill Trap & Future Bass",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 33,
+    "file": "CRB033_Ride_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB033",
+      "isrc": "QZK6Q2187118 ",
+      "iswc": "T-926.931.290-5",
+      "title": "Ride",
+      "release": "10/22/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "13",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:30",
+      "bpm": "80",
+      "key": {
+        "note": "B",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hip-Hop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "OT Genesis",
+        "2": "Migos",
+        "3": "Gucci Mane"
+      },
+      "mood": {
+        "mood1": "Dark",
+        "mood2": "Bouncy",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Verse 1"
+      },
+      "3": {
+        "time3": "0:00:30",
+        "section3": "Pre-Chorus 1"
+      },
+      "4": {
+        "time4": "0:00:42",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:05",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:30",
+        "section6": "Pre-Chorus 2"
+      },
+      "7": {
+        "time7": "0:01:42",
+        "section7": "Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:05",
+        "section8": "Verse 3"
+      },
+      "9": {
+        "time9": "0:02:30",
+        "section9": "Pre-Chorus 3"
+      },
+      "10": {
+        "time10": "0:02:42",
+        "section10": "Chorus 3A"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 34,
+    "file": "CRB034_Metro_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB034",
+      "isrc": "QZK6Q2187119 ",
+      "iswc": "T-926.931.282-5",
+      "title": "Metro",
+      "release": "10/23/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "14",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:04:05",
+      "bpm": "84",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        },
+        "2": {
+          "maingenre": "Electronic",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "The Weekend",
+        "2": "Flume",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Smooth",
+        "mood2": "Groovy",
+        "mood3": "Moody",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:28",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:51",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:14",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:36",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:02:00",
+        "section7": "Pre-Chorus 2"
+      },
+      "8": {
+        "time8": "0:02:22",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:45",
+        "section9": "Bridge "
+      },
+      "10": {
+        "time10": "0:03:08",
+        "section10": "Chorus 3B"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 35,
+    "file": "CRB035_Feeling_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB035",
+      "isrc": "QZK6Q2187120",
+      "iswc": "T-926.931.283-6",
+      "title": "Feeling",
+      "release": "10/23/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "15",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:22",
+      "bpm": "110",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Funk",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Bruno Mars",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Happy",
+        "mood2": "Bouncy",
+        "mood3": "Groovy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:19",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:36",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:54",
+        "section4": "Pre-Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:11",
+        "section5": "Chorus 2"
+      },
+      "6": {
+        "time6": "0:01:29",
+        "section6": "Verse 2"
+      },
+      "7": {
+        "time7": "0:01:45",
+        "section7": "Verse 2"
+      },
+      "8": {
+        "time8": "0:02:04",
+        "section8": "Pre-Chorus 2"
+      },
+      "9": {
+        "time9": "0:02:22",
+        "section9": "Chorus 3A"
+      },
+      "10": {
+        "time10": "0:02:39",
+        "section10": "Chorus 3B"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 36,
+    "file": "CRB036_Mermaid_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB036",
+      "isrc": "QZK6Q2187121 ",
+      "iswc": "T-926.931.274-5",
+      "title": "Mermaid",
+      "release": "10/23/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "16",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:39",
+      "bpm": "105",
+      "key": {
+        "note": "C",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Reggaeton",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Wizkid",
+        "2": "Mystro",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Happy",
+        "mood2": "Bouncy",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:09",
+        "section2": "Verse 1"
+      },
+      "3": {
+        "time3": "0:00:45",
+        "section3": "Pre-Chorus 1"
+      },
+      "4": {
+        "time4": "0:01:04",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:40",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:02:17",
+        "section6": "Pre-Chorus 2"
+      },
+      "7": {
+        "time7": "0:02:35",
+        "section7": "Chorus 2A"
+      },
+      "8": {
+        "time8": "0:03:12",
+        "section8": "Chorus 2B"
+      },
+      "9": {
+        "time9": "0:03:30",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 37,
+    "file": "CRB037_Water_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB037",
+      "isrc": "QZK6Q2187122",
+      "iswc": "T-926.931.270-1",
+      "title": "Water",
+      "release": "10/25/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "17",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:17",
+      "bpm": "75",
+      "key": {
+        "note": "E",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Drake",
+        "2": "Gunna",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Groovy",
+        "mood2": "Happy",
+        "mood3": "Mellow",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:06",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:28",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:50",
+        "section4": "Chorus 1"
+      },
+      "5": {
+        "time5": "0:01:13",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:36",
+        "section6": "Chorus 2"
+      },
+      "7": {
+        "time7": "0:01:58",
+        "section7": "Verse 3"
+      },
+      "8": {
+        "time8": "0:02:21",
+        "section8": "Chorus 3A"
+      },
+      "9": {
+        "time9": "0:02:43",
+        "section9": "Chorus 3B"
+      },
+      "10": {
+        "time10": "0:03:06",
+        "section10": "Outro"
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 38,
+    "file": "CRB038_Free_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB038",
+      "isrc": "QZK6Q2187123 ",
+      "iswc": "T-926.931.344-2",
+      "title": "Free",
+      "release": "10/26/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "18",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:06",
+      "bpm": "80",
+      "key": {
+        "note": "F#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Gunna",
+        "2": "Gunna",
+        "3": "Lil Skies"
+      },
+      "mood": {
+        "mood1": "Groovy",
+        "mood2": "Ambient",
+        "mood3": "Mellow",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:05",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:29",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:00:53",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:01:17",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:01:41",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:02:05",
+        "section7": "Verse 3"
+      },
+      "8": {
+        "time8": "0:02:29",
+        "section8": "Chorus 4"
+      },
+      "9": {
+        "time9": "0:02:53",
+        "section9": "Outro"
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 39,
+    "file": "CRB039_Love_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB039",
+      "isrc": "QZK6Q2187124 ",
+      "iswc": "T-926.931.338-4",
+      "title": "Love",
+      "release": "10/28/2018",
+      "album": "Cashrollie Beats, Vol. 2",
+      "track-number": "19",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:26",
+      "bpm": "100",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Chris Brown",
+        "2": "",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Bouncy",
+        "mood2": "Dark",
+        "mood3": "Mellow",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "0:00:00",
+        "section1": "Intro"
+      },
+      "2": {
+        "time2": "0:00:04",
+        "section2": "Chorus 1"
+      },
+      "3": {
+        "time3": "0:00:42",
+        "section3": "Verse 1"
+      },
+      "4": {
+        "time4": "0:01:20",
+        "section4": "Chorus 2"
+      },
+      "5": {
+        "time5": "0:01:59",
+        "section5": "Verse 2"
+      },
+      "6": {
+        "time6": "0:02:28",
+        "section6": "Chorus 3"
+      },
+      "7": {
+        "time7": "0:03:16",
+        "section7": "Outro"
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "WCG_90_guitar_lead_hydro_bounce_Fm\nDBM_SDRNB_HYPNOTIZED_LOWVOX_94BPM",
+      "samplepack": "Ocean Ave: West Coast Guitars\nSonice Dope R&B",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 40,
+    "file": "CRB040_Down_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB040",
+      "isrc": "QZK6Q2187125",
+      "iswc": "T-926.931.331-7",
+      "title": "Down",
+      "release": "10/29/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "20",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:04:24",
+      "bpm": "80",
+      "key": {
+        "note": "A",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Tory Lanez",
+        "2": "6ix9ine",
+        "3": "Nicki Minaj"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Mellow",
+        "mood3": "Ambient",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 41,
+    "file": "CRB041_Paradise_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB041",
+      "isrc": "QZK6Q2187516 ",
+      "iswc": "T-305.315.647-7",
+      "title": "Paradise",
+      "release": "11/02/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "1",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:25",
+      "bpm": "102",
+      "key": {
+        "note": "C",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Ariana Grande",
+        "2": "Justin Bieber",
+        "3": "Terror Jr."
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Love",
+        "mood3": "Moody",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "SCVNGR_synth_bouncy_stabs_02_108_C",
+      "samplepack": "Scavanger Hunt - Future Nostalgia",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 42,
+    "file": "CRB042_Savage_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB042",
+      "isrc": "QZK6Q2187517 ",
+      "iswc": "T-926.931.376-0",
+      "title": "Savage",
+      "release": "11/03/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "2",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:44",
+      "bpm": "74",
+      "key": {
+        "note": "D",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "21 Savage",
+        "3": "Lil Pump"
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Ambient",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 43,
+    "file": "CRB043_Sunkist_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB043",
+      "isrc": "QZK6Q2187518",
+      "iswc": "T-306.016.266-1",
+      "title": "Sunkist",
+      "release": "11/08/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "3",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:07",
+      "bpm": "92",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "Pop",
+          "subgenre": "R&B"
+        }
+      },
+      "relatedartist": {
+        "1": "Post Malone",
+        "2": "Swae Lee",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Loved",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "TRHZ_guitar_loop_sexychords_91_E",
+      "samplepack": "Electric Soul - Guitar Loops and Riffs by Treehouz",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 44,
+    "file": "CRB044_Comme_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB044",
+      "isrc": "QZK6Q2187519 ",
+      "iswc": "T-306.016.221-8",
+      "title": "Comme",
+      "release": "11/12/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "4",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:37",
+      "bpm": "84",
+      "key": {
+        "note": "B",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Pierre Bourne",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Dirty",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 45,
+    "file": "CRB045_Drive_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB045",
+      "isrc": "QZK6Q2187520 ",
+      "iswc": "T-305.320.339-3\n",
+      "title": "Drive",
+      "release": "11/17/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "5",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:05",
+      "bpm": "70",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Post Malone",
+        "2": "Pierre Bourne",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Dirty",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 46,
+    "file": "CRB046_Popstar_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB046",
+      "isrc": "QZK6Q2187521",
+      "iswc": "T-305.320.351-9",
+      "title": "Popstar",
+      "release": "11/23/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "6",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:17",
+      "bpm": "110",
+      "key": {
+        "note": "A",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Pop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Majid Jordan",
+        "2": "Lenno",
+        "3": "Tycho"
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Bouncy",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "LENNO_guitar_loop_wide_funk_107_Cmin_v2 / OSKAR_FLOOD_melody_loop_viamimice_110_Amaj",
+      "samplepack": "Lenno Sample Pack / Oskar Flood Sample Pack",
+      "author": "Splice",
+      "clearance": "royalty-free"
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 47,
+    "file": "CRB047_Japan_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB047",
+      "isrc": "QZK6Q2187522 ",
+      "iswc": "T-305.447.170-0",
+      "title": "Japan",
+      "release": "11/26/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "7",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:45",
+      "bpm": "84",
+      "key": {
+        "note": "F#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "A$AP Ferg",
+        "2": "Travis Scott",
+        "3": "Drake"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Bouncy",
+        "mood3": "Loved",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 48,
+    "file": "CRB048_Psychedelic_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB048",
+      "isrc": "QZK6Q2187523 ",
+      "iswc": "T-305.447.188-0",
+      "title": "Psychedelic",
+      "release": "11/28/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "8",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:12",
+      "bpm": "84",
+      "key": {
+        "note": "F#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Kendrick Lamar",
+        "2": "Tyler the Creator",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Mellow",
+        "mood2": "Ambient",
+        "mood3": "Energetic",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 49,
+    "file": "CRB049_Shark_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB049",
+      "isrc": "QZK6Q2187524\n",
+      "iswc": "T-305.447.184-6",
+      "title": "Shark",
+      "release": "11/30/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "9",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:45",
+      "bpm": "66",
+      "key": {
+        "note": "C",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Lil Pump",
+        "2": "Smokepurpp",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dirty",
+        "mood3": "Fun",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 50,
+    "file": "CRB050_Burn_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB050",
+      "isrc": "QZK6Q2187525",
+      "iswc": "T-305.447.168-6",
+      "title": "Burn",
+      "release": "12/07/2018",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "10",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:40",
+      "bpm": "87",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Lil Pump",
+        "2": "Smokrpurpp",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dirty",
+        "mood3": "Bouncy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 51,
+    "file": "CRB051_Money_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB051",
+      "isrc": "QZK6Q2187526 ",
+      "iswc": "T-305.447.200-9",
+      "title": "Money",
+      "release": "24/01/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "11",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:15",
+      "bpm": "98",
+      "key": {
+        "note": "G",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "R&B",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "The Weeknd",
+        "2": "Gesaffelstein",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Ambient",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 52,
+    "file": "CRB052_Killer_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB052",
+      "isrc": "QZK6Q2187527",
+      "iswc": "T-305.447.228-1",
+      "title": "Killer",
+      "release": "31/01/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "12",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:12",
+      "bpm": "95",
+      "key": {
+        "note": "C",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Drake",
+        "2": "J.Cole",
+        "3": "Migos"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Bouncy",
+        "mood3": "Agreesive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 53,
+    "file": "CRB053_Rapstar_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB053",
+      "isrc": "QZK6Q2187528\n",
+      "iswc": "T-305.447.194-8",
+      "title": "Rapstar",
+      "release": "04/02/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "13",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:05:03",
+      "bpm": "76",
+      "key": {
+        "note": "Eb",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Offset",
+        "3": "Quavo"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Bouncy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 54,
+    "file": "CRB054_Lambo_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB054",
+      "isrc": "QZK6Q2187529 ",
+      "iswc": "T-305.446.985-7",
+      "title": "Lambo",
+      "release": "22/02/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "14",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:10",
+      "bpm": "76",
+      "key": {
+        "note": "D",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Lil Pump",
+        "2": "Skrillex",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Hard",
+        "mood3": "Agressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 55,
+    "file": "CRB055_Kanga_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB055",
+      "isrc": "QZK6Q2187530 ",
+      "iswc": "T-305.446.992-6",
+      "title": "Kanga",
+      "release": "25/03/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "15",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:40",
+      "bpm": "120",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "J. Cole",
+        "2": "6ix9ine",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Bouncy",
+        "mood3": "Happy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 56,
+    "file": "CRB056_Suite_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB056",
+      "isrc": "QZK6Q2187531",
+      "iswc": "T-305.447.002-5\n",
+      "title": "Suite",
+      "release": "08/04/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "16",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:36",
+      "bpm": "80",
+      "key": {
+        "note": "F",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Kap G",
+        "2": "NBA Youngboy",
+        "3": "Ski The Slump God"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Smooth",
+        "mood3": "Groovy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 57,
+    "file": "CRB057_Africa_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB057",
+      "isrc": "QZK6Q2187532",
+      "iswc": "T-305.447.005-8",
+      "title": "Africa",
+      "release": "09/04/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "17",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:27",
+      "bpm": "102",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Reggaeton",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Davido",
+        "2": "Wizkid",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Happy",
+        "mood3": "Groovy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 58,
+    "file": "CRB058_Dark_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB058",
+      "isrc": "QZK6Q2187533 ",
+      "iswc": "T-305.640.744-0",
+      "title": "Dark",
+      "release": "10/04/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "18",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:02:45",
+      "bpm": "75",
+      "key": {
+        "note": "G",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Pewee Longway",
+        "3": ""
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Mellow",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 59,
+    "file": "CRB059_Bad_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB059",
+      "isrc": "QZK6Q2187534",
+      "iswc": "T-306.009.082-2",
+      "title": "Bad",
+      "release": "11/04/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "19",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:04:28",
+      "bpm": "75",
+      "key": {
+        "note": "D",
+        "scale": "major"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Drake",
+        "3": "Japanese"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Agressive",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  },
+  {
+    "id": 60,
+    "file": "CRB060_Final_Tag.mp3",
+    "metadata": {
+      "catalog": "CRB060",
+      "isrc": "QZK6Q2187535",
+      "iswc": "T-305.447.035-4",
+      "title": "Final",
+      "release": "12/04/2019",
+      "album": "Cashrollie Beats, Vol. 3",
+      "track-number": "20",
+      "producer": "Meekah"
+    },
+    "info": {
+      "duration": "0:03:00",
+      "bpm": "85",
+      "key": {
+        "note": "G#",
+        "scale": "minor"
+      },
+      "genre": {
+        "1": {
+          "maingenre": "Hiphop",
+          "subgenre": ""
+        },
+        "2": {
+          "maingenre": "",
+          "subgenre": ""
+        }
+      },
+      "relatedartist": {
+        "1": "Migos",
+        "2": "Drake",
+        "3": "Meek Mill"
+      },
+      "mood": {
+        "mood1": "Energetic",
+        "mood2": "Dark",
+        "mood3": "Groovy",
+        "energy": "",
+        "color": "",
+        "character": ""
+      }
+    },
+    "arrangement": {
+      "1": {
+        "time1": "",
+        "section1": ""
+      },
+      "2": {
+        "time2": "",
+        "section2": ""
+      },
+      "3": {
+        "time3": "",
+        "section3": ""
+      },
+      "4": {
+        "time4": "",
+        "section4": ""
+      },
+      "5": {
+        "time5": "",
+        "section5": ""
+      },
+      "6": {
+        "time6": "",
+        "section6": ""
+      },
+      "7": {
+        "time7": "",
+        "section7": ""
+      },
+      "8": {
+        "time8": "",
+        "section8": ""
+      },
+      "9": {
+        "time9": "",
+        "section9": ""
+      },
+      "10": {
+        "time10": "",
+        "section10": ""
+      }
+    },
+    "instruments": {
+      "1": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "2": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "3": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "4": {
+        "main-category": "",
+        "sub-category": ""
+      },
+      "5": {
+        "main-category": "",
+        "sub-category": ""
+      }
+    },
+    "sample": {
+      "file": "",
+      "samplepack": "",
+      "author": "",
+      "clearance": ""
+    },
+    "creator": {
+      "1": {
+        "name": "AHN ABRAHAM JOONGWHAN",
+        "producer": true,
+        "songwriter": true,
+        "ipi": "789929253",
+        "splits": "100"
+      },
+      "2": {
+        "name": "",
+        "producer": "",
+        "songwriter": "",
+        "ipi": "",
+        "splits": ""
+      }
+    },
+    "exclusive": {
+      "artistname": "",
+      "email": "",
+      "phone": "",
+      "address": "",
+      "management": ""
+    }
+  }
+]

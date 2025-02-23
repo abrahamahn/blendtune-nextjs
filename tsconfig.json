@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@app/*": ["./src/client/app/*"],
+      "@types/*": ["./src/shared/types/*"],
+      "@client/*": ["src/client/*"],
+      "@server/*": ["src/server/*"],
+      "@shared/*": ["src/shared/*"],
+      
+      /* Feature paths */
+      "@features/*": ["src/client/features/*"],
+      "@auth/*": ["src/client/features/auth/*"],
+      "@layout/*": ["src/client/features/layout/*"],
+      "@player/*": ["src/client/features/player/*"],
+      "@sounds/*": ["src/client/features/sounds/*"],
+      "@home/*": ["src/client/features/home/*"],
+      
+      /* Sounds feature subpaths */
+      "@tracks/*": ["src/client/features/sounds/tracks/*"],
+      "@filters/*": ["src/client/features/sounds/filters/*"],
+      "@category/*": ["src/client/features/sounds/category/*"],
+      "@search/*": ["src/client/features/sounds/search/*"],
+      "@visualizer/*": ["src/client/features/sounds/visualizer/*"],
+      
+      /* Layout feature subpaths */
+      "@header/*": ["src/client/features/layout/header/*"],
+      "@footer/*": ["src/client/features/layout/footer/*"],
+      "@leftbar/*": ["src/client/features/layout/leftbar/*"],
+      "@rightbar/*": ["src/client/features/layout/rightbar/*"],
+      
+      /* Core and shared paths */
+      "@core/*": ["src/client/core/*"],
+      "@components/*": ["src/client/shared/components/*"],
+      "@utils/*": ["src/client/shared/utils/*"],
+      "@hooks/*": ["src/client/shared/hooks/*"],
+      "@constants/*": ["src/client/shared/constants/*"],
+      "@styles/*": ["src/client/shared/styles/*"],
+      
+      /* Core subpaths */
+      "@providers/*": ["src/client/core/providers/*"],
+      "@store/*": ["src/client/core/store/*"],
+      "@context/*": ["src/client/core/context/*"],
+      "@services/*": ["src/client/core/services/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

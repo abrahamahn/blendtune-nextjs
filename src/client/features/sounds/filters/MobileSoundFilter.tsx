@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { removeAllKeywords, removeAllGenres } from "@store/slices";
-import { SortFilter } from "./components";
+import { SortFilter } from "./category";
 import { useFilterState } from "./hooks/useFilterState";
 import { createFilterComponents } from "@sounds/filters/shared/FilterComponents";
 import { hasItems, calculateAppliedFilterCount } from "./utils/filterUtils";

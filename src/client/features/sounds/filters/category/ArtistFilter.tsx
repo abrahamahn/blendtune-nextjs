@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FilterWrapper, SearchInput, FilterGrid, Button, ActionButtons } from "@sounds/filters/shared/ui";
+import { FilterWrapper, SearchInput, FilterGrid, ActionButtons } from "@sounds/filters/shared/ui";
 
 /**
 * Props interface for ArtistFilter component

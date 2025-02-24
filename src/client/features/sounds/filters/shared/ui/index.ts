@@ -1,5 +1,5 @@
 export { ActionButtons } from './ActionButtons';
-export { Button } from './Button';
+export { Item } from './Item';
 export { Checkbox } from './Checkbox';
 export { FilterGrid } from './FilterGrid';
 export { FilterWrapper } from './FilterWrapper';

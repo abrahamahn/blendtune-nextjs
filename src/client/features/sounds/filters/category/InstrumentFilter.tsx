@@ -10,9 +10,7 @@ import {
  faDrumSteelpan,
  faLinesLeaning,
 } from "@fortawesome/free-solid-svg-icons";
-import { FilterWrapper } from "../shared/ui/FilterWrapper";
-import { Button } from "../shared/ui/Button";
-import { ActionButtons } from "../shared/ui/ActionButtons";
+import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/shared/ui";
 
 /**
 * Props interface for InstrumentFilter component
@@ -69,7 +67,7 @@ const InstrumentFilter: React.FC<InstrumentFilterProps> = ({
      >
        <div className="grid grid-cols-2 gap-2">
          {instrumentItems.map((item, index) => (
-           <Button
+           <Item
              key={index}
              variant="filter"
              size="sm"
@@ -84,7 +82,7 @@ const InstrumentFilter: React.FC<InstrumentFilterProps> = ({
                />
              </div>
              <p>{item.text}</p>
-           </Button>
+           </Item>
          ))}
        </div>
        
@@ -101,7 +99,7 @@ const InstrumentFilter: React.FC<InstrumentFilterProps> = ({
      >
        <div className="grid grid-cols-3 gap-2">
          {instrumentItems.map((item, index) => (
-           <Button
+           <Item
              key={index}
              variant="filter"
              size="md"
@@ -117,7 +115,7 @@ const InstrumentFilter: React.FC<InstrumentFilterProps> = ({
                />
              </div>
              <p>{item.text}</p>
-           </Button>
+           </Item>
          ))}
        </div>
 

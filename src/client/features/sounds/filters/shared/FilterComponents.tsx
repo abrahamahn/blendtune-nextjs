@@ -8,7 +8,7 @@ import {
   InstrumentFilter,
   MoodFilter,
   KeywordFilter,
-} from "../components";
+} from "../category";
 import { FilterComponentsConfig } from "@sounds/filters/types";
 
 export const createFilterComponents = ({

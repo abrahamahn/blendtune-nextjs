@@ -14,7 +14,7 @@ import { RootState } from "@core/store";
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/components";
 import { MobileCatalog, DesktopCatalog, NewTracks } from "@sounds/tracks/components";
-import { DesktopSoundFilter, MobileSoundFilter } from "@sounds/filters/components";
+import { DesktopSoundFilter, MobileSoundFilter } from "@/client/features/sounds/filters/category";
 import {
   tempoFilter,
   keyFilter,

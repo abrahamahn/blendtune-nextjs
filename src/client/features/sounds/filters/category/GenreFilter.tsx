@@ -1,7 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '@core/store';
+import { useDispatch } from "react-redux";
 import { selectGenres, removeAllGenres } from "@store/slices";
 import {
  faStar,
@@ -11,10 +10,7 @@ import {
  faPaw,
  faBoltLightning,
 } from "@fortawesome/free-solid-svg-icons";
-import { FilterWrapper } from "../shared/ui/FilterWrapper";
-import { FilterGrid } from "../shared/ui/FilterGrid";
-import { Button } from "../shared/ui/Button";
-import { ActionButtons } from "../shared/ui/ActionButtons";
+import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/shared/ui";
 
 /**
 * Props for GenreFilter component
@@ -62,7 +58,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
      >
        <div className="grid grid-cols-2 gap-2">
          {genreItems.map((item, index) => (
-           <Button
+           <Item
              key={index}
              variant="filter"
              size="sm"
@@ -77,7 +73,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
                />
              </div>
              <p>{item.text}</p>
-           </Button>
+           </Item>
          ))}
        </div>
        
@@ -95,7 +91,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
      >
        <div className="grid grid-cols-3 gap-2">
          {genreItems.map((item, index) => (
-           <Button
+           <Item
              key={index}
              variant="filter"
              size="md"
@@ -111,7 +107,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
                />
              </div>
              <p>{item.text}</p>
-           </Button>
+           </Item>
          ))}
        </div>
 

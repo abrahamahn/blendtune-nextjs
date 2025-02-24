@@ -1,14 +1,14 @@
-// src/client/features/sounds/filters/components/shared/ui/Button.tsx
+// src/client/features/sounds/filters/components/shared/ui/Item.tsx
 import React from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'clear' | 'close' | 'filter' | 'sort';
     size?: 'sm' | 'md';
     selected?: boolean;
     children: React.ReactNode;
   }
   
-  export const Button: React.FC<ButtonProps> = ({
+  export const Item: React.FC<ItemProps> = ({
     variant = 'primary',
     size = 'md',
     selected = false,
@@ -18,7 +18,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   }) => {
     const baseStyles = 'transition-colors duration-150';
     
-    const variantStyles: Record<Required<ButtonProps>['variant'], string> = {
+    const variantStyles: Record<Required<ItemProps>['variant'], string> = {
       primary: 'bg-blue-600 dark:bg-blue-600 text-white',
       clear: 'bg-transparent underline text-neutral-500 dark:text-neutral-50',
       close: 'font-medium text-neutral-50 bg-blue-600 dark:bg-blue-600',
@@ -32,7 +32,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
       sort: 'text-left hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg hover:text-neutral-500'
     };
   
-    const sizeStyles: Record<Required<ButtonProps>['size'], string> = {
+    const sizeStyles: Record<Required<ItemProps>['size'], string> = {
       sm: 'text-xs px-1.5 py-1.5',
       md: 'text-sm px-3 py-2'
     };

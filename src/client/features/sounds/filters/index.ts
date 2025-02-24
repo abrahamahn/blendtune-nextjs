@@ -1,4 +1,4 @@
 // src\client\features\sounds\filters\index.ts
-export * from './components';
+export * from './category';
 export * from './DesktopSoundFilter';
 export * from './MobileSoundFilter';

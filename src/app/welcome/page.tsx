@@ -13,7 +13,7 @@ import {
   setMarketingConsent,
 } from "@store/slices";
 import { useSession } from "@auth/services";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 /**
  * Welcome Page Component:

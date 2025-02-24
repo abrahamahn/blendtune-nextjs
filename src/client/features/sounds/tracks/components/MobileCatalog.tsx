@@ -2,7 +2,6 @@
 
 "use client";
 import React from "react";
-import Image from "next/image";
 import { Track } from "@/shared/types/track";
 import { RootState } from "@core/store";
 import { useSelector } from "react-redux";
@@ -15,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
-import Watermark from "@components/common/Watermark";
+import { Artwork, Watermark } from "@components/common";
 
 export interface MobileCatalogProps {
   tracks: Track[]; // List of tracks to be displayed in the catalog.
@@ -69,32 +68,31 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
             }}
             onMouseDown={(e) => e.preventDefault()}
           >
-            {/* Track Image & Play Button */}
-            <div className="relative justify-center items-center flex w-16 h-16 dark:bg-black/70 bg-transparent rounded-md backdrop-blur-sm">
-              <div className="w-16 h-16 dark:w-16 dark:h-16 p-0 dark:p-1.5 shadow-lg dark:shadow-none rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105">
-                <Image
-                  crossOrigin="anonymous"
-                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                    track?.metadata?.catalog ?? "default"
-                  }.jpg`}
-                  alt={track.metadata.title}
-                  className="rounded-md object-center object-cover w-full h-full"
-                  width={50}
-                  height={50}
-                  priority
-                />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  {isPlaying ? (
-                    <FontAwesomeIcon icon={faPause} size="lg" className="text-white" />
-                  ) : (
-                    <FontAwesomeIcon icon={faPlay} size="lg" className="text-white" />
-                  )}
-                </div>
-                <div className="absolute bottom-0 right-0">
-                  <Watermark size="sm" />
-                </div>
+          {/* Track Image & Play Button */}
+          <div className="relative justify-center items-center flex w-16 h-16 dark:bg-black/70 bg-transparent rounded-md backdrop-blur-sm">
+            <div className="w-16 h-16 dark:w-16 dark:h-16 p-0 dark:p-1.5 shadow-lg dark:shadow-none rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105">
+              <Artwork
+                catalog={track?.metadata?.catalog}
+                fallback="default"
+                alt={track.metadata.title}
+                className="rounded-md object-center object-cover w-full h-full"
+                width={50}
+                height={50}
+                priority
+              />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                {isPlaying ? (
+                  <FontAwesomeIcon icon={faPause} size="lg" className="text-white" />
+                ) : (
+                  <FontAwesomeIcon icon={faPlay} size="lg" className="text-white" />
+                )}
+              </div>
+              <div className="absolute bottom-0 right-0">
+                <Watermark size="sm" />
               </div>
             </div>
+          </div>
+
 
             {/* Track Information */}
             <div className="flex flex-row justify-between w-full ml-2">

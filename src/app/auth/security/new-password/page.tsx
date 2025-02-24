@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { setAuthenticated, setUnauthenticated } from "@store/slices";
 import Logo from "@components/common/Logo";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 import SearchParamsWrapper from "@search/services/SearchParamsWrapper";
 
 /**

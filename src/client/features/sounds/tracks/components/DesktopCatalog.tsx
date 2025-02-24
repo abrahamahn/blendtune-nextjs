@@ -16,8 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
-import Watermark from "@components/common/Watermark";
-import EqualizerIcon from "@components/common/EqualizerIcon";
+import { Artwork, Watermark } from "@components/common";
+import EqualizerIcon from "@/client/shared/components/icons/EqualizerIcon";
 
 /**
  * Props definition for the DesktopCatalog component.
@@ -175,11 +175,9 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                       handleTitleClick(track);
                     }}
                   >
-                    <Image
-                      crossOrigin="anonymous"
-                      src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                        track?.metadata?.catalog ?? "default"
-                      }.jpg`}
+                    <Artwork
+                      catalog={track?.metadata?.catalog}
+                      fallback="default"
                       alt={track.metadata.title}
                       className="transition-transform rounded-md object-center object-cover w-full h-full"
                       width={100}
@@ -191,6 +189,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                     <Watermark size="sm" />
                   </div>
                 </div>
+
                 {/* Title and Producer */}
                 <div className="flex flex-row justify-between w-full ml-2">
                   <div className="flex flex-row w-5/12">

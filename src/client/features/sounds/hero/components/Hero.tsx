@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import { colorExtractor } from "@utils/colorExtractor";
 import Equalizer from "@visualizer/components/Equalizer";
-import { Watermark } from "@components/common";
+import { Watermark, Artwork } from "@/client/shared/components/common";
 
 /**
  * Props definition for the Hero component.
@@ -187,18 +187,15 @@ const Hero: React.FC<HeroProps> = ({
                 </div>
               </div>
             </div>
-
             {/* Artwork Container */}
             <div className="flex justify-center items-center order-1">
               <div className="w-28 h-30 sm:w-40 sm:h-40 bg-neutral-200/80 dark:bg-black/80 p-1 sm:p-2 rounded-md relative">
                 <div className="relative w-full h-full">
                   {/* Album Artwork */}
-                  <Image
-                    crossOrigin="anonymous"
-                    src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                      currentTrack?.metadata?.catalog ?? "default"
-                    }.jpg`}
-                    alt={currentTrack?.metadata?.title ?? ""}
+                  <Artwork
+                    catalog={currentTrack?.metadata?.catalog}
+                    fallback="default"
+                    alt={currentTrack?.metadata?.title || "Album artwork"}
                     className="w-28 h-30 sm:w-40 h-auto object-cover rounded-md shadow-md cursor-pointer hover:opacity-90 dark:hover:opacity-75"
                     width={150}
                     height={150}
@@ -339,24 +336,21 @@ const Hero: React.FC<HeroProps> = ({
                   </div>
                 </div>
               </div>
-
               {/* Album Artwork & Play Button */}
               <div className="flex justify-center items-center md:order-2 order-1">
                 {/* Artwork Container */}
                 <div className="w-36 h-36 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-72 lg:h-auto bg-neutral-200/80 dark:bg-black/80 p-1 sm:p-2 rounded-md relative">
                   <div className="relative w-full h-full">
                     {/* Displaying Album Cover Image */}
-                    <Image
-                      crossOrigin="anonymous"
-                      src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                        currentTrack?.metadata?.catalog ?? "default"
-                      }.jpg`}
-                      alt={currentTrack?.metadata?.title ?? ""}
+                    <Artwork
+                      catalog={currentTrack?.metadata?.catalog}
+                      fallback="default"
+                      alt={currentTrack?.metadata?.title || "Album artwork"}
                       className="w-36 sm:w-40 md:w-56 lg:w-72 lg:h-72 h-auto object-cover rounded-md shadow-md cursor-pointer hover:opacity-90 dark:hover:opacity-75"
                       width={150}
                       height={150}
                     />
-                    {/* Branding Watermark (e.g., logo or small branding text) */}
+                    {/* Branding Watermark */}
                     <Watermark size="lg" />
 
                     {/* Mobile Play Button (Appears only on small screens) */}

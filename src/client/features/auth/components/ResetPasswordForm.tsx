@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Logo from "@components/common/Logo";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 interface ResetPasswordProps {
   openSignIn: () => void;

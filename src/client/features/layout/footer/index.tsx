@@ -11,7 +11,7 @@ import {
  faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import Logo from "@components/common//Logo";
-import SocialIcon from "@components/common//SocialIcons";
+import SocialIcon from "@/client/shared/components/icons/SocialIcons";
 
 interface ListSectionProps {
  title: string;

@@ -7,7 +7,6 @@
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
-import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,6 +15,7 @@ import {
  faPlay,
  faStop,
 } from "@fortawesome/free-solid-svg-icons";
+import Artwork from "@components/common/Artwork";
 
 /**
 * Props interface for Pack component
@@ -219,15 +219,14 @@ const Pack: React.FC<PackProps> = ({ tracks }) => {
                   className="flex-grow w-60  rounded-lg md:bg-neutral-200 md:hover:bg-neutral-300 dark:md:bg-neutral-900 dark:md:hover:bg-neutral-800 relative snap-start"
                 >
                   <div className="w-36 md:w-auto flex items-center justify-center relative m-0 mr-3 md:m-3 aspect-ratio-1/1 user-select-none">
-                    <Image
-                      crossOrigin="anonymous"
-                      src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                        track?.metadata?.catalog ?? "default"
-                      }.jpg`}
+                    <Artwork
+                      catalog={track?.metadata?.catalog}
+                      fallback="default"
                       alt={track.metadata.title}
                       width={160}
                       height={160}
                       className="rounded-md user-select-none"
+                      loading="lazy"
                     />
                     <button
                       className={`absolute w-10 h-10 bottom-2 right-2 rounded-full p-2 z-10 opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out bg-blue-600 hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-500 ${
@@ -238,14 +237,10 @@ const Pack: React.FC<PackProps> = ({ tracks }) => {
                       }}
                     >
                       <FontAwesomeIcon
-                        icon={
-                          isPlaying && currentTrack === track ? faStop : faPlay
-                        }
+                        icon={isPlaying && currentTrack === track ? faStop : faPlay}
                         size="lg"
                         color="white"
-                        className={
-                          isPlaying && currentTrack === track ? "ml-0" : "ml-1"
-                        }
+                        className={isPlaying && currentTrack === track ? "ml-0" : "ml-1"}
                       />
                     </button>
                   </div>

@@ -40,6 +40,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import Waveform from "@visualizer/components/Waveform";
+import Artwork from "@components/common/Artwork";
 
 /**
  * Formats time in seconds to MM:SS format
@@ -741,10 +742,9 @@ const MusicPlayer: React.FC = () => {
             {/* Album Art */}
             <div className="relative h-12 w-12 lg:h-16 lg:w-16 dark:bg-black/70 bg-neutral-90/70 rounded-md ml-2">
               <div className="flex items-center justify-center h-12 w-12 lg:h-16 lg:w-16 ml-0 rounded-md p-0.5 md:p-0.5">
-                <Image
-                  crossOrigin="anonymous"
-                  src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${currentTrack?.metadata?.catalog ?? "default"}.jpg`}
-                  alt={currentTrack?.metadata?.title ?? ""}
+                <Artwork
+                  catalog={currentTrack?.metadata?.catalog}
+                  alt={currentTrack?.metadata?.title || "Album artwork"}
                   className="w-full h-full object-cover rounded-md shadow-md cursor-pointer hover:opacity-75"
                   width={64}
                   height={64}
@@ -826,18 +826,17 @@ const MusicPlayer: React.FC = () => {
           </div>
           {/* Main Controls */}
           <div className="flex items-center justify-start w-full h-full">
-            {/* Artwork Image at the very left */}
-            <div className="flex items-center justify-center">
-              <Image
-                crossOrigin="anonymous"
-                src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${currentTrack?.metadata?.catalog ?? "default"}.jpg`}
-                alt={currentTrack?.metadata?.title ?? ""}
-                className="h-full object-cover shadow-md"
-                width={50}
-                height={50}
-                loading="lazy"
-              />
-            </div>
+            {/* Album Art */}
+          <div className="flex items-center justify-center">
+            <Artwork
+              catalog={currentTrack?.metadata?.catalog}
+              alt={currentTrack?.metadata?.title || "Album artwork"}
+              className="h-full object-cover shadow-md"
+              width={50}
+              height={50}
+              loading="lazy"
+            />
+          </div>
             {/* Text Content: Title/Producer & Key/BPM */}
             <div className="flex items-center justify-between ml-3 flex-grow h-full">
               {/* Left Section: Title and Producer */}

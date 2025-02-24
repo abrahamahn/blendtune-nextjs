@@ -13,10 +13,9 @@ import { RootState } from '@core/store';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
 import { Track } from "@/shared/types/track";
-import Image from "next/image";
 import Equalizer from "@visualizer/components/Equalizer";
 import { colorExtractor } from "@utils/colorExtractor";
-import Watermark from "@components/common//Watermark";
+import { Artwork, Watermark } from "@components/common/"
 
 /**
 * InnerLayer component providing track details and audio visualization
@@ -126,12 +125,9 @@ const InnerLayer: React.FC = () => {
         {/* Artwork container */}
         <div className="flex justify-center mt-0 p-0">
           <div className="w-56 h-56 bg-neutral-200/80 dark:bg-black/80 p-2 rounded-md relative">
-            <Image
-              crossOrigin="anonymous"
-              src={`https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${
-                currentTrack?.metadata?.catalog ?? "default"
-              }.jpg`}
-              alt={currentTrack?.metadata?.title ?? ""}
+            <Artwork
+              catalog={currentTrack?.metadata?.catalog}
+              alt={currentTrack?.metadata?.title || "Artwork"}
               className="w-56 h-auto object-cover rounded-lg shadow-md cursor-pointer hover:opacity-75"
               width={200}
               height={200}

@@ -4,8 +4,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
-import Image from "next/image";
-import Watermark from "@components/common//Watermark";
+import { Artwork, Watermark } from "@components/common";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -192,9 +191,8 @@ const TrackCard: React.FC<TrackCardProps> = ({
                   {/* Image and Play Button */}
                   <div className="w-30 h-30 sm:h-36 sm:w-36 md:w-auto flex items-center justify-center relative m-0 mr-0 md:mr-3 md:m-3">
                     <div className="w-28 h-28 sm:w-36 sm:h-36 bg-black/20 dark:bg-black/80 p-2 dark:p-2 rounded-lg">
-                      <Image
-                        crossOrigin="anonymous"
-                        src={getImageUrl(track)}
+                      <Artwork
+                        srcOverride={getImageUrl(track)}
                         alt={track.metadata.title}
                         width={160}
                         height={160}
@@ -202,8 +200,8 @@ const TrackCard: React.FC<TrackCardProps> = ({
                       />
                       <button
                         className={`absolute w-8 h-8 bottom-3 right-3 rounded-full p-2 z-10 transition-opacity duration-300 ease-in-out bg-neutral-900 dark:bg-blue-700 dark:hover:bg-blue-600 ${
-                          hoverIndex === index || (isPlaying && currentTrack === track) 
-                            ? "opacity-100" 
+                          hoverIndex === index || (isPlaying && currentTrack === track)
+                            ? "opacity-100"
                             : "opacity-0"
                         }`}
                         onClick={() => {
@@ -212,11 +210,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
                       >
                         <div className="flex justify-center items-center">
                           <FontAwesomeIcon
-                            icon={
-                              isPlaying && currentTrack === track
-                                ? faPause
-                                : faPlay
-                            }
+                            icon={isPlaying && currentTrack === track ? faPause : faPlay}
                             size="sm"
                             color="white"
                           />

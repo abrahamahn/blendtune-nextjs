@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Logo from "@components/common/Logo";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 /**
  * ResetPassword component allows users to initiate a password reset.

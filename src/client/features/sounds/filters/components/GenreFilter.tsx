@@ -1,9 +1,3 @@
-// src\client\features\sounds\filters\components\GenreFilter.tsx
-/**
-* @fileoverview Genre filter component for track filtering
-* @module sounds/filters/GenreFilter
-*/
-
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +11,10 @@ import {
  faPaw,
  faBoltLightning,
 } from "@fortawesome/free-solid-svg-icons";
+import { FilterWrapper } from "../shared/ui/FilterWrapper";
+import { FilterGrid } from "../shared/ui/FilterGrid";
+import { Button } from "../shared/ui/Button";
+import { ActionButtons } from "../shared/ui/ActionButtons";
 
 /**
 * Props for GenreFilter component
@@ -47,9 +45,6 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
  onClose,
 }) => {
  const dispatch = useDispatch();
- const selectedCategory = useSelector(
-   (state: RootState) => state.tracks.selected.category
- );
 
  /**
   * Handles genre selection/deselection
@@ -58,100 +53,74 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
    dispatch(selectGenres(genre));
  };
 
- /**
-  * Clears all selected genres
-  */
- const handleClearClick = () => {
-   dispatch(removeAllGenres());
- };
-
- /**
-  * Closes the filter panel
-  */
- const handleCloseClick = () => {
-   onClose();
- };
-
  return (
    <div>
      {/* Desktop Filter Panel */}
-     <div className="hidden md:block top-0 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs">
+     <FilterWrapper 
+       isDesktop={true}
+       className="top-0 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs"
+     >
        <div className="grid grid-cols-2 gap-2">
          {genreItems.map((item, index) => (
-           <button
+           <Button
              key={index}
-             className={`mb-0 text-neutral-500 dark:text-neutral-200 
-             hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg flex flex-row px-1.5 py-1.5 ${
-               selectedGenres.includes(item.text)
-                 ? "bg-blue-600 text-white"
-                 : "hover:text-neutral-200 bg-white/90 dark:bg-black/90 text-neutral-500 border border-neutral-200 dark:border-transparent"
-             }`}
+             variant="filter"
+             size="sm"
+             selected={selectedGenres.includes(item.text)}
              onClick={() => handleGenreToggle(item.text)}
+             className="px-1.5 py-1.5"
            >
-             <div className="flex items-center justify-center w-4">
+             <div className="flex items-center justify-center w-4 mr-1">
                <FontAwesomeIcon
                  icon={item.icon}
                  className="justify-center items-center mt-0.5"
                />
              </div>
-             <p className="ml-1">{item.text}</p>
-           </button>
+             <p>{item.text}</p>
+           </Button>
          ))}
        </div>
        
        {/* Desktop Control Buttons */}
-       <div className="flex justify-between mt-4">
-         <button
-           onClick={handleClearClick}
-           className="font-medium text-xs rounded-full mr-3 text-neutral-500 dark:text-neutral-50 bg-transparent underline px-6 py-1"
-         >
-           Clear
-         </button>
-         <button
-           onClick={handleCloseClick}
-           className="font-medium text-xs rounded-full mr-3 text-neutral-50 bg-blue-600 dark:bg-blue-600 px-6 py-1"
-         >
-           Close
-         </button>
-       </div>
-     </div>
+       <ActionButtons 
+         onClear={() => dispatch(removeAllGenres())}
+         onClose={onClose}
+       />
+     </FilterWrapper>
 
      {/* Mobile Filter Panel */}
-     <div className="z-10 block md:hidden top-12 py-4 px-2 text-neutral-300 text-sm">
+     <FilterWrapper 
+       isDesktop={false}
+       className="z-10 top-12 py-4 px-2 text-neutral-300 text-sm"
+     >
        <div className="grid grid-cols-3 gap-2">
          {genreItems.map((item, index) => (
-           <button
+           <Button
              key={index}
-             className={`mb-0 text-neutral-500 dark:text-neutral-200 
-             hover:text-neutral-600 dark:hover:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg flex flex-row px-3 py-2 ${
-               selectedGenres.includes(item.text)
-                 ? "bg-blue-600 text-white"
-                 : "hover:text-neutral-200 bg-white/90 dark:bg-black/90 text-neutral-500 border border-neutral-200 dark:border-transparent"
-             }`}
+             variant="filter"
+             size="md"
+             selected={selectedGenres.includes(item.text)}
              onClick={() => handleGenreToggle(item.text)}
+             className="px-3 py-2"
            >
-             <div className="flex items-center justify-center w-5">
+             <div className="flex items-center justify-center w-5 mr-2">
                <FontAwesomeIcon
                  icon={item.icon}
                  size="lg"
-                 className="justify-center items-center mt-0.5 mr-2"
+                 className="justify-center items-center mt-0.5"
                />
              </div>
-             <p className="ml-1">{item.text}</p>
-           </button>
+             <p>{item.text}</p>
+           </Button>
          ))}
        </div>
 
        {/* Mobile Clear Button */}
-       <div className="flex justify-end mt-4">
-         <button
-           onClick={handleClearClick}
-           className="font-medium rounded-full mr-3 text-neutral-500 dark:text-neutral-50 bg-transparent underline py-1 text-sm"
-         >
-           Clear
-         </button>
-       </div>
-     </div>
+       <ActionButtons 
+         onClear={() => dispatch(removeAllGenres())}
+         isMobile={true}
+       />
+     </FilterWrapper>
    </div>
  );
 };

@@ -1,4 +1,9 @@
 // src\client\features\player\components\MusicPlayer.tsx
+/**
+ * @fileoverview Music player component handling audio playback and controls
+ * @module features/player/MusicPlayer
+ */
+
 "use client";
 import React, {
   useState,
@@ -10,7 +15,6 @@ import React, {
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@core/store';
-
 import { useAudio } from "@player/hooks";
 import {
   setIsPlaying,
@@ -37,9 +41,12 @@ import {
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import Waveform from "@visualizer/components/Waveform";
 
-
-
-function formatTime(timeInSeconds: number | undefined) {
+/**
+ * Formats time in seconds to MM:SS format
+ * @param timeInSeconds - Time to format in seconds
+ * @returns Formatted time string
+ */
+function formatTime(timeInSeconds: number | undefined): string {
   if (typeof timeInSeconds !== "number" || isNaN(timeInSeconds)) {
     return "0:00";
   }
@@ -48,10 +55,15 @@ function formatTime(timeInSeconds: number | undefined) {
   return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 }
 
+/**
+ * Main music player component
+ * Handles audio playback, controls, and visualization
+ */
 const MusicPlayer: React.FC = () => {
   const dispatch = useDispatch();
   const { audioRef } = useAudio();
 
+  // Redux state selectors
   const trackList = useSelector((state: RootState) => state.audio.playback.trackList);
   const loopedTrackList = useSelector((state: RootState) => state.audio.playback.loopedTrackList);
   const currentTrack = useSelector(
@@ -63,28 +75,7 @@ const MusicPlayer: React.FC = () => {
   const trackDuration = useSelector((state: RootState) => state.audio.playback.trackDuration);
   const loopMode = useSelector((state: RootState) => state.audio.playback.loopMode);
 
-  useEffect(() => {}, [currentTrack, audioRef]);
-
-  useEffect(() => {
-    if (!audioRef.current || !currentTrack) return;
-    const audioElement = audioRef.current;
-    const newSrc = `/audio/tracks/${currentTrack.file}`;
-    audioElement.pause();
-    audioElement.src = newSrc;
-    audioElement.load();
-    const handleLoadedData = () => {
-      audioElement
-        .play()
-        .catch((error) => console.error("Error Playing:", error));
-      dispatch(setIsPlaying(true));
-    };
-    audioElement.addEventListener("loadeddata", handleLoadedData, { once: true });
-    return () => {
-      audioElement.removeEventListener("loadeddata", handleLoadedData);
-    };
-  }, [currentTrack, audioRef, dispatch]);
-
-  // Local states and refs
+  // Local state management
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
   const [volume, setVolume] = useState(1);
@@ -93,13 +84,54 @@ const MusicPlayer: React.FC = () => {
   const volumeBarRef = useRef<HTMLDivElement>(null);
   const [sharedAudioUrl, setSharedAudioUrl] = useState<string>("");
 
+  /**
+  * Handles audio source updates when track changes
+  * - Pauses current playback
+  * - Updates audio source
+  * - Loads and plays new track
+  */
+  useEffect(() => {
+    // Return early if audio or track not available
+    if (!audioRef.current || !currentTrack) return;
+    
+    const audioElement = audioRef.current;
+    const newSrc = `/audio/tracks/${currentTrack.file}`;
+  
+    // Update audio source
+    audioElement.pause();
+    audioElement.src = newSrc;
+    audioElement.load();
+  
+    /**
+     * Handles playback once audio is loaded
+     * Attempts to play and updates playing state
+     */
+    const handleLoadedData = () => {
+      audioElement
+        .play()
+        .catch((error) => console.error("Error Playing:", error));
+      dispatch(setIsPlaying(true));
+    };
+  
+    // Add one-time event listener for loaded data
+    audioElement.addEventListener("loadeddata", handleLoadedData, { once: true });
+  
+    // Cleanup listener on unmount/track change
+    return () => {
+      audioElement.removeEventListener("loadeddata", handleLoadedData);
+    };
+  }, [currentTrack, audioRef, dispatch]);
+ 
+  // Update URL when track changes
   useEffect(() => {
     if (!currentTrack?.file) return;
     const sourceUrl = `/audio/tracks/${currentTrack.file}`;
     setSharedAudioUrl(sourceUrl);
   }, [currentTrack?.file]);
 
-  // Play/Pause toggle
+  /**
+  * Handles play/pause toggling
+  */
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -113,6 +145,10 @@ const MusicPlayer: React.FC = () => {
     }
   }, [audioRef, isPlaying, dispatch]);
 
+
+  /**
+  * Saves current playback time to localStorage
+  */
   const savePlaybackTime = useCallback(() => {
     if (!audioRef.current || !currentTrack?.id) return;
     const time = audioRef.current.currentTime;
@@ -127,6 +163,9 @@ const MusicPlayer: React.FC = () => {
     }
   }, [audioRef, currentTrack]);
 
+   /**
+  * Track navigation handlers
+  */
   const nextTrack = useCallback(() => {
     if (!trackList.length) return;
     savePlaybackTime();
@@ -151,6 +190,9 @@ const MusicPlayer: React.FC = () => {
     }
   }, [trackList, currentTrack, dispatch, savePlaybackTime]);
 
+  /**
+  * Loop mode cycling handler
+  */
   const loopTrack = useCallback(() => {
     if (!audioRef.current || !currentTrack) return;
   
@@ -181,11 +223,14 @@ const MusicPlayer: React.FC = () => {
     return () => resizeObserver.disconnect();
   }, []);
 
-  // Audio event handlers
-  const handleTrackEnd = useCallback(() => {
+  /**
+  * Audio event handlers
+  */
+ const handleTrackEnd = useCallback(() => {
     if (currentTrack?.id) {
       localStorage.setItem(`track-${currentTrack.id}-time`, "0");
     }
+
     if (loopMode === "one") {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
@@ -196,32 +241,26 @@ const MusicPlayer: React.FC = () => {
         });
       }
       return;
-    } else if (loopMode === "all") {
+    }
+
+    if (loopMode === "all") {
       const currentIndex = trackList.findIndex(
         (track) => track.id === currentTrack?.id
       );
       if (currentIndex === trackList.length - 1) {
         dispatch(setCurrentTrack(trackList[0]));
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch((error) => {
-            if (error.name !== "AbortError") {
-              console.error("Error playing audio:", error);
-            }
-          });
-        }
       } else {
         dispatch(setCurrentTrack(trackList[currentIndex + 1]));
       }
       return;
-    } else {
-      // loopMode === "off"
-      const currentIndex = trackList.findIndex(
-        (track) => track.id === currentTrack?.id
-      );
-      if (currentIndex < trackList.length - 1) {
-        dispatch(setCurrentTrack(trackList[currentIndex + 1]));
-      }
+    }
+
+    // Default behavior (loopMode === "off")
+    const currentIndex = trackList.findIndex(
+      (track) => track.id === currentTrack?.id
+    );
+    if (currentIndex < trackList.length - 1) {
+      dispatch(setCurrentTrack(trackList[currentIndex + 1]));
     }
   }, [trackList, loopMode, currentTrack, dispatch, audioRef]);
   
@@ -233,33 +272,49 @@ const MusicPlayer: React.FC = () => {
     }
   };
 
+  /**
+   * Restores saved playback position for returning users
+   * Retrieves and applies the last known position for the current track
+   */
   useEffect(() => {
     if (!audioRef.current || !currentTrack?.id) return;
     const audioEl = audioRef.current;
     const savedTime = localStorage.getItem(`track-${currentTrack.id}-time`);
+    
+    // Skip if no saved time or at start
     if (!savedTime || savedTime === "0") return;
+    
     const parsedTime = parseFloat(savedTime);
     if (isNaN(parsedTime) || parsedTime >= audioEl.duration) return;
+    
     const handleLoadedData = () => {
       audioEl.currentTime = parsedTime;
     };
+    
     audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
     return () => {
       audioEl.removeEventListener("loadeddata", handleLoadedData);
     };
   }, [audioRef, currentTrack]);
 
-  // Keyboard shortcuts
+  /**
+   * Keyboard shortcuts handler
+   * - Space: Play/Pause
+   * - Arrow Left/Right: Seek -/+ 10s (with Shift: Previous/Next track)
+   * - Arrow Up/Down: Volume +/- (with Shift: Max/Min)
+   */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!audioRef.current) return;
       const audioElement = audioRef.current;
+      
       switch (event.key) {
         case " ":
         case "Spacebar":
           event.preventDefault();
           togglePlayPause();
           break;
+          
         case "ArrowLeft":
           if (event.shiftKey) {
             event.preventDefault();
@@ -268,6 +323,7 @@ const MusicPlayer: React.FC = () => {
             audioElement.currentTime = Math.max(0, audioElement.currentTime - 10);
           }
           break;
+          
         case "ArrowRight":
           if (event.shiftKey) {
             event.preventDefault();
@@ -276,6 +332,7 @@ const MusicPlayer: React.FC = () => {
             audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 10);
           }
           break;
+          
         case "ArrowUp":
           event.preventDefault();
           setVolume((prevVolume) => {
@@ -284,6 +341,7 @@ const MusicPlayer: React.FC = () => {
             return newVolume;
           });
           break;
+          
         case "ArrowDown":
           event.preventDefault();
           setVolume((prevVolume) => {
@@ -294,129 +352,217 @@ const MusicPlayer: React.FC = () => {
           break;
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [audioRef, togglePlayPause, previousTrack, nextTrack]);
 
-  // --- VOLUME LOGIC ---
+  /**
+  * Volume control configuration and handlers
+  */
+
+  // Calculate volume percentage and icon positioning
   const volPercent = Math.round(volume * 100);
   const iconTransform =
-    volPercent === 0 ? "translateX(2.5px)" :
-    volPercent === 100 ? "translateX(3.5px)" :
-    "translateX(0)";
+  volPercent === 0 ? "translateX(2.5px)" :
+  volPercent === 100 ? "translateX(3.5px)" :
+  "translateX(0)";
+
+  /**
+  * Determine appropriate volume icon based on level
+  */
   const volumeIcon = (() => {
-    if (volPercent === 0) return faVolumeXmark;
-    if (volPercent === 100) return faVolumeHigh;
-    return faVolumeLow;
+  if (volPercent === 0) return faVolumeXmark;
+  if (volPercent === 100) return faVolumeHigh;
+  return faVolumeLow;
   })();
 
+  /**
+  * Toggle volume control visibility
+  */
   const toggleVolume = () => {
-    dispatch(setIsVolumeVisible(!isVolumeVisible));
+  dispatch(setIsVolumeVisible(!isVolumeVisible));
   };
 
+  /**
+  * Calculate volume level from mouse position
+  */
   const calculateVolume = (clientY: number, rect: DOMRect) => {
-    const newVolume = 1 - (clientY - rect.top) / rect.height;
-    return Math.max(0, Math.min(1, newVolume));
+  const newVolume = 1 - (clientY - rect.top) / rect.height;
+  return Math.max(0, Math.min(1, newVolume));
   };
 
+  /**
+  * Handle mouse wheel volume adjustment
+  */
   const handleVolumeWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+  e.preventDefault();
+  const step = 0.08;
+  setVolume((prevVolume) => {
+    const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(e.deltaY) * step));
+    if (audioRef.current) audioRef.current.volume = newVolume;
+    return newVolume;
+  });
+  };
+
+  /**
+  * Initialize volume drag operation
+  */
+  const handleVolumeMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
+  setIsDraggingVolume(true);
+  document.body.style.userSelect = "none";
+  document.body.style.cursor = "pointer";
+  
+  if (volumeBarRef.current) {
+    const rect = volumeBarRef.current.getBoundingClientRect();
+    const newVolume = calculateVolume(e.clientY, rect);
+    if (audioRef.current) audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  }
+  e.preventDefault();
+  };
+
+  /**
+  * Handle volume control drag operation
+  */
+  useEffect(() => {
+  if (isDraggingVolume) {
+    const handleDocumentMouseMove = (e: MouseEvent) => {
+      if (volumeBarRef.current) {
+        const rect = volumeBarRef.current.getBoundingClientRect();
+        const newVolume = calculateVolume(e.clientY, rect);
+        if (audioRef.current) audioRef.current.volume = newVolume;
+        setVolume(newVolume);
+      }
+      e.preventDefault();
+    };
+    
+    document.addEventListener("mousemove", handleDocumentMouseMove);
+    return () => document.removeEventListener("mousemove", handleDocumentMouseMove);
+  }
+  }, [isDraggingVolume, audioRef]);
+
+  /**
+  * Clean up volume drag operation
+  */
+  useEffect(() => {
+  const handleDocumentMouseUp = () => {
+    if (isDraggingVolume) {
+      setIsDraggingVolume(false);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    }
+  };
+  
+  document.addEventListener("mouseup", handleDocumentMouseUp);
+  return () => document.removeEventListener("mouseup", handleDocumentMouseUp);
+  }, [isDraggingVolume]);
+
+  /**
+  * Handle clicks outside volume control
+  */
+  useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      volumeContainerRef.current &&
+      !volumeContainerRef.current.contains(e.target as Node)
+    ) {
+      dispatch(setIsVolumeVisible(false));
+    }
+  };
+  
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dispatch]);
+
+  /**
+  * Global wheel event handler for volume control
+  */
+  useEffect(() => {
+  if (!isVolumeVisible) {
+    document.body.style.overflow = "";
+    return;
+  }
+
+  document.body.style.overflow = "hidden";
+  
+  const handleGlobalWheel: EventListener = (e) => {
     e.preventDefault();
-    const step = 0.08;
+    e.stopPropagation();
+    const wheelEvent = e as WheelEvent;
+
+    // Handle volume limits
+    if (volume === 1 && wheelEvent.deltaY < 0) {
+      dispatch(setIsVolumeVisible(false));
+      return;
+    }
+    if (volume === 0 && wheelEvent.deltaY > 0) {
+      dispatch(setIsVolumeVisible(false));
+      return;
+    }
+
+    // Adjust volume
+    const step = 0.05;
     setVolume((prevVolume) => {
-      const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(e.deltaY) * step));
+      const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(wheelEvent.deltaY) * step));
       if (audioRef.current) audioRef.current.volume = newVolume;
       return newVolume;
     });
   };
 
-  const handleVolumeMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
-    setIsDraggingVolume(true);
-    document.body.style.userSelect = "none";
-    document.body.style.cursor = "pointer";
-    if (volumeBarRef.current) {
-      const rect = volumeBarRef.current.getBoundingClientRect();
-      const newVolume = calculateVolume(e.clientY, rect);
-      if (audioRef.current) audioRef.current.volume = newVolume;
-      setVolume(newVolume);
-    }
-    e.preventDefault();
+  const wheelOptions = { passive: false, capture: true } as AddEventListenerOptions;
+  document.addEventListener("wheel", handleGlobalWheel, wheelOptions);
+  
+  return () => {
+    document.removeEventListener("wheel", handleGlobalWheel, wheelOptions);
+    document.body.style.overflow = "";
   };
-
-  useEffect(() => {
-    if (isDraggingVolume) {
-      const handleDocumentMouseMove = (e: MouseEvent) => {
-        if (volumeBarRef.current) {
-          const rect = volumeBarRef.current.getBoundingClientRect();
-          const newVolume = calculateVolume(e.clientY, rect);
-          if (audioRef.current) audioRef.current.volume = newVolume;
-          setVolume(newVolume);
-        }
-        e.preventDefault();
-      };
-      document.addEventListener("mousemove", handleDocumentMouseMove);
-      return () => document.removeEventListener("mousemove", handleDocumentMouseMove);
-    }
-  }, [isDraggingVolume, audioRef]);
-
-  useEffect(() => {
-    const handleDocumentMouseUp = () => {
-      if (isDraggingVolume) {
-        setIsDraggingVolume(false);
-        document.body.style.userSelect = "";
-        document.body.style.cursor = "";
-      }
-    };
-    document.addEventListener("mouseup", handleDocumentMouseUp);
-    return () => document.removeEventListener("mouseup", handleDocumentMouseUp);
-  }, [isDraggingVolume]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        volumeContainerRef.current &&
-        !volumeContainerRef.current.contains(e.target as Node)
-      ) {
-        dispatch(setIsVolumeVisible(false));
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dispatch]);
-
-  // Global wheel handler when volume bar is visible
-  useEffect(() => {
-    if (!isVolumeVisible) {
-      document.body.style.overflow = "";
-      return;
-    }
-    document.body.style.overflow = "hidden";
-    const handleGlobalWheel: EventListener = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const wheelEvent = e as WheelEvent;
-      if (volume === 1 && wheelEvent.deltaY < 0) {
-        dispatch(setIsVolumeVisible(false));
-        return;
-      }
-      if (volume === 0 && wheelEvent.deltaY > 0) {
-        dispatch(setIsVolumeVisible(false));
-        return;
-      }
-      const step = 0.05;
-      setVolume((prevVolume) => {
-        const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(wheelEvent.deltaY) * step));
-        if (audioRef.current) audioRef.current.volume = newVolume;
-        return newVolume;
-      });
-    };
-    const wheelOptions = { passive: false, capture: true } as AddEventListenerOptions;
-    document.addEventListener("wheel", handleGlobalWheel, wheelOptions);
-    return () => {
-      document.removeEventListener("wheel", handleGlobalWheel, wheelOptions);
-      document.body.style.overflow = "";
-    };
   }, [isVolumeVisible, audioRef, dispatch, volume]);
 
+    /**
+  * Global wheel event handler for volume control
+  */
+    useEffect(() => {
+      if (!isVolumeVisible) {
+        document.body.style.overflow = "";
+        return;
+      }
+    
+      document.body.style.overflow = "hidden";
+      
+      const handleGlobalWheel: EventListener = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const wheelEvent = e as WheelEvent;
+    
+        // Handle volume limits
+        if (volume === 1 && wheelEvent.deltaY < 0) {
+          dispatch(setIsVolumeVisible(false));
+          return;
+        }
+        if (volume === 0 && wheelEvent.deltaY > 0) {
+          dispatch(setIsVolumeVisible(false));
+          return;
+        }
+    
+        // Adjust volume
+        const step = 0.05;
+        setVolume((prevVolume) => {
+          const newVolume = Math.max(0, Math.min(1, prevVolume - Math.sign(wheelEvent.deltaY) * step));
+          if (audioRef.current) audioRef.current.volume = newVolume;
+          return newVolume;
+        });
+      };
+    
+      const wheelOptions = { passive: false, capture: true } as AddEventListenerOptions;
+      document.addEventListener("wheel", handleGlobalWheel, wheelOptions);
+      
+      return () => {
+        document.removeEventListener("wheel", handleGlobalWheel, wheelOptions);
+        document.body.style.overflow = "";
+      };
+    }, [isVolumeVisible, audioRef, dispatch, volume]);
+    
   // --- MOUSE WHEEL ON MUSIC PLAYER ---
   const handleMusicPlayerWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();

@@ -1,11 +1,12 @@
 // src\client\features\sounds\tracks\components\DesktopCatalog.tsx
+
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-
 import Image from "next/image";
 import { Track } from "@/shared/types/track";
-import { RootState } from '@core/store';
+import { RootState } from "@core/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisVertical,
@@ -13,36 +14,46 @@ import {
   faPlay,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-
-import Watermark from "@components/common//Watermark";
-import EqualizerIcon from "@components/common//EqualizerIcon";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
+import Watermark from "@components/common/Watermark";
+import EqualizerIcon from "@components/common/EqualizerIcon";
+
+/**
+ * Props definition for the DesktopCatalog component.
+ */
 export interface DesktopCatalogProps {
-  tracks: Track[];
-  playTrack: (selectedTrack: Track) => void;
-  onTitleClick: (selectedTrack: Track) => void;
+  tracks: Track[]; // List of tracks to display
+  playTrack: (selectedTrack: Track) => void; // Function to play a track
+  onTitleClick: (selectedTrack: Track) => void; // Function to handle title clicks
 }
 
+/**
+ * DesktopCatalog component for displaying a list of tracks in a tabular format.
+ */
 const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
   tracks,
   playTrack,
   onTitleClick,
 }) => {
+  // Retrieve the current track and playback state from Redux
   const currentTrack = useSelector(
-    (state: RootState) =>
-      state.audio.playback.currentTrack as Track | undefined
+    (state: RootState) => state.audio.playback.currentTrack as Track | undefined
   );
   const isPlaying = useSelector(
     (state: RootState) => state.audio.playback.isPlaying
   );
 
-  // Local state for the right bar window. Replace this with your actual implementation if needed.
+  // State to control the visibility of the right bar (track info panel)
   const [rightBarOpen, setRightBarOpen] = useState(false);
 
+  // Ref to track waveform container width for future waveform rendering
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState(0);
 
+  /**
+   * Updates waveform width dynamically when the container resizes.
+   */
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -60,39 +71,41 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
     };
   }, []);
 
+  /**
+   * Safely renders a value, returning `null` if empty or `"n/a"`.
+   */
   function renderValue(value: string) {
     return value && value !== "n/a" && value !== "" ? value : null;
   }
 
+  /**
+   * Formats a track duration string from `MM:SS` format to ensure zero-padding.
+   */
   function formatDuration(durationString: string): string {
     const [minutesStr, secondsStr] = durationString.split(":");
     const minutes = parseInt(minutesStr, 10);
     const seconds = parseInt(secondsStr, 10);
 
-    return (
-      minutes.toString().padStart(2, "0") +
-      ":" +
-      seconds.toString().padStart(2, "0")
-    );
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
 
+  // If no tracks are available, return null (prevents rendering issues)
   if (!tracks) {
     return null;
   }
 
-  // New function to handle title clicks with the exception for the currently playing track.
+  /**
+   * Handles title clicks, toggling the right panel when needed.
+   * If the clicked track is already playing, it opens the right panel instead.
+   */
   const handleTitleClick = (selectedTrack: Track) => {
-    // If clicking on the currently playing track:
     if (currentTrack?.id === selectedTrack.id) {
-      // If the right bar is not open, open it and load the track info
       if (!rightBarOpen) {
         setRightBarOpen(true);
         onTitleClick(selectedTrack);
       }
-      // If it's already open, do nothing.
       return;
     }
-    // For any other track, switch playback immediately.
     playTrack(selectedTrack);
   };
 
@@ -103,9 +116,9 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
           const isCurrentTrack = currentTrack?.id === track.id;
           return (
             <div key={track.id} className="relative">
-              {/* This div adds a flat bottom border spanning the full width */}
+              {/* Bottom Border Separator */}
               <div className="absolute bottom-0 left-0 right-0 border-b border-neutral-300 dark:border-neutral-900" />
-                {/* Inner container with rounded corners and only top/side borders */}
+                {/* Track Row */}
                 <div
                   className="cursor-pointer flex items-center p-1 border-neutral-300 hover:bg-[#F9F9F9] dark:hover:bg-neutral-900 group rounded-lg relative h-18"
                   onClick={(e) => {
@@ -114,9 +127,8 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                     playTrack(track);
                   }}
                 >
-                {/* Numbering / Equalizer / Play-Pause Icon */}
+                {/* Track Number / Equalizer / Play-Pause Icon */}
                 <div className="relative text-neutral-500 mr-4 w-8 h-8 flex justify-center items-center">
-                  
                   {/* Equalizer Icon (Always rendered, perfectly centered) */}
                   {isCurrentTrack && (
                     <div
@@ -212,7 +224,9 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                       </div>
                     </div>
                   </div>
+                  {/* Track Metadata */}
                   <div className="grid grid-cols-5 items-center justify-center gap-8 w-64 mr-2">
+                    {/* Duration */}
                     <div className="col-span-1">
                       <div className="mr-8 justify-center items-center">
                         <p className="text-[#707070] dark:text-[#707070] text-2xs">
@@ -220,6 +234,8 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                         </p>
                       </div>
                     </div>
+
+                    {/* BPM */}
                     <div className="col-span-1">
                       <div className="justify-center items-center">
                         <p className="text-[#707070] dark:text-[#707070] text-2xs">
@@ -227,16 +243,18 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                         </p>
                       </div>
                     </div>
+
+                    {/* Key & Scale */}
                     <div className="col-span-1">
                       <div className="flex justify-center items-center">
                         <p className="text-center text-white bg-blue-300 dark:bg-neutral-950 text-2xs px-2 py-0.5 rounded-md w-auto">
                           {renderValue(track.info.key.note)}
-                          {renderValue(
-                            track.info.key.scale.substring(0, 3).toLowerCase()
-                          )}
+                          {renderValue(track.info.key.scale.substring(0, 3).toLowerCase())}
                         </p>
                       </div>
                     </div>
+
+                    {/* Genre */}
                     <div className="flex-col col-span-2">
                       {renderValue(track?.info?.genre[0]?.maingenre) && (
                         <div className="flex justify-center items-center">
@@ -247,53 +265,28 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
                       )}
                     </div>
                   </div>
+
+                  {/* Related Artists & Moods */}
                   <div className="p-2 grid grid-cols-3 grid-rows-2 gap-2 w-64 bg-[#F9F9F9] dark:bg-neutral-900/50 rounded-md justify-center items-center">
-                    <div className="col-span-1 row-span-1">
-                      <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
-                        {renderValue(track.info.relatedartist[0]) && (
-                          <p className="px-1 mr-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap marquee">
-                            {renderValue(track.info.relatedartist[0])}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-span-1 row-span-1">
-                      <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
-                        {renderValue(track.info.relatedartist[1]) && (
-                          <p className="px-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap marquee">
-                            {renderValue(track.info.relatedartist[1])}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-span-1 row-span-1">
-                      <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
-                        {renderValue(track.info.mood[0]) && (
-                          <p className="px-1 mr-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap marquee">
-                            {renderValue(track.info.mood[0])}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-span-1 row-span-1">
-                      <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
-                        {renderValue(track.info.mood[1]) && (
-                          <p className="px-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap marquee">
-                            {renderValue(track.info.mood[1])}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-span-1 row-span-1">
-                      <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
-                        {renderValue(track.info.mood[2]) && (
-                          <p className="px-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap marquee">
-                            {renderValue(track.info.mood[2])}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    {[
+                      track.info.relatedartist[0],
+                      track.info.relatedartist[1],
+                      track.info.mood[0],
+                      track.info.mood[1],
+                      track.info.mood[2],
+                    ].map((value, i) =>
+                      renderValue(value) ? (
+                        <div key={i} className="col-span-1 row-span-1">
+                          <div className="flex flex-row justify-center items-center text-center text-2xs md:text-2xs w-full">
+                            <p className="px-1 cursor-pointer text-[#707070] hover:text-[#707070] dark:text-[#707070] dark:hover:text-white overflow-hidden whitespace-nowrap">
+                              {renderValue(value)}
+                            </p>
+                          </div>
+                        </div>
+                      ) : null
+                    )}
                   </div>
+                  {/* Favorite, Add, and More Options */}
                   <div className="flex justify-center items-center flex-grow relative">
                     <div className="flex justify-center items-center text-[#707070] dark:text-neutral-300 w-8 h-8 mr-2 bg-[#F9F9F9] hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-full opacity-0 group-hover:opacity-100 hover:cursor-pointer">
                       <FontAwesomeIcon icon={faHeart} />

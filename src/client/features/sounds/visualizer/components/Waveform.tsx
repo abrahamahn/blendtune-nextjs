@@ -102,16 +102,17 @@ const Waveform: React.FC<WaveformProps> = ({
 
     // Determine positions in pixels.
     const playbackPosition = (currentTime! / (trackDuration || 1)) * canvas.width;
-    const activePosition = isDragging ? hoverPosition : playbackPosition;
 
-    // Loop over each bar.
+  // Loop over each bar to compute and render audio waveform.
     for (let i = 0; i < numBars; i++) {
       let sumSquared = 0;
+      // Sum the squares of samples for RMS calculation.
       for (let j = 0; j < sampleSize; j++) {
         const sample = data[i * sampleSize + j] || 0;
         sumSquared += sample * sample;
       }
       const rms = Math.sqrt(sumSquared / sampleSize);
+      // Scale the RMS to derive the base height for the bar.
       const baseBarHeight = rms * amplitude * canvas.height * 6;
       const offsetY = (canvas.height - baseBarHeight) / 2;
       const barX = i * (barWidth + gapWidth);
@@ -248,6 +249,7 @@ const Waveform: React.FC<WaveformProps> = ({
     }
   };
 
+  // Handle mouse down event on the waveform canvas.
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!canvasRef.current) return;
     // Cancel any fade (even if one is in progress).
@@ -260,6 +262,7 @@ const Waveform: React.FC<WaveformProps> = ({
     handleMouseMove(event); // Immediate response.
   };
 
+  // Update hover position and time indicator as mouse moves.
   const handleMouseMove = useCallback(
     (event: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
       if (!canvasRef.current || !trackDuration) return;
@@ -268,6 +271,7 @@ const Waveform: React.FC<WaveformProps> = ({
       offsetX = Math.max(0, Math.min(offsetX, rect.width));
       setHoverPosition(offsetX);
 
+      // Compute time corresponding to current hover position.
       const percentage = offsetX / rect.width;
       const newTime = trackDuration * percentage;
       setHoverTime(
@@ -276,6 +280,7 @@ const Waveform: React.FC<WaveformProps> = ({
           .padStart(2, "0")}`
       );
 
+      // Update hover line and text positions.
       if (lineRef.current) {
         // Update the hover line position (that follows the mouse).
         lineRef.current.style.left = `${offsetX}px`;
@@ -287,6 +292,7 @@ const Waveform: React.FC<WaveformProps> = ({
     [trackDuration]
   );
 
+  // Handle mouse up event to finalize dragging and update playback.
   const handleMouseUp = useCallback(() => {
     if (!isDragging || !canvasRef.current || !trackDuration) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -297,8 +303,9 @@ const Waveform: React.FC<WaveformProps> = ({
     updateCurrentTime(finalTime);
     setIsDragging(false);
 
-    // Start fade-out: remain fully opaque for 2 seconds,
-    // then fade opacity to 0 over 2 seconds (a total of 4 seconds).
+    // Initiate fade-out animation:
+    // - Remain fully opaque for 2 seconds.
+    // - Then fade opacity to 0 over the next 2 seconds.
     cancelPendingFade();
     fadeDelayTimeoutRef.current = window.setTimeout(() => {
       setDisableTransition(false);
@@ -314,6 +321,7 @@ const Waveform: React.FC<WaveformProps> = ({
     }, 2000);
   }, [isDragging, hoverPosition, trackDuration, updateCurrentTime]);
 
+  // Attach global mouse event listeners during drag operations.
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
@@ -325,7 +333,7 @@ const Waveform: React.FC<WaveformProps> = ({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // Compute positions and formatted times.
+  // Calculate playback position and formatted time for display.
   const playbackPositionPx = ((currentTime ?? 0) / (trackDuration || 1)) * width;
   const activePosition = isDragging ? hoverPosition : playbackPositionPx;
   const activeTimeText = isDragging

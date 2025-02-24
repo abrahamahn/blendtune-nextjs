@@ -2,6 +2,11 @@
 import { NextResponse } from 'next/server';
 import { createJsonResponse } from './responses';
 
+/**
+ * Wraps handler functions with global error handling
+ * @param handler - Async function returning NextResponse
+ * @returns Wrapped function with error catching
+ */
 export function withErrorHandling<T extends (...args: any[]) => Promise<NextResponse>>(
   handler: T
 ): (...args: Parameters<T>) => Promise<NextResponse> {

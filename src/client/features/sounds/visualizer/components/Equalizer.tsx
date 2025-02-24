@@ -3,22 +3,30 @@
 import React, { useEffect, useRef, useState, RefObject } from "react";
 import { Track } from "@/shared/types/track";
 
+/** Extended audio element with Web Audio API nodes */
 interface AudioElementWithSourceNode extends HTMLAudioElement {
   sourceNode?: MediaElementAudioSourceNode;
   analyser?: AnalyserNode;
 }
 
+/** Props for Equalizer component */
 interface EqualizerProps {
+  /** Reference to the audio element */
   audioRef: RefObject<HTMLAudioElement | null>;
+  /** Currently playing track */
   currentTrack?: Track;
 }
 
+/**
+ * Audio frequency visualizer component
+ * Renders real-time audio frequency bars on a canvas
+ */
 const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
   const prefersDarkMode = useRef<boolean>(false);
 
-  // Use a safe default width (203) for SSR; update on mount if needed.
+  // Responsive canvas width handling
   const [canvasWidth, setCanvasWidth] = useState(203);
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,7 +34,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
     }
   }, []);
 
-  // Listen for dark mode changes.
+  // Dark mode detection
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     prefersDarkMode.current = mediaQuery.matches;
@@ -37,9 +45,10 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // Determine bar color based on color scheme
   const getBarColor = () => (prefersDarkMode.current ? "#ECECEC" : "#A9A9A9");
 
-  // Set up the audio analyser and rendering loop.
+  // Set up audio analysis and visualization
   useEffect(() => {
     if (!audioRef.current) return;
 
@@ -57,6 +66,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
       analyser.connect(audioCtx.destination);
     }
 
+    // Create frequency visualization
     const setupEqualizer = () => {
       if (extendedAudioRef.analyser && canvasRef.current) {
         const canvas = canvasRef.current;
@@ -72,12 +82,12 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
             // Clear canvas for fresh rendering
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Use identical fixed values as in Waveform.
+            // Consistent bar rendering parameters
             const barWidth = 2;
             const gapWidth = 1;
-            // Calculate the number of bars as done in the Waveform component.
             const numBars = Math.floor((canvas.width + gapWidth) / (barWidth + gapWidth));
 
+            // Draw frequency bars
             for (let i = 0; i < numBars && i < fbc_array.length; i++) {
               const barHeight = -(fbc_array[i] / 2);
               const barPosX = i * (barWidth + gapWidth);
@@ -93,6 +103,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
 
     setupEqualizer();
 
+    // Cleanup animation frame on unmount
     return () => {
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);

@@ -1,20 +1,61 @@
-// src\client\features\sounds\filters\components\TempoFilter.tsx
+// src/client/features/sounds/filters/components/TempoFilter.tsx
 import React from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
+/**
+ * Props interface for the TempoFilter component
+ * Defines the contract for tempo filtering functionality
+ */
 interface TempoFilterProps {
+  /** Callback to close the filter */
   onClose: () => void;
+
+  /** Minimum tempo value */
   minTempo: number;
+
+  /** Setter for minimum tempo */
   setMinTempo: (minTempo: number) => void;
+
+  /** Maximum tempo value */
   maxTempo: number;
-  setMaxTempo: (minTempo: number) => void;
+
+  /** Setter for maximum tempo */
+  setMaxTempo: (maxTempo: number) => void;
+
+  /** Flag to include half-time tracks */
   includeHalfTime: boolean;
+
+  /** Setter for half-time inclusion */
   setIncludeHalfTime: (includeHalfTime: boolean) => void;
+
+  /** Flag to include double-time tracks */
   includeDoubleTime: boolean;
+
+  /** Setter for double-time inclusion */
   setIncludeDoubleTime: (includeDoubleTime: boolean) => void;
 }
 
+/**
+ * TempoFilter component allows users to filter tracks by tempo
+ * Supports setting tempo range and time modification options
+ * 
+ * @component
+ * @example
+ * return (
+ *   <TempoFilter 
+ *     minTempo={60}
+ *     maxTempo={180}
+ *     setMinTempo={updateMinTempo}
+ *     setMaxTempo={updateMaxTempo}
+ *     includeHalfTime={halfTimeEnabled}
+ *     setIncludeHalfTime={toggleHalfTime}
+ *     includeDoubleTime={doubleTimeEnabled}
+ *     setIncludeDoubleTime={toggleDoubleTime}
+ *     onClose={handleFilterClose}
+ *   />
+ * )
+ */
 const TempoFilter: React.FC<TempoFilterProps> = ({
   minTempo,
   setMinTempo,
@@ -26,32 +67,54 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
   setIncludeDoubleTime,
   onClose,
 }) => {
+  /** Minimum allowed tempo */
+  const MIN_TEMPO = 40;
+
+  /** Maximum allowed tempo */
+  const MAX_TEMPO = 200;
+
+  /**
+   * Handles checkbox toggle for half-time tracks
+   */
   const handleHalfTimeCheckboxChange = () => {
     setIncludeHalfTime(!includeHalfTime);
   };
 
+  /**
+   * Handles checkbox toggle for double-time tracks
+   */
   const handleDoubleTimeCheckboxChange = () => {
     setIncludeDoubleTime(!includeDoubleTime);
   };
 
+  /**
+   * Resets all tempo filter settings to default
+   */
   const clearFilter = () => {
-    setMinTempo(40);
-    setMaxTempo(200);
+    setMinTempo(MIN_TEMPO);
+    setMaxTempo(MAX_TEMPO);
     setIncludeHalfTime(false);
     setIncludeDoubleTime(false);
   };
 
+  /**
+   * Handles clearing the tempo filter
+   */
   const handleClearClick = () => {
     clearFilter();
   };
 
+  /**
+   * Handles changes to the tempo slider
+   * @param {number | number[]} values - Selected tempo value(s)
+   */
   const handleSliderChange = (values: number | number[]) => {
     if (Array.isArray(values)) {
       const [minValue, maxValue] = values;
 
-      if (minValue === 40 && maxValue === 200) {
-        setMinTempo(40);
-        setMaxTempo(200);
+      if (minValue === MIN_TEMPO && maxValue === MAX_TEMPO) {
+        setMinTempo(MIN_TEMPO);
+        setMaxTempo(MAX_TEMPO);
       } else {
         setMinTempo(minValue);
         setMaxTempo(maxValue);
@@ -62,16 +125,20 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
     }
   };
 
+  /**
+   * Handles closing the tempo filter
+   */
   const handleCloseClick = () => {
     onClose();
   };
 
   return (
     <div>
+      {/* Desktop Filter */}
       <div className="hidden md:block z-10 absolute top-0 bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-8 shadow rounded-lg text-neutral-300 text-xs">
         <Slider
-          min={40}
-          max={200}
+          min={MIN_TEMPO}
+          max={MAX_TEMPO}
           range
           value={[minTempo, maxTempo]}
           onChange={handleSliderChange}
@@ -106,10 +173,10 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="text"
               id="minTempo"
               placeholder="From"
-              value={minTempo === 40 ? "40" : minTempo}
+              value={minTempo === MIN_TEMPO ? "40" : minTempo}
               onChange={(e) => {
                 const value = parseInt(e.target.value);
-                setMinTempo(isNaN(value) ? 40 : value);
+                setMinTempo(isNaN(value) ? MIN_TEMPO : value);
               }}
               className="text-neutral-500 dark:text-neutral-200 rounded-md border border-neutral-300 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-sm h-8 mt-1"
             />
@@ -126,10 +193,10 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="text"
               id="maxTempo"
               placeholder="To"
-              value={maxTempo === 200 ? "200" : maxTempo}
+              value={maxTempo === MAX_TEMPO ? "200" : maxTempo}
               onChange={(e) => {
                 const value = parseInt(e.target.value);
-                setMaxTempo(isNaN(value) ? 200 : value);
+                setMaxTempo(isNaN(value) ? MAX_TEMPO : value);
               }}
               className="text-neutral-500 dark:text-neutral-200 rounded-md border border-neutral-300 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-sm h-8 mt-1"
             />
@@ -141,7 +208,7 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="checkbox"
               checked={includeHalfTime}
               onChange={handleHalfTimeCheckboxChange}
-              className=" active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2  w-5 h-5 cursor-pointer"
+              className="active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2 w-5 h-5 cursor-pointer"
             />
             <span className="ml-2.5 text-neutral-500 dark:text-neutral-200">
               Include half time
@@ -152,7 +219,7 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="checkbox"
               checked={includeDoubleTime}
               onChange={handleDoubleTimeCheckboxChange}
-              className=" active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2  w-5 h-5 cursor-pointer"
+              className="active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2 w-5 h-5 cursor-pointer"
             />
             <span className="ml-2.5 text-neutral-500 dark:text-neutral-200">
               Include double time
@@ -175,11 +242,12 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
           </button>
         </div>
       </div>
-      {/*Mobile Menu*/}
+
+      {/* Mobile Filter */}
       <div className="block md:hidden justify-center items-center mx-auto z-10 w-full text-neutral-500 dark:text-neutral-300 text-xs py-4">
         <Slider
-          min={40}
-          max={200}
+          min={MIN_TEMPO}
+          max={MAX_TEMPO}
           range
           value={[minTempo, maxTempo]}
           onChange={handleSliderChange}
@@ -214,10 +282,10 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="text"
               id="minTempo"
               placeholder="From"
-              value={minTempo === 40 ? "40" : minTempo}
+              value={minTempo === MIN_TEMPO ? "40" : minTempo}
               onChange={(e) => {
                 const value = parseInt(e.target.value);
-                setMinTempo(isNaN(value) ? 40 : value);
+                setMinTempo(isNaN(value) ? MIN_TEMPO : value);
               }}
               className="text-neutral-500 dark:text-neutral-200 rounded-md border border-neutral-300 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-sm h-8 mt-1"
             />
@@ -234,10 +302,10 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="text"
               id="maxTempo"
               placeholder="To"
-              value={maxTempo === 200 ? "200" : maxTempo}
+              value={maxTempo === MAX_TEMPO ? "200" : maxTempo}
               onChange={(e) => {
                 const value = parseInt(e.target.value);
-                setMaxTempo(isNaN(value) ? 200 : value);
+                setMaxTempo(isNaN(value) ? MAX_TEMPO : value);
               }}
               className="text-neutral-500 dark:text-neutral-200 rounded-md border border-neutral-300 dark:border-neutral-500 bg-neutral-100 dark:bg-neutral-800 text-sm h-8 mt-1"
             />
@@ -249,7 +317,7 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="checkbox"
               checked={includeHalfTime}
               onChange={handleHalfTimeCheckboxChange}
-              className=" active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2  w-5 h-5 cursor-pointer"
+              className="active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2 w-5 h-5 cursor-pointer"
             />
             <span className="ml-2.5 text-neutral-500 dark:text-neutral-200">
               Include half time
@@ -260,7 +328,7 @@ const TempoFilter: React.FC<TempoFilterProps> = ({
               type="checkbox"
               checked={includeDoubleTime}
               onChange={handleDoubleTimeCheckboxChange}
-              className=" active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2  w-5 h-5 cursor-pointer"
+              className="active:outline-none focus:outline-none checked:bg-blue-600 dark:checked:bg-blue-600 checked:border-blue-400 dark:checked:border-blue-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 bg-neutral-200 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-500 rounded-md border-2 w-5 h-5 cursor-pointer"
             />
             <span className="ml-2.5 text-neutral-500 dark:text-neutral-200">
               Include double time

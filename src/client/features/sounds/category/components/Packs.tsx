@@ -1,135 +1,155 @@
 // src\client\features\sounds\category\components\Packs.tsx
+/**
+* @fileoverview Pack component for displaying and playing track collections
+* @module sounds/category/Packs
+*/
+
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
-  faArrowLeft,
-  faArrowRight,
-  faPlay,
-  faStop,
+ faArrowLeft,
+ faArrowRight,
+ faPlay,
+ faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
+/**
+* Props interface for Pack component
+*/
 interface PackProps {
-  tracks: Track[];
+ tracks: Track[];
 }
+
+/**
+* Pack component displaying grid of playable tracks
+* Includes pagination, playback controls, and responsive layout
+*/
 const Pack: React.FC<PackProps> = ({ tracks }) => {
-  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackPosition, setPlaybackPosition] = useState<number>(0);
-  const audioRef = React.useRef<HTMLAudioElement>(null);
+ // Playback state
+ const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+ const [isPlaying, setIsPlaying] = useState(false);
+ const [playbackPosition, setPlaybackPosition] = useState<number>(0);
+ const audioRef = React.useRef<HTMLAudioElement>(null);
 
-  const togglePlayPause = (track: Track) => {
-    if (track !== currentTrack) {
-      setCurrentTrack(track);
-      setIsPlaying(true);
-      setPlaybackPosition(0);
-    } else if (isPlaying) {
-      setIsPlaying(false);
-      setPlaybackPosition(audioRef.current?.currentTime || 0);
-      audioRef.current?.pause();
-    } else {
-      setIsPlaying(true);
-      if (audioRef.current) {
-        audioRef.current.currentTime = playbackPosition;
-        audioRef.current
-          .play()
-          .catch((error) => console.error("Play error:", error));
-      }
-    }
-  };
+ // Pagination state
+ const [currentPage, setCurrentPage] = useState(0);
+ const [itemsPerPage, setItemsPerPage] = useState(6);
+ const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+ const totalPages = Math.ceil(tracks?.length / itemsPerPage);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    const currentTrackFile = currentTrack?.file;
+ /**
+  * Handles play/pause toggle for tracks
+  */
+ const togglePlayPause = (track: Track) => {
+   if (track !== currentTrack) {
+     setCurrentTrack(track);
+     setIsPlaying(true);
+     setPlaybackPosition(0);
+   } else if (isPlaying) {
+     setIsPlaying(false);
+     setPlaybackPosition(audioRef.current?.currentTime || 0);
+     audioRef.current?.pause();
+   } else {
+     setIsPlaying(true);
+     if (audioRef.current) {
+       audioRef.current.currentTime = playbackPosition;
+       audioRef.current.play().catch((error) => console.error("Play error:", error));
+     }
+   }
+ };
 
-    if (audio && currentTrackFile) {
-      const audioSrc = `/audio/tracks/${currentTrackFile}`;
+ /**
+  * Manages audio playback when track or state changes
+  */
+ useEffect(() => {
+   const audio = audioRef.current;
+   const currentTrackFile = currentTrack?.file;
 
-      if (audio.src !== audioSrc) {
-        audio.src = audioSrc;
-        audio.load();
-      }
+   if (audio && currentTrackFile) {
+     const audioSrc = `/audio/tracks/${currentTrackFile}`;
 
-      if (isPlaying) {
-        audio.currentTime = playbackPosition;
-        audio.play().catch((error) => console.error("Play error:", error));
-      } else {
-        audio.pause();
-      }
-    }
+     if (audio.src !== audioSrc) {
+       audio.src = audioSrc;
+       audio.load();
+     }
 
-    return () => {
-      if (audio) {
-        audio.pause();
-      }
-    };
-  }, [currentTrack, isPlaying, playbackPosition]);
+     if (isPlaying) {
+       audio.currentTime = playbackPosition;
+       audio.play().catch((error) => console.error("Play error:", error));
+     } else {
+       audio.pause();
+     }
+   }
 
-  // Pagination Functions
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const totalPages = Math.ceil(tracks?.length / itemsPerPage);
+   return () => {
+     if (audio) {
+       audio.pause();
+     }
+   };
+ }, [currentTrack, isPlaying, playbackPosition]);
 
-  const handleNext = useCallback(() => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
-  }, [totalPages]);
+ /**
+  * Pagination handlers
+  */
+ const handleNext = useCallback(() => {
+   setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
+ }, [totalPages]);
 
-  const handlePrevious = useCallback(() => {
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  }, []);
+ const handlePrevious = useCallback(() => {
+   setCurrentPage((prev) => Math.max(prev - 1, 0));
+ }, []);
 
-  const renderValue = (value: string) => {
-    return value && value !== "n/a" && value !== "" ? value : null;
-  };
+ /**
+  * Utility for rendering track values
+  */
+ const renderValue = (value: string) => {
+   return value && value !== "n/a" && value !== "" ? value : null;
+ };
 
-  const displayedTracks = useMemo(() => {
-    return tracks?.slice(
-      currentPage * itemsPerPage,
-      (currentPage + 1) * itemsPerPage
-    );
-  }, [tracks, currentPage, itemsPerPage]);
+ /**
+  * Memoized slice of tracks for current page
+  */
+ const displayedTracks = useMemo(() => {
+   return tracks?.slice(
+     currentPage * itemsPerPage,
+     (currentPage + 1) * itemsPerPage
+   );
+ }, [tracks, currentPage, itemsPerPage]);
 
-  useEffect(() => {
-    const updateItemsPerPage = () => {
-      if (window.innerWidth > 1280) {
-        setItemsPerPage(6);
-      } else if (window.innerWidth > 1024) {
-        setItemsPerPage(5);
-      } else if (window.innerWidth > 768) {
-        setItemsPerPage(4);
-      } else if (window.innerWidth > 640) {
-        setItemsPerPage(15);
-      }
-    };
+ /**
+  * Handles responsive layout and keyboard navigation
+  */
+ useEffect(() => {
+   // Update items per page based on screen size
+   const updateItemsPerPage = () => {
+     if (window.innerWidth > 1280) setItemsPerPage(6);
+     else if (window.innerWidth > 1024) setItemsPerPage(5);
+     else if (window.innerWidth > 768) setItemsPerPage(4);
+     else if (window.innerWidth > 640) setItemsPerPage(15);
+   };
 
-    updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
+   // Keyboard navigation handler
+   const handleKeyDown = (event: KeyboardEvent) => {
+     switch (event.key) {
+       case "ArrowLeft": handlePrevious(); break;
+       case "ArrowRight": handleNext(); break;
+     }
+   };
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "ArrowLeft":
-          handlePrevious();
-          break;
-        case "ArrowRight":
-          handleNext();
-          break;
-        default:
-          break;
-      }
-    };
+   // Set up event listeners
+   updateItemsPerPage();
+   window.addEventListener("resize", updateItemsPerPage);
+   window.addEventListener("keydown", handleKeyDown);
 
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("resize", updateItemsPerPage);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [currentPage, handlePrevious, handleNext]);
+   return () => {
+     window.removeEventListener("resize", updateItemsPerPage);
+     window.removeEventListener("keydown", handleKeyDown);
+   };
+ }, [currentPage, handlePrevious, handleNext]);
 
   return (
     <div className="w-full flex justify-center items-center ">

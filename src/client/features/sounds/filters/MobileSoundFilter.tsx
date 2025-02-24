@@ -1,4 +1,5 @@
-// src\client\features\sounds\filters\MobileSoundFilter.tsx
+// src/client/features/sounds/filters/MobileSoundFilter.tsx
+
 "use client";
 import React, { useState, useEffect, useRef, type JSX } from "react";
 import { Track } from "@/shared/types/track";
@@ -14,15 +15,8 @@ import {
 } from "./components";
 
 import { useDispatch } from "react-redux";
-import {
-  removeAllKeywords,
-  removeAllGenres,
-} from "@store/slices";
-import {
-  uniqueArtists,
-  uniqueMoods,
-  uniqueKeywords,
-} from "@tracks/utils";
+import { removeAllKeywords, removeAllGenres } from "@store/slices";
+import { uniqueArtists, uniqueMoods, uniqueKeywords } from "@tracks/utils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -108,64 +102,64 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
   handleSortChange,
 }) => {
   const dispatch = useDispatch();
+
   /* Extract Unique Keyword List */
   const [artistList, setArtistList] = useState<string[]>([]);
   const [moodList, setMoodList] = useState<string[]>([]);
   const [keywordList, setKeywordList] = useState<string[]>([]);
 
   useEffect(() => {
-    const uniqueArtistsArray = uniqueArtists(tracks);
-    setArtistList(uniqueArtistsArray);
+    // Extract unique values for filtering
+    setArtistList(uniqueArtists(tracks));
+    setMoodList(uniqueMoods(tracks));
+    setKeywordList(uniqueKeywords(tracks));
+  }, [tracks]); // Removed `dispatch` dependency (not needed)
 
-    const uniqueMoodsArray = uniqueMoods(tracks);
-    setMoodList(uniqueMoodsArray);
-
-    const uniqueKeywordsArray = uniqueKeywords(tracks);
-    setKeywordList(uniqueKeywordsArray);
-  }, [dispatch, tracks]);
-
-  /* Filteration */
-  const toggleFilter = (filterName: string | null) => {
-    if (openFilter === filterName) {
-      setOpenFilter(null);
-    } else {
-      setOpenFilter(filterName);
-    }
-  };
-
+  /* Filtering State */
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [openSortFilter, setOpenSortFilter] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
+  /**
+   * Toggles the visibility of a specific filter.
+   * @param {string | null} filterName - The name of the filter to toggle.
+   */
+  const toggleFilter = (filterName: string | null) => {
+    setOpenFilter((prev) => (prev === filterName ? null : filterName));
+  };
+
+  /**
+   * Checks if an item has values to determine if a filter is applied.
+   * @param {string | string[] | undefined} item - The item to check.
+   * @returns {boolean} - True if the item is not empty or contains values.
+   */
   const hasItems = (item: string | string[] | undefined) => {
     if (typeof item === "string") {
       return item.trim() !== "";
-    } else if (Array.isArray(item)) {
-      return item.length > 0;
-    } else {
-      return false;
     }
+    if (Array.isArray(item)) {
+      return item.length > 0;
+    }
+    return false;
   };
 
+  /**
+   * Calculates the number of applied filters based on user selections.
+   * @returns {number} - The count of applied filters.
+   */
   const calculateAppliedFilterCount = () => {
     let count = 0;
 
-    if (minTempo > 40 || maxTempo < 200) {
-      count++;
-    }
-    if (hasItems(selectedKeys)) {
-      count++;
-    }
-    if (hasItems(selectedGenres)) {
-      count++;
-    }
-    if (hasItems(selectedArtists)) {
-      count++;
-    }
+    if (minTempo > 40 || maxTempo < 200) count++;
+    if (hasItems(selectedKeys)) count++;
+    if (hasItems(selectedGenres)) count++;
+    if (hasItems(selectedArtists)) count++;
+
     return count;
   };
 
   useEffect(() => {
+    // Determine if any filter is currently applied
     const anyFilterApplied =
       minTempo > 40 ||
       maxTempo < 200 ||
@@ -191,8 +185,11 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
   /* Sort Filter Functions */
   const sortButtonRef = useRef<HTMLDivElement | null>(null);
 
-
   useEffect(() => {
+    /**
+     * Handles clicks outside the sort button to close the sort filter dropdown.
+     * @param {MouseEvent} event - The event object.
+     */
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         sortButtonRef.current &&
@@ -203,7 +200,6 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
     };
 
     window.addEventListener("click", handleOutsideClick);
-
     return () => {
       window.removeEventListener("click", handleOutsideClick);
     };
@@ -211,17 +207,17 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
 
   /* Mobile Filter Functions */
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [currentExpandedItem, setCurrentExpandedItem] = useState<string | null>(
-    null
-  );
+  const [currentExpandedItem, setCurrentExpandedItem] = useState<string | null>(null);
 
+  /**
+   * Toggles the mobile filter panel visibility.
+   */
   const toggleMobileFilter = () => {
-    setMobileFilterOpen(!mobileFilterOpen);
+    setMobileFilterOpen((prev) => !prev);
   };
 
-  const [mobileMenu, setMobileMenu] = useState<{
-    [key: string]: boolean;
-  }>({
+  // State for managing expanded filter sections in the mobile menu.
+  const [mobileMenu, setMobileMenu] = useState<Record<string, boolean>>({
     Sort: false,
     Tempo: false,
     Key: false,
@@ -231,31 +227,44 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
     Mood: false,
   });
 
+  /**
+   * Toggles the expansion state of a filter item in the mobile menu.
+   * @param {string} item - The filter category to toggle.
+   */
   const toggleExpand = (item: string) => {
-    const updatedMobileMenu = { ...mobileMenu };
-
-    if (currentExpandedItem === item) {
-      updatedMobileMenu[item] = false;
-      setCurrentExpandedItem(null);
-    } else {
-      updatedMobileMenu[item] = true;
-      if (currentExpandedItem !== null) {
-        updatedMobileMenu[currentExpandedItem] = false;
+    setMobileMenu((prev) => {
+      const updatedMenu = { ...prev };
+      
+      if (currentExpandedItem === item) {
+        updatedMenu[item] = false;
+        setCurrentExpandedItem(null);
+      } else {
+        updatedMenu[item] = true;
+        if (currentExpandedItem !== null) {
+          updatedMenu[currentExpandedItem] = false;
+        }
+        setCurrentExpandedItem(item);
       }
-      setCurrentExpandedItem(item);
-    }
 
-    setMobileMenu(updatedMobileMenu);
+      return updatedMenu;
+    });
   };
 
+  /**
+   * Handles sorting changes in the mobile filter panel.
+   * @param {string} option - The selected sort option.
+   */
   const handleMobileSortChange = (option: string) => {
     handleSortChange(option);
     setMobileMenu((prevState) => ({
       ...prevState,
-      Sort: !prevState.Sort, // Toggle the 'Sort' key value
+      Sort: !prevState.Sort, // Toggle sorting menu visibility
     }));
   };
 
+  /**
+   * List of filter components with associated names.
+   */
   const filterComponents: FilterComponent[] = [
     {
       name: "Genre",
@@ -339,20 +348,24 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
     },
   ];
 
+  /**
+   * Renders the applied filter values dynamically.
+   * @param {string} name - The name of the filter to render.
+   * @returns {JSX.Element | null} - The rendered filter update text or null if no filter is applied.
+   */
   const renderFilterUpdates = (name: string) => {
+    /**
+     * Helper function to render selected filter values.
+     * @param {string[]} selectedItems - The selected filter items.
+     * @returns {JSX.Element | null} - A span element displaying the count or first selected item.
+     */
     const renderFilterText = (selectedItems: string[]) => {
       if (hasItems(selectedItems)) {
-        if (Array.isArray(selectedItems)) {
-          if (selectedItems.length > 1) {
-            return <span>+{selectedItems.length}</span>;
-          } else {
-            return <span>{selectedItems[0]}</span>;
-          }
-        } else {
-          return <span>{selectedItems}</span>;
-        }
+        if (selectedItems.length > 1) {
+          return <span>+{selectedItems.length}</span>;
+        } 
+        return <span>{selectedItems[0]}</span>;
       }
-
       return null;
     };
 
@@ -397,6 +410,9 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
     }
   };
 
+  /**
+   * Resets all filters to their default values.
+   */
   const handleClearClick = () => {
     setMinTempo(40);
     setMaxTempo(200);
@@ -407,13 +423,16 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
     setSelectedArtists([]);
     setSelectedInstruments([]);
     setSelectedMoods([]);
+    
     dispatch(removeAllGenres());
     dispatch(removeAllKeywords());
+
     setOpenFilter(null);
   };
 
   return (
     <div className="block md:hidden w-full">
+      {/* Header: Filter & Sort Button */}
       <div className="fixed top-14 md:mt-0 left-0 w-full px-2 py-1 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black z-10">
         <button
           type="button"
@@ -423,129 +442,135 @@ const MobileSoundFilter: React.FC<MobileSoundFilterProps> = ({
           Filter & Sort
         </button>
       </div>
+
+      {/* Mobile Filter Panel */}
       {mobileFilterOpen && (
-          <div className="mobile-filter-width mobile-filter-height block md:hidden fixed top-0 z-40 md:left-22 w-full h-screen bg-white/90 dark:bg-black/90">
-            <div className="fixed top-0 mt-16 left-0 md:left-22 w-full rounded-t-lg">
-              <div className="p-4 pb-3 rounded-t-xl">
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-row">
-                    <p className="text-neutral-800 dark:text-neutral-200 font-bold text-2xl">
-                      Menu{" "}
-                      {calculateAppliedFilterCount() > 0 &&
-                        `(${calculateAppliedFilterCount()})`}
+        <div className="mobile-filter-width mobile-filter-height block md:hidden fixed top-0 z-40 md:left-22 w-full h-screen bg-white/90 dark:bg-black/90">
+          <div className="fixed top-0 mt-16 left-0 md:left-22 w-full rounded-t-lg">
+            <div className="p-4 pb-3 rounded-t-xl">
+              {/* Header: Menu Title & Clear All Button */}
+              <div className="flex justify-between items-center">
+                <div className="flex flex-row">
+                  <p className="text-neutral-800 dark:text-neutral-200 font-bold text-2xl">
+                    Menu{" "}
+                    {calculateAppliedFilterCount() > 0 &&
+                      `(${calculateAppliedFilterCount()})`}
+                  </p>
+                  {filtersApplied && (
+                    <div className="flex justify-center items-center ml-1">
+                      <button
+                        className="flex px-3 py-1.5 font-medium text-neutral-600 dark:text-neutral-300 text-xs"
+                        onClick={handleClearClick}
+                      >
+                        <span className="underline text-sm">Clear all</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* Close Button */}
+                <button
+                  className="rounded-full p-2 cursor-pointer"
+                  onClick={toggleMobileFilter}
+                >
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    size="lg"
+                    className="text-neutral-600 dark:text-white"
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Sort Filter Section */}
+            <div>
+              <div className="flex flex-col items-start p-4 border-b border-neutral-400 dark:border-neutral-800 hover:cursor-pointer dark:font-medium dark:text-neutral-200 h-auto">
+                <button
+                  className="flex w-full flex-row justify-between items-start hover:cursor-pointer"
+                  onClick={() => toggleExpand("Sort")}
+                >
+                  <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                    Sort by
+                  </p>
+                  <div className="flex flex-row justify-center items-center">
+                    <p className="font-medium text-sm mr-3 text-neutral-600 dark:text-neutral-400">
+                      {sortBy}
                     </p>
-                    {filtersApplied && (
-                      <div className="flex justify-center items-center ml-1">
-                        <button
-                          className="flex px-3 py-1.5 font-medium text-neutral-600 dark:text-neutral-300 text-xs"
-                          onClick={handleClearClick}
-                        >
-                          <span className="underline text-sm">Clear all</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    className="rounded-full p-2 cursor-pointer"
-                    onClick={toggleMobileFilter}
-                  >
                     <FontAwesomeIcon
-                      icon={faTimes}
-                      size="lg"
-                      className="text-neutral-600 dark:text-white"
+                      icon={
+                        mobileMenu.Sort && currentExpandedItem === "Sort"
+                          ? faChevronUp
+                          : faAngleDown
+                      }
+                      size="xs"
+                      className="text-neutral-600 dark:text-neutral-200"
                     />
-                  </button>
+                  </div>
+                </button>
+                <div className="flex w-full justify-center items-center">
+                  {mobileMenu.Sort && (
+                    <SortFilter
+                      openSortFilter={openSortFilter}
+                      mobileFilterOpen={mobileMenu.Sort}
+                      sortBy={sortBy}
+                      handleSortChange={handleSortChange}
+                      handleMobileSortChange={handleMobileSortChange}
+                    />
+                  )}
                 </div>
               </div>
-              <div>
-                <div className="flex flex-col items-start p-4 border-b border-neutral-400 dark:border-neutral-800 hover:cursor-pointer dark:font-medium dark:text-neutral-200 h-auto">
+
+              {/* Filter Components Rendering */}
+              {filterComponents.map(({ name, component }) => (
+                <div
+                  key={name}
+                  className="flex flex-col items-start p-4 border-b border-neutral-400 dark:border-neutral-800 hover:cursor-pointer dark:font-medium dark:text-neutral-200 h-auto"
+                >
                   <button
                     className="flex w-full flex-row justify-between items-start hover:cursor-pointer"
-                    onClick={() => toggleExpand("Sort")}
+                    onClick={() => toggleExpand(name)}
                   >
                     <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
-                      Sort by
+                      {name}
                     </p>
                     <div className="flex flex-row justify-center items-center">
-                      <p className="font-medium text-sm mr-3 text-neutral-600 dark:text-neutral-400">
-                        {sortBy}
+                      <p className="font-medium text-base mr-3 text-neutral-600 dark:text-neutral-400">
+                        {renderFilterUpdates(name)}
                       </p>
                       <FontAwesomeIcon
                         icon={
-                          mobileMenu.Sort && currentExpandedItem === "Sort"
+                          mobileMenu[name] && currentExpandedItem === name
                             ? faChevronUp
-                            : faAngleDown
+                            : faChevronDown
                         }
                         size="xs"
-                        className="text-neutral-600 dark:text-neutral-200"
+                        className={`text-neutral-600 dark:text-neutral-200 cursor-pointer mt-0.5 ${
+                          mobileMenu[name] && currentExpandedItem === name
+                            ? "chevron-up"
+                            : "chevron-down"
+                        }`}
                       />
                     </div>
                   </button>
                   <div className="flex w-full justify-center items-center">
-                    {mobileMenu.Sort && (
-                      <SortFilter
-                        openSortFilter={openSortFilter}
-                        mobileFilterOpen={mobileMenu.Sort}
-                        sortBy={sortBy}
-                        handleSortChange={handleSortChange}
-                        handleMobileSortChange={handleMobileSortChange}
-                      />
-                    )}
+                    {mobileMenu[name] ? component : null}
                   </div>
                 </div>
-                {/* Use .map to create dropdown items */}
-                {filterComponents.map(({ name, component }) => (
-                  <div
-                    key={name}
-                    className={`flex flex-col items-start p-4 border-b border-neutral-400 dark:border-neutral-800 hover:cursor-pointer dark:font-medium dark:text-neutral-200 h-auto`}
-                  >
-                    <button
-                      className="flex w-full flex-row justify-between items-start hover:cursor-pointer"
-                      onClick={() => toggleExpand(name)}
-                    >
-                      <p
-                        className={`text-sm font-semibold text-neutral-800 dark:text-neutral-200`}
-                      >
-                        {name}
-                      </p>
-                      <div className="flex flex-row justify-center items-center">
-                        <p className="font-medium text-base mr-3 text-neutral-600 dark:text-neutral-400">
-                          {renderFilterUpdates(name)}
-                        </p>
-                        <FontAwesomeIcon
-                          icon={
-                            mobileMenu[name] && currentExpandedItem === name
-                              ? faChevronUp
-                              : faChevronDown
-                          }
-                          size="xs"
-                          className={`text-neutral-600 dark:text-neutral-200 cursor-pointer mt-0.5 ${
-                            mobileMenu[name] && currentExpandedItem === name
-                              ? "chevron-up"
-                              : "chevron-down"
-                          }`}
-                        />
-                      </div>
-                    </button>
-                    <div className="flex w-full justify-center items-center">
-                      {mobileMenu[name] ? component : null}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Mobile Filter */}
-            <div className="z-30 w-full block justify-end items-end xl:hidden absolute left-0 bottom-4 px-4 bg-white dark:bg-black dark:border-neutral-800 py-4">
-              <button
-                type="button"
-                className="w-full h-12 text-base p-1 font-semibold text-white bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-full"
-                onClick={toggleMobileFilter}
-              >
-                Apply Filters
-              </button>
+              ))}
             </div>
           </div>
-        )}
+
+          {/* Apply Filters Button */}
+          <div className="z-30 w-full block justify-end items-end xl:hidden absolute left-0 bottom-4 px-4 bg-white dark:bg-black dark:border-neutral-800 py-4">
+            <button
+              type="button"
+              className="w-full h-12 text-base p-1 font-semibold text-white bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-full"
+              onClick={toggleMobileFilter}
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

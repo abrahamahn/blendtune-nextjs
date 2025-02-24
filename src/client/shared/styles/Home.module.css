@@ -1,9 +1,9 @@
 /* src\client\shared\styles\Home.module.css */
 /* ---------------------------------------------------------------- */
-
-/* ----------------------- HOME STYLE --------------------------- */
-
+/* Home Page Styling Modules */
 /* ---------------------------------------------------------------- */
+
+/* Responsive column layout with animation */
 .column {
   z-index: 0;
   flex: 1.5;
@@ -26,6 +26,7 @@
   position: relative;
 }
 
+/* Directional movement animations */
 .up {
   animation-name: moveup;
 }
@@ -34,6 +35,7 @@
   animation-name: movedown;
 }
 
+/* Keyframe animations for vertical movement */
 @keyframes moveup {
   0% {
     transform: translateY(60);
@@ -54,6 +56,7 @@
   }
 }
 
+/* Overlay gradient for vintage effect */
 .overlay {
   position: absolute;
   inset: 0;
@@ -62,6 +65,7 @@
   background: linear-gradient(0deg, white 100%, transparent 200%), radial-gradient(circle at top, transparent 50%, white 95%);
 }
 
+/* Vintage cover effect */
 .vintage-cover::before {
   content: '';
   position: absolute;
@@ -78,6 +82,7 @@
   filter: sepia(0.3) saturate(0.9) contrast(1);
 }
 
+/* Dark mode variant of vintage effects */
 @media (prefers-color-scheme: dark) {
   .overlay {
     position: absolute;
@@ -88,7 +93,7 @@
       radial-gradient(circle at top, transparent 50%, black 90%);
   }
 
-    .vintage-cover::before {
+  .vintage-cover::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -105,7 +110,7 @@
   }
 }
 
-/* CSS to hide the scrollbar on Firefox */
+/* Scrollbar styling for webkit browsers */
 .hide-scrollbar::-webkit-scrollbar {
   width: 0.25rem;
 }
@@ -114,7 +119,7 @@
   background-color: transparent;
 }
 
-/* fadeInUp class for the fade-in animation */
+/* Fade-in animation for elements */
 .fadeInUp {
   animation: fadeInUp 1s ease-in-out forwards;
   opacity: 0;

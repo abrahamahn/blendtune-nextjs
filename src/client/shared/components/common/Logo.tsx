@@ -2,6 +2,9 @@
 import React from 'react';
 import Link from 'next/link';
 
+/** 
+ * Site logo component with home page link
+ */
 const Logo: React.FC = () => {
   return (
     <Link

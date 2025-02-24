@@ -3,6 +3,9 @@ import { NextRequest } from 'next/server';
 import { extractSessionToken } from './session';
 import { getUserIdFromSession } from '@server/services/session/session';
 
+/**
+ * Custom error for authentication failures
+ */
 export class UnauthorizedError extends Error {
   status: number;
   constructor(message: string, status = 401) {
@@ -11,8 +14,10 @@ export class UnauthorizedError extends Error {
   }
 }
 
+/**
+ * Validates user session and returns user ID
+ */
 export async function requireSession(req: NextRequest): Promise<number> {
-  // extractSessionToken is asynchronous now!
   const token = await extractSessionToken(req);
   if (!token) {
     throw new UnauthorizedError('Unauthorized: No session token provided');

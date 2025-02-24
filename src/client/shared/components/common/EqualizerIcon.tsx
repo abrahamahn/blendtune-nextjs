@@ -1,19 +1,30 @@
 // src\client\shared\components\common\EqualizerIcon.tsx
 import React, { useEffect, useMemo, useState } from "react";
 
+/** Configuration for individual equalizer bar */
 interface BarConfig {
+  /** Maximum scale for bar animation */
   maxScale: number;
+  /** Animation duration */
   duration: number;
+  /** Animation delay */
   delay: number;
 }
 
+/** Props for Equalizer component */
 interface EqualizerIconProps {
+  /** Indicates if audio is currently playing */
   isPlaying: boolean;
 }
 
+/**
+ * Animated equalizer icon with randomized bar movements
+ */
 const EqualizerIcon: React.FC<EqualizerIconProps> = ({ isPlaying }) => {
+  // Manages animation state
   const [animationActive, setAnimationActive] = useState(false);
 
+  // Handles animation based on play state
   useEffect(() => {
     if (isPlaying) {
       const timeout = setTimeout(() => setAnimationActive(true), 100);
@@ -21,8 +32,9 @@ const EqualizerIcon: React.FC<EqualizerIconProps> = ({ isPlaying }) => {
     } else {
       setAnimationActive(false);
     }
-  }, [isPlaying]); // ✅ Fix: Add isPlaying as a dependency
+  }, [isPlaying]);
 
+  // Generates random bar configurations
   const barsData: BarConfig[] = useMemo(() => {
     return Array.from({ length: 5 }).map(() => ({
       maxScale: Number((Math.random() * (1.0 - 0.6) + 0.3).toFixed(2)),

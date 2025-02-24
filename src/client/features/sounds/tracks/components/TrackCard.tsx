@@ -1,5 +1,7 @@
 // src\client\features\sounds\tracks\components\TrackCard.tsx
+
 "use client";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
 import Image from "next/image";
@@ -12,18 +14,27 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Helper function defined outside the component.
+/**
+ * Generates the URL for a track's artwork image.
+ * Falls back to a default image if no catalog metadata is available.
+ */
 function getImageUrl(track: Track): string {
   return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${track?.metadata?.catalog ?? "default"}.jpg`;
 }
 
+/**
+ * Props definition for the TrackCard component.
+ */
 interface TrackCardProps {
-  tracks: Track[];
-  currentTrack?: Track;
-  playTrack: (track: Track) => void;
-  isPlaying: boolean;
+  tracks: Track[]; // List of tracks to display
+  currentTrack?: Track; // The currently playing track
+  playTrack: (track: Track) => void; // Function to play a selected track
+  isPlaying: boolean; // Boolean indicating if a track is currently playing
 }
 
+/**
+ * A card-based track display component with pagination and playback controls.
+ */
 const TrackCard: React.FC<TrackCardProps> = ({
   tracks,
   currentTrack,
@@ -31,16 +42,22 @@ const TrackCard: React.FC<TrackCardProps> = ({
   isPlaying,
 }) => {
   // Pagination Functions
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const totalPages = Math.ceil(tracks?.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0); // Current page index for pagination
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Number of items per page (desktop)
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null); // Track hovered item index
+  const [isMobile, setIsMobile] = useState(false); // Determines if the view is mobile-based
+  const totalPages = Math.ceil(tracks.length / itemsPerPage); // Total pages for pagination
 
+  /**
+   * Moves to the next page if available.
+   */
   const handleNext = useCallback(() => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
   }, [totalPages]);
 
+  /**
+   * Moves to the previous page if available.
+   */
   const handlePrevious = useCallback(() => {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   }, []);
@@ -49,7 +66,9 @@ const TrackCard: React.FC<TrackCardProps> = ({
     return value && value !== "n/a" && value !== "" ? value : null;
   };
 
-  // Preload images for a given set of tracks.
+  /**
+   * Preloads images for better user experience when navigating.
+   */
   const preloadImages = useCallback((tracksToPreload: Track[]) => {
     tracksToPreload.forEach((track) => {
       const img = new window.Image();
@@ -57,7 +76,11 @@ const TrackCard: React.FC<TrackCardProps> = ({
     });
   }, []);
 
-  // Determine displayed tracks based on mobile or desktop view
+  /**
+   * Determines the tracks to be displayed based on screen size.
+   * On mobile, all tracks are displayed for horizontal scrolling.
+   * On desktop, tracks are paginated.
+   */
   const displayedTracks = useMemo(() => {
     if (isMobile) {
       // On mobile, show all tracks for horizontal scrolling
@@ -71,7 +94,10 @@ const TrackCard: React.FC<TrackCardProps> = ({
     }
   }, [tracks, currentPage, itemsPerPage, isMobile]);
 
-  // Adjust itemsPerPage and check if mobile based on window width
+  /**
+   * Handles responsive layout updates, adjusting the number of items per page
+   * and detecting mobile or desktop mode.
+   */
   useEffect(() => {
     const updateLayout = () => {
       // Check if mobile view (under 1024px)
@@ -97,7 +123,9 @@ const TrackCard: React.FC<TrackCardProps> = ({
     };
   }, []);
 
-  // Preload images for the next page (if available) so they show up immediately
+  /**
+   * Preloads images for the next page to ensure smooth transitions.
+   */
   useEffect(() => {
     if (!isMobile) {
       const nextPage = currentPage + 1;

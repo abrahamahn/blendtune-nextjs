@@ -1,14 +1,20 @@
+// src\client\features\layout\header\index.tsx
+/**
+* Main header component providing navigation, search functionality and auth state management.
+* Includes responsive layouts for both desktop and mobile viewports.
+*/
+
 import React from "react";
 import Link from "next/link";
 import { useSession } from "@auth/services/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBars,
-  faTimes,
-  faArrowRight,
-  faMusic,
-  faGreaterThan,
-  faSearch,
+ faBars,
+ faTimes,
+ faArrowRight,
+ faMusic,
+ faGreaterThan,
+ faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
@@ -21,39 +27,38 @@ import useAuth from "@auth/hooks/useAuth";
 import useGenreMenu from "@header/hooks/useGenreMenu";
 import useMobileSearch from "@search/hooks/useMobileSearch";
 import useKeywords from "@tracks/hooks/useKeywords";
-
 import { useMobileMenu } from "@header/hooks/useMobileMenu";
-
-
 import Logo from "@components/common//Logo";
 
-const Header: React.FC = () => {;
-  const { userAuthenticated } = useSession();
+// Define type for AuthModal form prop
+type AuthFormType = 'signin' | 'signup';
 
-  /* Desktop Functionality */
-  // Auth Modal
-  const {
-    authModalOpen,
-    form,
-    openSignInModal,
-    openSignUpModal,
-    closeAuthModal,
-    setForm,
-  } = useAuthModal();
+// Update AuthModal props interface
+interface AuthModalProps {
+ closeAuthModal: () => void;
+ form: AuthFormType;
+ setForm: (form: AuthFormType) => void;
+}
 
-  const { logout } = useAuth();
+const Header: React.FC = () => {
+ const { userAuthenticated } = useSession();
 
-  /* Mobile Functionality */
-  const { isMobileSearch, isAnimating, toggleSearchBar }
- = useMobileSearch();
+ const {
+   authModalOpen,
+   form,
+   openSignInModal,
+   openSignUpModal,
+   closeAuthModal,
+   setForm,
+ } = useAuthModal();
+
+ const { logout } = useAuth();
+
+ const { isMobileSearch, isAnimating, toggleSearchBar } = useMobileSearch();
  const { isMobileMenuOpen, openMobileMenu, closeMobileMenu, handleSoundsClick } = useMobileMenu();
 
-  /* Genre Menu */
-  const { genreItems, handleGenreItemClick } = useGenreMenu();
-
-  /* Fetch All Available Keywords */
-  const { keywords } = useKeywords();
-
+ const { genreItems, handleGenreItemClick } = useGenreMenu();
+ const { keywords } = useKeywords();
   /*  useEffect(() => {
     checkSession();
     if (userProfileCreated === false) {

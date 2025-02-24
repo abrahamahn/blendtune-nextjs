@@ -1,14 +1,20 @@
 // src\client\shared\components\common\Watermark.tsx
 import React from "react";
 
+/** Props for configuring Watermark component */
 interface WatermarkProps {
+  /** Size of the watermark */
   size: string;
 }
 
+/**
+ * Renders a branded watermark with responsive sizing
+ */
 const Watermark: React.FC<WatermarkProps> = ({ size }) => {
   let textSizeClass;
   let bgSizeClass;
 
+  // Color variations (unused but kept for potential future use)
   const backgroundColors = [
     "bg-blue-100",
     "bg-green-100",
@@ -17,6 +23,7 @@ const Watermark: React.FC<WatermarkProps> = ({ size }) => {
     "bg-purple-100",
   ];
 
+  // Determine background size classes based on size prop
   switch (size) {
     case "xl":
       bgSizeClass = "w-12 h-5 p-0.5 bottom-4 right-1 rounded-md";
@@ -35,6 +42,7 @@ const Watermark: React.FC<WatermarkProps> = ({ size }) => {
       break;
   }
 
+  // Determine text size classes based on size prop
   switch (size) {
     case "xl":
       textSizeClass = "text-xs";

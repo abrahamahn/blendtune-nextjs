@@ -1,10 +1,9 @@
-/* src\client\shared\styles\Sounds.module.css */
+/* src/client/shared/styles/Sounds.module.css */
+/* ---------------------------------------------------------------- */
+/* Sounds Module - Reusable Styles and Animations */
 /* ---------------------------------------------------------------- */
 
-/* ----------------------- SOUNDS STYLE --------------------------- */
-
-/* ---------------------------------------------------------------- */
-
+/* Chevron rotation for expandable/collapsible elements */
 .chevron-up {
   transform: rotate(180deg);
   transition: transform 0.3s ease-in-out;
@@ -15,29 +14,22 @@
   transition: transform 0.3s ease-in-out;
 }
 
+/* Fade-in animation for smooth element appearances */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
+/* Fade-out animation for smooth element disappearances */
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
+/* Placeholder styling for form inputs */
 .placeholder-style::placeholder {
   color: #b4b4b4;
   opacity: 1;
   font-size: 0.85rem;
-  font: normal;
+  font-style: normal;
 }

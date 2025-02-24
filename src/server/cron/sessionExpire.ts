@@ -2,8 +2,12 @@
 const cron = require('node-cron');
 const authPool = require('../db/auth');
 
+/** 
+ * Scheduled task to automatically expire user sessions
+ * Runs daily at midnight UTC to deactivate sessions past their expiration
+ */
 cron.schedule('0 0 * * *', async () => {
-  console.log('Running a task every day at 12:00 AM UTC to check for expired sessions');
+  console.log('Running daily session expiration check');
   const now = new Date().toISOString();
   const updateQuery = `
     UPDATE public.sessions
@@ -12,9 +16,9 @@ cron.schedule('0 0 * * *', async () => {
   `;
   try {
     await authPool.query(updateQuery, [now]);
-    console.log('Expired sessions have been marked as inactive');
+    console.log('Expired sessions marked as inactive');
   } catch (error) {
-    console.error('Error updating expired sessions:', error);
+    console.error('Session expiration update failed:', error);
   }
 }, {
   scheduled: true,

@@ -7,5 +7,3 @@
  * Example usage:
  * import { useFilterState } from '@sounds/filters/hooks';
  */
-
-export * from './useFilterState';

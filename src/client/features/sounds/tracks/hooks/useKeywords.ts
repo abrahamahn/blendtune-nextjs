@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { fetchTracks } from "@tracks/hooks";
-import { uniqueKeywords } from "@tracks/utils/uniqueKeywords";
+import { uniqueKeywords } from "@/client/features/sounds/filters/utils/uniqueKeywords";
 
 /**
  * Custom hook to fetch and extract unique keywords from track data.

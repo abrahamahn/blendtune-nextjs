@@ -1,4 +1,4 @@
-// src\client\features\sounds\tracks\utils\uniqueKeywords.ts
+// src\client\features\sounds\filters\utils\uniqueKeywords.ts
 import { Track } from '@/shared/types/track';
 
 /** 

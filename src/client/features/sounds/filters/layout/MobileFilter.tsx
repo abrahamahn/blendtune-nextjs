@@ -23,10 +23,9 @@ import {
 import { useDispatch } from "react-redux";
 import { removeAllKeywords, removeAllGenres } from "@store/slices";
 import { SortFilter } from "@sounds/filters/components";
-import { useFilterState } from "@sounds/filters/hooks";
 import { createFilterComponents } from "@sounds/filters/utils/filterUI";
 import { hasItems, calculateAppliedFilterCount } from "@sounds/filters/utils/filterLogic";
-import { SoundFilterProps } from "@sounds/filters/types";
+import { useFilterContext } from "@sounds/filters/context"
 
 /**
  * Mobile filter component for sound browsing interface
@@ -35,44 +34,43 @@ import { SoundFilterProps } from "@sounds/filters/types";
  * @param {SoundFilterProps} props - Component props containing filter state and handlers
  * @returns {React.ReactElement} Rendered mobile filter component
  */
-const MobileFilter: React.FC<SoundFilterProps> = ({
-  tracks,
-  minTempo,
-  setMinTempo,
-  maxTempo,
-  setMaxTempo,
-  includeHalfTime,
-  setIncludeHalfTime,
-  includeDoubleTime,
-  setIncludeDoubleTime,
-  setKeyFilterCombinations,
-  selectedKeys,
-  setSelectedKeys,
-  selectedScale,
-  setSelectedScale,
-  selectedGenres,
-  selectedArtists,
-  setSelectedArtists,
-  selectedInstruments,
-  setSelectedInstruments,
-  selectedMoods,
-  setSelectedMoods,
-  selectedKeywords,
-  sortBy,
-  handleSortChange,
-}) => {
+const MobileFilter: React.FC = () => {
   const dispatch = useDispatch();
   
   // Get filter state from hook
   const {
-    artistList,
-    moodList,
-    keywordList,
+    minTempo,
+    setMinTempo,
+    maxTempo,
+    setMaxTempo,
+    includeHalfTime,
+    setIncludeHalfTime,
+    includeDoubleTime,
+    setIncludeDoubleTime,
+    selectedKeys,
+    setSelectedKeys,
+    selectedScale,
+    setSelectedScale,
+    setKeyFilterCombinations,
+    selectedGenres,
+    selectedArtists,
+    setSelectedArtists,
+    selectedInstruments,
+    setSelectedInstruments,
+    selectedMoods,
+    setSelectedMoods,
+    selectedKeywords,
     openFilter,
     setOpenFilter,
     openSortFilter,
-    toggleFilter
-  } = useFilterState(tracks);
+    setOpenSortFilter,
+    sortBy,
+    setSortBy,
+    toggleFilter,
+    artistList,
+    keywordList,
+    moodList,
+  } = useFilterContext();
 
   // Mobile-specific state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -143,6 +141,11 @@ const MobileFilter: React.FC<SoundFilterProps> = ({
    * 
    * @param {string} option - The sort option to apply
    */
+
+  const handleSortChange = (option: string) => {
+    setSortBy(option);
+  };
+
   const handleMobileSortChange = (option: string) => {
     handleSortChange(option);
     setMobileMenu(prev => ({
@@ -155,7 +158,6 @@ const MobileFilter: React.FC<SoundFilterProps> = ({
    * Generate filter components based on current filter state
    */
   const filterButtons = createFilterComponents({
-    tracks,
     minTempo,
     setMinTempo,
     maxTempo,

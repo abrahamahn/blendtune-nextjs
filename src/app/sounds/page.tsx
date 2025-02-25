@@ -1,7 +1,7 @@
 // src/app/sounds/page.tsx
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAudio } from "@player/hooks";
 import { useTracks } from "@sounds/tracks/hooks";
@@ -12,21 +12,13 @@ import {
 } from "@store/slices";
 import { RootState } from "@core/store";
 import { Hero } from "@sounds/hero";
-import { Category } from "@sounds/category/components";
+import { Category } from "@sounds/category/layout";
 import { MobileCatalog, DesktopCatalog, NewTracks } from "@sounds/tracks/components";
-import { DesktopFilter, MobileFilter } from "@sounds/filters/layout";
-import {
-  tempoFilter,
-  keyFilter,
-  categoryFilter,
-  genreFilter,
-  artistFilter,
-  instrumentFilter,
-  moodFilter,
-  keywordFilter,
-} from "@/client/features/sounds/filters/utils";
-import { Track } from "@/shared/types/track";
+import { MobileFilter, DesktopFilter } from "@sounds/filters/layout";
 import { useRightSidebar } from "@layout/rightbar/context";
+import { FilterProvider, useFilterContext } from '@features/sounds/filters/context';
+import { Track } from "@/shared/types/track";
+
 
 /**
  * Sounds Component:
@@ -56,12 +48,14 @@ const Sounds: React.FC = () => {
   const { openSidebar, userClosedSidebar } = useRightSidebar();
 
   // Local state to manage filtered tracks and play/pause throttling
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const { filteredTracks } = useFilterContext();
+
 
   /**
    * Toggles play/pause state while preventing rapid clicking.
    */
+  
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const togglePlayPause = useCallback(() => {
     if (!audioRef.current || isTransitioning) return;
     setIsTransitioning(true);
@@ -133,163 +127,14 @@ const Sounds: React.FC = () => {
     [playTrack, openSidebar, userClosedSidebar]
   );
 
-  /**
-   * FILTER CONTROLS:
-   * - Manages track filtering based on user-selected criteria.
-   * - Uses Redux state for global filter selections.
-   */
-  const selectedGenres = useSelector(
-    (state: RootState) => state.tracks.selected.genres
-  );
-  const selectedCategory = useSelector(
-    (state: RootState) => state.tracks.selected.category
-  );
-
-  // State for tempo filtering (BPM range)
-  const [minTempo, setMinTempo] = useState(40);
-  const [maxTempo, setMaxTempo] = useState(200);
-  const [includeHalfTime, setIncludeHalfTime] = useState(false);
-  const [includeDoubleTime, setIncludeDoubleTime] = useState(false);
-
-  // State for key selection in filtering
-  const [selectedKeys, setSelectedKeys] = useState<string>("");
-  const [selectedScale, setSelectedScale] = useState<string>("Major");
-  const [keyFilterCombinations, setKeyFilterCombinations] = useState<
-    Array<{ key: string | null; "key.note": string | null; "key.scale": string | null }>
-  >([]);
-
-  // Redux state for additional filters
-  const selectedKeywords = useSelector(
-    (state: RootState) => state.tracks.selected.keywords
-  );
-
-  // State for filtering by artist, instrument, and mood
-  const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
-  const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
-  const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
-
-  /**
-   * Filters tracks based on selected criteria.
-   * - Category, tempo, key, genre, artist, instrument, mood, and keyword filters.
-   * - Updates the `filteredTracks` state after applying filters.
-   */
-  const applyAllFilters = useCallback(() => {
-    // Filter by category first
-    const categoryFiltered = tracks.filter((track) =>
-      categoryFilter(track, selectedCategory)
-    );
-
-    // Apply remaining filters
-    const filtered = categoryFiltered.filter((track) => {
-      const tempoPass = tempoFilter(
-        track,
-        minTempo,
-        maxTempo,
-        includeHalfTime,
-        includeDoubleTime
-      );
-      const keyPass = keyFilter(track, keyFilterCombinations);
-      const genrePass = genreFilter(track, selectedGenres);
-      const artistPass = artistFilter(track, selectedArtists);
-      const instrumentPass = instrumentFilter(track, selectedInstruments);
-      const moodPass = moodFilter(track, selectedMoods);
-      const keywordPass = keywordFilter(track, selectedKeywords);
-
-      return (
-        tempoPass &&
-        keyPass &&
-        genrePass &&
-        artistPass &&
-        instrumentPass &&
-        moodPass &&
-        keywordPass
-      );
-    });
-
-    setFilteredTracks(filtered);
-  }, [
-    tracks,
-    selectedCategory,
-    minTempo,
-    maxTempo,
-    includeHalfTime,
-    includeDoubleTime,
-    keyFilterCombinations,
-    selectedGenres,
-    selectedArtists,
-    selectedInstruments,
-    selectedMoods,
-    selectedKeywords,
-  ]);
-
-  // Reapply filters whenever the track list or filter criteria change
-  useEffect(() => {
-    applyAllFilters();
-  }, [tracks, applyAllFilters]);
-
-  /**
-   * SORTING LOGIC:
-   * - Handles sorting of tracks by newest, oldest, or alphabetical order.
-   */
-  const [sortBy, setSortBy] = useState<string | null>("Newest");
-
-  /**
-   * Shuffles an array randomly using Fisher-Yates algorithm.
-   */
-  function shuffleArray<T>(array: T[]): T[] {
-    let currentIndex = array.length;
-    while (currentIndex !== 0) {
-      const randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
-    }
-    return array;
-  }
-
-  /**
-   * Sorting criteria for tracks.
-   */
-  const sortByCriteria = useMemo(
-    () => ({
-      Newest: (a: Track, b: Track) =>
-        b.metadata.release.localeCompare(a.metadata.release),
-      Oldest: (a: Track, b: Track) =>
-        a.metadata.release.localeCompare(b.metadata.release),
-      "A-Z": (a: Track, b: Track) =>
-        a.metadata.title.localeCompare(b.metadata.title, undefined, {
-          sensitivity: "base",
-        }),
-    }),
-    []
-  );
-
-  /**
-   * Handles sorting when a new sort option is selected.
-   */
-  const handleSortChange = useCallback(
-    (option: string) => {
-      setSortBy(option);
-      const sortedTracks = [...filteredTracks];
-      if (option === "Random") {
-        shuffleArray(sortedTracks);
-      } else {
-        sortedTracks.sort(sortByCriteria[option as keyof typeof sortByCriteria]);
-      }
-      setFilteredTracks(sortedTracks);
-    },
-    [filteredTracks, sortByCriteria]
-  );
-
-  // Dispatch sorted track list to global state
+  // Dispatch the sorted track list to Redux global state whenever it changes.
   useEffect(() => {
     if (filteredTracks.length > 0) {
       dispatch(setTrackList(filteredTracks));
     }
   }, [filteredTracks, dispatch]);
 
+  if (!isMounted) return null;
 
     /**
    * Renders the UI components only after mounting.
@@ -299,32 +144,7 @@ const Sounds: React.FC = () => {
       <div className="flex flex-col h-full w-full">
         <div className="md:h-full overflow-y-scroll rounded-t-xl">
           {/* Mobile filter component */}
-          <MobileFilter
-            tracks={tracks}
-            minTempo={minTempo}
-            setMinTempo={setMinTempo}
-            maxTempo={maxTempo}
-            setMaxTempo={setMaxTempo}
-            includeHalfTime={includeHalfTime}
-            setIncludeHalfTime={setIncludeHalfTime}
-            includeDoubleTime={includeDoubleTime}
-            setIncludeDoubleTime={setIncludeDoubleTime}
-            selectedKeys={selectedKeys}
-            setSelectedKeys={setSelectedKeys}
-            selectedScale={selectedScale}
-            setSelectedScale={setSelectedScale}
-            setKeyFilterCombinations={setKeyFilterCombinations}
-            selectedGenres={selectedGenres}
-            selectedArtists={selectedArtists}
-            setSelectedArtists={setSelectedArtists}
-            selectedInstruments={selectedInstruments}
-            setSelectedInstruments={setSelectedInstruments}
-            selectedMoods={selectedMoods}
-            setSelectedMoods={setSelectedMoods}
-            selectedKeywords={selectedKeywords}
-            sortBy={sortBy}
-            handleSortChange={handleSortChange}
-          />
+          <MobileFilter />
   
           {/* Hero section: controls main playback */}
           <Hero
@@ -346,32 +166,7 @@ const Sounds: React.FC = () => {
           />
   
           {/* Desktop filter component */}
-          <DesktopFilter
-            tracks={tracks}
-            minTempo={minTempo}
-            setMinTempo={setMinTempo}
-            maxTempo={maxTempo}
-            setMaxTempo={setMaxTempo}
-            includeHalfTime={includeHalfTime}
-            setIncludeHalfTime={setIncludeHalfTime}
-            includeDoubleTime={includeDoubleTime}
-            setIncludeDoubleTime={setIncludeDoubleTime}
-            selectedKeys={selectedKeys}
-            setSelectedKeys={setSelectedKeys}
-            selectedScale={selectedScale}
-            setSelectedScale={setSelectedScale}
-            setKeyFilterCombinations={setKeyFilterCombinations}
-            selectedGenres={selectedGenres}
-            selectedArtists={selectedArtists}
-            setSelectedArtists={setSelectedArtists}
-            selectedInstruments={selectedInstruments}
-            setSelectedInstruments={setSelectedInstruments}
-            selectedMoods={selectedMoods}
-            setSelectedMoods={setSelectedMoods}
-            selectedKeywords={selectedKeywords}
-            sortBy={sortBy}
-            handleSortChange={handleSortChange}
-          />
+          <DesktopFilter />
   
           {/* Desktop track catalog */}
           <DesktopCatalog
@@ -394,4 +189,3 @@ const Sounds: React.FC = () => {
   };
   
   export default Sounds;
-  

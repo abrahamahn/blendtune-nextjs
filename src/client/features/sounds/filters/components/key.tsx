@@ -1,4 +1,4 @@
-// src\client\features\sounds\filters\components\key.tsx
+// src\client\features\sounds\filters\components\KeyFilter.tsx
 /**
  * @fileoverview Musical key filter component with support for scales and accidentals
  * @module sounds/filters/KeyFilter
@@ -9,20 +9,19 @@ import React, { useState, useEffect } from "react";
 /**
  * Props interface for KeyFilter component
  */
+
+export type KeyFilterCombination = {
+  key: string | null;
+  'key.note': string | null;
+  'key.scale': string | null;
+};
+
 interface KeyFilterProps {
   selectedKeys: string;
   setSelectedKeys(selectedKeys: string): void;
   selectedScale: string;
   setSelectedScale(selectedScale: string): void;
-
-  setKeyFilterCombinations: (
-    keyCombinations: {
-      key: string | null;
-      "key.note": string | null;
-      "key.scale": string | null;
-    }[]
-  ) => void;
-
+  setKeyFilterCombinations: React.Dispatch<React.SetStateAction<{ key: string | null; "key.note": string | null; "key.scale": string | null; }[]>>
   onClose: () => void;
 }
 

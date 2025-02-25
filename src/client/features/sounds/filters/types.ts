@@ -1,7 +1,4 @@
-import { Track } from "@/shared/types/track";
-
 export interface BaseFilterProps {
-  tracks: Track[];
   minTempo: number;
   setMinTempo: (val: number) => void;
   maxTempo: number;
@@ -33,16 +30,12 @@ export interface BaseFilterProps {
   selectedKeywords: string[];
 }
 
-export interface SoundFilterProps extends BaseFilterProps {
-  sortBy: string | null;
-  handleSortChange: (option: string) => void;
-}
-
 export interface FilterComponentsConfig extends BaseFilterProps {
   toggleFilter: (filterName: string) => void;
   artistList: string[];
   moodList: string[];
   keywordList: string[];
+  setKeyFilterCombinations: React.Dispatch<React.SetStateAction<{ key: string | null; "key.note": string | null; "key.scale": string | null; }[]>>
 }
 
 export interface FilterLabelProps {

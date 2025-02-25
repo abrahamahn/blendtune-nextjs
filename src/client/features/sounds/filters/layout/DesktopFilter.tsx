@@ -8,7 +8,6 @@
  * 
  * @module layout/DesktopFilter
  * @requires FontAwesomeIcon
- * @requires useFilterState
  * @requires React
  */
 "use client";
@@ -23,9 +22,8 @@ import {
 import { useDispatch } from "react-redux";
 import { removeAllKeywords, removeAllGenres } from "@store/slices";
 import { SortFilter } from "@sounds/filters/components";
-import { useFilterState } from "@sounds/filters/hooks";
 import { createFilterComponents, renderFilterLabel } from "@sounds/filters/utils";
-import { SoundFilterProps } from "@sounds/filters/types";
+import { useFilterContext } from "@sounds/filters/context"
 
 /**
  * Desktop filter component for sound browsing interface
@@ -34,46 +32,41 @@ import { SoundFilterProps } from "@sounds/filters/types";
  * @param {SoundFilterProps} props - Component props containing filter state and handlers
  * @returns {React.ReactElement} Rendered desktop filter component
  */
-const DesktopFilter: React.FC<SoundFilterProps> = ({
-  tracks,
-  minTempo,
-  setMinTempo,
-  maxTempo,
-  setMaxTempo,
-  includeHalfTime,
-  setIncludeHalfTime,
-  includeDoubleTime,
-  setIncludeDoubleTime,
-  setKeyFilterCombinations,
-  selectedKeys,
-  setSelectedKeys,
-  selectedScale,
-  setSelectedScale,
-  selectedGenres,
-  selectedArtists,
-  setSelectedArtists,
-  selectedInstruments,
-  setSelectedInstruments,
-  selectedMoods,
-  setSelectedMoods,
-  selectedKeywords,
-  sortBy,
-  handleSortChange,
-}) => {
+const DesktopFilter: React.FC = () => {
   const dispatch = useDispatch();
-  
-  // Get filter state from hook
   const {
-    artistList,
-    moodList,
-    keywordList,
+    minTempo,
+    setMinTempo,
+    maxTempo,
+    setMaxTempo,
+    includeHalfTime,
+    setIncludeHalfTime,
+    includeDoubleTime,
+    setIncludeDoubleTime,
+    selectedKeys,
+    setSelectedKeys,
+    selectedScale,
+    setSelectedScale,
+    setKeyFilterCombinations,
+    selectedGenres,
+    selectedArtists,
+    setSelectedArtists,
+    selectedInstruments,
+    setSelectedInstruments,
+    selectedMoods,
+    setSelectedMoods,
+    selectedKeywords,
     openFilter,
     setOpenFilter,
     openSortFilter,
     setOpenSortFilter,
-    toggleFilter
-  } = useFilterState(tracks);
-
+    sortBy,
+    setSortBy,
+    toggleFilter,
+    artistList,
+    keywordList,
+    moodList,
+  } = useFilterContext();
   const sortButtonRef = useRef<HTMLDivElement | null>(null);
 
   /**
@@ -137,6 +130,7 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
     setOpenFilter(null);
   };
 
+
   /**
    * Generates CSS classes for filter buttons based on state
    * 
@@ -182,7 +176,6 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
    * Generate filter components based on current filter state
    */
   const filterButtons = createFilterComponents({
-    tracks,
     minTempo,
     setMinTempo,
     maxTempo,
@@ -210,6 +203,10 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
     keywordList,
   });
 
+  const handleSortChange = (option: string) => {
+    setSortBy(option);
+  };
+
   return (
     <div className="hidden md:block w-full border-neutral-600 bg-white dark:bg-neutral-950 sticky top-0 py-2 z-10">
       <div className="max-w-screen-xl mx-auto px-4">
@@ -228,10 +225,9 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
                 selectedKeywords,
               });
               const buttonClass = getFilterButtonClass(f.name);
-
               return (
                 <div className="mr-2 relative" key={f.name}>
-                  <button 
+                  <button
                     className={buttonClass}
                     onClick={() => toggleFilter(f.name)}
                     aria-expanded={isOpen}
@@ -240,19 +236,28 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
                     <p className="mr-1.5">
                       {f.name}
                       {label && (
-                        <>: <span className="font-semibold">{label}</span></>
+                        <>
+                          : <span className="font-semibold">{label}</span>
+                        </>
                       )}
                     </p>
                     <FontAwesomeIcon
-                      icon={f.name === "Keyword" ? (isOpen ? faMinus : faPlus) : (isOpen ? faChevronUp : faChevronDown)}
+                      icon={
+                        f.name === "Keyword"
+                          ? isOpen
+                            ? faMinus
+                            : faPlus
+                          : isOpen
+                          ? faChevronUp
+                          : faChevronDown
+                      }
                       size="2xs"
                       className="mt-1"
                       aria-hidden="true"
                     />
                   </button>
-
                   {isOpen && (
-                    <div 
+                    <div
                       className="absolute left-0 mt-2 z-50 min-w-[240px]"
                       id={`${f.name.toLowerCase()}-filter`}
                     >
@@ -262,7 +267,6 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
                 </div>
               );
             })}
-
             {filtersApplied && (
               <button
                 className="px-2 py-1.5 text-2xs rounded-lg text-[#707070] dark:text-neutral-300"
@@ -291,7 +295,6 @@ const DesktopFilter: React.FC<SoundFilterProps> = ({
                 aria-hidden="true"
               />
             </button>
-
             {openSortFilter && (
               <div className="absolute right-0 mt-2 z-50" id="sort-filter">
                 <SortFilter

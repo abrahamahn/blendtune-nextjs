@@ -1,4 +1,4 @@
-// src\client\features\sounds\filters\components\SortFilter.tsx
+// src\client\features\sounds\filters\components\sort.tsx
 import React, { useMemo, useCallback } from "react";
 
 /**

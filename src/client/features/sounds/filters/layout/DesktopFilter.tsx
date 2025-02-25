@@ -1,3 +1,16 @@
+// src/client/features/sounds/filters/layout/DesktopFilter.tsx
+/**
+ * Desktop Filter Component
+ * Renders the desktop version of the sound filter interface
+ * 
+ * Displays filter buttons in a horizontal layout with dropdown filter panels
+ * Includes sort functionality and clear all filters button
+ * 
+ * @module layout/DesktopFilter
+ * @requires FontAwesomeIcon
+ * @requires useFilterState
+ * @requires React
+ */
 "use client";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,13 +22,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { removeAllKeywords, removeAllGenres } from "@store/slices";
-import { SortFilter } from "./category";
-import { useFilterState } from "./hooks/useFilterState";
-import { createFilterComponents } from "@features/sounds/filters/shared/FilterComponents";
-import { renderFilterLabel } from "@features/sounds/filters/shared/FilterLabel";
-import { SoundFilterProps } from "./types";
+import { SortFilter } from "@sounds/filters/components";
+import { useFilterState } from "@sounds/filters/hooks";
+import { createFilterComponents, renderFilterLabel } from "@sounds/filters/utils";
+import { SoundFilterProps } from "@sounds/filters/types";
 
-const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
+/**
+ * Desktop filter component for sound browsing interface
+ * Provides a horizontal filter bar with dropdown filter components
+ * 
+ * @param {SoundFilterProps} props - Component props containing filter state and handlers
+ * @returns {React.ReactElement} Rendered desktop filter component
+ */
+const DesktopFilter: React.FC<SoundFilterProps> = ({
   tracks,
   minTempo,
   setMinTempo,
@@ -42,6 +61,8 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
   handleSortChange,
 }) => {
   const dispatch = useDispatch();
+  
+  // Get filter state from hook
   const {
     artistList,
     moodList,
@@ -55,6 +76,9 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
 
   const sortButtonRef = useRef<HTMLDivElement | null>(null);
 
+  /**
+   * Handle clicks outside of sort dropdown to close it
+   */
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (sortButtonRef.current && !sortButtonRef.current.contains(event.target as Node)) {
@@ -66,6 +90,12 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [setOpenSortFilter]);
 
+  /**
+   * Checks if a string or array has values
+   * 
+   * @param {string | string[]} item - The item to check
+   * @returns {boolean} Whether the item has values
+   */
   const hasItems = (item: string | string[]) => {
     if (typeof item === "string") {
       return item.trim() !== "";
@@ -76,6 +106,9 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
     return false;
   };
 
+  /**
+   * Determines if any filters are currently applied
+   */
   const filtersApplied =
     minTempo > 40 ||
     maxTempo < 200 ||
@@ -86,6 +119,9 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
     hasItems(selectedMoods) ||
     hasItems(selectedKeywords);
 
+  /**
+   * Resets all filters to their default state
+   */
   const handleClearClick = () => {
     setMinTempo(40);
     setMaxTempo(200);
@@ -101,6 +137,12 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
     setOpenFilter(null);
   };
 
+  /**
+   * Generates CSS classes for filter buttons based on state
+   * 
+   * @param {string} name - Filter name
+   * @returns {string} CSS classes for the button
+   */
   const getFilterButtonClass = (name: string) => {
     const baseClasses = "flex flex-row px-3 py-1.5 text-2xs rounded-lg border transition-colors duration-150 bg-transparent text-neutral-600 dark:text-neutral-300 ";
 
@@ -136,6 +178,9 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
     return baseClasses + "border-neutral-400 hover:border-neutral-300 dark:border-neutral-600 dark:hover:border-neutral-500";
   };
 
+  /**
+   * Generate filter components based on current filter state
+   */
   const filterButtons = createFilterComponents({
     tracks,
     minTempo,
@@ -189,6 +234,8 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
                   <button 
                     className={buttonClass}
                     onClick={() => toggleFilter(f.name)}
+                    aria-expanded={isOpen}
+                    aria-controls={`${f.name.toLowerCase()}-filter`}
                   >
                     <p className="mr-1.5">
                       {f.name}
@@ -200,11 +247,15 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
                       icon={f.name === "Keyword" ? (isOpen ? faMinus : faPlus) : (isOpen ? faChevronUp : faChevronDown)}
                       size="2xs"
                       className="mt-1"
+                      aria-hidden="true"
                     />
                   </button>
 
                   {isOpen && (
-                    <div className="absolute left-0 mt-2 z-50 min-w-[240px]">
+                    <div 
+                      className="absolute left-0 mt-2 z-50 min-w-[240px]"
+                      id={`${f.name.toLowerCase()}-filter`}
+                    >
                       {f.component}
                     </div>
                   )}
@@ -216,6 +267,7 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
               <button
                 className="px-2 py-1.5 text-2xs rounded-lg text-[#707070] dark:text-neutral-300"
                 onClick={handleClearClick}
+                aria-label="Clear all filters"
               >
                 Clear all
               </button>
@@ -227,6 +279,8 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
             <button
               className="flex flex-row py-1.5 px-4 bg-transparent border rounded-full border-neutral-400 hover:border-neutral-400 dark:border-neutral-600 dark:hover:border-neutral-500 text-neutral-600 dark:text-neutral-300"
               onClick={() => setOpenSortFilter(!openSortFilter)}
+              aria-expanded={openSortFilter}
+              aria-controls="sort-filter"
             >
               <span className="text-2xs mr-1.5">Sort by:</span>
               <span className="text-2xs font-semibold mr-1.5">{sortBy}</span>
@@ -234,11 +288,12 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
                 icon={openSortFilter ? faChevronUp : faChevronDown}
                 size="2xs"
                 className="cursor-pointer mt-0.5"
+                aria-hidden="true"
               />
             </button>
 
             {openSortFilter && (
-              <div className="absolute right-0 mt-2 z-50">
+              <div className="absolute right-0 mt-2 z-50" id="sort-filter">
                 <SortFilter
                   openSortFilter={openSortFilter}
                   sortBy={sortBy}
@@ -253,4 +308,4 @@ const DesktopSoundFilter: React.FC<SoundFilterProps> = ({
   );
 };
 
-export default DesktopSoundFilter;
+export default DesktopFilter;

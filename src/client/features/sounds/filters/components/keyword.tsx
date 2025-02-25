@@ -1,4 +1,4 @@
-// src\client\features\sounds\filters\components\KeywordFilter.tsx
+// src\client\features\sounds\filters\components\keyword.tsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {

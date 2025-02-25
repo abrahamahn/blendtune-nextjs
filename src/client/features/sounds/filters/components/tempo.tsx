@@ -1,4 +1,4 @@
-// src/client/features/sounds/filters/components/TempoFilter.tsx
+// src\client\features\sounds\filters\components\tempo.tsx
 import React from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";

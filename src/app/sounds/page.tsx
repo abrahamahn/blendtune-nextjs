@@ -14,7 +14,7 @@ import { RootState } from "@core/store";
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/components";
 import { MobileCatalog, DesktopCatalog, NewTracks } from "@sounds/tracks/components";
-import { DesktopSoundFilter, MobileSoundFilter } from "@/client/features/sounds/filters/category";
+import { DesktopFilter, MobileFilter } from "@sounds/filters/layout";
 import {
   tempoFilter,
   keyFilter,
@@ -24,7 +24,7 @@ import {
   instrumentFilter,
   moodFilter,
   keywordFilter,
-} from "@sounds/filters/utils/filters";
+} from "@/client/features/sounds/filters/utils";
 import { Track } from "@/shared/types/track";
 import { useRightSidebar } from "@layout/rightbar/context";
 
@@ -299,7 +299,7 @@ const Sounds: React.FC = () => {
       <div className="flex flex-col h-full w-full">
         <div className="md:h-full overflow-y-scroll rounded-t-xl">
           {/* Mobile filter component */}
-          <MobileSoundFilter
+          <MobileFilter
             tracks={tracks}
             minTempo={minTempo}
             setMinTempo={setMinTempo}
@@ -346,7 +346,7 @@ const Sounds: React.FC = () => {
           />
   
           {/* Desktop filter component */}
-          <DesktopSoundFilter
+          <DesktopFilter
             tracks={tracks}
             minTempo={minTempo}
             setMinTempo={setMinTempo}

@@ -82,8 +82,8 @@ const fileMapping = {
   'client/app/sounds/filters/Keyword.tsx': 'client/features/sounds/filters/components/KeywordFilter.tsx',
   'client/app/sounds/filters/Sort.tsx': 'client/features/sounds/filters/components/SortFilter.tsx',
   'client/app/sounds/filters/index.ts': 'client/features/sounds/filters/components/index.ts',
-  'client/app/sounds/DesktopSoundFilter.tsx': 'client/features/sounds/filters/components/DesktopSoundFilter.tsx',
-  'client/app/sounds/MobileSoundFilter.tsx': 'client/features/sounds/filters/components/MobileSoundFilter.tsx',
+  'client/app/sounds/DesktopFilter.tsx': 'client/features/sounds/filters/components/DesktopFilter.tsx',
+  'client/app/sounds/MobileFilter.tsx': 'client/features/sounds/filters/components/MobileFilter.tsx',
   'client/utils/helpers/filters.ts': 'client/features/sounds/filters/utils/filters.ts',
 
   // Category

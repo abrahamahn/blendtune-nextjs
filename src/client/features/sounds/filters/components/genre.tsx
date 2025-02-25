@@ -1,3 +1,4 @@
+// src\client\features\sounds\filters\components\genre.tsx
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
@@ -10,7 +11,7 @@ import {
  faPaw,
  faBoltLightning,
 } from "@fortawesome/free-solid-svg-icons";
-import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/shared/ui";
+import { FilterWrapper, Item, ActionButtons } from "@/client/features/sounds/filters/ui";
 
 /**
 * Props for GenreFilter component

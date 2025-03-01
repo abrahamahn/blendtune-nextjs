@@ -1,7 +1,7 @@
 // src/client/features/sounds/tracks/components/NewTracks.tsx
 
 import React from "react";
-import TrackCard from "@tracks/components/TrackCard";
+import TrackCard from "@/client/features/sounds/catalog/components/TrackCard";
 import { Track } from "@/shared/types/track";
 
 interface NewTracksProps {

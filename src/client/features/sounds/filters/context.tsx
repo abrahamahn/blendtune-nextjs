@@ -3,8 +3,8 @@ import { Track } from '@/shared/types/track';
 import { FILTER_DEFAULTS, KEY_CONSTANTS } from './constants';
 import { categoryFilter, keyFilter, tempoFilter, genreFilter, artistFilter, instrumentFilter, moodFilter, keywordFilter } from '@/client/features/sounds/filters/utils/filterLogic';
 import { sortTracks } from '@/client/features/sounds/filters/utils/sortLogic';
-import { useTracks } from "@sounds/tracks/hooks";
-import { uniqueArtists, uniqueMoods, uniqueKeywords } from "@filters/utils/";
+import { useTracks } from "@/client/features/sounds/tracks/core/hooks";
+import { useTrackMetadata } from "@/client/features/sounds/metadata/hooks"; // Updated import
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@core/store";
 import { setTrackList } from "@store/slices";
@@ -123,18 +123,8 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   // Get tracks from the TracksProvider using the hook
   const { tracks } = useTracks();
 
-  // Unique filter options
-  const [artistList, setArtistList] = useState<string[]>([]);
-  const [moodList, setMoodList] = useState<string[]>([]);
-  const [instrumentList, setInstrumentList] = useState<string[]>([]);
-  const [keywordList, setKeywordList] = useState<string[]>([]);
-
-  // Update unique filter options when tracks change
-  useEffect(() => {
-    setArtistList(uniqueArtists(tracks));
-    setMoodList(uniqueMoods(tracks));
-    setKeywordList(uniqueKeywords(tracks));
-  }, [tracks]);
+  // Get track metadata using the dedicated hook from keywords feature
+  const { artistList, moodList, instrumentList, keywordList } = useTrackMetadata(tracks);
 
   // Filtered tracks state maintained in context
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
@@ -299,7 +289,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
 
   
   const contextValue = useMemo(() => ({
-    // Unique filter options
+    // Unique filter options from keywords feature
     artistList,
     moodList,
     instrumentList,

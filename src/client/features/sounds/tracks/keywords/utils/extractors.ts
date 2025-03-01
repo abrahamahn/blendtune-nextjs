@@ -1,4 +1,3 @@
-// src\client\features\sounds\filters\utils\uniqueKeywords.ts
 import { Track } from '@/shared/types/track';
 
 /** 
@@ -6,7 +5,7 @@ import { Track } from '@/shared/types/track';
  * @param tracks - Array of tracks to process
  * @returns Sorted array of unique artists
  */
-export const uniqueArtists = (tracks: Track[]) => {
+export const extractUniqueArtists = (tracks: Track[]): string[] => {
   const artistSet = new Set<string>();
   tracks.forEach(track => {
     track.info?.relatedartist?.forEach(combinedArtists => {
@@ -26,7 +25,7 @@ export const uniqueArtists = (tracks: Track[]) => {
  * @param tracks - Array of tracks to process
  * @returns Sorted array of unique moods
  */
-export const uniqueMoods = (tracks: Track[]) => {
+export const extractUniqueMoods = (tracks: Track[]): string[] => {
   const moodSet = new Set<string>();
   tracks.forEach(track => {
     track.info?.mood?.forEach(mood => {
@@ -38,11 +37,27 @@ export const uniqueMoods = (tracks: Track[]) => {
 };
 
 /** 
+ * Extracts unique instruments from tracks
+ * @param tracks - Array of tracks to process
+ * @returns Sorted array of unique instruments
+ */
+export const extractUniqueInstruments = (tracks: Track[]): string[] => {
+  const instrumentSet = new Set<string>();
+  tracks.forEach(track => {
+    track.instruments?.forEach(instrument => {
+      if (instrument.main) instrumentSet.add(instrument.main);
+    });
+  });
+
+  return Array.from(instrumentSet).sort();
+};
+
+/** 
  * Generates comprehensive set of unique keywords from tracks
  * @param tracks - Array of tracks to process
  * @returns Sorted array of unique keywords
  */
-export const uniqueKeywords = (tracks: Track[]) => {
+export const extractUniqueKeywords = (tracks: Track[]): string[] => {
   const keywordSet = new Set<string>();
 
   // Extract keywords from various track attributes

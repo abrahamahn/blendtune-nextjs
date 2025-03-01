@@ -43,7 +43,7 @@ export {
   deselectKeyword,
   removeAllKeywords,
   default as keywordReducer,
-} from "@tracks/store/keywordSlice";
+} from "@/client/features/sounds/filters/store/filterSlice";
 
 // Audio playback slice
 export {
@@ -61,4 +61,4 @@ export {
 // Exporting types for type safety
 export type { SessionState } from "@auth/store/sessionSlice";
 export type { UserState } from "@auth/store/userSlice";
-export type { KeywordState } from "@tracks/store/keywordSlice";
+export type { KeywordState } from "@/client/features/sounds/filters/store/filterSlice";

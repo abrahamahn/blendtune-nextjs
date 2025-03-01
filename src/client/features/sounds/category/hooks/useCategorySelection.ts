@@ -2,13 +2,13 @@
 
 /**
  * Custom hook for managing category selection state
- * Centralizes category selection logic and Redux interactions
+ * Centralized category selection logic and Redux interactions
  * 
  * @module sounds/category/hooks/useCategorySelection
  */
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@core/store';
-import { selectCategory, removeAllGenres } from "@store/slices";
+import { selectCategory, removeAllGenres } from "@sounds/filters/store/filterSlice";
 
 /**
  * Hook that manages category selection state
@@ -30,15 +30,25 @@ export const useCategorySelection = () => {
 
   /**
    * Handles genre selection/deselection
-   * "All" selection clears other genre filters
+   * Implements single-select behavior using the selectCategory action
    * 
    * @param {string} genre - The genre to select
    */
   const handleGenreSelection = (genre: string) => {
     if (genre === "All") {
+      // Clear all genre selections
       dispatch(removeAllGenres());
     } else {
-      dispatch(selectCategory(genre));
+      // Check if this genre is already selected
+      const isSelected = selectedCategory === genre;
+      
+      if (isSelected) {
+        // If already selected, clear selection
+        dispatch(removeAllGenres());
+      } else {
+        // Otherwise, select the new category
+        dispatch(selectCategory(genre));
+      }
     }
   };
 
@@ -49,10 +59,13 @@ export const useCategorySelection = () => {
    * @returns {boolean} Whether the genre is selected
    */
   const isGenreSelected = (genre: string) => {
-    return (
-      (selectedCategory.includes("All") && genre === "All") ||
-      selectedCategory.includes(genre)
-    );
+    if (genre === "All") {
+      // "All" is selected when category is "All"
+      return selectedCategory === "All";
+    }
+    
+    // For other genres, check if it matches the category
+    return selectedCategory === genre;
   };
 
   return {
@@ -62,3 +75,5 @@ export const useCategorySelection = () => {
     isGenreSelected
   };
 };
+
+export default useCategorySelection;

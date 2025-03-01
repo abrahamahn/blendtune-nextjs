@@ -9,7 +9,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { selectCategory, removeAllGenres } from "@tracks/store/keywordSlice";
+import { selectCategory, removeAllGenres } from "@/client/features/sounds/filters/store/filterSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
  faHome,

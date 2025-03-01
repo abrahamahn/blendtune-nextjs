@@ -1,14 +1,20 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
-import { selectGenres, removeAllGenres } from "@store/slices";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from '@core/store';
 import {
- faStar,
- faGem,
- faWater,
- faLeaf,
- faPaw,
- faBoltLightning,
+  selectGenres,
+  selectCategory,
+  removeAllGenres,
+} from "@store/slices";
+import {
+  faStar,
+  faGem,
+  faWater,
+  faLeaf,
+  faPaw,
+  faBoltLightning,
+  faGlobe, // Added icon for "All"
 } from "@fortawesome/free-solid-svg-icons";
 import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/ui";
 
@@ -21,9 +27,10 @@ interface GenreFilterProps {
 }
 
 /**
-* Available genre options with icons
+* Available genre options with icons - Added "All" option
 */
 const genreItems = [
+ { icon: faGlobe, text: "All" }, // Added All option
  { icon: faStar, text: "Pop" },
  { icon: faGem, text: "Hiphop" },
  { icon: faWater, text: "R&B" },
@@ -34,19 +41,45 @@ const genreItems = [
 
 /**
 * Genre filter component with responsive layout
-* Provides genre selection and filtering functionality
+* Fixed to include "All" option and use original working logic
 */
 const GenreFilter: React.FC<GenreFilterProps> = ({
  selectedGenres,
  onClose,
 }) => {
  const dispatch = useDispatch();
+ const selectedCategory = useSelector(
+   (state: RootState) => state.tracks.selected.category
+ );
 
  /**
-  * Handles genre selection/deselection
+  * Uses original working logic for genre toggling
   */
  const handleGenreToggle = (genre: string) => {
-   dispatch(selectGenres(genre));
+   if (genre === "All") {
+     // Original working logic - use removeAllGenres for "All"
+     dispatch(removeAllGenres());
+   } else {
+     // Original working logic - use selectCategory for specific genres
+     dispatch(selectCategory(genre));
+   }
+ };
+
+ /**
+  * Uses original clear function
+  */
+ const handleClearGenres = () => {
+   dispatch(removeAllGenres());
+ };
+
+ /**
+  * Determines if a genre is selected
+  */
+ const isGenreSelected = (genre: string) => {
+   if (genre === "All") {
+     return selectedCategory === "All";
+   }
+   return selectedGenres.includes(genre);
  };
 
  return (
@@ -62,7 +95,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
              key={index}
              variant="filter"
              size="sm"
-             selected={selectedGenres.includes(item.text)}
+             selected={isGenreSelected(item.text)}
              onClick={() => handleGenreToggle(item.text)}
              className="px-1.5 py-1.5"
            >
@@ -79,7 +112,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
        
        {/* Desktop Control Buttons */}
        <ActionButtons 
-         onClear={() => dispatch(removeAllGenres())}
+         onClear={handleClearGenres}
          onClose={onClose}
        />
      </FilterWrapper>
@@ -95,7 +128,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
              key={index}
              variant="filter"
              size="md"
-             selected={selectedGenres.includes(item.text)}
+             selected={isGenreSelected(item.text)}
              onClick={() => handleGenreToggle(item.text)}
              className="px-3 py-2"
            >
@@ -113,7 +146,7 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
 
        {/* Mobile Clear Button */}
        <ActionButtons 
-         onClear={() => dispatch(removeAllGenres())}
+         onClear={handleClearGenres}
          isMobile={true}
        />
      </FilterWrapper>

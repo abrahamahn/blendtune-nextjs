@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAudio } from "@player/hooks";
-import { useTracks } from "@sounds/tracks/hooks";
+import { useTracks } from "@/client/features/sounds/tracks/core/hooks";
 import {
   setCurrentTrack,
   setIsPlaying,
@@ -13,8 +13,8 @@ import {
 import { RootState } from "@core/store";
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/layout";
-import { MobileCatalog, DesktopCatalog, NewTracks } from "@sounds/tracks/components";
-import { MobileFilter, DesktopFilter } from "@sounds/filters/layout";
+import { MobileCatalog, DesktopCatalog, NewTracks } from "@/client/features/sounds/catalog/components";
+import { MobileFilter, DesktopFilter } from "@/client/features/sounds/filters/layout";
 import { useRightSidebar } from "@layout/rightbar/context";
 import { FilterProvider, useFilterContext } from '@features/sounds/filters/context';
 import { Track } from "@/shared/types/track";

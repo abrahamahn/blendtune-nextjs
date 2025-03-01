@@ -4,7 +4,7 @@
 import React, { ReactNode } from "react";
 import StoreProvider from "./StoreProvider";
 import SessionProvider from "@auth/services/sessionService";
-import TracksProvider from "@tracks/services/trackService";
+import TracksProvider from "@/client/features/sounds/tracks/core/services/trackService";
 import AudioProvider from "@player/services/audioService";
 import ServiceWorkerProvider from "@core/services/pwa/ServiceWorkerService";
 import { ClientEnvironmentProvider } from "@core/context/ClientEnvironment";

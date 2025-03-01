@@ -1,8 +1,6 @@
-// src\client\features\sounds\tracks\hooks\useKeywords.ts
-
 import { useState, useEffect } from "react";
-import { fetchTracks } from "@tracks/hooks";
-import { uniqueKeywords } from "@/client/features/sounds/filters/utils/uniqueKeywords";
+import { fetchTracks } from "@/client/features/sounds/tracks/core/hooks";
+import { extractUniqueKeywords } from "@/client/features/sounds/metadata/utils";
 
 /**
  * Custom hook to fetch and extract unique keywords from track data.
@@ -21,7 +19,7 @@ const useKeywords = () => {
     const fetchAndSetKeywords = async () => {
       try {
         const tracks = await fetchTracks(); // Fetch track data from API
-        const uniqueKeywordsArray = uniqueKeywords(tracks); // Extract unique keywords
+        const uniqueKeywordsArray = extractUniqueKeywords(tracks); // Updated function name
         setKeywords(uniqueKeywordsArray); // Update state with keywords
       } catch (error) {
         console.error("Error fetching tracks:", error);

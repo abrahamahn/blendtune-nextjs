@@ -5,7 +5,7 @@
 import React, { useState, ReactNode, useEffect, createContext } from "react";
 import { useAppDispatch } from "@store/hooks/useAppDispatch";
 import { setCurrentTrack, setTrackList } from "@store/slices";
-import { fetchTracks } from "@tracks/hooks";
+import { fetchTracks } from "@/client/features/sounds/tracks/core/hooks";
 import { Track } from "@/shared/types/track";
 
 /**

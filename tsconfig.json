@@ -38,6 +38,8 @@
       "@category/*": ["src/client/features/sounds/category/*"],
       "@search/*": ["src/client/features/sounds/search/*"],
       "@visualizer/*": ["src/client/features/sounds/visualizer/*"],
+      "@keywords*": ["src/client/features/sounds/tracks/keywords/*"],
+      "@catalog/*": ["src/client/features/sounds/catalog/*"],
       
       /* Layout feature subpaths */
       "@header/*": ["src/client/features/layout/header/*"],

@@ -1,7 +1,7 @@
 // Directory: src/client/features/sounds/tracks/hooks/useTracks.ts
 
 import { useContext } from "react";
-import { TracksContext } from "@tracks/services";
+import { TracksContext } from "@/client/features/sounds/tracks/core/services";
 
 /**
  * Custom hook for accessing the TracksContext.

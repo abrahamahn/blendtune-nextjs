@@ -1,8 +1,8 @@
 // src/client/core/store/index.ts
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import sessionReducer from "../../features/auth/store/sessionSlice";
-import userReducer from "../../features/auth/store/userSlice";
-import keywordReducer from "@tracks/store/keywordSlice";
+import sessionReducer from "@auth/store/sessionSlice";
+import userReducer from "@auth/store/userSlice";
+import keywordReducer from "@/client/features/sounds/filters/store/filterSlice";
 import playbackReducer from "@player/store/playbackSlice";
 
 // Group authentication-related reducers

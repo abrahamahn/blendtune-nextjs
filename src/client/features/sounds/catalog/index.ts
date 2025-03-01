@@ -1,2 +1,2 @@
 // src\client\features\sounds\tracks\index.ts
-export * from './components';
+export * from '@catalog/components';

@@ -11,6 +11,3 @@ export * from './sortLogic';
 
 // Export all filter UI helper functions
 export * from './filterUI';
-
-export * from './uniqueKeywords';
-

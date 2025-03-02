@@ -4,8 +4,8 @@
 import React, { ReactNode } from "react";
 import StoreProvider from "./StoreProvider";
 import SessionProvider from "@auth/services/sessionService";
-import TracksProvider from "@/client/features/sounds/tracks/core/services/trackService";
-import AudioProvider from "@player/services/audioService";
+import TracksProvider from "@/client/features/tracks/services/TracksContext";
+import { PlayerProvider } from "@player/services/playerService";
 import ServiceWorkerProvider from "@core/services/pwa/ServiceWorkerService";
 import { ClientEnvironmentProvider } from "@core/context/ClientEnvironment";
 import { FilterProvider } from "@sounds/filters/context";
@@ -26,10 +26,10 @@ const ClientProviders: React.FC<ClientProvidersProps> = ({ children }) => (
       <SessionProvider>
         <TracksProvider>
           <FilterProvider>
-            <AudioProvider>
+            <PlayerProvider>
               <ServiceWorkerProvider />
               {children}
-            </AudioProvider>
+            </PlayerProvider>
           </FilterProvider>
         </TracksProvider>
       </SessionProvider>

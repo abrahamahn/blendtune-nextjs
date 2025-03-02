@@ -31,9 +31,9 @@
       "@player/*": ["src/client/features/player/*"],
       "@sounds/*": ["src/client/features/sounds/*"],
       "@home/*": ["src/client/features/home/*"],
+      "@tracks/*": ["src/client/features/tracks/*"],
       
       /* Sounds feature subpaths */
-      "@tracks/*": ["src/client/features/sounds/tracks/*"],
       "@filters/*": ["src/client/features/sounds/filters/*"],
       "@category/*": ["src/client/features/sounds/category/*"],
       "@search/*": ["src/client/features/sounds/search/*"],

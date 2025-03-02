@@ -92,7 +92,6 @@ const KeyFilter: React.FC<KeyFilterProps> = ({
   };
 
   const handleKeyChange = (key: string) => {
-    console.log("Selected Key:", key);
     if (blackFlatKeys.includes(key)) {
       setSelectedAccidental("Flat");
     } else if (blackSharpKeys.includes(key)) {
@@ -103,7 +102,6 @@ const KeyFilter: React.FC<KeyFilterProps> = ({
 
   const handleAccidentalChange = (accidental: string) => {
     setSelectedAccidental(accidental);
-    console.log("Changed accidental to:", accidental);
 
     // Update the selected key to its equivalent flat or sharp if applicable
     if (accidental === "Flat" && blackSharpKeys.includes(selectedKeys)) {

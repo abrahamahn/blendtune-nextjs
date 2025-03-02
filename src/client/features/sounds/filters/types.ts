@@ -1,3 +1,5 @@
+
+
 export interface BaseFilterProps {
   minTempo: number;
   setMinTempo: (val: number) => void;
@@ -55,3 +57,4 @@ export interface SortFilterProps {
     handleSortChange: (option: string) => void;
     handleMobileSortChange?: (option: string) => void;
   }
+

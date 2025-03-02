@@ -1,4 +1,4 @@
-// src/client/features/player/components/ResizableHandle.tsx
+// src\client\features\player\components\ResizableHandle.tsx
 "use client";
 
 import React, { useState } from "react";

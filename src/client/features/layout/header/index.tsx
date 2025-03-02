@@ -26,7 +26,7 @@ import useAuthModal from "@auth/hooks/useAuthModal";
 import useAuth from "@auth/hooks/useAuth";
 import useGenreMenu from "@header/hooks/useGenreMenu";
 import useMobileSearch from "@search/hooks/useMobileSearch";
-import useKeywords from "@keywords/hooks/useKeywords";
+import { useKeywords } from "@tracks/keywords/hooks/useKeywords";
 import { useMobileMenu } from "@header/hooks/useMobileMenu";
 import Logo from "@components/common//Logo";
 

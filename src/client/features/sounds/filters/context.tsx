@@ -1,10 +1,27 @@
-import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, ReactNode } from 'react';
+import React, { 
+  createContext, 
+  useContext, 
+  useState, 
+  useCallback, 
+  useMemo,
+  useEffect, 
+  ReactNode 
+} from 'react';
 import { Track } from '@/shared/types/track';
 import { FILTER_DEFAULTS, KEY_CONSTANTS } from './constants';
-import { categoryFilter, keyFilter, tempoFilter, genreFilter, artistFilter, instrumentFilter, moodFilter, keywordFilter } from '@/client/features/sounds/filters/utils/filterLogic';
+import { 
+  categoryFilter, 
+  keyFilter, 
+  tempoFilter, 
+  genreFilter, 
+  artistFilter, 
+  instrumentFilter, 
+  moodFilter, 
+  keywordFilter 
+} from '@/client/features/sounds/filters/utils/filterLogic';
 import { sortTracks } from '@/client/features/sounds/filters/utils/sortLogic';
-import { useTracks } from "@/client/features/sounds/tracks/core/hooks";
-import { useTrackMetadata } from "@keywords/hooks"; // Updated import
+import { useTracks } from "@/client/features/tracks";
+import { useTrackMetadata } from "@tracks/keywords/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@core/store";
 import { setTrackList } from "@store/slices";

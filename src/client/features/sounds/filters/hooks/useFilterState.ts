@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Track } from "@shared/types/track";
-import { useTrackMetadata } from '@keywords/hooks';
+import { Track } from "@/shared/types/track";
+import { useTrackMetadata } from '@tracks/keywords/hooks';
 
 /**
  * Custom hook to manage filter UI state

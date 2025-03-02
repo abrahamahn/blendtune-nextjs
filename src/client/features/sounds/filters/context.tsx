@@ -4,7 +4,7 @@ import { FILTER_DEFAULTS, KEY_CONSTANTS } from './constants';
 import { categoryFilter, keyFilter, tempoFilter, genreFilter, artistFilter, instrumentFilter, moodFilter, keywordFilter } from '@/client/features/sounds/filters/utils/filterLogic';
 import { sortTracks } from '@/client/features/sounds/filters/utils/sortLogic';
 import { useTracks } from "@/client/features/sounds/tracks/core/hooks";
-import { useTrackMetadata } from "@/client/features/sounds/metadata/hooks"; // Updated import
+import { useTrackMetadata } from "@keywords/hooks"; // Updated import
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@core/store";
 import { setTrackList } from "@store/slices";

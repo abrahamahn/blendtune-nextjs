@@ -1,6 +1,6 @@
 // src\client\features\sounds\category\components\Packs.tsx
 /**
-* @fileoverview Pack component for displaying and playing track collections
+* @fileoverview Packs component for displaying and playing track collections
 * @module sounds/category/Packs
 */
 
@@ -18,17 +18,17 @@ import {
 import Artwork from "@components/common/Artwork";
 
 /**
-* Props interface for Pack component
+* Props interface for Packs component
 */
-interface PackProps {
+interface PacksProps {
  tracks: Track[];
 }
 
 /**
-* Pack component displaying grid of playable tracks
+* Packs component displaying grid of playable tracks
 * Includes pagination, playback controls, and responsive layout
 */
-const Pack: React.FC<PackProps> = ({ tracks }) => {
+const Packs: React.FC<PacksProps> = ({ tracks }) => {
  // Playback state
  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
  const [isPlaying, setIsPlaying] = useState(false);
@@ -260,4 +260,4 @@ const Pack: React.FC<PackProps> = ({ tracks }) => {
   );
 };
 
-export default Pack;
+export default Packs;

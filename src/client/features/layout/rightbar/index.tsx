@@ -3,7 +3,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import InnerLayer from "@rightbar/components/InnerLayer";
-import ResizableHandle from "@player/components/ResizableHandle";
+import ResizableHandle from "@rightbar/context/ResizableHandle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useRightSidebar } from "@rightbar/context/useRightSidebar";

@@ -1,3 +1,4 @@
+// src\client\features\player\utils\storage.ts
 /**
  * @fileoverview Utility functions for localStorage operations
  * @module features/player/utils/storage

@@ -1,4 +1,4 @@
-// src/client/features/sounds/filters/layout/MobileFilter.tsx
+// src\client\features\sounds\filters\layout\MobileFilter.tsx
 /**
  * Mobile Filter Component
  * Renders the mobile version of the sound filter interface

@@ -1,4 +1,4 @@
-// src/client/features/sounds/tracks/components/MobileCatalog.tsx
+// src\client\features\sounds\catalog\components\MobileCatalog.tsx
 
 "use client";
 import React from "react";

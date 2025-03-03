@@ -1,3 +1,4 @@
+// src\client\features\player\index.ts
 /**
  * @fileoverview Entry point for the player feature
  * @module features/player

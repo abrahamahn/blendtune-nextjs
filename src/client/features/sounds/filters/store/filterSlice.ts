@@ -1,4 +1,4 @@
-// src\client\features\sounds\tracks\store\filterSlice.ts
+// src\client\features\sounds\filters\store\filterSlice.ts
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 

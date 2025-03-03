@@ -1,4 +1,4 @@
-// src/client/features/sounds/category/index.ts
+// src\client\features\sounds\category\index.ts
 
 /**
  * Export all category components and hooks

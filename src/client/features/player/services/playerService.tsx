@@ -1,3 +1,5 @@
+
+// src\client\features\player\services\playerService.tsx
 /**
  * @fileoverview Centralized context for music player state management
  * @module features/player/services/playerService

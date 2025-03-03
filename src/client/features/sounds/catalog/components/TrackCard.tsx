@@ -1,4 +1,4 @@
-// src\client\features\sounds\tracks\components\TrackCard.tsx
+// src\client\features\sounds\catalog\components\TrackCard.tsx
 
 "use client";
 

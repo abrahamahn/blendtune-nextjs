@@ -1,4 +1,4 @@
-// src/client/features/sounds/category/constants.ts
+// src\client\features\sounds\category\constants.ts
 
 /**
  * Constants for the category feature

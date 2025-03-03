@@ -1,4 +1,5 @@
-// src/client/features/sounds/filters/ui/FilterWrapper.tsx
+// src\client\features\sounds\filters\ui\FilterWrapper.tsx
+
 /**
  * Container component for filter panels
  * Provides consistent styling and responsive behavior for filter components

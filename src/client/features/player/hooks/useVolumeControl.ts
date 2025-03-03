@@ -1,3 +1,4 @@
+// src\client\features\player\hooks\useVolumeControl.ts
 /**
  * @fileoverview Hook for volume control functionality
  * @module features/player/hooks/useVolumeControl

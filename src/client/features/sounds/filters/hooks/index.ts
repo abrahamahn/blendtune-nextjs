@@ -1,9 +1,8 @@
 // src\client\features\sounds\filters\hooks\index.ts
 
 /**
- * Exports all custom hooks for the filters feature
- * This allows for clean imports from other modules
- * 
- * Example usage:
- * import { useFilterState } from '@sounds/filters/hooks';
+ * @fileoverview Exports hooks related to filter functionality
+ * @module features/sounds/filters/hooks
  */
+
+export { useFilterState } from './useFilterState';

@@ -1,3 +1,4 @@
+// src\client\features\player\hooks\useTrackNavigation.ts
 /**
  * @fileoverview Hook for track navigation functionality
  * @module features/player/hooks/useTrackNavigation

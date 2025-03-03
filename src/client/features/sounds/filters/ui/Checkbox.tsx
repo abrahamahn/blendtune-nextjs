@@ -1,4 +1,4 @@
-// src/client/features/sounds/filters/ui/Checkbox.tsx
+// src\client\features\sounds\filters\ui\Checkbox.tsx
 /**
  * Custom checkbox component for filter selections
  * Provides consistent styling and behavior for filter checkboxes

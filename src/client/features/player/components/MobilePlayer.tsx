@@ -1,3 +1,4 @@
+// src\client\features\player\components\MobilePlayer.tsx
 "use client";
 /**
  * @fileoverview Mobile-specific music player component

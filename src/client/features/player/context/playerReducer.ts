@@ -1,3 +1,4 @@
+// src\client\features\player\context\playerReducer.ts
 /**
  * @fileoverview Reducer function for player state management
  * @module features/player/context/playerReducer

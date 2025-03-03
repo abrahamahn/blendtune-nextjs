@@ -1,4 +1,4 @@
-// src\client\features\sounds\tracks\components\DesktopCatalog.tsx
+// src\client\features\sounds\catalog\components\DesktopCatalog.tsx
 
 "use client";
 

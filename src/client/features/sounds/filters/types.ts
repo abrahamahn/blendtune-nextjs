@@ -1,4 +1,4 @@
-
+// src\client\features\sounds\filters\types.ts
 
 export interface BaseFilterProps {
   minTempo: number;

@@ -1,4 +1,4 @@
-// src/client/features/sounds/tracks/components/NewTracks.tsx
+// src\client\features\sounds\catalog\components\NewTracks.tsx
 
 import React from "react";
 import TrackCard from "@/client/features/sounds/catalog/components/TrackCard";

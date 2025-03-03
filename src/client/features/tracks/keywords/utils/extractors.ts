@@ -1,5 +1,4 @@
-// src/client/features/tracks/keywords/utils/extractors.ts
-
+// src\client\features\tracks\keywords\utils\extractors.ts
 import { Track } from '@/shared/types/track';
 
 /**

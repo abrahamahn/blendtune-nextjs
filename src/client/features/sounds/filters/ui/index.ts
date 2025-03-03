@@ -1,4 +1,5 @@
-// src/client/features/sounds/filters/ui/index.ts
+// src\client\features\sounds\filters\ui\index.ts
+
 /**
  * Export all UI components for filters
  * Centralized exports for all shared filter UI components

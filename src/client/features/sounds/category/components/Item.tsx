@@ -1,4 +1,4 @@
-// src/client/features/sounds/category/components/CategoryItem.tsx
+// src\client\features\sounds\category\components\Item.tsx
 /**
  * Individual category item button component
  * Represents a single genre selection option

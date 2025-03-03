@@ -1,3 +1,4 @@
+// src\client\features\player\components\TrackProgress.tsx
 /**
  * @fileoverview Component for track waveform and time display
  * @module features/player/components/TrackProgress

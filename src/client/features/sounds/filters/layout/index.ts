@@ -1,4 +1,4 @@
-// src/client/features/sounds/filters/layout/index.ts
+// src\client\features\sounds\filters\layout\index.ts
 /**
  * Export filter layout components
  * Provides both named exports and a default export with both components

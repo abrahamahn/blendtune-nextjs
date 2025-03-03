@@ -1,4 +1,4 @@
-// src\client\features\tracks\types.ts
+// src\client\features\tracks\types\trackTypes.ts
 import { Track } from "@/shared/types/track";
 
 /**

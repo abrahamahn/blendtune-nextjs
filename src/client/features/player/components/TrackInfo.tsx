@@ -1,3 +1,4 @@
+// src\client\features\player\components\TrackInfo.tsx
 /**
  * @fileoverview Component to display current track information and metadata
  * @module features/player/components/TrackInfo

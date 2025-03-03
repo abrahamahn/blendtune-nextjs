@@ -1,4 +1,4 @@
-// src\client\features\sounds\tracks\components\index.ts
+// src\client\features\sounds\catalog\components\index.ts
 export { default as DesktopCatalog } from './DesktopCatalog';
 export { default as MobileCatalog } from './MobileCatalog';
 export { default as NewTracks } from './NewTracks';

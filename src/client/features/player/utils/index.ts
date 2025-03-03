@@ -1,3 +1,4 @@
+// src\client\features\player\utils\index.ts
 /**
  * @fileoverview Export all player utility functions
  * @module features/player/utils

@@ -1,4 +1,5 @@
-// src/client/features/sounds/filters/ui/ActionButtons.tsx
+// src\client\features\sounds\filters\ui\ActionButtons.tsx
+
 /**
  * Action buttons component for filter control actions
  * Provides consistent UI for filter actions like clear and close

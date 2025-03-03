@@ -1,3 +1,4 @@
+// src\client\features\player\context\playerActions.ts
 /**
  * @fileoverview Action creators for player state management
  * @module features/player/context/playerActions

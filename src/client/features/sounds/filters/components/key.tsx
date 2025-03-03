@@ -1,4 +1,4 @@
-// src\client\features\sounds\filters\components\KeyFilter.tsx
+// src\client\features\sounds\filters\components\key.tsx
 /**
  * @fileoverview Musical key filter component with support for scales and accidentals
  * @module sounds/filters/KeyFilter

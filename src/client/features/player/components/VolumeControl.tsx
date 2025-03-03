@@ -1,3 +1,4 @@
+// src\client\features\player\components\VolumeControl.tsx
 /**
  * @fileoverview Volume control component with slider
  * @module features/player/components/VolumeControl

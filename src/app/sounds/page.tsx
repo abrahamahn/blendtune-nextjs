@@ -1,3 +1,4 @@
+// src\app\sounds\page.tsx
 /**
  * @fileoverview Sounds page for music discovery and playback
  * @module pages/sounds

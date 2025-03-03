@@ -1,4 +1,4 @@
-// src/client/features/sounds/category/types.ts
+// src\client\features\sounds\category\types.ts
 
 /**
  * Type definitions for the category feature

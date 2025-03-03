@@ -1,4 +1,4 @@
-// src/client/features/sounds/filters/ui/FilterGrid.tsx
+// src\client\features\sounds\filters\ui\FilterGrid.tsx
 /**
  * Grid layout component for organizing filter options
  * Provides consistent layout for filter items with customizable columns

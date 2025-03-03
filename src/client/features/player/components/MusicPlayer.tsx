@@ -1,3 +1,4 @@
+// src\client\features\player\components\MusicPlayer.tsx
 /**
  * @fileoverview Main music player component orchestrating the player UI and functionality
  * @module features/player/components/MusicPlayer

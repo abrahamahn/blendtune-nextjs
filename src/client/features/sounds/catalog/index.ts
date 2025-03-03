@@ -1,2 +1,2 @@
-// src\client\features\sounds\tracks\index.ts
+// src\client\features\sounds\catalog\index.ts
 export * from '@catalog/components';

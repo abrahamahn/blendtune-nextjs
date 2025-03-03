@@ -1,4 +1,5 @@
-// src/client/features/sounds/filters/layout/DesktopFilter.tsx
+// src\client\features\sounds\filters\layout\DesktopFilter.tsx
+
 /**
  * Desktop Filter Component
  * Renders the desktop version of the sound filter interface

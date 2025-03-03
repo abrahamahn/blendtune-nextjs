@@ -1,3 +1,4 @@
+// src\client\features\player\hooks\index.ts
 /**
  * @fileoverview Export hooks for player functionality
  * @module features/player/hooks

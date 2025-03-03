@@ -3,18 +3,16 @@
 "use client";
 import React from "react";
 import { Track } from "@/shared/types/track";
-import { RootState } from "@core/store";
-import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisVertical,
   faPlus,
-  faPlay,
-  faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 import { Artwork, Watermark } from "@components/common";
+import { usePlayer } from "@/client/features/player/services/playerService";
+import { PlayerIcons } from '@/client/shared/components/icons';
 
 export interface MobileCatalogProps {
   tracks: Track[]; // List of tracks to be displayed in the catalog.
@@ -37,9 +35,7 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
   onTitleClick,
 }) => {
   // Retrieve playback state from the Redux store.
-  const isPlaying = useSelector(
-    (state: RootState) => state.audio.playback.isPlaying
-  );
+  const { isPlaying } = usePlayer();
 
   /**
    * Renders a value only if it is valid (not empty or "n/a").
@@ -81,11 +77,11 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
                 priority
               />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                {isPlaying ? (
-                  <FontAwesomeIcon icon={faPause} size="lg" className="text-white" />
-                ) : (
-                  <FontAwesomeIcon icon={faPlay} size="lg" className="text-white" />
-                )}
+                <PlayerIcons.PlayPause 
+                  isPlaying={isPlaying} 
+                  size="lg" 
+                  className="text-white dark:text-white"
+                />
               </div>
               <div className="absolute bottom-0 right-0">
                 <Watermark size="sm" />

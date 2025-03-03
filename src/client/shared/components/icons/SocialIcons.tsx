@@ -1,4 +1,4 @@
-// src/client/shared/components/common/SocialIcons.tsx
+// src\client\shared\components\icons\SocialIcons.tsx
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';

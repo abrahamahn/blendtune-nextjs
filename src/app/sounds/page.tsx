@@ -76,6 +76,7 @@ const Sounds: React.FC = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+  
   // Update track list when filtered tracks change
   useEffect(() => {
     if (filteredTracks.length > 0) {

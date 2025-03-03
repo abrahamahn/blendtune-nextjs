@@ -1,3 +1,4 @@
+// src\client\shared\components\common\Artwork.tsx
 import React from "react";
 import Image, { ImageProps } from "next/image";
 

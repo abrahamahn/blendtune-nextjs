@@ -3,21 +3,18 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import Image from "next/image";
 import { Track } from "@/shared/types/track";
-import { RootState } from "@core/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisVertical,
   faPlus,
-  faPlay,
-  faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 import { Artwork, Watermark } from "@components/common";
 import EqualizerIcon from "@/client/shared/components/icons/EqualizerIcon";
+import { usePlayer } from "@/client/features/player/services/playerService";
+import { PlayerIcons } from '@/client/shared/components/icons';
 
 /**
  * Props definition for the DesktopCatalog component.
@@ -37,12 +34,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
   onTitleClick,
 }) => {
   // Retrieve the current track and playback state from Redux
-  const currentTrack = useSelector(
-    (state: RootState) => state.audio.playback.currentTrack as Track | undefined
-  );
-  const isPlaying = useSelector(
-    (state: RootState) => state.audio.playback.isPlaying
-  );
+  const { currentTrack, isPlaying } = usePlayer();
 
   // State to control the visibility of the right bar (track info panel)
   const [rightBarOpen, setRightBarOpen] = useState(false);
@@ -149,19 +141,11 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
 
                   {/* Play/Pause Icon (Takes priority on hover) */}
                   <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 cursor-pointer">
-                    {isCurrentTrack && isPlaying ? (
-                      <FontAwesomeIcon
-                        icon={faPause}
-                        size="lg"
-                        className="text-[#1F1F1F] dark:text-white"
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faPlay}
-                        size="lg"
-                        className="text-[#1F1F1F] dark:text-white"
-                      />
-                    )}
+                  <PlayerIcons.PlayPause 
+                    isPlaying={isCurrentTrack && isPlaying} 
+                    size="lg" 
+                    className="text-black dark:text-white" 
+                  />
                   </div>
                 </div>
                 {/* Artwork */}

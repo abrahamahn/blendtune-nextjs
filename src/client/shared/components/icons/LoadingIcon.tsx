@@ -1,4 +1,4 @@
-// src/client/shared/components/common/LoadingIcon.tsx
+// src\client\shared\components\icons\LoadingIcon.tsx
 import React from "react";
 
 /**

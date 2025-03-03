@@ -6,15 +6,11 @@
 
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faForwardStep,
-  faPlay,
-  faPause,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Artwork from "@components/common/Artwork";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTrackNavigation } from "../hooks";
+import { PlayerIcons } from '@/client/shared/components/icons';
 
 /**
  * Compact player version optimized for mobile screens
@@ -27,12 +23,6 @@ export const MobilePlayer: React.FC = () => {
   if (!currentTrack) {
     return null;
   }
-
-  const playPauseButtonMobile = isPlaying ? (
-    <FontAwesomeIcon icon={faPause} size="lg" className="text-[#1F1F1F] dark:text-white" />
-  ) : (
-    <FontAwesomeIcon icon={faPlay} size="lg" className="ml-0.5 text-[#1F1F1F] dark:text-white" />
-  );
 
   /**
    * Handle progress bar seeking
@@ -122,7 +112,11 @@ export const MobilePlayer: React.FC = () => {
               onClick={togglePlayPause}
             >
               <div className="cursor-pointer hover:opacity-90">
-                {playPauseButtonMobile}
+                <PlayerIcons.PlayPause 
+                  isPlaying={isPlaying} 
+                  size="lg"
+                  className="text-black dark:text-white"
+                />
               </div>
             </button>
           </div>
@@ -132,10 +126,10 @@ export const MobilePlayer: React.FC = () => {
               onClick={nextTrack}
             >
               <div className="cursor-pointer hover:opacity-90">
-                <FontAwesomeIcon
-                  icon={faForwardStep}
-                  size="lg"
-                  className="cursor-pointer hover:opacity-90 text-[#1F1F1F] dark:text-white"
+                <PlayerIcons.Forward 
+                  size="lg" 
+                  onClick={nextTrack} 
+                  className="text-black dark:text-white"
                 />
               </div>
             </button>

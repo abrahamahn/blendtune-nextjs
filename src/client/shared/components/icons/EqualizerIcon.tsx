@@ -1,4 +1,4 @@
-// src\client\shared\components\common\EqualizerIcon.tsx
+// src\client\shared\components\icons\EqualizerIcon.tsx
 import React, { useEffect, useMemo, useState } from "react";
 
 /** Configuration for individual equalizer bar */

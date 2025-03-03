@@ -5,13 +5,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
 import { Artwork, Watermark } from "@components/common";
+import { PlayerIcons } from '@/client/shared/components/icons';
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-  faArrowRight,
-  faPlay,
-  faPause,
-} from "@fortawesome/free-solid-svg-icons";
 
 /**
  * Generates the URL for a track's artwork image.
@@ -165,7 +161,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
             </div>
           )}
 
-          {/* Track List - Takes up all available space between buttons */}
+          {/* Track List */}
           <div className={`flex-1 ${isMobile ? "overflow-x-auto" : "overflow-hidden"} px-2`}>
             <div 
               className={`flex ${
@@ -209,10 +205,10 @@ const TrackCard: React.FC<TrackCardProps> = ({
                         }}
                       >
                         <div className="flex justify-center items-center">
-                          <FontAwesomeIcon
-                            icon={isPlaying && currentTrack === track ? faPause : faPlay}
-                            size="sm"
-                            color="white"
+                          <PlayerIcons.PlayPause 
+                            isPlaying={isPlaying && currentTrack === track} 
+                            size="sm" 
+                            className="text-white"
                           />
                         </div>
                       </button>

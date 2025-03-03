@@ -5,4 +5,3 @@ export * from './filters/layout';
 export * from './hero';
 export * from './packs';
 export * from './search';
-export * from './visualizer';

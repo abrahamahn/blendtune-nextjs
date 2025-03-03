@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
-import Equalizer from "@visualizer/components/Equalizer";
+import { Equalizer } from "@player/visualizer/";
 import { colorExtractor } from "@utils/colorExtractor";
 import { Artwork, Watermark } from "@components/common/";
 import { TrackMetadata } from "@layout/rightbar/components/TrackMetadata";

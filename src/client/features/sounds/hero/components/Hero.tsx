@@ -6,10 +6,9 @@ import React, { useState, useEffect, useRef, RefObject } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause, faMusic } from "@fortawesome/free-solid-svg-icons";
 import { Track } from "@/shared/types/track";
-import Image from "next/image";
 
 import { colorExtractor } from "@utils/colorExtractor";
-import Equalizer from "@visualizer/components/Equalizer";
+import { Equalizer } from "@player/visualizer/";
 import { Watermark, Artwork } from "@/client/shared/components/common";
 
 /**

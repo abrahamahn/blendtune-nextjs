@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import Waveform from "@visualizer/components/Waveform";
+import { Waveform } from "@player/visualizer";
 import { formatTime } from "../utils/formatTime";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTrackNavigation } from "@player/hooks";

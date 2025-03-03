@@ -1,7 +1,7 @@
 // src\client\features\tracks\services\TracksContext.tsx
 "use client";
 
-import React, { useState, ReactNode, useEffect, createContext, useContext, useCallback } from "react";
+import React, { useState, ReactNode, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { fetchTracks } from "@tracks/core/hooks";
 import { Track } from "@/shared/types/track";
 import { TrackServiceType } from "@tracks/types";
@@ -71,22 +71,54 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
   const [currentTrack, setCurrentTrackState] = useState<Track | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<{ message: string; code: string } | null>(null);
+  
+  // Flag to track initial data load
+  const initialLoadRef = useRef(false);
+  
+  // Flag to prevent circular updates
+  const updatingRef = useRef(false);
 
   /**
    * Set track list method for consumers of this context
    */
   const setTrackList = useCallback((newTracks: Track[]) => {
-    setTracks(newTracks);
+    // Prevent circular updates
+    if (updatingRef.current) return;
+    updatingRef.current = true;
+    
+    try {
+      setTracks(newTracks);
+    } finally {
+      // Reset the updating flag
+      setTimeout(() => {
+        updatingRef.current = false;
+      }, 0);
+    }
   }, []);
 
   /**
    * Set current track method for consumers of this context
    */
   const setCurrentTrack = useCallback((track: Track | undefined) => {
-    setCurrentTrackState(track);
+    // Prevent circular updates
+    if (updatingRef.current) return;
+    updatingRef.current = true;
+    
+    try {
+      setCurrentTrackState(track);
+    } finally {
+      // Reset the updating flag
+      setTimeout(() => {
+        updatingRef.current = false;
+      }, 0);
+    }
   }, []);
 
+  // Data fetching effect - only run once on mount
   useEffect(() => {
+    // Skip if already loaded
+    if (initialLoadRef.current) return;
+
     /**
      * Fetches track data from the API and updates context state
      */
@@ -97,14 +129,10 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
       
       try {
         const trackList = await fetchTracks();
+        initialLoadRef.current = true;
         
         // Update local state
         setTracks(trackList);
-        
-        // Automatically set the first track as the current track if available
-        if (trackList.length > 0 && !currentTrack) {
-          setCurrentTrackState(trackList[0]);
-        }
       } catch (err) {
         // Improved error handling
         let trackError: TrackError;
@@ -142,7 +170,15 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
     };
 
     fetchTrackData();
-  }, [currentTrack]); // No need to include other dependencies as we're initializing
+  }, []); // Empty dependency array for initial mount only
+
+  // Set initial track effect - run once after tracks are loaded
+  useEffect(() => {
+    // Only run if we have tracks and no current track selected
+    if (tracks.length > 0 && !currentTrack && initialLoadRef.current) {
+      setCurrentTrackState(tracks[0]);
+    }
+  }, [tracks, currentTrack]);
 
   // Construct the context value with all state and methods
   const contextValue: ExtendedTrackServiceType = {

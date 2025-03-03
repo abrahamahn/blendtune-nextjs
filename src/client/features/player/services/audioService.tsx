@@ -1,5 +1,5 @@
 /**
- * @fileoverview Core audio service that abstracts HTMLAudioElement functionality
+ * @fileoverview Minimal audio service that abstracts HTMLAudioElement functionality
  * @module features/player/services/audioService
  */
 
@@ -43,13 +43,7 @@ export interface UseAudioElementReturn extends AudioState, AudioActions {
 }
 
 /**
- * Custom hook for abstracting HTMLAudioElement functionality
- * Provides a clean interface for audio operations and state
- * 
- * @param initialSrc - Optional initial audio source
- * @param initialVolume - Optional initial volume (0-1)
- * @param eventHandlers - Optional event handlers for audio events
- * @returns Audio state, actions, and ref
+ * Simplified hook for abstracting HTMLAudioElement functionality
  */
 export const useAudioElement = (
   initialSrc: string = '',
@@ -57,7 +51,10 @@ export const useAudioElement = (
   eventHandlers: AudioEventHandlers = {}
 ): UseAudioElementReturn => {
   // Create ref for the audio element
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Operation guard
+  const operationInProgressRef = useRef(false);
   
   // Audio state
   const [state, setState] = useState<AudioState>({
@@ -72,25 +69,29 @@ export const useAudioElement = (
 
   // Initialize audio element
   useEffect(() => {
-    // Create audio element if it doesn't exist yet
-    if (!audioRef.current) {
-      const audio = new Audio();
-      audio.preload = 'metadata';
-      audio.volume = initialVolume;
-      audioRef.current = audio;
-    }
-
-    const audioEl = audioRef.current;
+    if (audioRef.current) return;
     
-    // Handle events
+    const audio = new Audio();
+    audio.preload = 'metadata';
+    audio.volume = initialVolume;
+    audioRef.current = audio;
+  }, [initialVolume]);
+
+  // Set up event listeners
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
+    
     const handlePlay = () => {
       setState(prev => ({ ...prev, isPlaying: true }));
       eventHandlers.onPlay?.();
+      operationInProgressRef.current = false;
     };
     
     const handlePause = () => {
       setState(prev => ({ ...prev, isPlaying: false }));
       eventHandlers.onPause?.();
+      operationInProgressRef.current = false;
     };
     
     const handleTimeUpdate = () => {
@@ -117,9 +118,13 @@ export const useAudioElement = (
     };
 
     const handleError = (e: ErrorEvent) => {
-      const error = new Error(`Audio error: ${e.message}`);
+      // Create a simple error object
+      const errorMessage = e.message || 'Unknown audio error';
+      const error = new Error(`Audio error: ${errorMessage}`);
+      
       setState(prev => ({ ...prev, error, isLoading: false }));
       eventHandlers.onError?.(error);
+      operationInProgressRef.current = false;
     };
 
     const handleLoadStart = () => {
@@ -147,11 +152,6 @@ export const useAudioElement = (
     audioEl.addEventListener('loadstart', handleLoadStart);
     audioEl.addEventListener('loadeddata', handleLoadedData);
     
-    // Load initial source if provided
-    if (initialSrc && audioEl.src !== initialSrc) {
-      audioEl.src = initialSrc;
-    }
-
     // Cleanup
     return () => {
       audioEl.removeEventListener('play', handlePlay);
@@ -164,66 +164,93 @@ export const useAudioElement = (
       audioEl.removeEventListener('loadstart', handleLoadStart);
       audioEl.removeEventListener('loadeddata', handleLoadedData);
     };
-  }, [initialSrc, initialVolume, eventHandlers]);
+  }, [eventHandlers]);
 
   /**
    * Load a new audio track
    */
   const loadTrack = useCallback((src: string) => {
     if (!audioRef.current) return;
+    if (audioRef.current.src === src) return;
     
-    // Only reload if source has changed
-    if (audioRef.current.src !== src) {
-      // Reset state
-      setState(prev => ({
-        ...prev,
-        isPlaying: false,
-        currentTime: 0,
-        duration: 0,
-        src,
-        isLoading: true,
-        error: null
-      }));
+    // Update state
+    setState(prev => ({
+      ...prev,
+      isPlaying: false,
+      currentTime: 0,
+      duration: 0,
+      src,
+      isLoading: true,
+      error: null
+    }));
 
-      // Update audio element
-      audioRef.current.pause();
-      audioRef.current.src = src;
-      audioRef.current.load();
-    }
+    // Stop any current playback
+    audioRef.current.pause();
+    
+    // Reset operation flag
+    operationInProgressRef.current = false;
+    
+    // Load new source
+    audioRef.current.src = src;
+    audioRef.current.load();
   }, []);
 
   /**
    * Play audio
    */
   const play = useCallback(async () => {
-    if (!audioRef.current) return Promise.reject(new Error('Audio element not available'));
+    if (!audioRef.current) {
+      return Promise.reject(new Error('Audio element not available'));
+    }
+    
+    // Prevent multiple play calls
+    if (operationInProgressRef.current || state.isPlaying) {
+      return Promise.resolve();
+    }
+    
+    operationInProgressRef.current = true;
     
     try {
       await audioRef.current.play();
       return Promise.resolve();
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error : new Error(String(error)),
-        isPlaying: false 
-      }));
+      operationInProgressRef.current = false;
+      
+      // Only update state for non-abort errors
+      if (error instanceof Error && error.name !== 'AbortError') {
+        setState(prev => ({ 
+          ...prev, 
+          error,
+          isPlaying: false 
+        }));
+      }
+      
       return Promise.reject(error);
     }
-  }, []);
+  }, [state.isPlaying]);
 
   /**
    * Pause audio
    */
   const pause = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || operationInProgressRef.current || !state.isPlaying) return;
+    
+    operationInProgressRef.current = true;
     audioRef.current.pause();
-  }, []);
+  }, [state.isPlaying]);
 
   /**
    * Toggle play/pause
    */
   const toggle = useCallback(async () => {
-    if (!audioRef.current) return Promise.reject(new Error('Audio element not available'));
+    if (!audioRef.current) {
+      return Promise.reject(new Error('Audio element not available'));
+    }
+    
+    // Prevent concurrent operations
+    if (operationInProgressRef.current) {
+      return Promise.resolve();
+    }
     
     if (state.isPlaying) {
       pause();
@@ -239,11 +266,10 @@ export const useAudioElement = (
   const seekTo = useCallback((time: number) => {
     if (!audioRef.current) return;
     
-    // Validate time
     const safeTime = Math.max(0, Math.min(time, state.duration || 0));
-    
-    // Update audio time
     audioRef.current.currentTime = safeTime;
+    
+    // Update state directly to avoid waiting for timeupdate event
     setState(prev => ({ ...prev, currentTime: safeTime }));
   }, [state.duration]);
 
@@ -253,11 +279,10 @@ export const useAudioElement = (
   const setVolume = useCallback((volume: number) => {
     if (!audioRef.current) return;
     
-    // Validate volume
     const safeVolume = Math.max(0, Math.min(volume, 1));
-    
-    // Update audio volume
     audioRef.current.volume = safeVolume;
+    
+    // Update state directly to avoid waiting for volumechange event
     setState(prev => ({ ...prev, volume: safeVolume }));
   }, []);
 
@@ -266,8 +291,7 @@ export const useAudioElement = (
    */
   const jumpForward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
-    const newTime = state.currentTime + seconds;
-    seekTo(newTime);
+    seekTo(state.currentTime + seconds);
   }, [state.currentTime, seekTo]);
 
   /**
@@ -275,8 +299,7 @@ export const useAudioElement = (
    */
   const jumpBackward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
-    const newTime = state.currentTime - seconds;
-    seekTo(newTime);
+    seekTo(state.currentTime - seconds);
   }, [state.currentTime, seekTo]);
 
   return {

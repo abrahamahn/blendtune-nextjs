@@ -1,13 +1,11 @@
-// src\client\features\player\hooks\useKeyboardShortcuts.ts
 /**
  * @fileoverview Hook for handling keyboard shortcuts for player controls
  * @module features/player/hooks/useKeyboardShortcuts
  */
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTrackNavigation } from "./useTrackNavigation";
-import { useVolumeControl } from "./useVolumeControl";
 
 /**
  * Hook for handling keyboard shortcuts for the music player
@@ -16,9 +14,22 @@ import { useVolumeControl } from "./useVolumeControl";
  * - Arrow Up/Down: Volume +/- (with Shift: Max/Min)
  */
 export const useKeyboardShortcuts = () => {
-  const { audioRef } = usePlayer();
-  const { togglePlayPause, jumpBackward, jumpForward, previousTrack, nextTrack } = useTrackNavigation();
-  const { volume, setVolume } = useVolumeControl();
+  const { audioRef, volume, setVolume } = usePlayer();
+  const { 
+    togglePlayPause, 
+    jumpBackward, 
+    jumpForward, 
+    previousTrack, 
+    nextTrack 
+  } = useTrackNavigation();
+
+  // Use refs to avoid dependency changes triggering effect reruns
+  const volumeRef = useRef(volume);
+  
+  // Update refs when values change
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -63,7 +74,7 @@ export const useKeyboardShortcuts = () => {
           if (event.shiftKey) {
             setVolume(1); // Max volume
           } else {
-            setVolume(Math.min(1, volume + 0.05));
+            setVolume(Math.min(1, volumeRef.current + 0.05));
           }
           break;
           
@@ -72,7 +83,7 @@ export const useKeyboardShortcuts = () => {
           if (event.shiftKey) {
             setVolume(0); // Mute
           } else {
-            setVolume(Math.max(0, volume - 0.05));
+            setVolume(Math.max(0, volumeRef.current - 0.05));
           }
           break;
       }
@@ -80,7 +91,15 @@ export const useKeyboardShortcuts = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [audioRef, togglePlayPause, previousTrack, nextTrack, jumpBackward, jumpForward, volume, setVolume]);
+  }, [
+    audioRef, 
+    togglePlayPause, 
+    previousTrack, 
+    nextTrack, 
+    jumpBackward, 
+    jumpForward, 
+    setVolume
+  ]);
 };
 
 export default useKeyboardShortcuts;

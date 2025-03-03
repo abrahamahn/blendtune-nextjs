@@ -1,4 +1,3 @@
-// src\client\shared\components\icons\PlayerIcons.tsx
 /**
  * @fileoverview Centralized playback icons component
  * @module shared/components/common/PlayerIcons
@@ -46,8 +45,9 @@ const PlayerIcon: React.FC<PlayerIconProps> = ({
 }) => {
   // Special handling for repeat icon
   if (icon === faRepeat) {
-    const iconClassName = loopMode !== 'off' 
-      ? `${className} text-blue-500 dark:text-blue-500` 
+    // Modify base className to include blue color logic
+    const baseClassName = loopMode !== 'off' 
+      ? "text-blue-500 dark:text-blue-500 cursor-pointer hover:opacity-75"
       : className;
 
     return (
@@ -55,7 +55,7 @@ const PlayerIcon: React.FC<PlayerIconProps> = ({
         <FontAwesomeIcon 
           icon={icon} 
           size={size} 
-          className={iconClassName}
+          className={baseClassName}
           onClick={onClick}
         />
         {loopMode !== 'off' && (

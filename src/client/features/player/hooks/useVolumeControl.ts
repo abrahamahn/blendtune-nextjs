@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo, RefObject } from "react";
+import { useState, useCallback, useEffect, useMemo, RefObject, useRef } from "react";
 import { faVolumeLow, faVolumeXmark, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
@@ -9,23 +9,52 @@ import { usePlayer, playerActions } from "@/client/features/player/services/play
 export const useVolumeState = (initialVolume = 0.5) => {
   const { audioRef, volume: storedVolume, dispatch } = usePlayer();
   const [localVolume, setLocalVolume] = useState(storedVolume);
+  
+  // Keep track of previous non-zero volume for mute/unmute
+  const prevVolumeRef = useRef(storedVolume > 0 ? storedVolume : initialVolume);
+  
+  // Flag to prevent circular updates
+  const updatingRef = useRef(false);
+
+  // Sync local state with context state when it changes externally
+  useEffect(() => {
+    if (!updatingRef.current && storedVolume !== localVolume) {
+      setLocalVolume(storedVolume);
+    }
+  }, [storedVolume, localVolume]);
 
   /**
    * Update volume level
    */
   const setVolume = useCallback((newVolume: number) => {
-    const clampedVolume = Math.max(0, Math.min(1, newVolume));
+    // Prevent circular updates
+    if (updatingRef.current) return;
+    updatingRef.current = true;
     
-    // Update audio element volume
-    if (audioRef.current) {
-      audioRef.current.volume = clampedVolume;
+    try {
+      const clampedVolume = Math.max(0, Math.min(1, newVolume));
+      
+      // Store non-zero volume for future unmute
+      if (clampedVolume > 0) {
+        prevVolumeRef.current = clampedVolume;
+      }
+      
+      // Update audio element volume
+      if (audioRef.current) {
+        audioRef.current.volume = clampedVolume;
+      }
+      
+      // Update global state
+      dispatch(playerActions.setVolume(clampedVolume));
+      
+      // Update local state
+      setLocalVolume(clampedVolume);
+    } finally {
+      // Reset flag with slight delay to ensure updates are processed
+      setTimeout(() => {
+        updatingRef.current = false;
+      }, 0);
     }
-    
-    // Update global state
-    dispatch(playerActions.setVolume(clampedVolume));
-    
-    // Update local state
-    setLocalVolume(clampedVolume);
   }, [audioRef, dispatch]);
 
   /**
@@ -34,12 +63,13 @@ export const useVolumeState = (initialVolume = 0.5) => {
   const toggleMute = useCallback(() => {
     if (localVolume > 0) {
       // Store current volume before muting
+      prevVolumeRef.current = localVolume;
       setVolume(0);
     } else {
-      // Restore previous volume (or default to 0.5)
-      setVolume(initialVolume);
+      // Restore previous volume
+      setVolume(prevVolumeRef.current);
     }
-  }, [localVolume, initialVolume, setVolume]);
+  }, [localVolume, setVolume]);
 
   return {
     volume: localVolume,
@@ -87,6 +117,14 @@ export const useVolumeDrag = (
   setVolume: (newVolume: number) => void
 ) => {
   const [isDraggingVolume, setIsDraggingVolume] = useState(false);
+  
+  // Use refs to track values without causing re-renders
+  const volumeRef = useRef(volume);
+  
+  // Update ref when value changes
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
 
   /**
    * Calculate volume level from mouse position
@@ -120,19 +158,28 @@ export const useVolumeDrag = (
    * Attach document-level drag event listeners
    */
   const useDragListeners = (volumeBarRef: RefObject<HTMLDivElement | null>) => {
+    // Ref to store handler function
+    const handleMouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
+    
     useEffect(() => {
+      // Create handler function
+      handleMouseMoveRef.current = (e: MouseEvent) => {
+        const rect = volumeBarRef.current?.getBoundingClientRect();
+        if (rect) {
+          const newVolume = calculateVolume(e.clientY, rect);
+          setVolume(newVolume);
+        }
+        e.preventDefault();
+      };
+      
+      // Add event listener if dragging
       if (isDraggingVolume && volumeBarRef.current) {
-        const handleDocumentMouseMove = (e: MouseEvent) => {
-          const rect = volumeBarRef.current?.getBoundingClientRect();
-          if (rect) {
-            const newVolume = calculateVolume(e.clientY, rect);
-            setVolume(newVolume);
+        document.addEventListener("mousemove", handleMouseMoveRef.current);
+        return () => {
+          if (handleMouseMoveRef.current) {
+            document.removeEventListener("mousemove", handleMouseMoveRef.current);
           }
-          e.preventDefault();
         };
-        
-        document.addEventListener("mousemove", handleDocumentMouseMove);
-        return () => document.removeEventListener("mousemove", handleDocumentMouseMove);
       }
     }, [volumeBarRef]);
 
@@ -164,6 +211,14 @@ export const useVolumeWheel = (
   setVolume: (newVolume: number) => void,
   toggleVolumeVisibility: () => void
 ) => {
+  // Use refs to track values without causing re-renders
+  const volumeRef = useRef(volume);
+  
+  // Update ref when value changes
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
+
   /**
    * Handle mouse wheel volume adjustment
    */
@@ -172,17 +227,41 @@ export const useVolumeWheel = (
     e.stopPropagation();
     
     const step = 0.05;
-    const newVolume = Math.max(0, Math.min(1, volume - Math.sign(e.deltaY) * step));
+    const newVolume = Math.max(0, Math.min(1, volumeRef.current - Math.sign(e.deltaY) * step));
     setVolume(newVolume);
-  }, [volume, setVolume]);
+  }, [setVolume]);
 
   /**
    * Global wheel event handler for volume control
    */
   const useGlobalWheel = () => {
     const { isVolumeVisible } = usePlayer();
+    
+    // Function ref to avoid recreation on each render
+    const wheelHandlerRef = useRef<((e: WheelEvent) => void) | null>(null);
 
     useEffect(() => {
+      // Create or update the handler function
+      wheelHandlerRef.current = (e: WheelEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Handle volume limits
+        if (volumeRef.current === 1 && e.deltaY < 0) {
+          toggleVolumeVisibility();
+          return;
+        }
+        if (volumeRef.current === 0 && e.deltaY > 0) {
+          toggleVolumeVisibility();
+          return;
+        }
+
+        // Adjust volume
+        const step = 0.05;
+        const newVolume = Math.max(0, Math.min(1, volumeRef.current - Math.sign(e.deltaY) * step));
+        setVolume(newVolume);
+      };
+
       if (!isVolumeVisible) {
         document.body.style.overflow = "";
         return;
@@ -190,32 +269,13 @@ export const useVolumeWheel = (
 
       document.body.style.overflow = "hidden";
       
-      const handleGlobalWheel: EventListener = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const wheelEvent = e as WheelEvent;
-
-        // Handle volume limits
-        if (volume === 1 && wheelEvent.deltaY < 0) {
-          toggleVolumeVisibility();
-          return;
-        }
-        if (volume === 0 && wheelEvent.deltaY > 0) {
-          toggleVolumeVisibility();
-          return;
-        }
-
-        // Adjust volume
-        const step = 0.05;
-        const newVolume = Math.max(0, Math.min(1, volume - Math.sign(wheelEvent.deltaY) * step));
-        setVolume(newVolume);
-      };
-
       const wheelOptions = { passive: false, capture: true } as AddEventListenerOptions;
-      document.addEventListener("wheel", handleGlobalWheel, wheelOptions);
+      document.addEventListener("wheel", wheelHandlerRef.current, wheelOptions);
       
       return () => {
-        document.removeEventListener("wheel", handleGlobalWheel, wheelOptions);
+        if (wheelHandlerRef.current) {
+          document.removeEventListener("wheel", wheelHandlerRef.current, wheelOptions);
+        }
         document.body.style.overflow = "";
       };
     }, [isVolumeVisible]);
@@ -232,20 +292,38 @@ export const useVolumeWheel = (
  */
 export const useVolumeVisibility = () => {
   const { isVolumeVisible, dispatch } = usePlayer();
+  
+  // Flag to prevent circular updates
+  const updatingRef = useRef(false);
 
   /**
    * Toggle volume control visibility
    */
   const toggleVolumeVisibility = useCallback(() => {
-    dispatch(playerActions.setIsVolumeVisible(!isVolumeVisible));
+    // Prevent circular updates
+    if (updatingRef.current) return;
+    updatingRef.current = true;
+    
+    try {
+      dispatch(playerActions.setIsVolumeVisible(!isVolumeVisible));
+    } finally {
+      // Reset flag with slight delay
+      setTimeout(() => {
+        updatingRef.current = false;
+      }, 0);
+    }
   }, [isVolumeVisible, dispatch]);
 
   /**
    * Handle clicks outside volume control
    */
   const useOutsideClick = (volumeContainerRef: RefObject<HTMLDivElement | null>) => {
+    // Function ref to avoid recreation on each render
+    const clickHandlerRef = useRef<((e: MouseEvent) => void) | null>(null);
+    
     useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
+      // Create or update the handler function
+      clickHandlerRef.current = (e: MouseEvent) => {
         if (
           volumeContainerRef.current &&
           !volumeContainerRef.current.contains(e.target as Node)
@@ -255,8 +333,12 @@ export const useVolumeVisibility = () => {
       };
       
       if (isVolumeVisible) {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", clickHandlerRef.current);
+        return () => {
+          if (clickHandlerRef.current) {
+            document.removeEventListener("mousedown", clickHandlerRef.current);
+          }
+        };
       }
     }, [volumeContainerRef]);
   };

@@ -1,14 +1,13 @@
-// src\app\sounds\page.tsx
 /**
  * @fileoverview Sounds page for music discovery and playback
  * @module pages/sounds
  */
 
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { Track } from "@/shared/types/track";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTracks } from "@/client/features/tracks";
-import { Track } from "@/shared/types/track";
 
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/layout";
@@ -33,10 +32,10 @@ const Sounds: React.FC = () => {
   const { 
     currentTrack, 
     isPlaying, 
-    setCurrentTrack, 
     setTrackList, 
     togglePlay, 
-    audioRef 
+    audioRef,
+    playTrack
   } = usePlayer();
 
   // Track and filter contexts
@@ -44,40 +43,17 @@ const Sounds: React.FC = () => {
   const { filteredTracks } = useFilterContext();
   const { openSidebar, userClosedSidebar } = useRightSidebar();
 
-  // Manage track selection and playback
-  const playTrack = useCallback(
-    (selectedTrack: Track) => {
-      // Prevent rapid track switching
-      const audioElement = audioRef.current;
-      if (!audioElement) return;
+  // Handle track selection with sidebar behavior
+  const handleTrackPlay = React.useCallback((selectedTrack: Track) => {
+    // Play the track using context method
+    playTrack(selectedTrack);
+    
+    // Open sidebar unless explicitly closed
+    if (!userClosedSidebar) {
+      openSidebar();
+    }
+  }, [playTrack, openSidebar, userClosedSidebar]);
 
-      // If same track, toggle play/pause
-      if (currentTrack && selectedTrack.id === currentTrack.id) {
-        togglePlay();
-      } else {
-        // Set new track and ensure it plays
-        setCurrentTrack(selectedTrack);
-      }
-
-      // Open sidebar unless explicitly closed
-      if (!userClosedSidebar) {
-        openSidebar();
-      }
-    },
-    [
-      currentTrack, 
-      setCurrentTrack, 
-      togglePlay, 
-      audioRef, 
-      openSidebar, 
-      userClosedSidebar
-    ]
-  );
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
   // Update track list when filtered tracks change
   useEffect(() => {
     if (filteredTracks.length > 0) {
@@ -105,7 +81,7 @@ const Sounds: React.FC = () => {
         {/* New tracks display */}
         <NewTracks
           tracks={tracks}
-          playTrack={playTrack}
+          playTrack={handleTrackPlay}
           currentTrack={currentTrack}
           isPlaying={isPlaying}
         />
@@ -116,13 +92,13 @@ const Sounds: React.FC = () => {
         {/* Track catalogs */}
         <DesktopCatalog
           tracks={filteredTracks}
-          playTrack={playTrack}
-          onTitleClick={playTrack}
+          playTrack={handleTrackPlay}
+          onTitleClick={handleTrackPlay}
         />
         <MobileCatalog
           tracks={filteredTracks}
-          playTrack={playTrack}
-          onTitleClick={playTrack}
+          playTrack={handleTrackPlay}
+          onTitleClick={handleTrackPlay}
         />
       </div>
     </div>

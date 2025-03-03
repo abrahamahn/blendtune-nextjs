@@ -1,174 +1,295 @@
 /**
- * @fileoverview Updated hook for track navigation functionality using AudioService
+ * @fileoverview Fixed track navigation hook that properly maintains play state
  * @module features/player/hooks/useTrackNavigation
  */
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
 import { resetPlaybackTime, storePlaybackTime } from "../utils/storage";
+import { Track } from "@/shared/types/track";
 
 /**
- * Custom hook that provides track navigation functionality
- * Manages previous/next track navigation and loop mode cycling
- * Uses the new AudioService abstraction via PlayerProvider
+ * Complete navigation hook
  */
 export const useTrackNavigation = () => {
+  // Get player context values with minimal dependencies
   const { 
     audioRef,
     currentTrack, 
     trackList, 
     loopMode,
     currentTime,
+    isPlaying,
     dispatch,
     setTrackEndHandler,
-    seekTo
+    seekTo: playerSeekTo,
+    togglePlay,
+    play,
+    pause
   } = usePlayer();
   
+  // Store refs to prevent dependency cycles
+  const currentTrackRef = useRef(currentTrack);
+  const trackListRef = useRef(trackList);
+  const loopModeRef = useRef(loopMode);
+  const currentTimeRef = useRef(currentTime);
+  const isPlayingRef = useRef(isPlaying);
+  
+  // Track if we should auto-play the next track and what caused the track change
+  const shouldAutoPlayRef = useRef(false);
+  const trackChangeSourceRef = useRef<'manual' | 'navigation' | 'end' | null>(null);
+  
+  // Update refs when values change
+  useEffect(() => {
+    currentTrackRef.current = currentTrack;
+    trackListRef.current = trackList;
+    loopModeRef.current = loopMode;
+    currentTimeRef.current = currentTime;
+    isPlayingRef.current = isPlaying;
+  }, [currentTrack, trackList, loopMode, currentTime, isPlaying]);
+  
+  // Handle the track change logic
+  useEffect(() => {
+    if (!currentTrack) return;
+    
+    // Skip the first render
+    if (trackChangeSourceRef.current === null) {
+      trackChangeSourceRef.current = 'manual';
+      return;
+    }
+    
+    // Only handle auto-play if track changed by navigation or ended naturally
+    if (trackChangeSourceRef.current === 'navigation' || trackChangeSourceRef.current === 'end') {
+      // Small delay to ensure audio is loaded
+      const timer = setTimeout(() => {
+        if (shouldAutoPlayRef.current) {
+          play().catch(error => {
+            if (error.name !== 'AbortError') {
+              console.error("Error auto-playing track:", error);
+            }
+          });
+        }
+        
+        // Reset the flags
+        shouldAutoPlayRef.current = false;
+        trackChangeSourceRef.current = 'manual';
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentTrack, play]);
+  
   /**
-   * Saves current playback time to localStorage
+   * Save current playback position
    */
   const savePlaybackTime = useCallback(() => {
-    if (!audioRef.current || !currentTrack?.id) return;
+    if (!audioRef.current || !currentTrackRef.current?.id) return;
     
-    const time = currentTime;
+    const time = currentTimeRef.current;
     const duration = audioRef.current.duration;
-    const remainingTime = duration - time;
     
     if (!isNaN(duration) && isFinite(duration) && time > 0) {
+      const remainingTime = duration - time;
       if (remainingTime <= 45) {
-        // Reset playback time if we're near the end of the track
-        resetPlaybackTime(currentTrack.id);
+        // Reset if near the end
+        resetPlaybackTime(currentTrackRef.current.id);
       } else {
-        storePlaybackTime(currentTrack.id, time);
+        storePlaybackTime(currentTrackRef.current.id, time);
       }
     }
-  }, [audioRef, currentTrack, currentTime]);
-
+  }, [audioRef]);
+  
   /**
-   * Jump forward by a specific amount of seconds
+   * Seek to a specific time position
    */
-  const jumpForward = useCallback((seconds: number = 10) => {
-    if (!audioRef.current) return;
-    const newTime = currentTime + seconds;
-    seekTo(newTime);
-  }, [currentTime, seekTo, audioRef]);
-
+  const seekTo = useCallback((time: number) => {
+    playerSeekTo(time);
+  }, [playerSeekTo]);
+  
   /**
-   * Jump backward by a specific amount of seconds
+   * Set a track and play it immediately
    */
-  const jumpBackward = useCallback((seconds: number = 10) => {
-    if (!audioRef.current) return;
-    const newTime = currentTime - seconds;
-    seekTo(newTime);
-  }, [currentTime, seekTo, audioRef]);
-
+  const playTrack = useCallback((track: Track) => {
+    if (!track) return;
+    
+    // Save current position before changing tracks
+    savePlaybackTime();
+    
+    // Set flags to trigger auto-play
+    shouldAutoPlayRef.current = true;
+    trackChangeSourceRef.current = 'navigation';
+    
+    // Set the new track
+    dispatch(playerActions.setCurrentTrack(track));
+  }, [dispatch, savePlaybackTime]);
+  
   /**
-   * Navigate to next track in playlist
+   * Set a track without playing it
+   */
+  const selectTrack = useCallback((track: Track) => {
+    if (!track) return;
+    
+    // Save current position before changing tracks
+    savePlaybackTime();
+    
+    // Set flags to NOT trigger auto-play
+    shouldAutoPlayRef.current = false;
+    trackChangeSourceRef.current = 'navigation';
+    
+    // Set the new track
+    dispatch(playerActions.setCurrentTrack(track));
+  }, [dispatch, savePlaybackTime]);
+  
+  /**
+   * Go to next track
+   * Maintains play state - if current track is playing, next will play automatically
    */
   const nextTrack = useCallback(() => {
-    if (!trackList.length) return;
+    const tracks = trackListRef.current;
+    const current = currentTrackRef.current;
+    const wasPlaying = isPlayingRef.current;
+    
+    if (!tracks.length) return;
     savePlaybackTime();
     
-    const currentIndex = trackList.findIndex(
-      (track) => track.id === currentTrack?.id
+    const currentIndex = tracks.findIndex(
+      track => track.id === current?.id
     );
     
-    if (currentIndex < trackList.length - 1) {
-      const next = trackList[currentIndex + 1];
-      dispatch(playerActions.setCurrentTrack(next));
+    if (currentIndex < tracks.length - 1) {
+      // Set flags based on current play state
+      shouldAutoPlayRef.current = wasPlaying;
+      trackChangeSourceRef.current = 'navigation';
+      
+      // Select next track
+      dispatch(playerActions.setCurrentTrack(tracks[currentIndex + 1]));
     }
-  }, [trackList, currentTrack, dispatch, savePlaybackTime]);
-
+  }, [dispatch, savePlaybackTime]);
+  
   /**
-   * Navigate to previous track in playlist
+   * Go to previous track
+   * Maintains play state - if current track is playing, previous will play automatically
    */
   const previousTrack = useCallback(() => {
-    if (!trackList.length) return;
+    const tracks = trackListRef.current;
+    const current = currentTrackRef.current;
+    const wasPlaying = isPlayingRef.current;
+    
+    if (!tracks.length) return;
     savePlaybackTime();
     
-    const currentIndex = trackList.findIndex(
-      (track) => track.id === currentTrack?.id
+    const currentIndex = tracks.findIndex(
+      track => track.id === current?.id
     );
     
     if (currentIndex > 0) {
-      const prev = trackList[currentIndex - 1];
-      dispatch(playerActions.setCurrentTrack(prev));
+      // Set flags based on current play state
+      shouldAutoPlayRef.current = wasPlaying;
+      trackChangeSourceRef.current = 'navigation';
+      
+      // Select previous track
+      dispatch(playerActions.setCurrentTrack(tracks[currentIndex - 1]));
     }
-  }, [trackList, currentTrack, dispatch, savePlaybackTime]);
-
+  }, [dispatch, savePlaybackTime]);
+  
+  /**
+   * Jump forward by seconds
+   */
+  const jumpForward = useCallback((seconds: number = 10) => {
+    if (!audioRef.current) return;
+    seekTo(currentTimeRef.current + seconds);
+  }, [audioRef, seekTo]);
+  
+  /**
+   * Jump backward by seconds
+   */
+  const jumpBackward = useCallback((seconds: number = 10) => {
+    if (!audioRef.current) return;
+    seekTo(Math.max(0, currentTimeRef.current - seconds));
+  }, [audioRef, seekTo]);
+  
   /**
    * Cycle through loop modes (off → one → all → off)
    */
   const loopTrack = useCallback(() => {
-    if (!currentTrack) return;
+    const current = currentTrackRef.current;
+    const loop = loopModeRef.current;
+    
+    if (!current) return;
   
-    if (loopMode === "off") {
+    if (loop === "off") {
       dispatch(playerActions.setLoopMode("one"));
-      dispatch(playerActions.setLoopedTrackList([currentTrack]));
-    } else if (loopMode === "one") {
+      dispatch(playerActions.setLoopedTrackList([current]));
+    } else if (loop === "one") {
       dispatch(playerActions.setLoopMode("all"));
       dispatch(playerActions.setLoopedTrackList([]));
-    } else if (loopMode === "all") {
+    } else if (loop === "all") {
       dispatch(playerActions.setLoopMode("off"));
       dispatch(playerActions.setLoopedTrackList([]));
     }
-  }, [currentTrack, loopMode, dispatch]);
+  }, [dispatch]);
   
   /**
-   * Handle what happens when a track ends
+   * Handle track end based on loop mode
    */
   const handleTrackEnd = useCallback(() => {
-    if (!currentTrack?.id) return;
+    const current = currentTrackRef.current;
+    const tracks = trackListRef.current;
+    const loop = loopModeRef.current;
     
-    resetPlaybackTime(currentTrack.id);
-
-    if (loopMode === "one") {
+    if (!current?.id) return;
+    resetPlaybackTime(current.id);
+    
+    if (loop === "one") {
+      // Loop the same track
+      seekTo(0);
       if (audioRef.current) {
-        seekTo(0);
-        audioRef.current.play().catch((error) => {
-          if (error.name !== "AbortError") {
-            console.error("Error playing audio:", error);
+        audioRef.current.play().catch(err => {
+          // Ignore AbortError
+          if (err.name !== 'AbortError') {
+            console.error("Error replaying track:", err);
           }
         });
       }
       return;
     }
-
-    if (loopMode === "all") {
-      const currentIndex = trackList.findIndex(
-        (track) => track.id === currentTrack?.id
-      );
-      if (currentIndex === trackList.length - 1) {
-        dispatch(playerActions.setCurrentTrack(trackList[0]));
-      } else {
-        dispatch(playerActions.setCurrentTrack(trackList[currentIndex + 1]));
-      }
-      return;
-    }
-
-    // Default behavior (loopMode === "off")
-    const currentIndex = trackList.findIndex(
-      (track) => track.id === currentTrack?.id
+    
+    const currentIndex = tracks.findIndex(
+      track => track.id === current?.id
     );
-    if (currentIndex < trackList.length - 1) {
-      dispatch(playerActions.setCurrentTrack(trackList[currentIndex + 1]));
+    
+    if (loop === "all" || (currentIndex < tracks.length - 1)) {
+      // Set flags - track ended naturally, so we always want to play the next one
+      shouldAutoPlayRef.current = true;
+      trackChangeSourceRef.current = 'end';
+      
+      // Play next track or loop to first
+      if (currentIndex === tracks.length - 1 && loop === "all") {
+        dispatch(playerActions.setCurrentTrack(tracks[0]));
+      } else if (currentIndex < tracks.length - 1) {
+        dispatch(playerActions.setCurrentTrack(tracks[currentIndex + 1]));
+      }
     }
-  }, [audioRef, currentTrack, trackList, loopMode, dispatch, seekTo]);
+  }, [audioRef, dispatch, seekTo]);
   
-  // Register the track end handler with the context
+  // Register track end handler once
   useEffect(() => {
     setTrackEndHandler(() => handleTrackEnd);
   }, [handleTrackEnd, setTrackEndHandler]);
-
-  return { 
-    togglePlayPause: usePlayer().togglePlay, // Use the togglePlay from the player context
-    previousTrack, 
-    nextTrack, 
-    loopTrack, 
+  
+  return {
+    togglePlayPause: togglePlay,
+    previousTrack,
+    nextTrack,
+    jumpForward,
+    jumpBackward,
     savePlaybackTime,
     seekTo,
-    jumpForward,
-    jumpBackward
+    loopTrack,
+    playTrack,
+    selectTrack,
+    play,
+    pause
   };
 };
 

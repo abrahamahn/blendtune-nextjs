@@ -1,3 +1,4 @@
+// src\client\features\layout\rightbar\components\SimpleTrackProgress.tsx
 /**
  * @fileoverview Track metadata display component
  * @module layout/rightbar/components/TrackMetadata

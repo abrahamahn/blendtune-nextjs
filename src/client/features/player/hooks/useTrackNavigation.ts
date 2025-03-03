@@ -1,5 +1,7 @@
+// src\client\features\player\hooks\useTrackNavigation.ts
 /**
  * @fileoverview Fixed track navigation hook that properly maintains play state
+ * and uses useCallback for all functions passed to child components.
  * @module features/player/hooks/useTrackNavigation
  */
 
@@ -9,10 +11,12 @@ import { resetPlaybackTime, storePlaybackTime } from "../utils/storage";
 import { Track } from "@/shared/types/track";
 
 /**
- * Complete navigation hook
+ * Custom hook for handling track navigation and playback control.
+ * It includes functions for saving playback time, seeking, navigating tracks,
+ * and managing loop modes—all memoized via useCallback to ensure stable references.
  */
 export const useTrackNavigation = () => {
-  // Get player context values with minimal dependencies
+  // Retrieve necessary player state and control functions from context.
   const { 
     audioRef,
     currentTrack, 
@@ -28,18 +32,18 @@ export const useTrackNavigation = () => {
     pause
   } = usePlayer();
   
-  // Store refs to prevent dependency cycles
+  // Refs to store current values (avoids including them in dependency arrays)
   const currentTrackRef = useRef(currentTrack);
   const trackListRef = useRef(trackList);
   const loopModeRef = useRef(loopMode);
   const currentTimeRef = useRef(currentTime);
   const isPlayingRef = useRef(isPlaying);
   
-  // Track if we should auto-play the next track and what caused the track change
+  // Refs for auto-play behavior and track change source detection.
   const shouldAutoPlayRef = useRef(false);
   const trackChangeSourceRef = useRef<'manual' | 'navigation' | 'end' | null>(null);
   
-  // Update refs when values change
+  // Update refs whenever the corresponding state values change.
   useEffect(() => {
     currentTrackRef.current = currentTrack;
     trackListRef.current = trackList;
@@ -48,19 +52,18 @@ export const useTrackNavigation = () => {
     isPlayingRef.current = isPlaying;
   }, [currentTrack, trackList, loopMode, currentTime, isPlaying]);
   
-  // Handle the track change logic
+  // Effect to auto-play a track after navigation or natural track end.
   useEffect(() => {
     if (!currentTrack) return;
     
-    // Skip the first render
+    // On first render, default to 'manual' without auto-playing.
     if (trackChangeSourceRef.current === null) {
       trackChangeSourceRef.current = 'manual';
       return;
     }
     
-    // Only handle auto-play if track changed by navigation or ended naturally
+    // If track change was due to navigation or a natural end, auto-play after a brief delay.
     if (trackChangeSourceRef.current === 'navigation' || trackChangeSourceRef.current === 'end') {
-      // Small delay to ensure audio is loaded
       const timer = setTimeout(() => {
         if (shouldAutoPlayRef.current) {
           play().catch(error => {
@@ -69,8 +72,7 @@ export const useTrackNavigation = () => {
             }
           });
         }
-        
-        // Reset the flags
+        // Reset flags after handling auto-play.
         shouldAutoPlayRef.current = false;
         trackChangeSourceRef.current = 'manual';
       }, 100);
@@ -80,7 +82,8 @@ export const useTrackNavigation = () => {
   }, [currentTrack, play]);
   
   /**
-   * Save current playback position
+   * Save the current playback position of the track.
+   * Checks if near the end of the track and resets or stores the time accordingly.
    */
   const savePlaybackTime = useCallback(() => {
     if (!audioRef.current || !currentTrackRef.current?.id) return;
@@ -91,58 +94,62 @@ export const useTrackNavigation = () => {
     if (!isNaN(duration) && isFinite(duration) && time > 0) {
       const remainingTime = duration - time;
       if (remainingTime <= 45) {
-        // Reset if near the end
+        // Reset playback time if the track is almost finished.
         resetPlaybackTime(currentTrackRef.current.id);
       } else {
+        // Otherwise, store the current playback time.
         storePlaybackTime(currentTrackRef.current.id, time);
       }
     }
   }, [audioRef]);
   
   /**
-   * Seek to a specific time position
+   * Seek the current track to a specified time.
+   * Delegates to the playerSeekTo function provided by the player context.
    */
   const seekTo = useCallback((time: number) => {
     playerSeekTo(time);
   }, [playerSeekTo]);
   
   /**
-   * Set a track and play it immediately
+   * Set a new track and automatically play it.
+   * Saves current playback time, sets auto-play flags, and updates the current track.
    */
   const playTrack = useCallback((track: Track) => {
     if (!track) return;
     
-    // Save current position before changing tracks
+    // Save the current playback position before switching tracks.
     savePlaybackTime();
     
-    // Set flags to trigger auto-play
+    // Set flags to auto-play the new track.
     shouldAutoPlayRef.current = true;
     trackChangeSourceRef.current = 'navigation';
     
-    // Set the new track
+    // Dispatch action to update the current track.
     dispatch(playerActions.setCurrentTrack(track));
   }, [dispatch, savePlaybackTime]);
   
   /**
-   * Set a track without playing it
+   * Set a new track without auto-playing it.
+   * Useful for scenarios where the user wants to select a track for preview.
    */
   const selectTrack = useCallback((track: Track) => {
     if (!track) return;
     
-    // Save current position before changing tracks
+    // Save the current playback position before changing tracks.
     savePlaybackTime();
     
-    // Set flags to NOT trigger auto-play
+    // Disable auto-play and mark the track change as manual navigation.
     shouldAutoPlayRef.current = false;
     trackChangeSourceRef.current = 'navigation';
     
-    // Set the new track
+    // Dispatch action to update the current track.
     dispatch(playerActions.setCurrentTrack(track));
   }, [dispatch, savePlaybackTime]);
   
   /**
-   * Go to next track
-   * Maintains play state - if current track is playing, next will play automatically
+   * Navigate to the next track.
+   * Preserves the play state: if the current track was playing, the next will auto-play.
    */
   const nextTrack = useCallback(() => {
     const tracks = trackListRef.current;
@@ -152,23 +159,21 @@ export const useTrackNavigation = () => {
     if (!tracks.length) return;
     savePlaybackTime();
     
-    const currentIndex = tracks.findIndex(
-      track => track.id === current?.id
-    );
+    const currentIndex = tracks.findIndex(track => track.id === current?.id);
     
     if (currentIndex < tracks.length - 1) {
-      // Set flags based on current play state
+      // Set flags based on the current play state.
       shouldAutoPlayRef.current = wasPlaying;
       trackChangeSourceRef.current = 'navigation';
       
-      // Select next track
+      // Dispatch action to set the next track.
       dispatch(playerActions.setCurrentTrack(tracks[currentIndex + 1]));
     }
   }, [dispatch, savePlaybackTime]);
   
   /**
-   * Go to previous track
-   * Maintains play state - if current track is playing, previous will play automatically
+   * Navigate to the previous track.
+   * Preserves the play state similarly to nextTrack.
    */
   const previousTrack = useCallback(() => {
     const tracks = trackListRef.current;
@@ -178,22 +183,20 @@ export const useTrackNavigation = () => {
     if (!tracks.length) return;
     savePlaybackTime();
     
-    const currentIndex = tracks.findIndex(
-      track => track.id === current?.id
-    );
+    const currentIndex = tracks.findIndex(track => track.id === current?.id);
     
     if (currentIndex > 0) {
-      // Set flags based on current play state
+      // Set flags based on whether the track was playing.
       shouldAutoPlayRef.current = wasPlaying;
       trackChangeSourceRef.current = 'navigation';
       
-      // Select previous track
+      // Dispatch action to set the previous track.
       dispatch(playerActions.setCurrentTrack(tracks[currentIndex - 1]));
     }
   }, [dispatch, savePlaybackTime]);
   
   /**
-   * Jump forward by seconds
+   * Jump forward by a specified number of seconds (default is 10 seconds).
    */
   const jumpForward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
@@ -201,7 +204,7 @@ export const useTrackNavigation = () => {
   }, [audioRef, seekTo]);
   
   /**
-   * Jump backward by seconds
+   * Jump backward by a specified number of seconds (default is 10 seconds).
    */
   const jumpBackward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
@@ -209,7 +212,8 @@ export const useTrackNavigation = () => {
   }, [audioRef, seekTo]);
   
   /**
-   * Cycle through loop modes (off → one → all → off)
+   * Cycle through loop modes: off → one → all → off.
+   * Updates both the loop mode and the looped track list.
    */
   const loopTrack = useCallback(() => {
     const current = currentTrackRef.current;
@@ -230,7 +234,8 @@ export const useTrackNavigation = () => {
   }, [dispatch]);
   
   /**
-   * Handle track end based on loop mode
+   * Handle the end of a track.
+   * Depending on the loop mode, this may restart the current track or move to the next one.
    */
   const handleTrackEnd = useCallback(() => {
     const current = currentTrackRef.current;
@@ -241,11 +246,10 @@ export const useTrackNavigation = () => {
     resetPlaybackTime(current.id);
     
     if (loop === "one") {
-      // Loop the same track
+      // Restart the same track.
       seekTo(0);
       if (audioRef.current) {
         audioRef.current.play().catch(err => {
-          // Ignore AbortError
           if (err.name !== 'AbortError') {
             console.error("Error replaying track:", err);
           }
@@ -254,16 +258,14 @@ export const useTrackNavigation = () => {
       return;
     }
     
-    const currentIndex = tracks.findIndex(
-      track => track.id === current?.id
-    );
+    const currentIndex = tracks.findIndex(track => track.id === current?.id);
     
     if (loop === "all" || (currentIndex < tracks.length - 1)) {
-      // Set flags - track ended naturally, so we always want to play the next one
+      // For natural end or when in loop mode "all", flag auto-play.
       shouldAutoPlayRef.current = true;
       trackChangeSourceRef.current = 'end';
       
-      // Play next track or loop to first
+      // Dispatch action to move to the next track or loop back to the first.
       if (currentIndex === tracks.length - 1 && loop === "all") {
         dispatch(playerActions.setCurrentTrack(tracks[0]));
       } else if (currentIndex < tracks.length - 1) {
@@ -272,11 +274,12 @@ export const useTrackNavigation = () => {
     }
   }, [audioRef, dispatch, seekTo]);
   
-  // Register track end handler once
+  // Register the track end handler so the player knows how to proceed when a track ends.
   useEffect(() => {
     setTrackEndHandler(() => handleTrackEnd);
   }, [handleTrackEnd, setTrackEndHandler]);
   
+  // Return all memoized navigation functions to be used by player controls.
   return {
     togglePlayPause: togglePlay,
     previousTrack,

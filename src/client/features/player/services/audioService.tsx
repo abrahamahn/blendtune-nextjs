@@ -1,3 +1,4 @@
+// src/client/features/player/services/audioService.tsx
 /**
  * @fileoverview Minimal audio service that abstracts HTMLAudioElement functionality
  * @module features/player/services/audioService
@@ -53,7 +54,7 @@ export const useAudioElement = (
   // Create ref for the audio element
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
-  // Operation guard
+  // Operation guard to prevent concurrent actions
   const operationInProgressRef = useRef(false);
   
   // Audio state
@@ -94,10 +95,16 @@ export const useAudioElement = (
       operationInProgressRef.current = false;
     };
     
+    // Optimized time update: update state only if the time difference is greater than 0.5 seconds
     const handleTimeUpdate = () => {
       const currentTime = audioEl.currentTime;
-      setState(prev => ({ ...prev, currentTime }));
-      eventHandlers.onTimeUpdate?.(currentTime);
+      setState(prev => {
+        if (Math.abs(currentTime - prev.currentTime) > 0.5) {
+          eventHandlers.onTimeUpdate?.(currentTime);
+          return { ...prev, currentTime };
+        }
+        return prev;
+      });
     };
     
     const handleDurationChange = () => {
@@ -152,7 +159,7 @@ export const useAudioElement = (
     audioEl.addEventListener('loadstart', handleLoadStart);
     audioEl.addEventListener('loadeddata', handleLoadedData);
     
-    // Cleanup
+    // Cleanup event listeners on unmount
     return () => {
       audioEl.removeEventListener('play', handlePlay);
       audioEl.removeEventListener('pause', handlePause);
@@ -269,7 +276,7 @@ export const useAudioElement = (
     const safeTime = Math.max(0, Math.min(time, state.duration || 0));
     audioRef.current.currentTime = safeTime;
     
-    // Update state directly to avoid waiting for timeupdate event
+    // Update state directly to avoid waiting for the timeupdate event
     setState(prev => ({ ...prev, currentTime: safeTime }));
   }, [state.duration]);
 
@@ -282,7 +289,7 @@ export const useAudioElement = (
     const safeVolume = Math.max(0, Math.min(volume, 1));
     audioRef.current.volume = safeVolume;
     
-    // Update state directly to avoid waiting for volumechange event
+    // Update state directly to avoid waiting for the volumechange event
     setState(prev => ({ ...prev, volume: safeVolume }));
   }, []);
 

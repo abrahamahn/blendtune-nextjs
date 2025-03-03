@@ -1,3 +1,4 @@
+// src\client\features\layout\rightbar\components\SimpleTrackProgress.tsx
 /**
  * @fileoverview Simple track progress component for sidebar
  * @module layout/rightbar/components/SimpleTrackProgress

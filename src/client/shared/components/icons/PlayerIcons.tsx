@@ -1,3 +1,4 @@
+// src\client\shared\components\icons\PlayerIcons.tsx
 /**
  * @fileoverview Centralized playback icons component
  * @module shared/components/common/PlayerIcons

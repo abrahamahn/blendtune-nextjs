@@ -1,3 +1,4 @@
+// src\client\features\layout\rightbar\components\index.ts
 /**
  * @fileoverview Export all rightbar components
  * @module layout/rightbar/components

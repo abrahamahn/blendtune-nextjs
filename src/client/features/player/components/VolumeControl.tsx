@@ -1,31 +1,35 @@
+// src\client\features\player\components\VolumeControl.tsx
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useVolumeControl } from "../hooks";
+import { useThrottleFn } from "@client/shared/utils/useThrottleFn";
 
 /**
- * Displays and controls volume level with a slider
+ * Displays and controls the volume level with a slider.
+ * This version uses a throttled mouse–move handler (at ~60fps) to reduce frequent DOM measurements.
  */
 export const VolumeControl: React.FC = () => {
   const { 
     volume, 
+    setVolume, 
     volumeIcon, 
     iconTransform,
     toggleVolumeVisibility, 
-    isVolumeVisible, 
-    handleVolumeMouseDown,
-    handleVolumeWheel,
-    useDragListeners,
-    useOutsideClick,
-    useGlobalWheel
+    isVolumeVisible,
+    calculateVolume
   } = useVolumeControl();
   
   const volumeContainerRef = useRef<HTMLDivElement>(null);
   const volumeBarRef = useRef<HTMLDivElement>(null);
 
-  // Use custom hooks for various volume interactions
-  useDragListeners(volumeBarRef);
-  useOutsideClick(volumeContainerRef);
-  useGlobalWheel();
+  // Throttled mouse–move handler to update volume at ~60fps.
+  const handleVolumeMouseMove = useThrottleFn((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (volumeBarRef.current) {
+      const rect = volumeBarRef.current.getBoundingClientRect();
+      const newVolume = calculateVolume(e.clientY, rect);
+      setVolume(newVolume);
+    }
+  }, 16); // 16ms delay ~60fps
 
   return (
     <div ref={volumeContainerRef} className="relative shrink-0 flex justify-center md:w-12 mr-3">
@@ -44,8 +48,8 @@ export const VolumeControl: React.FC = () => {
       </button>
       {isVolumeVisible && (
         <div
-          onMouseDown={(e) => handleVolumeMouseDown(e, volumeBarRef)}
-          onWheel={handleVolumeWheel}
+          onMouseMove={handleVolumeMouseMove}
+          onWheel={(e) => e.preventDefault()} // Optionally throttle wheel events too
           className="volume-bar select-none cursor-pointer bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 h-28 w-6 rounded-full absolute bottom-10 right-[9px] transform z-10 flex justify-center items-center"
         >
           <div

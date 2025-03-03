@@ -1,20 +1,22 @@
+// src\client\features\player\services\playerService.tsx
 /**
  * @fileoverview Final PlayerProvider with flexible playback control
  * @module features/player/services/playerService
  */
 
 "use client";
-import React, { 
-  createContext, 
-  useContext, 
-  useReducer, 
-  ReactNode, 
-  useEffect, 
-  useState, 
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useEffect,
+  useState,
   useCallback,
   useRef,
   RefObject,
-  Dispatch
+  Dispatch,
+  useMemo
 } from 'react';
 import { Track } from '@/shared/types/track';
 import { playerReducer, initialPlayerState } from '../context/playerReducer';
@@ -24,7 +26,7 @@ import { useTracks } from "@/client/features/tracks";
 import { useAudioElement, AudioEventHandlers } from '../services/audioService';
 
 // Define PlayerAction type from action creators
-export type PlayerAction = 
+export type PlayerAction =
   | ReturnType<typeof playerActions.setCurrentTrack>
   | ReturnType<typeof playerActions.setIsPlaying>
   | ReturnType<typeof playerActions.setTrackList>
@@ -69,23 +71,24 @@ export interface PlayerContextType extends PlayerState {
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 /**
- * Player Provider component
+ * Player Provider component that manages playback state and control functions.
+ * It also memoizes the context value to prevent unnecessary re-renders of context consumers.
  */
 export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize player state and dispatch
+  // Initialize player state and dispatch using a reducer
   const [state, dispatch] = useReducer(playerReducer, initialPlayerState);
   const { tracks } = useTracks();
   
-  // Track end handler to prevent circular dependencies
+  // State for handling track end events to avoid circular dependencies
   const [trackEndHandler, setTrackEndHandler] = useState<() => void>(() => () => {});
   
-  // Track initialization flag
+  // Ref to track initialization status (one-time setup)
   const isInitializedRef = useRef(false);
   
-  // Refs to track previous values
+  // Ref to store the previous track to detect changes
   const prevTrackRef = useRef<Track | undefined>(undefined);
   
-  // Track auto-play flag
+  // Ref flag to determine if auto-play should occur on track load
   const shouldAutoPlayRef = useRef(false);
   
   // Define audio event handlers with minimal dependencies
@@ -110,13 +113,13 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       dispatch(playerActions.setVolume(volume));
     },
     onError: (error: Error) => {
-      // Only log non-abort errors
+      // Only log errors that are not abort-related
       if (error.name !== 'AbortError') {
         console.error("Audio playback error:", error);
       }
     },
     onLoaded: () => {
-      // Restore saved time if available
+      // Restore saved playback time if available
       if (state.currentTrack?.id) {
         const savedTime = getPlaybackTime(state.currentTrack.id);
         if (savedTime > 0 && audioRef.current) {
@@ -127,7 +130,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         }
       }
       
-      // Auto-play if flag is explicitly set
+      // Auto-play the track if flagged to do so
       if (shouldAutoPlayRef.current) {
         setTimeout(() => {
           play().catch(error => {
@@ -135,13 +138,13 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
               console.error("Error auto-playing after load:", error);
             }
           });
-          shouldAutoPlayRef.current = false; // Reset flag after use
+          shouldAutoPlayRef.current = false; // Reset flag after auto-play
         }, 50);
       }
     }
   };
   
-  // Initialize audio service with handlers
+  // Initialize audio service using a custom hook
   const { 
     audioRef, 
     play, 
@@ -152,38 +155,39 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     loadTrack
   } = useAudioElement('', state.volume, audioEventHandlers);
 
-  // One-time initialization effect
+  // One-time initialization effect for setting default track and track list
   useEffect(() => {
     if (isInitializedRef.current) return;
     
     if (tracks.length > 0 && !state.currentTrack) {
       isInitializedRef.current = true;
       
-      // Set the first track and track list, but don't trigger audio loading yet
+      // Set the first track as the current track and update the track list
       dispatch(playerActions.setCurrentTrack(tracks[0]));
       dispatch(playerActions.setTrackList(tracks));
     }
   }, [tracks, state.currentTrack]);
 
-  // Effect to load audio when track changes
+  // Effect to load new audio when the current track changes
   useEffect(() => {
-    // Skip if no current track
+    // If there is no current track or file, do nothing
     if (!state.currentTrack?.file) return;
     
-    // Skip if track hasn't actually changed
+    // Prevent re-loading if the track hasn't changed
     if (prevTrackRef.current === state.currentTrack) return;
     
-    // Update track reference
+    // Update the previous track ref
     prevTrackRef.current = state.currentTrack;
     
-    // Load new audio source
+    // Load new audio source based on the current track's file property
     const newSrc = `/audio/tracks/${state.currentTrack.file}`;
     dispatch(playerActions.setSharedAudioUrl(newSrc));
     loadTrack(newSrc);
   }, [state.currentTrack, loadTrack]);
 
   /**
-   * Set current track in player state with optional auto-play flag
+   * Sets the current track in the player state.
+   * Optionally triggers auto-play if the second parameter is true.
    */
   const setCurrentTrack = useCallback((track: Track | undefined, autoPlay: boolean = false) => {
     if (track === state.currentTrack) return;
@@ -195,10 +199,11 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   }, [state.currentTrack]);
 
   /**
-   * Play a specific track - convenient method for catalog components
+   * Plays a specific track.
+   * If the track is already current, it toggles play/pause.
+   * Otherwise, it sets the track with auto-play enabled.
    */
   const playTrack = useCallback((track: Track) => {
-    // If it's the current track, just toggle play/pause
     if (track.id === state.currentTrack?.id) {
       toggle().catch(error => {
         if (error.name !== 'AbortError') {
@@ -208,19 +213,18 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       return;
     }
     
-    // Otherwise, set track with auto-play
     setCurrentTrack(track, true);
   }, [state.currentTrack, toggle, setCurrentTrack]);
 
   /**
-   * Update track list in player state
+   * Updates the track list in the player state.
    */
   const setTrackList = useCallback((tracks: Track[]) => {
     dispatch(playerActions.setTrackList(tracks));
   }, []);
 
   /**
-   * Toggle play/pause for current track
+   * Toggles play/pause for the current track.
    */
   const handleTogglePlay = useCallback(() => {
     toggle().catch(error => {
@@ -230,8 +234,8 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     });
   }, [toggle]);
 
-  // Combine all context values and methods
-  const contextValue: PlayerContextType = {
+  // Memoize the context value to prevent unnecessary re-renders of consumers.
+  const contextValue: PlayerContextType = useMemo(() => ({
     ...state,
     audioRef,
     dispatch,
@@ -244,7 +248,20 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     seekTo,
     setTrackEndHandler,
     playTrack
-  };
+  }), [
+    state,
+    audioRef,
+    dispatch,
+    setCurrentTrack,
+    setTrackList,
+    handleTogglePlay,
+    play,
+    pause,
+    setVolume,
+    seekTo,
+    setTrackEndHandler,
+    playTrack
+  ]);
 
   return (
     <PlayerContext.Provider value={contextValue}>
@@ -254,7 +271,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 };
 
 /**
- * Custom hook for accessing player context
+ * Custom hook for accessing the player context.
  */
 export const usePlayer = (): PlayerContextType => {
   const context = useContext(PlayerContext);
@@ -264,5 +281,5 @@ export const usePlayer = (): PlayerContextType => {
   return context;
 };
 
-// Re-export actions for convenience
+// Re-export player actions for convenience
 export { playerActions } from '../context/playerActions';

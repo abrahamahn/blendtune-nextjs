@@ -1,3 +1,4 @@
+// src\client\features\player\hooks\useVolumeControl.ts
 import { useState, useCallback, useEffect, useMemo, RefObject, useRef } from "react";
 import { faVolumeLow, faVolumeXmark, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -351,6 +352,18 @@ export const useVolumeVisibility = () => {
 };
 
 /**
+ * Calculates volume based on the vertical mouse position and the element's bounding rectangle.
+ *
+ * @param clientY The vertical mouse position (in client coordinates).
+ * @param rect The bounding rectangle of the volume bar element.
+ * @returns A clamped volume value between 0 and 1.
+ */
+export const calculateVolume = (clientY: number, rect: DOMRect): number => {
+  const newVolume = 1 - (clientY - rect.top) / rect.height;
+  return Math.max(0, Math.min(1, newVolume));
+};
+
+/**
  * Combines all volume control hooks
  */
 export const useVolumeControl = () => {
@@ -369,7 +382,8 @@ export const useVolumeControl = () => {
     ...volumeDisplay,
     ...volumeVisibility,
     ...volumeDrag,
-    ...volumeWheel
+    ...volumeWheel,
+    calculateVolume
   };
 };
 

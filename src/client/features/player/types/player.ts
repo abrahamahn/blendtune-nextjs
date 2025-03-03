@@ -1,3 +1,4 @@
+// src\client\features\player\types\player.ts
 /**
  * @fileoverview Type definitions for player context
  * @module features/player/types/player

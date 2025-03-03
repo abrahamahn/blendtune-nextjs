@@ -1,3 +1,4 @@
+// src\client\features\player\hooks\useKeyboardShortcuts.ts
 /**
  * @fileoverview Hook for handling keyboard shortcuts for player controls
  * @module features/player/hooks/useKeyboardShortcuts

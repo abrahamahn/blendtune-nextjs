@@ -5,8 +5,7 @@
  */
 
 "use client";
-import React from "react";
-import { usePlayer } from "@/client/features/player/services/playerService";
+import React, { Suspense }  from "react";
 import { useKeyboardShortcuts, useVolumeControl } from "../hooks";
 
 import PlayerControls from "./PlayerControls";
@@ -36,8 +35,12 @@ const MusicPlayer: React.FC = () => {
 
           {/* Track Progress and Volume */}
           <div className="flex flex-row w-1/2 h-full items-center px-4">
-            <TrackProgress />
-            <VolumeControl />
+            <Suspense fallback={<div>Loading additional components...</div>}>
+
+              <TrackProgress />
+              <VolumeControl />
+            </Suspense>
+
           </div>
 
           {/* Track Info & Action Buttons */}

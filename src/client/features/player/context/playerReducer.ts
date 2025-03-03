@@ -4,7 +4,7 @@
  * @module features/player/context/playerReducer
  */
 
-import { PlayerState, PlayerAction } from '../types/player';
+import { PlayerState, PlayerAction } from '../types/contextType';
 
 /**
  * Initial state for the player

@@ -12,7 +12,7 @@ export type {
   PlayerState,
   PlayerAction,
   PlayerContextType
-} from './player';
+} from './contextType';
 
 // Re-export audio service
 export { 

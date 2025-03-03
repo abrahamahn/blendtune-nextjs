@@ -11,7 +11,8 @@ import { useTracks } from "@/client/features/tracks";
 
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/layout";
-import { MobileCatalog, DesktopCatalog, NewTracks } from "@sounds/catalog/components";
+import { NewTracks } from "@sounds/catalog/components";
+import { MobileCatalog, DesktopCatalog } from "@sounds/catalog/layouts";
 import { MobileFilter, DesktopFilter } from "@sounds/filters/layout";
 import { useRightSidebar } from "@layout/rightbar/context";
 import { useFilterContext } from '@sounds/filters/context';

@@ -1,4 +1,4 @@
-// src\client\features\sounds\filters\context.tsx
+// src/client/features/sounds/filters/context.tsx
 import React, { 
   createContext, 
   useContext, 
@@ -140,9 +140,6 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   // Get track metadata using the dedicated hook from keywords feature
   const { artistList, moodList, instrumentList, keywordList } = useTrackMetadata(tracks);
 
-  // Filtered tracks state maintained in context
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
-  
   // Tempo filter state
   const [minTempo, setMinTempo] = useState<number>(FILTER_DEFAULTS.MIN_TEMPO);
   const [maxTempo, setMaxTempo] = useState<number>(FILTER_DEFAULTS.MAX_TEMPO);
@@ -154,7 +151,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   const [selectedScale, setSelectedScale] = useState<string>(KEY_CONSTANTS.DEFAULT_SCALE);
   const [keyFilterCombinations, setKeyFilterCombinations] = useState<KeyFilterCombination[]>([]);
   
-  // Move local state for filters that were previously in Redux
+  // Other filter states
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
@@ -170,64 +167,47 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   const [sortBy, setSortBy] = useState<string>('Newest');
 
   /**
-   * Toggles a filter's open/closed state
-   * 
-   * @param {string} filterName - The name of the filter to toggle
+   * Toggles a filter's open/closed state.
    */
   const toggleFilter = useCallback((filterName: string) => {
     setOpenFilter(prev => prev === filterName ? null : filterName);
   }, []);
   
   /**
-   * Handles sorting when a new sort option is selected.
+   * Handles sorting by updating the sort option.
    */
-  const handleSortChange = useCallback(
-    (option: string) => {
-      setSortBy(option);
-      const sorted = sortTracks(filteredTracks, option);
-      setFilteredTracks(sorted);
-    },
-    [filteredTracks]
-  );
-  
+  const handleSortChange = useCallback((option: string) => {
+    setSortBy(option);
+  }, []);
+
   /**
-   * Clears all filter selections and resets to defaults
+   * Clears all filter selections and resets to defaults.
    */
   const clearAllFilters = useCallback(() => {
-    // Reset tempo filters
     setMinTempo(FILTER_DEFAULTS.MIN_TEMPO);
     setMaxTempo(FILTER_DEFAULTS.MAX_TEMPO);
     setIncludeHalfTime(FILTER_DEFAULTS.INCLUDE_HALF_TIME);
     setIncludeDoubleTime(FILTER_DEFAULTS.INCLUDE_DOUBLE_TIME);
-    
-    // Reset key filters
     setSelectedKeys('');
     setSelectedScale(KEY_CONSTANTS.DEFAULT_SCALE);
     setKeyFilterCombinations([]);
-    
-    // Reset other filters
     setSelectedCategory('');
     setSelectedGenres([]);
     setSelectedKeywords([]);
     setSelectedArtists([]);
     setSelectedInstruments([]);
     setSelectedMoods([]);
-    
-    // Reset UI state
     setOpenFilter(null);
   }, []);
 
   /**
-   * Filters tracks based on selected criteria.
-   * - Category, tempo, key, genre, artist, instrument, mood, and keyword filters.
-   * - Updates the `filteredTracks` state after applying filters.
+   * Compute the filtered (and sorted) tracks based on current filter criteria.
    */
-  const applyAllFilters = useCallback(() => {
+  const filteredTracks = useMemo(() => {
     // Filter by category first
     const categoryFiltered = tracks.filter((track) =>
       categoryFilter(track, selectedCategory)
     );
-
     // Apply remaining filters
     const filtered = categoryFiltered.filter((track) => {
       const tempoPass = tempoFilter(
@@ -243,7 +223,6 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
       const instrumentPass = instrumentFilter(track, selectedInstruments);
       const moodPass = moodFilter(track, selectedMoods);
       const keywordPass = keywordFilter(track, selectedKeywords);
-
       return (
         tempoPass &&
         keyPass &&
@@ -254,10 +233,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
         keywordPass
       );
     });
-
-    // Apply sorting
-    const sortedFiltered = sortTracks(filtered, sortBy);
-    setFilteredTracks(sortedFiltered);
+    return sortTracks(filtered, sortBy);
   }, [
     tracks,
     selectedCategory,
@@ -274,26 +250,19 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     sortBy
   ]);
 
-  // Reapply filters whenever the track list or filter criteria change
+  // Whenever the computed filtered tracks change, update the parent track list.
   useEffect(() => {
-    applyAllFilters();
-  }, [tracks, applyAllFilters]);
-
-  // Update track list in Tracks context with filtered results
-  useEffect(() => {
-    if (filteredTracks.length > 0) {
-      setTrackList(filteredTracks);
-    }
+    setTrackList(filteredTracks);
   }, [filteredTracks, setTrackList]);
 
   const contextValue = useMemo(() => ({
-    // Unique filter options from keywords feature
+    // Unique filter options
     artistList,
     moodList,
     instrumentList,
     keywordList,
     
-    // Filter state
+    // Filter state values
     minTempo,
     maxTempo,
     includeHalfTime,
@@ -311,7 +280,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     openSortFilter,
     sortBy,
     
-    // Setters
+    // Setters and actions
     setMinTempo,
     setMaxTempo,
     setIncludeHalfTime,
@@ -329,20 +298,18 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     setOpenSortFilter,
     setSortBy,
     handleSortChange,
-    
-    // Actions
     clearAllFilters,
     toggleFilter,
     
-    // Filtered and sorted tracks
+    // Derived filtered tracks
     filteredTracks,
   }), [
     artistList, moodList, instrumentList, keywordList,
     minTempo, maxTempo, includeHalfTime, includeDoubleTime,
     selectedKeys, selectedScale, keyFilterCombinations,
     selectedCategory, selectedGenres, selectedArtists, selectedInstruments, selectedMoods, selectedKeywords,
-    openFilter, openSortFilter, sortBy, setSortBy, handleSortChange,
-    clearAllFilters, toggleFilter,
+    openFilter, openSortFilter, sortBy,
+    handleSortChange, clearAllFilters, toggleFilter,
     filteredTracks
   ]);
   

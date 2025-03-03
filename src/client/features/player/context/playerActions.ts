@@ -6,10 +6,6 @@
 
 import { Track } from '@/shared/types/track';
 
-/**
- * Centralized action creators for player context
- * Provides type-safe, reusable methods for state mutations
- */
 export const playerActions = {
   /**
    * Create an action to set the current track
@@ -99,5 +95,18 @@ export const playerActions = {
   setSharedAudioUrl: (payload: string) => ({ 
     type: 'SET_SHARED_AUDIO_URL' as const, 
     payload 
+  }),
+
+  /**
+   * Create an action to set a playback error for robust error handling
+   * @param payload Error details including type, message, and recoverability
+   */
+  setPlaybackError: (payload: { 
+    type: string; 
+    message: string; 
+    recoverable: boolean; 
+  }) => ({
+    type: 'SET_PLAYBACK_ERROR' as const,
+    payload,
   }),
 };

@@ -12,9 +12,8 @@ import {
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 import { Artwork, Watermark } from "@components/common";
-import EqualizerIcon from "@/client/shared/components/icons/EqualizerIcon";
-import { usePlayer } from "@/client/features/player/services/playerService";
-import { PlayerIcons } from '@/client/shared/components/icons';
+import { usePlayer } from "@player/services/playerService";
+import { PlayerIcons, EqualizerIcon } from '@client/shared/components/icons';
 
 /**
  * Props definition for the DesktopCatalog component.

@@ -1,7 +1,7 @@
 // src\client\features\sounds\catalog\components\NewTracks.tsx
 
 import React from "react";
-import TrackCard from "@/client/features/sounds/catalog/layouts/TrackCard";
+import TrackCard from "@/client/features/sounds/catalog/components/TrackCard";
 import { useTracks } from "@/client/features/tracks";
 import useTrackPlayback from "@/client/features/sounds/catalog/hooks/useTrackPlayback";
 

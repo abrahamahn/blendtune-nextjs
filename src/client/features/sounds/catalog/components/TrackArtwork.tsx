@@ -1,3 +1,4 @@
+// src\client\features\sounds\catalog\components\TrackArtwork.tsx
 import React from "react";
 import { Artwork, Watermark } from "@components/common";
 import { PlayerIcons } from "@/client/shared/components/icons";

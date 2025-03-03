@@ -7,7 +7,7 @@ import { useTracks } from "@/client/features/tracks";
 
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/layout";
-import { NewTracks } from "@sounds/catalog/components";
+import { NewTracks } from "@sounds/catalog/layouts";
 import { CatalogProvider } from "@sounds/catalog";
 import { MobileFilter, DesktopFilter } from "@sounds/filters/layout";
 import { useFilterContext } from '@sounds/filters/context';

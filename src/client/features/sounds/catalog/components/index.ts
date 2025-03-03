@@ -1,7 +1,7 @@
 // src\client\features\sounds\catalog\components\index.ts
 
 // Export component files
-export { default as NewTracks } from './NewTracks';
+export { default as TrackCard } from './TrackCard';
 export { default as TrackArtwork } from './TrackArtwork';
 export { default as TrackActions } from './TrackActions';
 

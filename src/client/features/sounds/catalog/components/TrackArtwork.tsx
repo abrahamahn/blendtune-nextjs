@@ -23,7 +23,7 @@ const TrackArtwork: React.FC<TrackArtworkProps> = ({
     style={{ width: `${width}px`, height: `${height}px` }}
   >
     <div 
-      className="p-0 dark:p-1.5 shadow-lg dark:shadow-none rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105"
+      className="p-0 shadow-lg dark:shadow-none rounded-md transition-transform duration-300 ease-in-out group-hover:scale-105"
       style={{ width: `${width}px`, height: `${height}px` }}
     >
       <Artwork

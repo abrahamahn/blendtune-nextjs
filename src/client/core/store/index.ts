@@ -3,7 +3,6 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import sessionReducer from "@auth/store/sessionSlice";
 import userReducer from "@auth/store/userSlice";
 import keywordReducer from "@/client/features/sounds/filters/store/filterSlice";
-import playbackReducer from "@player/store/playbackSlice";
 
 // Group authentication-related reducers
 const authReducer = combineReducers({
@@ -16,16 +15,10 @@ const tracksReducer = combineReducers({
   selected: keywordReducer,
 });
 
-// Group audio playback-related reducers
-const audioReducer = combineReducers({
-  playback: playbackReducer,
-});
-
 // Combine all domain reducers into a single root reducer
 const rootReducer = combineReducers({
   auth: authReducer,
   tracks: tracksReducer,
-  audio: audioReducer,
 });
 
 // Configure the Redux store

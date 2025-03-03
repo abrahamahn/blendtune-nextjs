@@ -1,26 +1,27 @@
-// src\client\features\player\hooks\useTrackNavigation.ts
 /**
- * @fileoverview Hook for track navigation functionality
+ * @fileoverview Updated hook for track navigation functionality using AudioService
  * @module features/player/hooks/useTrackNavigation
  */
 
 import { useCallback, useEffect } from "react";
 import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
-import { storePlaybackTime, resetPlaybackTime } from "../utils/storage";
+import { resetPlaybackTime, storePlaybackTime } from "../utils/storage";
 
 /**
  * Custom hook that provides track navigation functionality
  * Manages previous/next track navigation and loop mode cycling
+ * Uses the new AudioService abstraction via PlayerProvider
  */
 export const useTrackNavigation = () => {
   const { 
-    audioRef, 
+    audioRef,
     currentTrack, 
     trackList, 
     loopMode,
-    isPlaying,
+    currentTime,
     dispatch,
-    setTrackEndHandler
+    setTrackEndHandler,
+    seekTo
   } = usePlayer();
   
   /**
@@ -28,9 +29,11 @@ export const useTrackNavigation = () => {
    */
   const savePlaybackTime = useCallback(() => {
     if (!audioRef.current || !currentTrack?.id) return;
-    const time = audioRef.current.currentTime;
+    
+    const time = currentTime;
     const duration = audioRef.current.duration;
     const remainingTime = duration - time;
+    
     if (!isNaN(duration) && isFinite(duration) && time > 0) {
       if (remainingTime <= 45) {
         // Reset playback time if we're near the end of the track
@@ -39,62 +42,25 @@ export const useTrackNavigation = () => {
         storePlaybackTime(currentTrack.id, time);
       }
     }
-  }, [audioRef, currentTrack]);
-
-  /**
-   * Toggles play/pause state
-   */
-  const togglePlayPause = useCallback(() => {
-    if (!audioRef.current) return;
-    
-    if (isPlaying) {
-      audioRef.current.pause();
-      dispatch(playerActions.setIsPlaying(false));
-    } else {
-      audioRef.current
-        .play()
-        .catch((error) => console.error("❌ Error Playing:", error));
-      dispatch(playerActions.setIsPlaying(true));
-    }
-  }, [audioRef, isPlaying, dispatch]);
-
-  /**
-   * Seek to a specific time position in the track
-   */
-  const seekTo = useCallback((timeInSeconds: number) => {
-    if (!audioRef.current) return;
-    
-    // Ensure the time is within valid bounds
-    const duration = audioRef.current.duration;
-    const safeTime = Math.max(0, Math.min(duration, timeInSeconds));
-    
-    // Set the current time
-    audioRef.current.currentTime = safeTime;
-    dispatch(playerActions.setCurrentTime(safeTime));
-    
-    // Store the updated position
-    if (currentTrack?.id) {
-      storePlaybackTime(currentTrack.id, safeTime);
-    }
-  }, [audioRef, currentTrack, dispatch]);
+  }, [audioRef, currentTrack, currentTime]);
 
   /**
    * Jump forward by a specific amount of seconds
    */
   const jumpForward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
-    const newTime = audioRef.current.currentTime + seconds;
+    const newTime = currentTime + seconds;
     seekTo(newTime);
-  }, [audioRef, seekTo]);
+  }, [currentTime, seekTo, audioRef]);
 
   /**
    * Jump backward by a specific amount of seconds
    */
   const jumpBackward = useCallback((seconds: number = 10) => {
     if (!audioRef.current) return;
-    const newTime = audioRef.current.currentTime - seconds;
+    const newTime = currentTime - seconds;
     seekTo(newTime);
-  }, [audioRef, seekTo]);
+  }, [currentTime, seekTo, audioRef]);
 
   /**
    * Navigate to next track in playlist
@@ -102,9 +68,11 @@ export const useTrackNavigation = () => {
   const nextTrack = useCallback(() => {
     if (!trackList.length) return;
     savePlaybackTime();
+    
     const currentIndex = trackList.findIndex(
       (track) => track.id === currentTrack?.id
     );
+    
     if (currentIndex < trackList.length - 1) {
       const next = trackList[currentIndex + 1];
       dispatch(playerActions.setCurrentTrack(next));
@@ -117,9 +85,11 @@ export const useTrackNavigation = () => {
   const previousTrack = useCallback(() => {
     if (!trackList.length) return;
     savePlaybackTime();
+    
     const currentIndex = trackList.findIndex(
       (track) => track.id === currentTrack?.id
     );
+    
     if (currentIndex > 0) {
       const prev = trackList[currentIndex - 1];
       dispatch(playerActions.setCurrentTrack(prev));
@@ -130,7 +100,7 @@ export const useTrackNavigation = () => {
    * Cycle through loop modes (off → one → all → off)
    */
   const loopTrack = useCallback(() => {
-    if (!audioRef.current || !currentTrack) return;
+    if (!currentTrack) return;
   
     if (loopMode === "off") {
       dispatch(playerActions.setLoopMode("one"));
@@ -142,7 +112,7 @@ export const useTrackNavigation = () => {
       dispatch(playerActions.setLoopMode("off"));
       dispatch(playerActions.setLoopedTrackList([]));
     }
-  }, [audioRef, currentTrack, loopMode, dispatch]);
+  }, [currentTrack, loopMode, dispatch]);
   
   /**
    * Handle what happens when a track ends
@@ -154,7 +124,7 @@ export const useTrackNavigation = () => {
 
     if (loopMode === "one") {
       if (audioRef.current) {
-        audioRef.current.currentTime = 0;
+        seekTo(0);
         audioRef.current.play().catch((error) => {
           if (error.name !== "AbortError") {
             console.error("Error playing audio:", error);
@@ -183,7 +153,7 @@ export const useTrackNavigation = () => {
     if (currentIndex < trackList.length - 1) {
       dispatch(playerActions.setCurrentTrack(trackList[currentIndex + 1]));
     }
-  }, [audioRef, currentTrack, trackList, loopMode, dispatch]);
+  }, [audioRef, currentTrack, trackList, loopMode, dispatch, seekTo]);
   
   // Register the track end handler with the context
   useEffect(() => {
@@ -191,7 +161,7 @@ export const useTrackNavigation = () => {
   }, [handleTrackEnd, setTrackEndHandler]);
 
   return { 
-    togglePlayPause,
+    togglePlayPause: usePlayer().togglePlay, // Use the togglePlay from the player context
     previousTrack, 
     nextTrack, 
     loopTrack, 

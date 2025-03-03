@@ -45,19 +45,6 @@ export {
   default as keywordReducer,
 } from "@/client/features/sounds/filters/store/filterSlice";
 
-// Audio playback slice
-export {
-  setCurrentTrack,
-  setIsPlaying,
-  setTrackList,
-  setLoopedTrackList,
-  setLoopMode,
-  setIsVolumeVisible,
-  setCurrentTime,
-  setTrackDuration,
-  default as playbackReducer,
-} from "@player/store/playbackSlice";
-
 // Exporting types for type safety
 export type { SessionState } from "@auth/store/sessionSlice";
 export type { UserState } from "@auth/store/userSlice";

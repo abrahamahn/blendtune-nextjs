@@ -1,3 +1,4 @@
+// src\client\features\layout\rightbar\components\InnerLayer.tsx
 /**
 * @fileoverview InnerLayer component for right sidebar displaying track details and visualizer
 * @module layout/rightbar/InnerLayer
@@ -5,13 +6,9 @@
 
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { usePlayer } from "@/client/features/player/services/playerService";
-import { useSelector, useDispatch } from "react-redux";
-import { setCurrentTime, setTrackDuration } from "@store/slices";
-import { RootState } from '@core/store';
+import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
-import { Track } from "@/shared/types/track";
 import Equalizer from "@visualizer/components/Equalizer";
 import { colorExtractor } from "@utils/colorExtractor";
 import { Artwork, Watermark } from "@components/common/";
@@ -22,11 +19,13 @@ import { SimpleTrackProgress } from "@layout/rightbar/components/SimpleTrackProg
 * InnerLayer component providing track details and audio visualization
 */
 const InnerLayer: React.FC = () => {
-  const dispatch = useDispatch();
-  const { audioRef } = usePlayer();
-  const currentTrack = useSelector(
-    (state: RootState) => state.audio.playback.currentTrack as Track | undefined
-  );
+  const { 
+    audioRef, 
+    currentTrack, 
+    currentTime, 
+    trackDuration, 
+    dispatch 
+  } = usePlayer();
 
   // Theme and color state
   const [themePreference, setThemePreference] = useState("dark");
@@ -35,10 +34,6 @@ const InnerLayer: React.FC = () => {
   // Equalizer dimensions
   const equalizerContainerRef = useRef<HTMLDivElement>(null);
   const [equalizerWidth, setEqualizerWidth] = useState(0);
-
-  // Track progress from Redux store
-  const currentTime = useSelector((state: RootState) => state.audio.playback.currentTime);
-  const trackDuration = useSelector((state: RootState) => state.audio.playback.trackDuration);
 
   // Theme and color effect
   useEffect(() => {
@@ -83,11 +78,11 @@ const InnerLayer: React.FC = () => {
   // Audio time update effect
   useEffect(() => {
     const handleTimeUpdate = () => {
-      dispatch(setCurrentTime(audioRef.current?.currentTime || 0));
+      dispatch(playerActions.setCurrentTime(audioRef.current?.currentTime || 0));
     };
 
     const handleLoadedMetadata = () => {
-      dispatch(setTrackDuration(audioRef.current?.duration || 0));
+      dispatch(playerActions.setTrackDuration(audioRef.current?.duration || 0));
     };
 
     const currentAudioRef = audioRef.current;

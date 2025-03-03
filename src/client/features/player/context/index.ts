@@ -4,4 +4,4 @@
  * @module features/player/context
  */
 
-export type { PlayerState, PlayerAction, PlayerContextType } from './playerTypes';
+export type { PlayerState, PlayerAction, PlayerContextType } from '../types/player';

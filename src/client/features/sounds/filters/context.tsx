@@ -23,9 +23,6 @@ import {
 import { sortTracks } from '@/client/features/sounds/filters/utils/sortLogic';
 import { useTracks } from "@/client/features/tracks";
 import { useTrackMetadata } from "@tracks/keywords/hooks";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@core/store";
-import { setTrackList } from "@store/slices";
 
 /**
  * Type for key filter combinations
@@ -101,6 +98,7 @@ interface FilterContextState {
   // Combined actions
   clearAllFilters: () => void;
   toggleFilter: (filterName: string) => void;
+  setSelectedCategory: (category: string) => void;
 
   // Filtered and sorted tracks based on applied filters
   filteredTracks: Track[];
@@ -136,10 +134,8 @@ export const useFilterContext = (): FilterContextState => {
  * @returns {JSX.Element} The provider component
  */
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
-  const dispatch = useDispatch();
-  
-  // Get tracks from the TracksProvider using the hook
-  const { tracks } = useTracks();
+  // Get tracks and setTrackList from the TracksProvider using the hook
+  const { tracks, setTrackList } = useTracks();
 
   // Get track metadata using the dedicated hook from keywords feature
   const { artistList, moodList, instrumentList, keywordList } = useTrackMetadata(tracks);
@@ -158,16 +154,10 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   const [selectedScale, setSelectedScale] = useState<string>(KEY_CONSTANTS.DEFAULT_SCALE);
   const [keyFilterCombinations, setKeyFilterCombinations] = useState<KeyFilterCombination[]>([]);
   
-  // Get Redux state
-  const selectedCategory = useSelector(
-    (state: RootState) => state.tracks.selected.category
-  );
-  const selectedGenres = useSelector(
-    (state: RootState) => state.tracks.selected.genres
-  );
-  const selectedKeywords = useSelector(
-    (state: RootState) => state.tracks.selected.keywords
-  );
+  // Move local state for filters that were previously in Redux
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   
   // Local state for filters not in Redux
   const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
@@ -186,21 +176,6 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
    */
   const toggleFilter = useCallback((filterName: string) => {
     setOpenFilter(prev => prev === filterName ? null : filterName);
-  }, []);
-  
-  /**
-   * Redux dispatch wrapper functions for selected genres and keywords
-   */
-  // We don't directly modify Redux state for genres and keywords
-  // These are likely handled by dedicated components elsewhere
-  const setSelectedGenresWrapper = useCallback((genres: string[]) => {
-    console.warn('setSelectedGenres called in FilterContext, but this may not update Redux state');
-    // This is a placeholder - the actual Redux update likely happens elsewhere
-  }, []);
-
-  const setSelectedKeywordsWrapper = useCallback((keywords: string[]) => {
-    console.warn('setSelectedKeywords called in FilterContext, but this may not update Redux state');
-    // This is a placeholder - the actual Redux update likely happens elsewhere
   }, []);
   
   /**
@@ -231,6 +206,9 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     setKeyFilterCombinations([]);
     
     // Reset other filters
+    setSelectedCategory('');
+    setSelectedGenres([]);
+    setSelectedKeywords([]);
     setSelectedArtists([]);
     setSelectedInstruments([]);
     setSelectedMoods([]);
@@ -239,73 +217,75 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     setOpenFilter(null);
   }, []);
 
-    /**
+  /**
    * Filters tracks based on selected criteria.
    * - Category, tempo, key, genre, artist, instrument, mood, and keyword filters.
    * - Updates the `filteredTracks` state after applying filters.
    */
-    const applyAllFilters = useCallback(() => {
-      // Filter by category first
-      const categoryFiltered = tracks.filter((track) =>
-        categoryFilter(track, selectedCategory)
+  const applyAllFilters = useCallback(() => {
+    // Filter by category first
+    const categoryFiltered = tracks.filter((track) =>
+      categoryFilter(track, selectedCategory)
+    );
+
+    // Apply remaining filters
+    const filtered = categoryFiltered.filter((track) => {
+      const tempoPass = tempoFilter(
+        track,
+        minTempo,
+        maxTempo,
+        includeHalfTime,
+        includeDoubleTime
       );
-  
-      // Apply remaining filters
-      const filtered = categoryFiltered.filter((track) => {
-        const tempoPass = tempoFilter(
-          track,
-          minTempo,
-          maxTempo,
-          includeHalfTime,
-          includeDoubleTime
-        );
-        const keyPass = keyFilter(track, keyFilterCombinations);
-        const genrePass = genreFilter(track, selectedGenres);
-        const artistPass = artistFilter(track, selectedArtists);
-        const instrumentPass = instrumentFilter(track, selectedInstruments);
-        const moodPass = moodFilter(track, selectedMoods);
-        const keywordPass = keywordFilter(track, selectedKeywords);
-  
-        return (
-          tempoPass &&
-          keyPass &&
-          genrePass &&
-          artistPass &&
-          instrumentPass &&
-          moodPass &&
-          keywordPass
-        );
-      });
-  
-      setFilteredTracks(filtered);
-    }, [
-      tracks,
-      selectedCategory,
-      minTempo,
-      maxTempo,
-      includeHalfTime,
-      includeDoubleTime,
-      keyFilterCombinations,
-      selectedGenres,
-      selectedArtists,
-      selectedInstruments,
-      selectedMoods,
-      selectedKeywords,
-    ]);
-  
-    // Reapply filters whenever the track list or filter criteria change
-    useEffect(() => {
-      applyAllFilters();
-    }, [tracks, applyAllFilters]);
+      const keyPass = keyFilter(track, keyFilterCombinations);
+      const genrePass = genreFilter(track, selectedGenres);
+      const artistPass = artistFilter(track, selectedArtists);
+      const instrumentPass = instrumentFilter(track, selectedInstruments);
+      const moodPass = moodFilter(track, selectedMoods);
+      const keywordPass = keywordFilter(track, selectedKeywords);
 
-    // Dispatch sorted track list to global state
-    useEffect(() => {
-      if (filteredTracks.length > 0) {
-        dispatch(setTrackList(filteredTracks));
-      }
-    }, [filteredTracks, dispatch]);
+      return (
+        tempoPass &&
+        keyPass &&
+        genrePass &&
+        artistPass &&
+        instrumentPass &&
+        moodPass &&
+        keywordPass
+      );
+    });
 
-  
+    // Apply sorting
+    const sortedFiltered = sortTracks(filtered, sortBy);
+    setFilteredTracks(sortedFiltered);
+  }, [
+    tracks,
+    selectedCategory,
+    minTempo,
+    maxTempo,
+    includeHalfTime,
+    includeDoubleTime,
+    keyFilterCombinations,
+    selectedGenres,
+    selectedArtists,
+    selectedInstruments,
+    selectedMoods,
+    selectedKeywords,
+    sortBy
+  ]);
+
+  // Reapply filters whenever the track list or filter criteria change
+  useEffect(() => {
+    applyAllFilters();
+  }, [tracks, applyAllFilters]);
+
+  // Update track list in Tracks context with filtered results
+  useEffect(() => {
+    if (filteredTracks.length > 0) {
+      setTrackList(filteredTracks);
+    }
+  }, [filteredTracks, setTrackList]);
+
   const contextValue = useMemo(() => ({
     // Unique filter options from keywords feature
     artistList,
@@ -339,11 +319,12 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     setSelectedKeys,
     setSelectedScale,
     setKeyFilterCombinations,
-    setSelectedGenres: setSelectedGenresWrapper,
+    setSelectedCategory,
+    setSelectedGenres,
     setSelectedArtists,
     setSelectedInstruments,
     setSelectedMoods,
-    setSelectedKeywords: setSelectedKeywordsWrapper,
+    setSelectedKeywords,
     setOpenFilter,
     setOpenSortFilter,
     setSortBy,
@@ -362,8 +343,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     selectedCategory, selectedGenres, selectedArtists, selectedInstruments, selectedMoods, selectedKeywords,
     openFilter, openSortFilter, sortBy, setSortBy, handleSortChange,
     clearAllFilters, toggleFilter,
-    filteredTracks,
-    setSelectedGenresWrapper, setSelectedKeywordsWrapper
+    filteredTracks
   ]);
   
   return (

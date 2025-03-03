@@ -1,9 +1,7 @@
 // src\client\features\tracks\services\TracksContext.tsx
 "use client";
 
-import React, { useState, ReactNode, useEffect, createContext } from "react";
-import { useAppDispatch } from "@store/hooks/useAppDispatch";
-import { setCurrentTrack, setTrackList } from "@store/slices";
+import React, { useState, ReactNode, useEffect, createContext, useContext, useCallback } from "react";
 import { fetchTracks } from "@tracks/core/hooks";
 import { Track } from "@/shared/types/track";
 import { TrackServiceType } from "@tracks/types";
@@ -11,7 +9,6 @@ import {
   TrackError, 
   TrackErrorCode, 
   isTrackError, 
-  createFetchError,
   setErrorLogger 
 } from "@tracks/utils/errors";
 
@@ -23,11 +20,14 @@ interface TracksProviderProps {
 }
 
 /**
- * Extended TrackServiceType that includes loading state and error information
+ * Extended TrackServiceType that includes loading state, error information, and methods
  */
 interface ExtendedTrackServiceType extends TrackServiceType {
   isLoading: boolean;
   error: { message: string; code: string } | null;
+  // Add methods for track management
+  setTrackList: (tracks: Track[]) => void;
+  setCurrentTrack: (track: Track | undefined) => void;
 }
 
 /**
@@ -36,7 +36,9 @@ interface ExtendedTrackServiceType extends TrackServiceType {
 const initialTrackService: ExtendedTrackServiceType = {
   tracks: [],
   isLoading: false,
-  error: null
+  error: null,
+  setTrackList: () => {},
+  setCurrentTrack: () => {}
 };
 
 /**
@@ -60,18 +62,33 @@ setErrorLogger({
 });
 
 /**
- * TracksProvider component that fetches and manages track data,
- * storing it in both local state and Redux.
+ * TracksProvider component that fetches and manages track data
+ * using local state and context instead of Redux.
  */
 const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
-  const dispatch = useAppDispatch(); // Typed Redux dispatch function
-  const [tracks, setTracks] = useState<Track[]>([]); // Local state for tracks
+  // Local state for tracks
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [currentTrack, setCurrentTrackState] = useState<Track | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<{ message: string; code: string } | null>(null);
 
+  /**
+   * Set track list method for consumers of this context
+   */
+  const setTrackList = useCallback((newTracks: Track[]) => {
+    setTracks(newTracks);
+  }, []);
+
+  /**
+   * Set current track method for consumers of this context
+   */
+  const setCurrentTrack = useCallback((track: Track | undefined) => {
+    setCurrentTrackState(track);
+  }, []);
+
   useEffect(() => {
     /**
-     * Fetches track data from the API and updates both local state and Redux store.
+     * Fetches track data from the API and updates context state
      */
     const fetchTrackData = async () => {
       // Reset state for new fetch operation
@@ -84,12 +101,9 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
         // Update local state
         setTracks(trackList);
         
-        // Store the full track list in Redux
-        dispatch(setTrackList(trackList));
-        
         // Automatically set the first track as the current track if available
-        if (trackList.length > 0) {
-          dispatch(setCurrentTrack(trackList[0]));
+        if (trackList.length > 0 && !currentTrack) {
+          setCurrentTrackState(trackList[0]);
         }
       } catch (err) {
         // Improved error handling
@@ -128,13 +142,15 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
     };
 
     fetchTrackData();
-  }, [dispatch]); // Ensure dispatch is included as a dependency
+  }, [currentTrack]); // No need to include other dependencies as we're initializing
 
-  // Construct the context value with all state
-  const contextValue = {
+  // Construct the context value with all state and methods
+  const contextValue: ExtendedTrackServiceType = {
     tracks,
     isLoading,
-    error
+    error,
+    setTrackList,
+    setCurrentTrack
   };
 
   return (
@@ -142,6 +158,20 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
       {children}
     </TracksContext.Provider>
   );
+};
+
+/**
+ * Custom hook for accessing tracks context
+ * Provides a convenient way to consume tracks state and methods
+ * @throws {Error} If used outside of TracksProvider
+ * @returns {ExtendedTrackServiceType} Tracks context with state and methods
+ */
+export const useTracks = (): ExtendedTrackServiceType => {
+  const context = useContext(TracksContext);
+  if (!context) {
+    throw new Error('useTracks must be used within a TracksProvider');
+  }
+  return context;
 };
 
 export default TracksProvider;

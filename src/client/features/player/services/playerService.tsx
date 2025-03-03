@@ -1,7 +1,5 @@
-
-// src\client\features\player\services\playerService.tsx
 /**
- * @fileoverview Centralized context for music player state management
+ * @fileoverview Updated PlayerProvider using the AudioService abstraction
  * @module features/player/services/playerService
  */
 
@@ -10,18 +8,18 @@ import React, {
   createContext, 
   useContext, 
   useReducer, 
-  useRef, 
   ReactNode, 
   useEffect, 
   useState, 
   useCallback 
 } from 'react';
 import { Track } from '@/shared/types/track';
-import { PlayerContextType } from '../context/playerTypes';
+import { PlayerContextType } from '../types/player';
 import { playerReducer, initialPlayerState } from '../context/playerReducer';
 import { playerActions } from '../context/playerActions';
-import { storePlaybackTime, getPlaybackTime } from '../utils/storage';
+import { storePlaybackTime, getPlaybackTime, resetPlaybackTime } from '../utils/storage';
 import { useTracks } from "@/client/features/tracks";
+import { useAudioElement, AudioEventHandlers } from './audioService';
 
 // Create the context for player state and methods
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -29,17 +27,56 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 /**
  * Player Provider component
  * Manages all player-related state, audio playback, and provides context methods
+ * Uses the new AudioService abstraction
  */
 export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Initialize player state and dispatch
   const [state, dispatch] = useReducer(playerReducer, initialPlayerState);
+  const { tracks, setCurrentTrack: setTrackInTracksContext } = useTracks();
   
-  // Reference to HTML audio element
-  const audioRef = useRef<HTMLAudioElement>(null!);
-  const { tracks } = useTracks();
-
   // Track end handler to prevent circular dependencies
   const [trackEndHandler, setTrackEndHandler] = useState<() => void>(() => () => {});
+  
+  // Define audio event handlers
+  const audioEventHandlers: AudioEventHandlers = {
+    onEnded: () => trackEndHandler(),
+    onTimeUpdate: (currentTime) => {
+      dispatch(playerActions.setCurrentTime(currentTime));
+      if (state.currentTrack?.id) {
+        storePlaybackTime(state.currentTrack.id, currentTime);
+      }
+    },
+    onDurationChange: (duration) => {
+      dispatch(playerActions.setTrackDuration(duration));
+    },
+    onPlay: () => {
+      dispatch(playerActions.setIsPlaying(true));
+    },
+    onPause: () => {
+      dispatch(playerActions.setIsPlaying(false));
+    },
+    onVolumeChange: (volume) => {
+      dispatch(playerActions.setVolume(volume));
+    },
+    onError: (error) => {
+      console.error("Audio playback error:", error);
+    },
+    onLoaded: () => {
+      // Restore saved time if available
+      if (state.currentTrack?.id) {
+        const savedTime = getPlaybackTime(state.currentTrack.id);
+        if (savedTime > 0 && savedTime < audio.duration) {
+          audio.seekTo(savedTime);
+        }
+      }
+      
+      // Autoplay
+      audio.play().catch(error => console.error("Error playing track:", error));
+    }
+  };
+  
+  // Initialize audio service with handlers
+  const audio = useAudioElement('', state.volume, audioEventHandlers);
 
   // Add this effect to initialize tracks
   useEffect(() => {
@@ -55,8 +92,19 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
    * @param track Track to be set as current
    */
   const setCurrentTrack = useCallback((track: Track | undefined) => {
+    // Update track in player context
     dispatch(playerActions.setCurrentTrack(track));
-  }, []);
+    
+    // Also update track in tracks context to keep both contexts in sync
+    setTrackInTracksContext(track);
+    
+    // Load track audio
+    if (track?.file) {
+      const newSrc = `/audio/tracks/${track.file}`;
+      dispatch(playerActions.setSharedAudioUrl(newSrc));
+      audio.loadTrack(newSrc);
+    }
+  }, [audio, setTrackInTracksContext]);
 
   /**
    * Update track list in player state
@@ -70,99 +118,40 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
    * Toggle play/pause for current track
    */
   const togglePlay = useCallback(() => {
-    if (!audioRef.current) return;
-
-    if (state.isPlaying) {
-      audioRef.current.pause();
-      dispatch(playerActions.setIsPlaying(false));
-    } else {
-      audioRef.current.play().catch(console.error);
-      dispatch(playerActions.setIsPlaying(true));
-    }
-  }, [state.isPlaying]);
+    audio.toggle().catch(error => {
+      console.error("Error toggling playback:", error);
+    });
+  }, [audio]);
 
   /**
    * Set volume level
    * @param volume Volume level between 0 and 1
    */
   const setVolume = useCallback((volume: number) => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-      dispatch(playerActions.setVolume(volume));
-    }
-  }, []);
+    audio.setVolume(volume);
+  }, [audio]);
 
   /**
    * Seek to a specific time in the track
    * @param time Time to seek to in seconds
    */
   const seekTo = useCallback((time: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      dispatch(playerActions.setCurrentTime(time));
-    }
-  }, []);
+    audio.seekTo(time);
+  }, [audio]);
 
-  // Effect: Update audio source when current track changes
+  // Effect: Update track source when current track changes
   useEffect(() => {
-    if (!audioRef.current || !state.currentTrack) return;
+    if (!state.currentTrack?.file) return;
     
-    const audioElement = audioRef.current;
     const newSrc = `/audio/tracks/${state.currentTrack.file}`;
-    
-    // Update shared audio URL
     dispatch(playerActions.setSharedAudioUrl(newSrc));
-  
-    // Reset and load new audio source
-    audioElement.pause();
-    audioElement.src = newSrc;
-    audioElement.load();
-  
-    // Handle metadata loading and autoplay
-    const handleLoadedData = () => {
-      // Update track duration
-      if (audioElement.duration && !isNaN(audioElement.duration)) {
-        dispatch(playerActions.setTrackDuration(audioElement.duration));
-      }
-      
-      audioElement
-        .play()
-        .catch((error) => console.error("Error Playing:", error));
-      dispatch(playerActions.setIsPlaying(true));
-    };
-  
-    audioElement.addEventListener("loadeddata", handleLoadedData, { once: true });
-  
-    return () => {
-      audioElement.removeEventListener("loadeddata", handleLoadedData);
-    };
-  }, [state.currentTrack]);
-
-  // Effect: Restore playback position
-  useEffect(() => {
-    if (!audioRef.current || !state.currentTrack?.id) return;
-    
-    const audioEl = audioRef.current;
-    const trackId = state.currentTrack.id;
-    const savedTime = getPlaybackTime(trackId);
-    
-    if (savedTime <= 0) return;
-    
-    const handleLoadedData = () => {
-      if (savedTime >= audioEl.duration) return;
-      audioEl.currentTime = savedTime;
-    };
-    
-    audioEl.addEventListener("loadeddata", handleLoadedData, { once: true });
-    return () => {
-      audioEl.removeEventListener("loadeddata", handleLoadedData);
-    };
-  }, [state.currentTrack]);
+    audio.loadTrack(newSrc);
+  }, [state.currentTrack, audio]);
 
   // Combine all context values and methods
   const contextValue: PlayerContextType = {
     ...state,
-    audioRef,
+    audioRef: audio.audioRef,
     dispatch,
     setCurrentTrack,
     setTrackList,
@@ -175,20 +164,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   return (
     <PlayerContext.Provider value={contextValue}>
       {children}
-      <audio
-        ref={audioRef}
-        className="hidden"
-        onEnded={trackEndHandler}
-        onPause={() => dispatch(playerActions.setIsPlaying(false))}
-        onPlay={() => dispatch(playerActions.setIsPlaying(true))}
-        onTimeUpdate={() => {
-          if (!audioRef.current || !state.currentTrack?.id) return;
-          const time = audioRef.current.currentTime;
-          dispatch(playerActions.setCurrentTime(time));
-          storePlaybackTime(state.currentTrack.id, time);
-        }}
-        preload="none"
-      />
+      {/* Audio element is now managed by the useAudioElement hook */}
     </PlayerContext.Provider>
   );
 };

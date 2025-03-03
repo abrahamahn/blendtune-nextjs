@@ -1,4 +1,22 @@
-// src\client\features\tracks\types\index.ts
-export type { Track } from '@/shared/types/track';
-// Export all other types from trackTypes.ts
-export * from './trackTypes';
+/**
+ * @fileoverview Type definitions for tracks context
+ * @module features/tracks/types
+ */
+
+import { Track } from '@/shared/types/track';
+
+/**
+ * Basic Track Service interface
+ * Defines the core properties for track management
+ */
+export interface TrackServiceType {
+  tracks: Track[];
+}
+
+/**
+ * Extended Track Error information
+ */
+export interface TrackErrorInfo {
+  message: string;
+  code: string;
+}

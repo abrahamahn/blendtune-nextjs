@@ -1,13 +1,18 @@
-// src\client\features\sounds\catalog\utils\trackUtils.ts
-
 import { Track } from "@/shared/types/track";
 
 /**
  * Generates the URL for a track's artwork image.
- * Falls back to a default image if no catalog metadata is available.
+ * Prioritizes the imageUrl property if available, otherwise
+ * constructs URL from catalog metadata.
+ * Falls back to a default image if no valid data is available.
  */
 export function getImageUrl(track: Track): string {
-  return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${track?.metadata?.catalog ?? "default"}.jpg`;
+  if (track?.metadata?.catalog) {
+    return `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${track.metadata.catalog}.jpg`;
+  }
+  
+  // Default fallback
+  return "https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/default.jpg";
 }
 
 /**

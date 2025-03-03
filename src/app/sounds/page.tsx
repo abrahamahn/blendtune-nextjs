@@ -1,21 +1,18 @@
-/**
- * @fileoverview Sounds page for music discovery and playback
- * @module pages/sounds
- */
+// src\client\features\sounds\pages\Sounds.tsx
 
 "use client";
 import React, { useState, useEffect } from "react";
-import { Track } from "@/shared/types/track";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTracks } from "@/client/features/tracks";
 
 import { Hero } from "@sounds/hero";
 import { Category } from "@sounds/category/layout";
 import { NewTracks } from "@sounds/catalog/components";
-import { MobileCatalog, DesktopCatalog } from "@sounds/catalog/layouts";
+import { CatalogProvider } from "@sounds/catalog";
 import { MobileFilter, DesktopFilter } from "@sounds/filters/layout";
-import { useRightSidebar } from "@layout/rightbar/context";
 import { useFilterContext } from '@sounds/filters/context';
+import { MobileCatalog, DesktopCatalog } from "@sounds/catalog";
+import { Track } from "@shared/types/track";
 
 /**
  * Sounds Component:
@@ -42,18 +39,6 @@ const Sounds: React.FC = () => {
   // Track and filter contexts
   const { tracks } = useTracks();
   const { filteredTracks } = useFilterContext();
-  const { openSidebar, userClosedSidebar } = useRightSidebar();
-
-  // Handle track selection with sidebar behavior
-  const handleTrackPlay = React.useCallback((selectedTrack: Track) => {
-    // Play the track using context method
-    playTrack(selectedTrack);
-    
-    // Open sidebar unless explicitly closed
-    if (!userClosedSidebar) {
-      openSidebar();
-    }
-  }, [playTrack, openSidebar, userClosedSidebar]);
 
   // Update track list when filtered tracks change
   useEffect(() => {
@@ -61,6 +46,17 @@ const Sounds: React.FC = () => {
       setTrackList(filteredTracks);
     }
   }, [filteredTracks, setTrackList]);
+
+  // Handler for playing tracks
+  const handlePlayTrack = (track: Track) => {
+    playTrack(track);
+  };
+
+  // Handler for track title clicks
+  const handleTitleClick = (track: Track) => {
+    // Implement title click behavior if needed
+    console.log("Track title clicked:", track.metadata.title);
+  };
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -80,27 +76,29 @@ const Sounds: React.FC = () => {
         <Category />
 
         {/* New tracks display */}
-        <NewTracks
-          tracks={tracks}
-          playTrack={handleTrackPlay}
-          currentTrack={currentTrack}
-          isPlaying={isPlaying}
-        />
+        <NewTracks />
 
         {/* Desktop filter */}
         <DesktopFilter />
 
-        {/* Track catalogs */}
-        <DesktopCatalog
-          tracks={filteredTracks}
-          playTrack={handleTrackPlay}
-          onTitleClick={handleTrackPlay}
-        />
-        <MobileCatalog
-          tracks={filteredTracks}
-          playTrack={handleTrackPlay}
-          onTitleClick={handleTrackPlay}
-        />
+        {/* Catalog with actual children components */}
+        <CatalogProvider tracks={filteredTracks}>
+          <div>
+            {/* Mobile catalog view */}
+            <MobileCatalog 
+              tracks={filteredTracks} 
+              playTrack={handlePlayTrack}
+              onTitleClick={handleTitleClick}
+            />
+            
+            {/* Desktop catalog view */}
+            <DesktopCatalog 
+              tracks={filteredTracks} 
+              playTrack={handlePlayTrack}
+              onTitleClick={handleTitleClick}
+            />
+          </div>
+        </CatalogProvider>
       </div>
     </div>
   );

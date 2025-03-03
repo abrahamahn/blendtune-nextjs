@@ -2,37 +2,27 @@
 
 import React from "react";
 import TrackCard from "@/client/features/sounds/catalog/layouts/TrackCard";
-import { Track } from "@/shared/types/track";
-
-interface NewTracksProps {
-  tracks: Track[];            // List of tracks to display.
-  currentTrack?: Track;       // Currently playing track (if any).
-  isPlaying: boolean;         // Indicates whether a track is currently playing.
-  playTrack: (track: Track) => void; // Function to trigger track playback.
-}
+import { useTracks } from "@/client/features/tracks";
+import useTrackPlayback from "@/client/features/sounds/catalog/hooks/useTrackPlayback";
 
 /**
  * NewTracks Component
  * 
- * Displays a list of tracks in a scrollable horizontal layout.
- * Delegates rendering and playback control to the `TrackCard` component.
- *
- * @param {NewTracksProps} props - Component properties.
- * @returns {JSX.Element} The rendered component.
+ * Displays a list of newly added tracks in a horizontal layout.
+ * Uses context hooks directly for data access.
  */
-const NewTracks: React.FC<NewTracksProps> = ({
-  tracks,
-  currentTrack,
-  isPlaying,
-  playTrack,
-}) => {
+const NewTracks: React.FC = () => {
+  // Get tracks directly from context
+  const { tracks } = useTracks();
+  
+  // Get playback functionality from our hook
+  const { handleTrackPlay } = useTrackPlayback();
+
   return (
-    <div className="w-full overflow-x-auto">
-      <TrackCard
+    <div className="w-full">
+      <TrackCard 
         tracks={tracks}
-        currentTrack={currentTrack}
-        playTrack={playTrack}
-        isPlaying={isPlaying}
+        playTrack={handleTrackPlay}
       />
     </div>
   );

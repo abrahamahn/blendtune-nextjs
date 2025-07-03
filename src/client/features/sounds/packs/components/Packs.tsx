@@ -156,7 +156,7 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
       <audio
         key={currentTrack?.id}
         className="hidden"
-        src={`/audio/tracks/${currentTrack?.file}`}
+        src={`${process.env.NEXT_PUBLIC_AUDIO_BASE_URL}${currentTrack?.file}`}
         controls
         ref={audioRef}
         onEnded={() => {

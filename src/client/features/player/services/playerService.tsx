@@ -83,6 +83,9 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [state, dispatch] = useReducer(playerReducer, initialPlayerState);
   const { tracks } = useTracks();
 
+  // Add this at the top of your PlayerProvider component
+  console.log('🎵 PlayerProvider rendering, tracks:', tracks.length);
+  console.log('🎵 Current track:', state.currentTrack?.metadata?.title);
   // State for handling track end events to avoid circular dependencies
   const [trackEndHandler, setTrackEndHandler] = useState<() => void>(() => () => {});
 

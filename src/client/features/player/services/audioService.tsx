@@ -106,6 +106,28 @@ export const useAudioElement = (
         return prev;
       });
     };
+
+    // Add this debug logging to your useAudioElement hook
+    useEffect(() => {
+      console.log('🎵 useAudioElement: Initializing audio element...');
+      console.log('🎵 audioRef.current:', audioRef.current);
+      console.log('🎵 initialVolume:', initialVolume);
+      
+      if (audioRef.current) {
+        console.log('🎵 Audio element already exists, skipping creation');
+        return;
+      }
+      
+      console.log('🎵 Creating new Audio element...');
+      const audio = new Audio();
+      console.log('🎵 Audio element created:', audio);
+      
+      audio.preload = 'metadata';
+      audio.volume = initialVolume;
+      audioRef.current = audio;
+      
+      console.log('🎵 Audio element assigned to ref:', audioRef.current);
+    }, [initialVolume]);
     
     const handleDurationChange = () => {
       if (!isNaN(audioEl.duration) && isFinite(audioEl.duration)) {

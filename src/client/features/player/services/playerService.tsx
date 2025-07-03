@@ -160,16 +160,13 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     loadTrack,
   } = useAudioElement('', state.volume, audioEventHandlers);
 
-  // One-time initialization effect for setting default track and track list
   useEffect(() => {
-    if (isInitializedRef.current) return;
-
-    if (tracks.length > 0 && !state.currentTrack) {
-      isInitializedRef.current = true;
-      dispatch(playerActions.setCurrentTrack(tracks[0]));
-      dispatch(playerActions.setTrackList(tracks));
-    }
-  }, [tracks, state.currentTrack]);
+    if (isInitializedRef.current || tracks.length === 0) return;
+  
+    isInitializedRef.current = true;
+    dispatch(playerActions.setCurrentTrack(tracks[0]));
+    dispatch(playerActions.setTrackList(tracks));
+  }, [tracks.length]);
 
   // Effect to load new audio when the current track changes
   useEffect(() => {

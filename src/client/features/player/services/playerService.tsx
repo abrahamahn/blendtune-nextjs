@@ -242,7 +242,9 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setTrackEndHandler,
     playTrack,
   }), [
-    state,
+    state.isPlaying,
+    state.currentTrack,
+    state.volume,
     audioRef,
     dispatch,
     setCurrentTrack,

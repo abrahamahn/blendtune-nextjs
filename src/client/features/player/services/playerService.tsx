@@ -174,7 +174,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     if (prevTrackRef.current === state.currentTrack) return;
 
     prevTrackRef.current = state.currentTrack;
-    const newSrc = `/audio/tracks/${state.currentTrack.file}`;
+    const newSrc = `/audio/streaming/${state.currentTrack.file}`;
     dispatch(playerActions.setSharedAudioUrl(newSrc));
     loadTrack(newSrc);
   }, [state.currentTrack, loadTrack]);

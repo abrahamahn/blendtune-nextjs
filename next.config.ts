@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/audio/tracks/:file',
+        source: '/audio/streaming/:file',
         destination: '/api/audio/:file',
       },
     ];

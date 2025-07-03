@@ -70,7 +70,7 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
    const currentTrackFile = currentTrack?.file;
 
    if (audio && currentTrackFile) {
-     const audioSrc = `/audio/tracks/${currentTrackFile}`;
+     const audioSrc = `/audio/streaming/${currentTrackFile}`;
 
      if (audio.src !== audioSrc) {
        audio.src = audioSrc;
@@ -156,7 +156,7 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
       <audio
         key={currentTrack?.id}
         className="hidden"
-        src={`/audio/tracks/${currentTrack?.file}`}
+        src={`/audio/streaming/${currentTrack?.file}`}
         controls
         ref={audioRef}
         onEnded={() => {

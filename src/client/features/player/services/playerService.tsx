@@ -227,6 +227,8 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     });
   }, [toggle, dispatch, state.currentTrack]);
 
+  console.log('🔄 Creating context value, state keys:', Object.keys(state));
+
   // Memoize the context value to prevent unnecessary re-renders of consumers.
   const contextValue: PlayerContextType = useMemo(() => ({
     ...state,
@@ -243,8 +245,11 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     playTrack,
   }), [
     state.isPlaying,
-    state.currentTrack,
+    state.currentTrack?.id,
     state.volume,
+    state.currentTime,
+    state.trackList.length,
+    state.loopMode,
     audioRef,
     dispatch,
     setCurrentTrack,

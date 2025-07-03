@@ -247,17 +247,6 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     state.currentTime,
     state.trackList.length,
     state.loopMode,
-    audioRef,
-    dispatch,
-    setCurrentTrack,
-    setTrackList,
-    handleTogglePlay,
-    play,
-    pause,
-    setVolume,
-    seekTo,
-    setTrackEndHandler,
-    playTrack,
   ]);
 
   return (

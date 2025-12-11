@@ -1,5 +1,3 @@
-// src\shared\types\track.ts
-
 /**
  * Comprehensive track metadata interface
  */
@@ -10,6 +8,12 @@ export interface Track {
   /** Track audio file reference */
   file: string;
 
+  /** Optional image URL for track artwork */
+  imageUrl?: string;
+
+  /** Optional categories for filtering */
+  categories?: string[];
+
   /** Catalog and identification details */
   metadata: {
     catalog: string;
@@ -18,6 +22,7 @@ export interface Track {
     title: string;
     release: string;
     album: string;
+    
     track: string;
     producer: string;
   };

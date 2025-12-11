@@ -3,10 +3,11 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import InnerLayer from "@rightbar/components/InnerLayer";
-import ResizableHandle from "@player/components/ResizableHandle";
+import ResizableHandle from "@rightbar/context/ResizableHandle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useRightSidebar } from "@rightbar/context/useRightSidebar";
+import { usePlayer } from "@/client/features/player/services/playerService";
 
 /**
  * Constants for sidebar width constraints
@@ -26,6 +27,7 @@ const MAX_WIDTH = 22.5 * 16; // 360px
  */
 const RightBar: React.FC = () => {
   const { closeSidebar } = useRightSidebar();
+  const { currentTrack } = usePlayer();
   const [rightBarWidth, setRightBarWidth] = useState<number>(MIN_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
 
@@ -93,24 +95,26 @@ const RightBar: React.FC = () => {
       style={{ width: `${rightBarWidth}px` }}
     >
       {/* Close button - positioned absolutely in top-right corner */}
-      <button
-        onClick={handleClose}
-        className="absolute top-2 right-3 z-10 p-2 w-8 h-4"
-        aria-label="Close sidebar"
-      >
-        <FontAwesomeIcon 
-          icon={faX} 
-          size="sm" 
-          color="#525252" 
-          className="text-[#525252] dark:text-neutral-300" 
-        />
-      </button>
+      {currentTrack && (
+        <button
+          onClick={handleClose}
+          className="absolute top-2 right-3 z-10 p-2 w-8 h-4"
+          aria-label="Close sidebar"
+        >
+          <FontAwesomeIcon 
+            icon={faX} 
+            size="sm" 
+            color="#525252" 
+            className="text-[#525252] dark:text-neutral-300" 
+          />
+        </button>
+      )}
 
       {/* Resize handle component */}
       <ResizableHandle onResizeStart={onResizeStart} />
 
       {/* Main content container with scrolling */}
-      <div className="w-full h-full overflow-auto">
+      <div className="absolute top-2 left-1 right-2 bottom-2 overflow-hidden rounded-xl">
         <InnerLayer />
       </div>
     </div>

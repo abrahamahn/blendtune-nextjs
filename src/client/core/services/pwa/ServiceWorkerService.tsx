@@ -18,15 +18,11 @@ const ServiceWorkerProvider = () => {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         if (debug) {
-          console.log("Skipping service worker registration in development mode");
           return;
         }
 
         navigator.serviceWorker
           .register("/sw.js")
-          .then((registration) => {
-            console.log("Service Worker registered with scope:", registration.scope);
-          })
           .catch((error) => {
             console.error("Service Worker registration failed:", error);
           });

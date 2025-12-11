@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Logo from "@components/common//Logo";
-import LoadingIcon from "@components/common//LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 /**
  * Props interface for the VerifyEmail component

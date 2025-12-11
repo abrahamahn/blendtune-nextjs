@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import {
   selectKeyword,
   removeAllKeywords,
-} from "@tracks/store/keywordSlice";
+} from "@/client/features/sounds/filters/store/filterSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 

@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@components/common/Logo";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 /**
  * VerifyEmail component:

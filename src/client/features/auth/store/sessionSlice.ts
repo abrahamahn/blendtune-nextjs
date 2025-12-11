@@ -12,6 +12,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface SessionState {
  status: boolean;
  authenticated: boolean;
+ loading: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ export interface SessionState {
 const initialState: SessionState = {
  authenticated: false,
  status: false,
+ loading: true,
 };
 
 /**
@@ -31,9 +33,11 @@ const sessionSlice = createSlice({
  reducers: {
    setAuthenticated: (state) => {
      state.authenticated = true;
+     state.loading = false;
    },
    setUnauthenticated: (state) => {
      state.authenticated = false;
+     state.loading = false;
    },
    setOnline: (state, action: PayloadAction<boolean>) => {
      state.status = action.payload;
@@ -42,6 +46,9 @@ const sessionSlice = createSlice({
      state.authenticated = false;
      state.status = false;
    },
+   setLoading: (state, action: PayloadAction<boolean>) => {
+     state.loading = action.payload;
+   },
  },
 });
 
@@ -49,7 +56,8 @@ export const {
  setAuthenticated, 
  setUnauthenticated, 
  setOnline, 
- setOffline 
+ setOffline,
+ setLoading
 } = sessionSlice.actions;
 
 export default sessionSlice.reducer;

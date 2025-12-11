@@ -42,6 +42,7 @@ interface UserPreferences {
 interface SessionStatus {
   userAuthenticated: boolean;
   userStatus: boolean;
+  sessionLoading: boolean;
 }
 
 /**
@@ -79,6 +80,9 @@ export const useSession = () => {
   );
   const userStatus = useAppSelector(
     (state: RootState) => state.auth.session.status
+  );
+  const sessionLoading = useAppSelector(
+    (state: RootState) => state.auth.session.loading
   );
 
   // User profile selectors
@@ -138,6 +142,7 @@ export const useSession = () => {
       // Session status
       userAuthenticated,
       userStatus,
+      sessionLoading,
       
       // User profile
       username,
@@ -166,6 +171,7 @@ export const useSession = () => {
     context,
     userAuthenticated,
     userStatus,
+    sessionLoading,
     username,
     userEmail,
     userFirstName,

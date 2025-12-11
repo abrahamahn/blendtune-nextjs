@@ -1,7 +1,7 @@
 // src\client\features\layout\header\hooks\useGenreMenu.ts
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { selectCategory, removeAllGenres } from "@tracks/store/keywordSlice";
+import { selectCategory, removeAllGenres } from "@/client/features/sounds/filters/store/filterSlice";
 import { 
  faStar, 
  faGem, 

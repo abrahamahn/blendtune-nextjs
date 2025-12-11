@@ -33,32 +33,37 @@ export {
   default as userReducer,
 } from "../../../features/auth/store/userSlice";
 
-// Track selection & keyword management slice
+// Filter management slice
 export {
+  // Category & Genre
   selectGenres,
+  setGenres,
   selectCategory,
   removeAllGenres,
+  // Tempo
+  setMinTempo,
+  setMaxTempo,
+  setIncludeHalfTime,
+  setIncludeDoubleTime,
+  // Key
+  setSelectedKeys,
+  setSelectedScale,
+  setKeyFilterCombinations,
+  // Artist, Instrument, Mood
+  setSelectedArtists,
+  setSelectedInstruments,
+  setSelectedMoods,
+  // Keywords
   selectKeyword,
   selectKeywords,
   deselectKeyword,
   removeAllKeywords,
-  default as keywordReducer,
-} from "@tracks/store/keywordSlice";
-
-// Audio playback slice
-export {
-  setCurrentTrack,
-  setIsPlaying,
-  setTrackList,
-  setLoopedTrackList,
-  setLoopMode,
-  setIsVolumeVisible,
-  setCurrentTime,
-  setTrackDuration,
-  default as playbackReducer,
-} from "@player/store/playbackSlice";
+  // Clear All
+  clearAllFilters,
+  default as filterReducer,
+} from "@/client/features/sounds/filters/store/filterSlice";
 
 // Exporting types for type safety
 export type { SessionState } from "@auth/store/sessionSlice";
 export type { UserState } from "@auth/store/userSlice";
-export type { KeywordState } from "@tracks/store/keywordSlice";
+export type { FilterState, KeyFilterCombination } from "@/client/features/sounds/filters/store/filterSlice";

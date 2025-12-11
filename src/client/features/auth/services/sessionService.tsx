@@ -13,6 +13,7 @@ import {
   setAuthenticated,
   setUnauthenticated,
   setOnline,
+  setLoading,
 } from "@auth/store/sessionSlice";
 import {
   setUsername,
@@ -47,6 +48,7 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
    * Automatically logs out user on session expiration or invalid tokens.
    */
   const checkSession = useCallback(async () => {
+    dispatch(setLoading(true));
     try {
       const response = await fetch("/api/auth/security/check-session", {
         credentials: "include",
@@ -95,6 +97,8 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
       // Reset auth state on any errors to prevent inconsistent states
       dispatch(setUnauthenticated());
       dispatch(clearUserProfile());
+    } finally {
+      dispatch(setLoading(false));
     }
   }, [dispatch]);
 

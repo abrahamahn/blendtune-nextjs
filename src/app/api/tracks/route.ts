@@ -2,8 +2,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tracksPool } from '@server/db';
 import { createJsonResponse, withErrorHandling } from '@server/lib/core';
+import { TrackErrorCode, TrackError, handleTrackError } from '@tracks/utils/errors';
 
-interface Track {
+interface TrackDBRecord {
   id: number;
   release: string;
   file_public: string;
@@ -43,20 +44,26 @@ interface Track {
  * - Returns a structured JSON response.
  */
 async function getTracksHandler(req: NextRequest): Promise<NextResponse> {
-  // Connect to the database and fetch track data.
-  const client = await tracksPool.connect();
-  const result = await client.query('SELECT * FROM meekah.track_info;');
-  let trackInfo = result.rows;
-  client.release();
+  let client;
+  try {
+    client = await tracksPool.connect();
+    const result = await client.query('SELECT * FROM meekah.track_info;');
+    
+    // Early validation
+    if (!result.rows || result.rows.length === 0) {
+      throw new TrackError(
+        'No tracks found in the database', 
+        TrackErrorCode.MISSING_DATA
+      );
+    }
 
-  // Assign sequential IDs to each track.
-  trackInfo = trackInfo.map((track: Track, index: number) => ({
-    ...track,
-    id: index + 1,
-  }));
+    let trackInfo = result.rows.map((track: TrackDBRecord, index: number) => ({
+      ...track,
+      id: index + 1,
+    }));
 
   // Format the track information into a structured object.
-  const formattedTrackInfo = trackInfo.reduce((acc: Record<string, any>, track: Track) => {
+  const formattedTrackInfo = trackInfo.reduce((acc: Record<string, any>, track: TrackDBRecord) => {
     acc[track.id] = {
       id: track.id,
       file: track.file_public,
@@ -91,7 +98,23 @@ async function getTracksHandler(req: NextRequest): Promise<NextResponse> {
     return acc;
   }, {});
 
+
   return createJsonResponse(formattedTrackInfo, 200);
+} catch (error) {
+  // Log the error for server-side tracking
+  console.error('Track retrieval error:', error);
+  
+  // Use the error handling utility
+  const { message, code } = handleTrackError(error);
+  
+  return createJsonResponse(
+    { error: message }, 
+    code === TrackErrorCode.MISSING_DATA ? 404 : 500
+  );
+} finally {
+  // Ensure client is released even if an error occurs
+  if (client) client.release();
+}
 }
 
 // Export the GET endpoint with error handling applied.

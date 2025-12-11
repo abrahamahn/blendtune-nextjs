@@ -26,9 +26,10 @@ import useAuthModal from "@auth/hooks/useAuthModal";
 import useAuth from "@auth/hooks/useAuth";
 import useGenreMenu from "@header/hooks/useGenreMenu";
 import useMobileSearch from "@search/hooks/useMobileSearch";
-import useKeywords from "@tracks/hooks/useKeywords";
+import { useKeywords } from "@tracks/keywords/hooks/useKeywords";
 import { useMobileMenu } from "@header/hooks/useMobileMenu";
 import Logo from "@components/common//Logo";
+import { Skeleton } from "@/client/shared/components/common/Skeleton";
 
 // Define type for AuthModal form prop
 type AuthFormType = 'signin' | 'signup';
@@ -41,7 +42,7 @@ interface AuthModalProps {
 }
 
 const Header: React.FC = () => {
- const { userAuthenticated } = useSession();
+ const { userAuthenticated, sessionLoading } = useSession();
 
  const {
    authModalOpen,
@@ -68,65 +69,74 @@ const Header: React.FC = () => {
 */
   return (
     <header className="w-full h-full">
-      <div>
+      <div className="h-full">
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center justify-between 
-                      w-full h-full 
-                      xl:px-2 xl:py-4 lg:px-2 py-2">
-          <div className="flex items-center justify-between mx-auto w-full px-6">
-            <div className="flex items-center space-x-2 lg:space-x-4 h-full">
+                      w-full h-full
+                      xl:px-2 lg:px-2">
+          <div className="flex items-center justify-between mx-auto w-full px-6 h-full">
+            <div className="flex items-center space-x-2 lg:space-x-4">
               <Logo />
               {/* Search Bar */}
               <SearchBar keywords={keywords} />
             </div>
             <div className="flex items-center space-x-2 lg:space-x-2">
-              {userAuthenticated ? (
-                <Link
-                  href="/welcome"
-                  className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
-                >
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
-                  />
-                  <p className="hidden xl:block">Profile</p>
-                </Link>
+              {sessionLoading ? (
+                 <div className="flex space-x-2">
+                   <Skeleton variant="rectangular" className="w-24 h-9 rounded-full" />
+                   <Skeleton variant="rectangular" className="w-24 h-9 rounded-lg" />
+                 </div>
               ) : (
-                <button
-                  onClick={openSignInModal}
-                  className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
-                >
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
-                  />
-                  <p className="hidden xl:block">Log In</p>
-                </button>
-              )}
-              {userAuthenticated ? (
-                <button
-                  onClick={logout}
-                  className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
-                >
-                  <FontAwesomeIcon
-                    icon={faGreaterThan}
-                    size="xs"
-                    className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
-                  />
-                  <p className="hidden xl:block">Log Out</p>
-                </button>
-              ) : (
-                <button
-                  onClick={openSignUpModal}
-                  className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
-                >
-                  <FontAwesomeIcon
-                    icon={faGreaterThan}
-                    size="xs"
-                    className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
-                  />
-                  <p className="hidden xl:block">Get Started</p>
-                </button>
+                <>
+                  {userAuthenticated ? (
+                    <Link
+                      href="/welcome"
+                      className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
+                    >
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
+                      />
+                      <p className="hidden xl:block">Profile</p>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={openSignInModal}
+                      className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
+                    >
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="mr-0 xl:mr-2 text-black dark:text-neutral-200"
+                      />
+                      <p className="hidden xl:block">Log In</p>
+                    </button>
+                  )}
+                  {userAuthenticated ? (
+                    <button
+                      onClick={logout}
+                      className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
+                    >
+                      <FontAwesomeIcon
+                        icon={faGreaterThan}
+                        size="xs"
+                        className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
+                      />
+                      <p className="hidden xl:block">Log Out</p>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={openSignUpModal}
+                      className="font-medium flex flex-row text-sm items-center border-2 border-transparent dark:border-white text-neutral-200 dark:text-white dark:hover:text-neutral-200/50 bg-neutral-900 dark:bg-transparent  dark:hover:bg-neutral-700 py-1.5 px-4 rounded-lg"
+                    >
+                      <FontAwesomeIcon
+                        icon={faGreaterThan}
+                        size="xs"
+                        className="hidden md:block mr-0 xl:mr-2 text-neutral-200 dark:text-white"
+                      />
+                      <p className="hidden xl:block">Get Started</p>
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -164,17 +174,21 @@ const Header: React.FC = () => {
                     className="text-neutral-900 dark:text-neutral-200 px-2"
                   />
                 </button>
-                <button
-                  onClick={openSignInModal}
-                  className="text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:text-neutral-700 py-2 px-3 border-l border-neutral-300 dark:border-neutral-900"
-                  data-testid="mobile-menu-signin"
-                >
-                  <FontAwesomeIcon
-                    icon={faUser}
-                    size="sm"
-                    className="text-neutral-900 dark:text-neutral-200 px-2"
-                  />
-                </button>
+                {sessionLoading ? (
+                  <Skeleton variant="circular" width={20} height={20} className="mx-3" />
+                ) : (
+                  <button
+                    onClick={openSignInModal}
+                    className="text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:text-neutral-700 py-2 px-3 border-l border-neutral-300 dark:border-neutral-900"
+                    data-testid="mobile-menu-signin"
+                  >
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      size="sm"
+                      className="text-neutral-900 dark:text-neutral-200 px-2"
+                    />
+                  </button>
+                )}
               </div>
             </div>
           </div>

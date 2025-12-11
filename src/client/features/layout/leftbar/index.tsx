@@ -9,9 +9,9 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { selectCategory, removeAllGenres } from "@tracks/store/keywordSlice";
+import { selectCategory, removeAllGenres } from "@/client/features/sounds/filters/store/filterSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
+ import {
  faHome,
  faMusic,
  faStar,
@@ -24,6 +24,8 @@ import {
  faCircleInfo,
  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTracks } from "@/client/features/tracks";
+import LeftBarSkeleton from "./components/LeftBarSkeleton";
 
 /**
 * Navigation item configuration type
@@ -40,6 +42,7 @@ interface NavItem {
 const LeftBar: React.FC = () => {
  const router = useRouter();
  const dispatch = useDispatch();
+ const { isLoading } = useTracks();
 
  // Genre navigation items configuration
  const genreItems: NavItem[] = [
@@ -58,6 +61,9 @@ const LeftBar: React.FC = () => {
    { icon: faUpload, text: "Submit" },
  ];
 
+ if (isLoading) {
+   return <LeftBarSkeleton />;
+ }
  /**
   * Handles click on sounds navigation
   * Clears genre filters and navigates to sounds page

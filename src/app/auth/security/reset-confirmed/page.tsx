@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import Logo from "@components/common/Logo";
 import { useRouter } from "next/navigation";
 import { useSession } from "@auth/services";
-import LoadingIcon from "@components/common/LoadingIcon";
+import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
 /**
  * PasswordReset component:

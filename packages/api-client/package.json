@@ -1,0 +1,23 @@
+{
+  "name": "@blendtune/api-client",
+  "version": "0.1.0",
+  "description": "API client for BlendTune",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@blendtune/shared-types": "workspace:*"
+  }
+}

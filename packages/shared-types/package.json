@@ -1,0 +1,19 @@
+{
+  "name": "@blendtune/shared-types",
+  "version": "0.1.0",
+  "description": "Shared TypeScript types for BlendTune",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

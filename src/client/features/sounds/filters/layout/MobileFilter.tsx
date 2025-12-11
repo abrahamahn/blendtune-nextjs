@@ -20,23 +20,22 @@ import {
   faTimes,
   faAngleDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
-import { removeAllKeywords, removeAllGenres } from "@store/slices";
 import { SortFilter } from "@sounds/filters/components";
 import { createFilterComponents } from "@sounds/filters/utils/filterUI";
 import { hasItems, calculateAppliedFilterCount } from "@sounds/filters/utils/filterLogic";
 import { useFilterContext } from "@sounds/filters/context"
+import { useTracks } from "@/client/features/tracks";
+import { Skeleton } from "@/client/shared/components/common/Skeleton";
 
 /**
  * Mobile filter component for sound browsing interface
  * Provides a full-screen modal filter with accordion sections
- * 
+ *
  * @param {SoundFilterProps} props - Component props containing filter state and handlers
  * @returns {React.ReactElement} Rendered mobile filter component
  */
 const MobileFilter: React.FC = () => {
-  const dispatch = useDispatch();
-  
+  const { isLoading } = useTracks();
   // Get filter state from hook
   const {
     minTempo,
@@ -67,6 +66,7 @@ const MobileFilter: React.FC = () => {
     sortBy,
     setSortBy,
     toggleFilter,
+    clearAllFilters,
     artistList,
     keywordList,
     moodList,
@@ -89,18 +89,7 @@ const MobileFilter: React.FC = () => {
    * Resets all filters to their default state
    */
   const handleClearClick = () => {
-    setMinTempo(40);
-    setMaxTempo(200);
-    setIncludeHalfTime(false);
-    setIncludeDoubleTime(false);
-    setSelectedKeys("");
-    setKeyFilterCombinations([]);
-    setSelectedArtists([]);
-    setSelectedInstruments([]);
-    setSelectedMoods([]);
-    dispatch(removeAllGenres());
-    dispatch(removeAllKeywords());
-    setOpenFilter(null);
+    clearAllFilters();
   };
 
   /**
@@ -257,15 +246,19 @@ const MobileFilter: React.FC = () => {
     <div className="block md:hidden w-full">
       {/* Header Button */}
       <div className="fixed top-14 md:mt-0 left-0 w-full px-2 py-1 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black z-10">
-        <button
-          type="button"
-          className="w-full text-sm p-0.5 font-semibold text-white bg-blue-500 hover:bg-blue-400 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-full"
-          onClick={toggleMobileFilter}
-          aria-expanded={mobileFilterOpen}
-          aria-controls="mobile-filter-panel"
-        >
-          Filter & Sort {appliedFilterCount > 0 && `(${appliedFilterCount})`}
-        </button>
+        {isLoading ? (
+          <Skeleton variant="rectangular" className="w-full h-8 rounded-full" />
+        ) : (
+          <button
+            type="button"
+            className="w-full text-sm p-0.5 font-semibold text-white bg-blue-500 hover:bg-blue-400 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-full"
+            onClick={toggleMobileFilter}
+            aria-expanded={mobileFilterOpen}
+            aria-controls="mobile-filter-panel"
+          >
+            Filter & Sort {appliedFilterCount > 0 && `(${appliedFilterCount})`}
+          </button>
+        )}
       </div>
 
       {/* Mobile Filter Panel */}

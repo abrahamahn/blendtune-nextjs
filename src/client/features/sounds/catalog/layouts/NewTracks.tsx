@@ -13,7 +13,7 @@ import useTrackPlayback from "@/client/features/sounds/catalog/hooks/useTrackPla
  */
 const NewTracks: React.FC = () => {
   // Get tracks directly from context
-  const { tracks } = useTracks();
+  const { tracks, isLoading } = useTracks();
   
   // Get playback functionality from our hook
   const { handleTrackPlay } = useTrackPlayback();
@@ -23,6 +23,7 @@ const NewTracks: React.FC = () => {
       <TrackCard 
         tracks={tracks}
         playTrack={handleTrackPlay}
+        isLoading={isLoading}
       />
     </div>
   );

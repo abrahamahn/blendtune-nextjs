@@ -24,6 +24,8 @@ import {
  faCircleInfo,
  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "@auth/services/useSession";
+import LeftBarSkeleton from "./components/LeftBarSkeleton";
 
 /**
 * Navigation item configuration type
@@ -40,6 +42,7 @@ interface NavItem {
 const LeftBar: React.FC = () => {
  const router = useRouter();
  const dispatch = useDispatch();
+ const { sessionLoading } = useSession();
 
  // Genre navigation items configuration
  const genreItems: NavItem[] = [
@@ -57,6 +60,10 @@ const LeftBar: React.FC = () => {
    { icon: faCircleInfo, text: "Support" },
    { icon: faUpload, text: "Submit" },
  ];
+
+ if (sessionLoading) {
+   return <LeftBarSkeleton />;
+ }
 
  /**
   * Handles click on sounds navigation

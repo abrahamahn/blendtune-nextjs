@@ -21,11 +21,11 @@ export const useCategorySelection = () => {
   
   // Get current selection state from Redux store
   const selectedGenres = useSelector(
-    (state: RootState) => state.tracks.selected.genres
+    (state: RootState) => state.tracks.filters.genres
   );
-  
+
   const selectedCategory = useSelector(
-    (state: RootState) => state.tracks.selected.category
+    (state: RootState) => state.tracks.filters.category
   );
 
   /**

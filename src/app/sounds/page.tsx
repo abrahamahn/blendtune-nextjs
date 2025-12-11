@@ -37,7 +37,7 @@ const Sounds: React.FC = () => {
   } = usePlayer();
 
   // Track and filter contexts
-  const { tracks } = useTracks();
+  const { tracks, isLoading } = useTracks();
   const { filteredTracks } = useFilterContext();
 
   // Update track list when filtered tracks change
@@ -89,6 +89,7 @@ const Sounds: React.FC = () => {
               tracks={filteredTracks} 
               playTrack={handlePlayTrack}
               onTitleClick={handleTitleClick}
+              isLoading={isLoading}
             />
             
             {/* Desktop catalog view */}
@@ -96,6 +97,7 @@ const Sounds: React.FC = () => {
               tracks={filteredTracks} 
               playTrack={handlePlayTrack}
               onTitleClick={handleTitleClick}
+              isLoading={isLoading}
             />
           </div>
         </CatalogProvider>

@@ -14,6 +14,7 @@ import {
 } from "@store/slices";
 import { useSession } from "@auth/services";
 import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
+import WelcomeSkeleton from "./WelcomeSkeleton";
 
 /**
  * Welcome Page Component:
@@ -33,6 +34,7 @@ const Welcome = () => {
     userType,
     userOccupation,
     userMarketingConsent,
+    sessionLoading,
   } = useSession();
 
   // Local states for loading and error handling
@@ -59,6 +61,11 @@ const Welcome = () => {
     : { year: new Date().getFullYear(), month: 1, day: 1 };
 
   const [dobState, setDobState] = useState(initialDobState);
+
+  // If session is still loading, show skeleton
+  if (sessionLoading) {
+    return <WelcomeSkeleton />;
+  }
 
   /**
    * Updates the date of birth state when a user selects a new value.

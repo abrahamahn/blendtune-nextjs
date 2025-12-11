@@ -2,7 +2,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import sessionReducer from "@auth/store/sessionSlice";
 import userReducer from "@auth/store/userSlice";
-import keywordReducer from "@/client/features/sounds/filters/store/filterSlice";
+import filterReducer from "@/client/features/sounds/filters/store/filterSlice";
 
 // Group authentication-related reducers
 const authReducer = combineReducers({
@@ -10,9 +10,9 @@ const authReducer = combineReducers({
   user: userReducer,
 });
 
-// Group track & keyword selection reducers
+// Group track & filter selection reducers
 const tracksReducer = combineReducers({
-  selected: keywordReducer,
+  filters: filterReducer,
 });
 
 // Combine all domain reducers into a single root reducer

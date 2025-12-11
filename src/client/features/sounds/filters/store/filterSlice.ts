@@ -3,107 +3,193 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /**
- * Defines the structure of the state for keyword selection in the music streaming app.
+ * Type for key filter combinations
  */
-export interface KeywordState {
-  category: string; // Represents the currently selected category
-  genres: string[]; // List of selected genres
-  keywords: string[]; // List of selected keywords
-}
-
-/**
- * Initial state for keyword selection.
- */
-const initialState: KeywordState = {
-  category: 'All', // Default category when no specific genre is selected
-  genres: [], // No genres selected initially
-  keywords: [], // No keywords selected initially
+export type KeyFilterCombination = {
+  key: string | null;
+  'key.note': string | null;
+  'key.scale': string | null;
 };
 
 /**
- * Redux slice to manage category, genre, and keyword selection.
+ * Defines the structure of the state for all filters in the music streaming app.
  */
-const selectedSlice = createSlice({
-  name: 'selected',
+export interface FilterState {
+  // Category & Genre
+  category: string;
+  genres: string[];
+
+  // Tempo
+  minTempo: number;
+  maxTempo: number;
+  includeHalfTime: boolean;
+  includeDoubleTime: boolean;
+
+  // Key
+  selectedKeys: string;
+  selectedScale: string;
+  keyFilterCombinations: KeyFilterCombination[];
+
+  // Artist, Instrument, Mood
+  selectedArtists: string[];
+  selectedInstruments: string[];
+  selectedMoods: string[];
+
+  // Keywords
+  keywords: string[];
+}
+
+/**
+ * Initial state for all filters.
+ */
+const initialState: FilterState = {
+  category: 'All',
+  genres: [],
+  minTempo: 40,
+  maxTempo: 200,
+  includeHalfTime: false,
+  includeDoubleTime: false,
+  selectedKeys: '',
+  selectedScale: 'Major',
+  keyFilterCombinations: [],
+  selectedArtists: [],
+  selectedInstruments: [],
+  selectedMoods: [],
+  keywords: [],
+};
+
+/**
+ * Redux slice to manage all filter selections.
+ */
+const filterSlice = createSlice({
+  name: 'filters',
   initialState,
   reducers: {
-    /**
-     * Updates the selected category and resets the genres array to contain only the selected category.
-     */
+    // ===== Category & Genre =====
     selectCategory: (state, action: PayloadAction<string>) => {
       state.category = action.payload;
-      state.genres = [action.payload]; // Ensures only one category is active at a time
+      state.genres = [action.payload];
     },
 
-    /**
-     * Toggles a genre selection. If the genre is not already selected, it gets added; 
-     * otherwise, it gets removed. Ensures category updates based on selected genres.
-     */
     selectGenres: (state, action: PayloadAction<string>) => {
       const index = state.genres.indexOf(action.payload);
-      
       if (index < 0) {
         state.genres.push(action.payload);
       } else {
         state.genres.splice(index, 1);
       }
-
-      // If only one genre remains, update category; otherwise, reset to "All"
       state.category = state.genres.length === 1 ? state.genres[0] : 'All';
     },
 
-    /**
-     * Clears all selected genres and resets the category to "All".
-     */
+    setGenres: (state, action: PayloadAction<string[]>) => {
+      state.genres = action.payload;
+      state.category = action.payload.length === 1 ? action.payload[0] : 'All';
+    },
+
     removeAllGenres: (state) => {
       state.category = 'All';
       state.genres = [];
     },
 
-    /**
-     * Selects a single keyword, replacing any previously selected keywords.
-     */
+    // ===== Tempo =====
+    setMinTempo: (state, action: PayloadAction<number>) => {
+      state.minTempo = action.payload;
+    },
+
+    setMaxTempo: (state, action: PayloadAction<number>) => {
+      state.maxTempo = action.payload;
+    },
+
+    setIncludeHalfTime: (state, action: PayloadAction<boolean>) => {
+      state.includeHalfTime = action.payload;
+    },
+
+    setIncludeDoubleTime: (state, action: PayloadAction<boolean>) => {
+      state.includeDoubleTime = action.payload;
+    },
+
+    // ===== Key =====
+    setSelectedKeys: (state, action: PayloadAction<string>) => {
+      state.selectedKeys = action.payload;
+    },
+
+    setSelectedScale: (state, action: PayloadAction<string>) => {
+      state.selectedScale = action.payload;
+    },
+
+    setKeyFilterCombinations: (state, action: PayloadAction<KeyFilterCombination[]>) => {
+      state.keyFilterCombinations = action.payload;
+    },
+
+    // ===== Artist, Instrument, Mood =====
+    setSelectedArtists: (state, action: PayloadAction<string[]>) => {
+      state.selectedArtists = action.payload;
+    },
+
+    setSelectedInstruments: (state, action: PayloadAction<string[]>) => {
+      state.selectedInstruments = action.payload;
+    },
+
+    setSelectedMoods: (state, action: PayloadAction<string[]>) => {
+      state.selectedMoods = action.payload;
+    },
+
+    // ===== Keywords =====
     selectKeyword: (state, action: PayloadAction<string>) => {
       state.keywords = [action.payload];
     },
 
-    /**
-     * Adds multiple keywords to the list while ensuring uniqueness.
-     */
     selectKeywords: (state, action: PayloadAction<string[]>) => {
       state.keywords = Array.from(new Set([...state.keywords, ...action.payload]));
     },
 
-    /**
-     * Removes a specific keyword from the selected keywords list.
-     */
     deselectKeyword: (state, action: PayloadAction<string>) => {
       state.keywords = state.keywords.filter(keyword => keyword !== action.payload);
     },
 
-    /**
-     * Clears all selected keywords.
-     */
     removeAllKeywords: (state) => {
       state.keywords = [];
+    },
+
+    // ===== Clear All =====
+    clearAllFilters: (state) => {
+      return initialState;
     },
   },
 });
 
 /**
- * Exporting action creators for modifying the keyword state.
+ * Exporting action creators for modifying filter state.
  */
-export const { 
-  selectGenres, 
+export const {
+  // Category & Genre
+  selectGenres,
+  setGenres,
   selectCategory,
   removeAllGenres,
-  selectKeyword, 
-  selectKeywords, 
+  // Tempo
+  setMinTempo,
+  setMaxTempo,
+  setIncludeHalfTime,
+  setIncludeDoubleTime,
+  // Key
+  setSelectedKeys,
+  setSelectedScale,
+  setKeyFilterCombinations,
+  // Artist, Instrument, Mood
+  setSelectedArtists,
+  setSelectedInstruments,
+  setSelectedMoods,
+  // Keywords
+  selectKeyword,
+  selectKeywords,
   deselectKeyword,
-  removeAllKeywords, 
-} = selectedSlice.actions;
+  removeAllKeywords,
+  // Clear All
+  clearAllFilters,
+} = filterSlice.actions;
 
 /**
  * Default export for the slice reducer to be integrated into the store.
  */
-export default selectedSlice.reducer;
+export default filterSlice.reducer;

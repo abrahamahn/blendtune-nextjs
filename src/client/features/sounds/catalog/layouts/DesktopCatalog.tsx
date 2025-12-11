@@ -12,6 +12,8 @@ import { usePlayer } from "@player/services/playerService";
 import { PlayerIcons, EqualizerIcon } from '@client/shared/components/icons';
 import { renderValue, formatDuration } from "@/client/features/sounds/catalog/utils/trackUtils";
 
+import TrackRowSkeleton from "@/client/features/sounds/catalog/components/TrackRowSkeleton";
+
 /**
  * Props definition for the DesktopCatalog component.
  */
@@ -19,6 +21,7 @@ export interface DesktopCatalogProps {
   tracks: Track[]; // List of tracks to display
   playTrack: (selectedTrack: Track) => void; // Function to play a track
   onTitleClick: (selectedTrack: Track) => void; // Function to handle title clicks
+  isLoading?: boolean;
 }
 
 /**
@@ -28,6 +31,7 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
   tracks,
   playTrack,
   onTitleClick,
+  isLoading = false,
 }) => {
   // Retrieve the current track and playback state from Redux
   const { currentTrack, isPlaying } = usePlayer();
@@ -50,25 +54,35 @@ const DesktopCatalog: React.FC<DesktopCatalogProps> = ({
     playTrack(selectedTrack);
   };
 
-  // If no tracks are available, return null (prevents rendering issues)
-  if (!tracks) {
-    return null;
-  }
+  const renderContent = () => {
+    if (isLoading) {
+      // Render 10 skeletons as a default
+      return Array.from({ length: 10 }).map((_, index) => (
+        <TrackRowSkeleton key={`skeleton-${index}`} />
+      ));
+    }
+
+    if (!tracks) {
+      return null;
+    }
+
+    return tracks.map((track: Track, index: number) => (
+      <TrackRow 
+        key={track.id}
+        track={track}
+        index={index}
+        isCurrentTrack={currentTrack?.id === track.id}
+        isPlaying={isPlaying}
+        playTrack={playTrack}
+        handleTitleClick={handleTitleClick}
+      />
+    ));
+  };
 
   return (
     <div className="hidden xl:block w-full justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-4 mx-auto flex-col relative">
-        {tracks.map((track: Track, index: number) => (
-          <TrackRow 
-            key={track.id}
-            track={track}
-            index={index}
-            isCurrentTrack={currentTrack?.id === track.id}
-            isPlaying={isPlaying}
-            playTrack={playTrack}
-            handleTitleClick={handleTitleClick}
-          />
-        ))}
+        {renderContent()}
       </div>
     </div>
   );

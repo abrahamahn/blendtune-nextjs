@@ -46,7 +46,7 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
 
   // Retrieves selected keywords from the Redux store.
   const selectedKeywords = useSelector(
-    (state: RootState) => state.tracks.selected.keywords
+    (state: RootState) => state.tracks.filters.keywords
   );
 
   // Handles changes in the search input field.

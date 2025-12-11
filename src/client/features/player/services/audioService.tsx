@@ -51,31 +51,6 @@ export const useAudioElement = (
   initialVolume: number = 1,
   eventHandlers: AudioEventHandlers = {}
 ): UseAudioElementReturn => {
-
-  // Add this at the very top of your useAudioElement hook
-  console.log('🎵 useAudioElement hook called with:', { initialSrc, initialVolume });
-
-  // In the audio element initialization useEffect:
-  useEffect(() => {
-    console.log('🎵 Audio element initialization effect running...');
-    console.log('🎵 Current audioRef:', audioRef.current);
-    
-    if (audioRef.current) {
-      console.log('🎵 Audio element already exists, skipping');
-      return;
-    }
-    
-    console.log('🎵 Creating new Audio element...');
-    const audio = new Audio();
-    console.log('🎵 Audio element created:', audio);
-    
-    audio.preload = 'metadata';
-    audio.volume = initialVolume;
-    audioRef.current = audio;
-    
-    console.log('🎵 Audio element stored in ref:', audioRef.current);
-  }, [initialVolume]);
-  
   // Create ref for the audio element
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
@@ -92,16 +67,6 @@ export const useAudioElement = (
     isLoading: false,
     error: null
   });
-
-  // Initialize audio element
-  useEffect(() => {
-    if (audioRef.current) return;
-    
-    const audio = new Audio();
-    audio.preload = 'metadata';
-    audio.volume = initialVolume;
-    audioRef.current = audio;
-  }, []);
 
   // Set up event listeners
   useEffect(() => {

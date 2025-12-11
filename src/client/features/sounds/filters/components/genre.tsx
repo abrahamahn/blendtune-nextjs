@@ -1,13 +1,8 @@
 // src\client\features\sounds\filters\components\genre.tsx
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '@core/store';
-import {
-  selectGenres,
-  selectCategory,
-  removeAllGenres,
-} from "@store/slices";
+import { useDispatch } from "react-redux";
+import { selectGenres, removeAllGenres } from "@store/slices";
 import {
   faStar,
   faGem,
@@ -15,7 +10,6 @@ import {
   faLeaf,
   faPaw,
   faBoltLightning,
-  faGlobe, // Added icon for "All"
 } from "@fortawesome/free-solid-svg-icons";
 import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/ui";
 
@@ -28,10 +22,9 @@ interface GenreFilterProps {
 }
 
 /**
-* Available genre options with icons - Added "All" option
+* Available genre options with icons
 */
 const genreItems = [
- { icon: faGlobe, text: "All" }, // Added All option
  { icon: faStar, text: "Pop" },
  { icon: faGem, text: "Hiphop" },
  { icon: faWater, text: "R&B" },
@@ -42,32 +35,23 @@ const genreItems = [
 
 /**
 * Genre filter component with responsive layout
-* Fixed to include "All" option and use original working logic
+* Uses Redux for state management with toggle functionality
 */
 const GenreFilter: React.FC<GenreFilterProps> = ({
  selectedGenres,
  onClose,
 }) => {
  const dispatch = useDispatch();
- const selectedCategory = useSelector(
-   (state: RootState) => state.tracks.selected.category
- );
 
  /**
-  * Uses original working logic for genre toggling
+  * Toggles a genre selection on/off using Redux
   */
  const handleGenreToggle = (genre: string) => {
-   if (genre === "All") {
-     // Original working logic - use removeAllGenres for "All"
-     dispatch(removeAllGenres());
-   } else {
-     // Original working logic - use selectCategory for specific genres
-     dispatch(selectCategory(genre));
-   }
+   dispatch(selectGenres(genre));
  };
 
  /**
-  * Uses original clear function
+  * Clears all selected genres using Redux
   */
  const handleClearGenres = () => {
    dispatch(removeAllGenres());
@@ -77,9 +61,6 @@ const GenreFilter: React.FC<GenreFilterProps> = ({
   * Determines if a genre is selected
   */
  const isGenreSelected = (genre: string) => {
-   if (genre === "All") {
-     return selectedCategory === "All";
-   }
    return selectedGenres.includes(genre);
  };
 

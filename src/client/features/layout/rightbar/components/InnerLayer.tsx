@@ -14,6 +14,7 @@ import { colorExtractor } from "@utils/colorExtractor";
 import { Artwork, Watermark } from "@components/common/";
 import { TrackMetadata } from "@layout/rightbar/components/TrackMetadata";
 import { SimpleTrackProgress } from "@layout/rightbar/components/SimpleTrackProgress";
+import InnerLayerSkeleton from "./InnerLayerSkeleton";
 
 /**
 * InnerLayer component providing track details and audio visualization
@@ -108,6 +109,10 @@ const InnerLayer: React.FC = () => {
       audioRef.current.currentTime = newPlaybackPosition;
     }
   };
+
+  if (!currentTrack) {
+    return <InnerLayerSkeleton />;
+  }
 
   return (
     <div className="w-full h-full flex flex-col overflow-auto p-2 pl-1">

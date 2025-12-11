@@ -20,11 +20,11 @@ import {
   faPlus,
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
-import { removeAllKeywords, removeAllGenres } from "@store/slices";
 import { SortFilter } from "@sounds/filters/components";
 import { createFilterComponents, renderFilterLabel } from "@sounds/filters/utils";
 import { useFilterContext } from "@sounds/filters/context"
+import { useTracks } from "@/client/features/tracks";
+import FilterSkeleton from "@sounds/filters/components/FilterSkeleton";
 
 /**
  * Desktop filter component for sound browsing interface
@@ -34,7 +34,7 @@ import { useFilterContext } from "@sounds/filters/context"
  * @returns {React.ReactElement} Rendered desktop filter component
  */
 const DesktopFilter: React.FC = () => {
-  const dispatch = useDispatch();
+  const { isLoading } = useTracks();
   const {
     minTempo,
     setMinTempo,
@@ -64,6 +64,7 @@ const DesktopFilter: React.FC = () => {
     sortBy,
     setSortBy,
     toggleFilter,
+    clearAllFilters,
     artistList,
     keywordList,
     moodList,
@@ -83,6 +84,10 @@ const DesktopFilter: React.FC = () => {
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [setOpenSortFilter]);
+
+  if (isLoading) {
+    return <FilterSkeleton />;
+  }
 
   /**
    * Checks if a string or array has values
@@ -117,17 +122,7 @@ const DesktopFilter: React.FC = () => {
    * Resets all filters to their default state
    */
   const handleClearClick = () => {
-    setMinTempo(40);
-    setMaxTempo(200);
-    setIncludeHalfTime(false);
-    setIncludeDoubleTime(false);
-    setSelectedKeys("");
-    setKeyFilterCombinations([]);
-    setSelectedArtists([]);
-    setSelectedInstruments([]);
-    setSelectedMoods([]);
-    dispatch(removeAllGenres());
-    dispatch(removeAllKeywords());
+    clearAllFilters();
     setOpenFilter(null);
   };
 

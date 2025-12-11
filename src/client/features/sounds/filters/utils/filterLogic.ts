@@ -196,7 +196,7 @@ export const instrumentFilter = (track: Track, selectedInstruments: string[]): b
   // Otherwise, check if track matches any of the selected instruments
   const selectedInstrumentsEmpty = selectedInstruments.length === 0;
   return selectedInstrumentsEmpty || selectedInstruments.some(instrument => {
-    return track.instruments.some(instr => instr.main === instrument);
+    return track.instruments?.some(instr => instr.main === instrument) ?? false;
   });
 };
 

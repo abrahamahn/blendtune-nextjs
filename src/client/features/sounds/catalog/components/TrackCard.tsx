@@ -9,6 +9,7 @@ import useResponsiveLayout from "@/client/features/sounds/catalog/hooks/useRespo
 import useImagePreloader from "@/client/features/sounds/catalog/hooks/useImagePreloader";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import TrackCardItem from "@catalog/components/TrackCardItem";
+import TrackCardSkeleton from "./TrackCardSkeleton";
 
 /**
  * Props definition for the TrackCard component.
@@ -17,6 +18,7 @@ export interface TrackCardProps {
   tracks: Track[]; // List of tracks to display
   currentTrack?: Track; // The currently playing track
   playTrack: (track: Track) => void; // Function to play a selected track
+  isLoading?: boolean;
 }
 
 /**
@@ -25,6 +27,7 @@ export interface TrackCardProps {
 const TrackCard: React.FC<TrackCardProps> = ({
   tracks,
   playTrack,
+  isLoading = false,
 }) => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
@@ -35,7 +38,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   const { isMobile, itemsPerPage } = useResponsiveLayout();
   
   // Calculate total pages for pagination
-  const totalPages = Math.ceil(tracks.length / itemsPerPage);
+  const totalPages = Math.ceil((tracks?.length || 0) / itemsPerPage);
 
   // Navigation handlers
   const handleNext = useCallback(() => {
@@ -59,7 +62,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   
   // Preload images for the next page
   React.useEffect(() => {
-    if (!isMobile) {
+    if (!isMobile && !isLoading && tracks) {
       const nextPage = currentPage + 1;
       const nextPageTracks = tracks.slice(
         nextPage * itemsPerPage,
@@ -69,7 +72,30 @@ const TrackCard: React.FC<TrackCardProps> = ({
         preloadImages(nextPageTracks);
       }
     }
-  }, [preloadImages, currentPage, itemsPerPage, tracks, isMobile]);
+  }, [preloadImages, currentPage, itemsPerPage, tracks, isMobile, isLoading]);
+
+  const renderContent = () => {
+    if (isLoading) {
+      const skeletonCount = isMobile ? 4 : itemsPerPage;
+      return Array.from({ length: skeletonCount }).map((_, index) => (
+        <TrackCardSkeleton key={`skeleton-${index}`} isMobile={isMobile} />
+      ));
+    }
+
+    return displayedTracks?.map((track, index) => (
+      <TrackCardItem
+        key={track.id || index}
+        track={track}
+        isCurrentlyPlaying={isPlaying && currentTrack?.id === track.id}
+        isMobile={isMobile}
+        onPlay={() => playTrack(track)}
+        onHoverChange={(isHovering) => 
+          setHoverIndex(isHovering ? index : null)
+        }
+        isHovered={hoverIndex === index}
+      />
+    ));
+  };
 
   return (
     <div className="py-4 max-w-screen-xl w-full mx-auto p-2 pb-0 md:pb-2">
@@ -77,7 +103,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
         {/* Main container with 3 divs: prev button, track list, next button */}
         <div className="flex w-full items-center">
           {/* Previous Button - Only visible on desktop */}
-          {!isMobile && (
+          {!isMobile && !isLoading && (
             <NavigationButton 
               direction="previous" 
               onClick={handlePrevious} 
@@ -94,24 +120,12 @@ const TrackCard: React.FC<TrackCardProps> = ({
                   : "justify-center space-x-4"
               }`}
             >
-              {displayedTracks?.map((track, index) => (
-                <TrackCardItem
-                  key={track.id || index}
-                  track={track}
-                  isCurrentlyPlaying={isPlaying && currentTrack?.id === track.id}
-                  isMobile={isMobile}
-                  onPlay={() => playTrack(track)}
-                  onHoverChange={(isHovering) => 
-                    setHoverIndex(isHovering ? index : null)
-                  }
-                  isHovered={hoverIndex === index}
-                />
-              ))}
+              {renderContent()}
             </div>
           </div>
 
           {/* Next Button - Only visible on desktop */}
-          {!isMobile && (
+          {!isMobile && !isLoading && (
             <NavigationButton 
               direction="next" 
               onClick={handleNext} 

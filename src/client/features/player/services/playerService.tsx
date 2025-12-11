@@ -83,9 +83,6 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [state, dispatch] = useReducer(playerReducer, initialPlayerState);
   const { tracks } = useTracks();
 
-  // Add this at the top of your PlayerProvider component
-  console.log('🎵 PlayerProvider rendering, tracks:', tracks.length);
-  console.log('🎵 Current track:', state.currentTrack?.metadata?.title);
   // State for handling track end events to avoid circular dependencies
   const [trackEndHandler, setTrackEndHandler] = useState<() => void>(() => () => {});
 
@@ -162,11 +159,11 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   useEffect(() => {
     if (isInitializedRef.current || tracks.length === 0) return;
-  
+
     isInitializedRef.current = true;
     dispatch(playerActions.setCurrentTrack(tracks[0]));
     dispatch(playerActions.setTrackList(tracks));
-  }, [tracks.length]);
+  }, [tracks, dispatch]);
 
   // Effect to load new audio when the current track changes
   useEffect(() => {
@@ -224,8 +221,6 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     });
   }, [toggle, dispatch, state.currentTrack]);
 
-  console.log('🔄 Creating context value, state keys:', Object.keys(state));
-
   // Memoize the context value to prevent unnecessary re-renders of consumers.
   const contextValue: PlayerContextType = useMemo(() => ({
     ...state,
@@ -241,12 +236,18 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setTrackEndHandler,
     playTrack,
   }), [
-    state.isPlaying,
-    state.currentTrack?.id,
-    state.volume,
-    state.currentTime,
-    state.trackList.length,
-    state.loopMode,
+    state,
+    audioRef,
+    dispatch,
+    setCurrentTrack,
+    setTrackList,
+    handleTogglePlay,
+    play,
+    pause,
+    setVolume,
+    seekTo,
+    setTrackEndHandler,
+    playTrack,
   ]);
 
   return (

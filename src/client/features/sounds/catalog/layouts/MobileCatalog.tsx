@@ -8,10 +8,13 @@ import TrackArtwork from "@catalog/components/TrackArtwork";
 import TrackActions from "@catalog/components/TrackActions";
 import { renderValue } from "@/client/features/sounds/catalog/utils/trackUtils";
 
+import MobileTrackRowSkeleton from "@/client/features/sounds/catalog/components/MobileTrackRowSkeleton";
+
 export interface MobileCatalogProps {
   tracks: Track[];
   playTrack: (track: Track) => void;
   onTitleClick: (selectedTrack: Track) => void;
+  isLoading?: boolean;
 }
 
 /**
@@ -22,23 +25,34 @@ const MobileCatalog: React.FC<MobileCatalogProps> = ({
   tracks,
   playTrack,
   onTitleClick,
+  isLoading = false,
 }) => {
   const { currentTrack, isPlaying } = usePlayer();
 
-  if (!tracks) return null;
+  const renderContent = () => {
+    if (isLoading) {
+      return Array.from({ length: 8 }).map((_, index) => (
+        <MobileTrackRowSkeleton key={`skeleton-${index}`} />
+      ));
+    }
+
+    if (!tracks) return null;
+
+    return tracks.map((track) => (
+      <MobileTrackRow
+        key={track.id}
+        track={track}
+        isCurrentlyPlaying={isPlaying && currentTrack?.id === track.id}
+        playTrack={playTrack}
+        onTitleClick={onTitleClick}
+      />
+    ));
+  };
 
   return (
     <div className="block xl:hidden w-full pt-0 md:pt-4 justify-center items-center mx-auto">
       <div className="flex max-w-screen-xl pl-2 lg:px-2 mx-auto flex-col relative">
-        {tracks.map((track) => (
-          <MobileTrackRow
-            key={track.id}
-            track={track}
-            isCurrentlyPlaying={isPlaying && currentTrack?.id === track.id}
-            playTrack={playTrack}
-            onTitleClick={onTitleClick}
-          />
-        ))}
+        {renderContent()}
       </div>
     </div>
   );

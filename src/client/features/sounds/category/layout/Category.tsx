@@ -11,6 +11,7 @@ import { DEFAULT_GENRES } from "../constants";
 import { useCategorySelection } from "../hooks/useCategorySelection";
 import { CategoryItem } from "../components/Item";
 import { CategoryProps } from "../types";
+import CategorySkeleton from "../components/CategorySkeleton";
 
 /**
  * Genre selection component for filtering tracks
@@ -20,11 +21,16 @@ import { CategoryProps } from "../types";
  * @param {CategoryProps} props - Component properties
  * @returns {React.ReactElement} Rendered category component
  */
-const Category: React.FC<CategoryProps> = ({ 
+const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({ 
   className = "",
-  genres = DEFAULT_GENRES
+  genres = DEFAULT_GENRES,
+  isLoading = false,
 }) => {
   const { handleGenreSelection, isGenreSelected } = useCategorySelection();
+
+  if (isLoading) {
+    return <CategorySkeleton />;
+  }
 
   return (
     <div className={`max-w-screen-xl mx-auto md:px-2 lg:px-2 px-4 sm:pt-4 md:pt-0 lg:p-2 ${className}`}>

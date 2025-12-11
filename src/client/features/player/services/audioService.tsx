@@ -68,6 +68,17 @@ export const useAudioElement = (
     error: null
   });
 
+  // Initialize audio element once
+  useEffect(() => {
+    if (audioRef.current) return;
+
+    const audio = new Audio();
+    audio.preload = 'auto';
+    audio.volume = initialVolume;
+    audio.crossOrigin = 'anonymous';
+    audioRef.current = audio;
+  }, [initialVolume]);
+
   // Set up event listeners
   useEffect(() => {
     const audioEl = audioRef.current;

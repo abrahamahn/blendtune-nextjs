@@ -73,7 +73,7 @@ const Sounds: React.FC = () => {
         />
 
         {/* Category selector */}
-        <Category />
+        <Category isLoading={isLoading} />
 
         {/* New tracks display */}
         <NewTracks />

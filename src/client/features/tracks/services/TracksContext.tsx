@@ -35,7 +35,7 @@ interface ExtendedTrackServiceType extends TrackServiceType {
  */
 const initialTrackService: ExtendedTrackServiceType = {
   tracks: [],
-  isLoading: false,
+  isLoading: true,
   error: null,
   setTrackList: () => {},
   setCurrentTrack: () => {}
@@ -69,7 +69,7 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
   // Local state for tracks
   const [tracks, setTracks] = useState<Track[]>([]);
   const [currentTrack, setCurrentTrackState] = useState<Track | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<{ message: string; code: string } | null>(null);
   
   // Flag to track initial data load

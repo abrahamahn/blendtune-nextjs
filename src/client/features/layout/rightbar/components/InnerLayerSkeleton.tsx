@@ -3,7 +3,7 @@ import { Skeleton } from "@/client/shared/components/common/Skeleton";
 
 const InnerLayerSkeleton: React.FC = () => {
   return (
-    <div className="w-full h-full flex flex-col overflow-auto p-2 pl-1">
+    <div className="w-full h-full flex flex-col overflow-auto">
       {/* Main container skeleton */}
       <div className="p-0 rounded-2xl h-full border dark:border-0 bg-neutral-100 dark:bg-neutral-900">
         <div className="flex flex-col p-8 pt-4 rounded-md m-0 mt-0 lg:mt-2">

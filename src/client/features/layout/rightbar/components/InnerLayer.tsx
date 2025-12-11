@@ -115,7 +115,7 @@ const InnerLayer: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col overflow-auto p-2 pl-1">
+    <div className="w-full h-full flex flex-col overflow-auto">
       {/* Main container with dynamic background */}
       <div
         className="p-0 rounded-2xl h-full border dark:border-0"

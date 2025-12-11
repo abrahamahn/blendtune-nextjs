@@ -68,16 +68,14 @@ export const useAudioElement = (
     error: null
   });
 
-  // Initialize audio element once
-  useEffect(() => {
-    if (audioRef.current) return;
-
+  // Initialize audio element synchronously to avoid race conditions with children
+  if (!audioRef.current && typeof window !== 'undefined') {
     const audio = new Audio();
     audio.preload = 'auto';
     audio.volume = initialVolume;
     audio.crossOrigin = 'anonymous';
     audioRef.current = audio;
-  }, [initialVolume]);
+  }
 
   // Set up event listeners
   useEffect(() => {
@@ -211,6 +209,16 @@ export const useAudioElement = (
   const play = useCallback(async () => {
     if (!audioRef.current) {
       return Promise.reject(new Error('Audio element not available'));
+    }
+
+    // Resume AudioContext if it exists and is suspended (fix for autoplay policy)
+    const audioEl = audioRef.current as any;
+    if (audioEl.__btAudioCtx && audioEl.__btAudioCtx.state === 'suspended') {
+      try {
+        await audioEl.__btAudioCtx.resume();
+      } catch (e) {
+        console.warn('Failed to resume AudioContext:', e);
+      }
     }
     
     // Prevent multiple play calls

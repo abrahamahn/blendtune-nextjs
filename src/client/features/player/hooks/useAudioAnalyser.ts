@@ -12,11 +12,17 @@ export function useAudioAnalyser(
   type ExtendedAudioEl = HTMLAudioElement & {
     __btAudioCtx?: AudioContext;
     __btSource?: MediaElementAudioSourceNode;
+    __btAnalyser?: AnalyserNode;
   };
 
   useEffect(() => {
     const audioEl = audioRef.current as ExtendedAudioEl | null;
     if (!audioEl) return;
+
+    if (audioEl.__btAnalyser) {
+      setAnalyser(audioEl.__btAnalyser);
+      return;
+    }
 
     const AudioContextClass =
       (window as any).AudioContext || (window as any).webkitAudioContext;
@@ -26,24 +32,17 @@ export function useAudioAnalyser(
       audioEl.__btSource || ctx.createMediaElementSource(audioEl);
     const analyserNode = ctx.createAnalyser();
 
-    // Persist source/context on the element to avoid InvalidStateError on re-use
+    // Persist source/context/analyser on the element
     audioEl.__btAudioCtx = ctx;
     audioEl.__btSource = source;
+    audioEl.__btAnalyser = analyserNode;
 
     source.connect(analyserNode);
     analyserNode.connect(ctx.destination);
 
     setAnalyser(analyserNode);
 
-    return () => {
-      try {
-        source.disconnect();
-        analyserNode.disconnect();
-      } catch {
-        // no-op cleanup guard
-      }
-      setAnalyser(null);
-    };
+    // No cleanup: persist the graph for the lifecycle of the audio element
   }, [audioRef]);
 
   return analyser;

@@ -2,11 +2,11 @@
 import React from "react";
 import { PlayerIcons } from '@/client/shared/components/icons';
 import { usePlayer } from "@/client/features/player/services/playerService";
-import { useTrackNavigation } from "../hooks";
+import { usePlayerControls } from "../hooks";
 
 export const PlayerControls: React.FC = () => {
   const { isPlaying, loopMode } = usePlayer();
-  const { togglePlayPause, previousTrack, nextTrack, loopTrack } = useTrackNavigation();
+  const { togglePlayPause, previousTrack, nextTrack, loopTrack } = usePlayerControls();
 
   return (
     <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">

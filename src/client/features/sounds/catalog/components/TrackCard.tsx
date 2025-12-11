@@ -98,7 +98,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
   };
 
   return (
-    <div className="py-4 max-w-screen-xl w-full mx-auto p-2 pb-0 md:pb-2">
+    <div className="py-4 max-w-screen-xl w-full mx-auto">
       <div className="w-full max-w-screen-xl mx-auto">
         {/* Main container with 3 divs: prev button, track list, next button */}
         <div className="flex w-full items-center">
@@ -112,7 +112,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
           )}
 
           {/* Track List */}
-          <div className={`flex-1 ${isMobile ? "overflow-x-auto" : "overflow-hidden"} px-2`}>
+          <div className={`flex-1 ${isMobile ? "overflow-x-auto" : "overflow-hidden"}`}>
             <div 
               className={`flex ${
                 isMobile 

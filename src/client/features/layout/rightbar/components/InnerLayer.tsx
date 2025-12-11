@@ -15,6 +15,7 @@ import { Artwork, Watermark } from "@components/common/";
 import { TrackMetadata } from "@layout/rightbar/components/TrackMetadata";
 import { SimpleTrackProgress } from "@layout/rightbar/components/SimpleTrackProgress";
 import InnerLayerSkeleton from "./InnerLayerSkeleton";
+import { useProgressControl } from "@player/hooks/useProgressControl";
 
 /**
 * InnerLayer component providing track details and audio visualization
@@ -27,6 +28,7 @@ const InnerLayer: React.FC = () => {
     trackDuration, 
     dispatch 
   } = usePlayer();
+  const { handleProgressClick, progressPercent } = useProgressControl();
 
   // Theme and color state
   const [themePreference, setThemePreference] = useState("dark");
@@ -77,39 +79,6 @@ const InnerLayer: React.FC = () => {
   }, []);
 
   // Audio time update effect
-  useEffect(() => {
-    const handleTimeUpdate = () => {
-      dispatch(playerActions.setCurrentTime(audioRef.current?.currentTime || 0));
-    };
-
-    const handleLoadedMetadata = () => {
-      dispatch(playerActions.setTrackDuration(audioRef.current?.duration || 0));
-    };
-
-    const currentAudioRef = audioRef.current;
-    currentAudioRef?.addEventListener("timeupdate", handleTimeUpdate);
-    currentAudioRef?.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      currentAudioRef?.removeEventListener("timeupdate", handleTimeUpdate);
-      currentAudioRef?.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [dispatch, audioRef]);
-
-  // Handle progress bar click to seek
-  const handleProgressBarClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const durationBar = e.currentTarget;
-    const rect = durationBar.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const newPercentage = (mouseX / rect.width) * 100;
-    const newPlaybackPosition = trackDuration
-      ? (newPercentage / 100) * trackDuration
-      : 0;
-    if (audioRef.current) {
-      audioRef.current.currentTime = newPlaybackPosition;
-    }
-  };
-
   if (!currentTrack) {
     return <InnerLayerSkeleton />;
   }
@@ -195,7 +164,8 @@ const InnerLayer: React.FC = () => {
             audioRef={audioRef}
             currentTime={currentTime}
             trackDuration={trackDuration}
-            onProgressClick={handleProgressBarClick}
+            onProgressClick={handleProgressClick}
+            progressPercent={progressPercent}
           />
 
           {/* Detailed track information */}
@@ -205,13 +175,6 @@ const InnerLayer: React.FC = () => {
           
           {/* Track metadata component */}
           <TrackMetadata currentTrack={currentTrack} />
-        </div>
-
-        {/* Similar tracks section */}
-        <div className="px-4">
-          <div className="flex flex-col p-2 rounded-md mt-2 h-20">
-            <p className="text-neutral-500 dark:text-white">Sounds Similar</p>
-          </div>
         </div>
       </div>
     </div>

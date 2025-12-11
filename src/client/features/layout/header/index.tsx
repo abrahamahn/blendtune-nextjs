@@ -69,13 +69,13 @@ const Header: React.FC = () => {
 */
   return (
     <header className="w-full h-full">
-      <div>
+      <div className="h-full">
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center justify-between 
-                      w-full h-full 
-                      xl:px-2 xl:py-4 lg:px-2 py-2">
-          <div className="flex items-center justify-between mx-auto w-full px-6">
-            <div className="flex items-center space-x-2 lg:space-x-4 h-full">
+                      w-full h-full
+                      xl:px-2 lg:px-2">
+          <div className="flex items-center justify-between mx-auto w-full px-6 h-full">
+            <div className="flex items-center space-x-2 lg:space-x-4">
               <Logo />
               {/* Search Bar */}
               <SearchBar keywords={keywords} />

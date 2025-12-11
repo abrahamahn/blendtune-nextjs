@@ -10,32 +10,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Artwork from "@components/common/Artwork";
 import { usePlayer } from "@/client/features/player/services/playerService";
-import { useTrackNavigation } from "../hooks";
+import { usePlayerControls } from "../hooks";
 import { PlayerIcons } from '@/client/shared/components/icons';
+import { useProgressControl } from "../hooks/useProgressControl";
 
 /**
  * Compact player version optimized for mobile screens
  */
 export const MobilePlayer: React.FC = () => {
   const { audioRef, currentTrack, currentTime, trackDuration, isPlaying } = usePlayer();
-  const { togglePlayPause, nextTrack, seekTo } = useTrackNavigation();
+  const { togglePlayPause, nextTrack } = usePlayerControls();
+  const { handleProgressClick, progressPercent } = useProgressControl();
 
   // If no track is playing, don't render the mobile player
   if (!currentTrack) {
     return null;
   }
-
-  /**
-   * Handle progress bar seeking
-   */
-  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current) return;
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const newPercentage = (mouseX / rect.width) * 100;
-    const newPlaybackPosition = (newPercentage / 100) * (trackDuration || 0);
-    seekTo(newPlaybackPosition);
-  };
 
   return (
     <div className="fixed px-3 rounded-lg bottom-4 w-full h-14 z-0 block md:hidden">
@@ -44,14 +34,12 @@ export const MobilePlayer: React.FC = () => {
         <div className="w-full" style={{ width: "calc(100% + 11px)" }}>
           <div
             className="w-full border-md bg-black/10 dark:bg-white/10 h-1 rounded-full shadow-xl overflow-hidden cursor-pointer"
-            onClick={handleProgressBarClick}
+            onClick={handleProgressClick}
           >
             <div
               className="bg-[#1F1F1F] dark:bg-blue-600 h-1 rounded-md shadow-md w-full transition-width duration-100 ease-in-out"
               style={{
-                width: `${
-                  ((currentTime || 0) / (audioRef.current?.duration || 1)) * 100
-                }%`,
+                width: `${progressPercent}%`,
               }}
             />
           </div>

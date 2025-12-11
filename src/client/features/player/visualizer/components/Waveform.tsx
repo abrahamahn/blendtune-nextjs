@@ -1,11 +1,6 @@
 "use client";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  RefObject,
-} from "react";
+import React, { useEffect, useRef, useState, useCallback, RefObject } from "react";
+import { getCachedBuffer, setCachedBuffer } from "../utils/audioBufferCache";
 
 interface WaveformProps {
   audioUrl: string;
@@ -70,9 +65,18 @@ const Waveform: React.FC<WaveformProps> = ({
 
   // Fetch & decode the audio offline.
   useEffect(() => {
+    const controller = new AbortController();
+    let cancelled = false;
+
     const fetchDataAndDecode = async () => {
       try {
-        const response = await fetch(audioUrl);
+        const cached = getCachedBuffer(audioUrl);
+        if (cached) {
+          setAudioBuffer(cached);
+          return;
+        }
+
+        const response = await fetch(audioUrl, { signal: controller.signal });
         const arrayBuffer = await response.arrayBuffer();
 
         let OfflineAudioContextClass =
@@ -86,13 +90,21 @@ const Waveform: React.FC<WaveformProps> = ({
 
         const offlineCtx = new OfflineAudioContextClass(2, 44100 * 600, 44100);
         const decodedBuffer = await offlineCtx.decodeAudioData(arrayBuffer);
+        if (cancelled) return;
+        setCachedBuffer(audioUrl, decodedBuffer);
         setAudioBuffer(decodedBuffer);
       } catch (error) {
+        if (controller.signal.aborted) return;
         console.error("Error loading audio (Waveform):", error);
       }
     };
 
     fetchDataAndDecode();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [audioUrl]);
 
   // Function to draw the waveform - extracted to be reusable

@@ -11,7 +11,8 @@
  * @param time - Current playback time in seconds
  */
 export const storePlaybackTime = (trackId: number, time: number): void => {
-  localStorage.setItem(`track-${trackId}-time`, time.toString());
+  const safeTime = Math.max(0, Number.isFinite(time) ? time : 0);
+  localStorage.setItem(`track-${trackId}-time`, safeTime.toString());
 };
 
 /**

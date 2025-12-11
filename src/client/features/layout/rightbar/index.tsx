@@ -114,7 +114,7 @@ const RightBar: React.FC = () => {
       <ResizableHandle onResizeStart={onResizeStart} />
 
       {/* Main content container with scrolling */}
-      <div className="w-full h-full overflow-auto">
+      <div className="absolute top-2 left-1 right-2 bottom-2 overflow-hidden rounded-xl">
         <InnerLayer />
       </div>
     </div>

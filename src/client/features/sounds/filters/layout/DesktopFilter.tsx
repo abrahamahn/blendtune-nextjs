@@ -205,7 +205,7 @@ const DesktopFilter: React.FC = () => {
 
   return (
     <div className="hidden md:block w-full border-neutral-600 bg-white dark:bg-neutral-950 sticky top-0 py-2 z-10">
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="max-w-screen-xl mx-auto">
         <div className="flex flex-row justify-between items-center w-full">
           {/* Filter Buttons */}
           <div className="flex flex-row items-center">

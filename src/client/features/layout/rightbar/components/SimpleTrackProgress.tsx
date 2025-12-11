@@ -11,7 +11,8 @@ interface SimpleTrackProgressProps {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   currentTime: number;
   trackDuration: number;
-  onProgressClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onProgressClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  progressPercent?: number;
 }
 
 /**
@@ -23,6 +24,7 @@ export const SimpleTrackProgress: React.FC<SimpleTrackProgressProps> = ({
   currentTime,
   trackDuration,
   onProgressClick,
+  progressPercent,
 }) => {
   return (
     <>
@@ -35,7 +37,9 @@ export const SimpleTrackProgress: React.FC<SimpleTrackProgressProps> = ({
           <div
             className="bg-black/40 dark:bg-white h-1 rounded-md shadow-md w-full transition-width duration-100 ease-in-out cursor-pointer"
             style={{
-              width: `${(currentTime / (trackDuration ?? 1)) * 100}%`,
+              width: `${
+                progressPercent ?? (trackDuration ? (currentTime / trackDuration) * 100 : 0)
+              }%`,
             }}
           />
         </button>

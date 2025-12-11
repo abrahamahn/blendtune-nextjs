@@ -16,6 +16,8 @@ import {
  faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import Artwork from "@components/common/Artwork";
+import { useTrackNavigation } from "@player/hooks";
+import { usePlayer } from "@player/services/playerService";
 
 /**
 * Props interface for Packs component
@@ -29,11 +31,9 @@ interface PacksProps {
 * Includes pagination, playback controls, and responsive layout
 */
 const Packs: React.FC<PacksProps> = ({ tracks }) => {
- // Playback state
- const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
- const [isPlaying, setIsPlaying] = useState(false);
- const [playbackPosition, setPlaybackPosition] = useState<number>(0);
- const audioRef = React.useRef<HTMLAudioElement>(null);
+ // Global player hooks
+ const { currentTrack, isPlaying } = usePlayer();
+ const { playTrack, togglePlayPause } = useTrackNavigation();
 
  // Pagination state
  const [currentPage, setCurrentPage] = useState(0);
@@ -42,55 +42,15 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
  const totalPages = Math.ceil(tracks?.length / itemsPerPage);
 
  /**
-  * Handles play/pause toggle for tracks
+  * Handles play/pause toggle for tracks using the shared player
   */
- const togglePlayPause = (track: Track) => {
-   if (track !== currentTrack) {
-     setCurrentTrack(track);
-     setIsPlaying(true);
-     setPlaybackPosition(0);
-   } else if (isPlaying) {
-     setIsPlaying(false);
-     setPlaybackPosition(audioRef.current?.currentTime || 0);
-     audioRef.current?.pause();
-   } else {
-     setIsPlaying(true);
-     if (audioRef.current) {
-       audioRef.current.currentTime = playbackPosition;
-       audioRef.current.play().catch((error) => console.error("Play error:", error));
-     }
+ const handleToggle = (track: Track) => {
+   if (!currentTrack || currentTrack.id !== track.id) {
+     playTrack(track);
+     return;
    }
+   togglePlayPause();
  };
-
- /**
-  * Manages audio playback when track or state changes
-  */
- useEffect(() => {
-   const audio = audioRef.current;
-   const currentTrackFile = currentTrack?.file;
-
-   if (audio && currentTrackFile) {
-     const audioSrc = `/audio/streaming/${currentTrackFile}`;
-
-     if (audio.src !== audioSrc) {
-       audio.src = audioSrc;
-       audio.load();
-     }
-
-     if (isPlaying) {
-       audio.currentTime = playbackPosition;
-       audio.play().catch((error) => console.error("Play error:", error));
-     } else {
-       audio.pause();
-     }
-   }
-
-   return () => {
-     if (audio) {
-       audio.pause();
-     }
-   };
- }, [currentTrack, isPlaying, playbackPosition]);
 
  /**
   * Pagination handlers
@@ -153,16 +113,6 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
 
   return (
     <div className="w-full flex justify-center items-center ">
-      <audio
-        key={currentTrack?.id}
-        className="hidden"
-        src={`/audio/streaming/${currentTrack?.file}`}
-        controls
-        ref={audioRef}
-        onEnded={() => {
-          setIsPlaying(false);
-        }}
-      />
       <div className="w-full xl:w-4/5 flex flex-col items-center justify-between">
         <div className="container mx-auto">
           {/* Header and Navigation */}
@@ -233,11 +183,11 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
                         hoverIndex === index ? "opacity-100" : "opacity-0"
                       }`}
                       onClick={() => {
-                        togglePlayPause(track);
+                        handleToggle(track);
                       }}
                     >
                       <FontAwesomeIcon
-                        icon={isPlaying && currentTrack === track ? faStop : faPlay}
+                        icon={isPlaying && currentTrack?.id === track.id ? faStop : faPlay}
                         size="lg"
                         color="white"
                         className={isPlaying && currentTrack === track ? "ml-0" : "ml-1"}

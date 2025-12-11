@@ -33,7 +33,7 @@ const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({
   }
 
   return (
-    <div className={`max-w-screen-xl mx-auto md:px-2 lg:px-2 px-4 sm:pt-4 md:pt-0 lg:p-2 ${className}`}>
+    <div className={`max-w-screen-xl mx-auto ${className}`}>
       <div 
         className="flex flex-row justify-start items-start w-full border-b border-neutral-200 dark:border-neutral-700 overflow-x-scroll"
         role="tablist"

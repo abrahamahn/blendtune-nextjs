@@ -2,11 +2,7 @@
 "use client";
 import React, { useEffect, useRef, useState, RefObject } from "react";
 import { Track } from "@/shared/types/track";
-
-interface AudioElementWithSourceNode extends HTMLAudioElement {
-  sourceNode?: MediaElementAudioSourceNode;
-  analyser?: AnalyserNode;
-}
+import { useAudioAnalyser } from "@player/hooks/useAudioAnalyser";
 
 interface EqualizerProps {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -17,6 +13,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
   const prefersDarkMode = useRef<boolean>(false);
+  const analyser = useAudioAnalyser(audioRef);
 
   const [canvasWidth, setCanvasWidth] = useState(203);
   useEffect(() => {
@@ -38,27 +35,12 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const getBarColor = () => (prefersDarkMode.current ? "#ECECEC" : "#A9A9A9");
 
   useEffect(() => {
-    if (!audioRef.current) return;
-
-    const extendedAudioRef = audioRef.current as AudioElementWithSourceNode;
-    if (!extendedAudioRef.sourceNode) {
-      const AudioContextClass =
-        window.AudioContext || (window as any).webkitAudioContext;
-      const audioCtx = new AudioContextClass();
-      const sourceNode = audioCtx.createMediaElementSource(audioRef.current);
-      const analyser = audioCtx.createAnalyser();
-
-      extendedAudioRef.sourceNode = sourceNode;
-      extendedAudioRef.analyser = analyser;
-      sourceNode.connect(analyser);
-      analyser.connect(audioCtx.destination);
-    }
+    if (!analyser || !canvasRef.current) return;
 
     const setupEqualizer = () => {
-      if (extendedAudioRef.analyser && canvasRef.current) {
+      if (analyser && canvasRef.current) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
-        const analyser = extendedAudioRef.analyser;
 
         const frameLooper = () => {
           animationFrameId.current = requestAnimationFrame(frameLooper);
@@ -90,7 +72,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [audioRef, currentTrack]);
+  }, [analyser, currentTrack, getBarColor]);
 
   return (
     <canvas

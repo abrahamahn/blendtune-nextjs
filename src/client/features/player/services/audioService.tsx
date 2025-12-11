@@ -179,7 +179,9 @@ export const useAudioElement = (
    */
   const loadTrack = useCallback((src: string) => {
     if (!audioRef.current) return;
-    if (audioRef.current.src === src) return;
+    // Avoid reloading if already set (handle relative vs absolute path)
+    const currentSrc = audioRef.current.currentSrc || audioRef.current.src;
+    if (currentSrc.endsWith(src)) return;
     
     // Update state
     setState(prev => ({

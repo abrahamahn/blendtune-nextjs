@@ -25,6 +25,7 @@ import { storePlaybackTime, getPlaybackTime } from '../utils/storage';
 import { useTracks } from "@/client/features/tracks";
 import { useAudioElement, AudioEventHandlers } from '../services/audioService';
 import { PlayerContextType, PlayerAction } from '../types/contextType';
+import { usePlaybackPersistence } from "../hooks/usePlaybackPersistence";
 
 // Define the context
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -156,6 +157,9 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setVolume,
     loadTrack,
   } = useAudioElement('', state.volume, audioEventHandlers);
+
+  // Persist/resume playback time in a single place
+  usePlaybackPersistence(audioRef, state.currentTrack);
 
   useEffect(() => {
     if (isInitializedRef.current || tracks.length === 0) return;

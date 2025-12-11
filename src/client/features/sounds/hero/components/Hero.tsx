@@ -89,7 +89,7 @@ const Hero: React.FC = () => {
             backgroundImage: `linear-gradient(to bottom, ${dominantColor}, var(--background-color))`,
           }}
         >
-          <div className="max-w-screen-xl flex flex-row justify-center items-center mx-auto px-4 py-0 rounded-md m-0">
+          <div className="max-w-screen-xl flex flex-row justify-center items-center mx-auto py-0 rounded-md m-0">
             {/* Content Container */}
             <div className="w-full order-2 flex flex-col justify-between p-0 ml-4 h-36 sm:h-44">
               <div className="w-full flex flex-col text-left items-start justify-start h-28 pt-4">

@@ -65,28 +65,48 @@ const Sounds: React.FC = () => {
         <MobileFilter />
 
         {/* Hero section with playback controls */}
-        <div className="p-2">
+        <div>
           <Hero />
         </div>
 
         {/* Category selector */}
-        <div className="p-2">
+        <div>
           <Category isLoading={isLoading} />
         </div>
 
-        {/* New tracks display */}
-        <div className="p-2">
-          <NewTracks />
-        </div>
+                        {/* New tracks display */}
 
-        {/* Desktop filter */}
-        <DesktopFilter />
+                        <div>
 
-        {/* Catalog with actual children components */}
-        <CatalogProvider tracks={filteredTracks}>
-          <div>
-            {/* Mobile catalog view */}
-            <MobileCatalog 
+                          <NewTracks />
+
+                        </div>
+
+        
+
+                {/* Desktop filter */}
+
+                <DesktopFilter />
+
+        
+
+                        {/* Catalog with actual children components */}
+
+        
+
+                        <CatalogProvider tracks={filteredTracks}>
+
+        
+
+                          <div>
+
+        
+
+                            {/* Mobile catalog view */}
+
+        
+
+                            <MobileCatalog 
               tracks={filteredTracks} 
               playTrack={handlePlayTrack}
               onTitleClick={handleTitleClick}

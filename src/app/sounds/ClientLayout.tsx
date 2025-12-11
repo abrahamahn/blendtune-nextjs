@@ -45,7 +45,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               {/* MAIN CONTENT AREA */}
               <div className="p-0 m-0 flex-auto relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 bottom-0">
-                  <div className="absolute top-2 left-1 right-1 bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
+                  <div className="absolute top-2 left-1 right-1 bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-900">
                     {children}
                   </div>
                 </div>

@@ -60,18 +60,24 @@ const Sounds: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="md:h-full overflow-y-scroll rounded-t-xl p-2">
+      <div className="md:h-full overflow-y-scroll rounded-t-xl">
         {/* Mobile filter */}
         <MobileFilter />
 
         {/* Hero section with playback controls */}
-        <Hero />
+        <div className="p-2">
+          <Hero />
+        </div>
 
         {/* Category selector */}
-        <Category isLoading={isLoading} />
+        <div className="p-2">
+          <Category isLoading={isLoading} />
+        </div>
 
         {/* New tracks display */}
-        <NewTracks />
+        <div className="p-2">
+          <NewTracks />
+        </div>
 
         {/* Desktop filter */}
         <DesktopFilter />

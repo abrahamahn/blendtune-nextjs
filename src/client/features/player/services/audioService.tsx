@@ -51,6 +51,21 @@ export const useAudioElement = (
   initialVolume: number = 1,
   eventHandlers: AudioEventHandlers = {}
 ): UseAudioElementReturn => {
+  const describeMediaErrorCode = (code: number): string => {
+    switch (code) {
+      case MediaError.MEDIA_ERR_ABORTED:
+        return 'Playback aborted by the user agent';
+      case MediaError.MEDIA_ERR_NETWORK:
+        return 'Network error while fetching audio';
+      case MediaError.MEDIA_ERR_DECODE:
+        return 'Audio decode error';
+      case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        return 'Audio source format is not supported';
+      default:
+        return `Unknown media error code (${code})`;
+    }
+  };
+
   // Create ref for the audio element
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
@@ -123,10 +138,31 @@ export const useAudioElement = (
       eventHandlers.onEnded?.();
     };
 
-    const handleError = (e: ErrorEvent) => {
-      // Create a simple error object
-      const errorMessage = e.message || 'Unknown audio error';
-      const error = new Error(`Audio error: ${errorMessage}`);
+    const handleError = () => {
+      const mediaError = audioEl.error;
+      let errorMessage = 'Unknown audio error';
+      let errorName = 'AudioError';
+
+      if (mediaError) {
+        const reason = describeMediaErrorCode(mediaError.code);
+        const details = [
+          `reason=${reason}`,
+          `code=${mediaError.code}`,
+          `networkState=${audioEl.networkState}`,
+          `readyState=${audioEl.readyState}`,
+          `src=${audioEl.currentSrc || audioEl.src || 'n/a'}`,
+        ].join(', ');
+        errorMessage = `Audio element error (${details})`;
+
+        if (mediaError.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+          errorName = 'NotSupportedError';
+        } else if (mediaError.code === MediaError.MEDIA_ERR_DECODE) {
+          errorName = 'DecodeError';
+        }
+      }
+
+      const error = new Error(errorMessage);
+      error.name = errorName;
       
       setState(prev => ({ ...prev, error, isLoading: false }));
       eventHandlers.onError?.(error);

@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "lint:watch": "eslint . --ext .js,.jsx,.ts,.tsx --watch",
     "lint:style": "stylelint '**/*.{css,scss}' --fix",

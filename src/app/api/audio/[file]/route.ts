@@ -50,9 +50,10 @@ async function getAudioHandler(
     );
   }
 
-  // Trust upstream content type when available (helps if extension is mismatched)
+  // Prefer upstream only when it is clearly an audio MIME type.
+  // Some object stores return generic binary types, which can break media decoding.
   const upstreamContentType = remoteResponse.headers.get("Content-Type");
-  if (upstreamContentType) {
+  if (upstreamContentType?.toLowerCase().startsWith("audio/")) {
     contentType = upstreamContentType;
   }
 

@@ -16,9 +16,41 @@ export async function fetchRemoteAudio(
     cache: "no-store",
     headers: range ? { Range: range } : undefined,
   };
-  const remoteUrl = `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/streaming/${trackId}`;
-  console.log("Fetching remote audio:", remoteUrl);
-  return await fetch(remoteUrl, fetchOptions);
+  const dotIndex = trackId.lastIndexOf(".");
+  const baseName = dotIndex > 0 ? trackId.slice(0, dotIndex) : trackId;
+  const fileNames = Array.from(
+    new Set([trackId, `${baseName}.webm`, `${baseName}.ogg`, `${baseName}.mp3`])
+  );
+  const prefixes = ["streaming", "tracks"];
+  const hosts = [
+    "https://blendtune-public.nyc3.cdn.digitaloceanspaces.com",
+    "https://blendtune-public.nyc3.digitaloceanspaces.com",
+  ];
+
+  const candidates: string[] = [];
+  for (const host of hosts) {
+    for (const prefix of prefixes) {
+      for (const fileName of fileNames) {
+        candidates.push(`${host}/${prefix}/${fileName}`);
+      }
+    }
+  }
+
+  let lastResponse: Response | null = null;
+  for (const url of candidates) {
+    console.log("Fetching remote audio:", url);
+    const response = await fetch(url, fetchOptions);
+    if (response.ok) return response;
+    lastResponse = response;
+
+    // If this is not an authorization/not-found issue, return immediately.
+    if (response.status !== 403 && response.status !== 404) {
+      return response;
+    }
+  }
+
+  // All candidates failed with 403/404 (or similar). Return the last response.
+  return lastResponse as Response;
 }
 
 /**

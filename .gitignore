@@ -37,3 +37,6 @@ next-env.d.ts
 
 run.sh
 .aider*
+
+# local env
+src/shared/config/.env.development

@@ -35,7 +35,13 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
  * In a real application, replace this with your analytics logging implementation.
  */
 const logPlaybackError = (error: Error, trackId?: number) => {
-  console.error(`Analytics log - Playback error for track ${trackId}:`, error);
+  const prefix = `Playback error for track ${trackId}`;
+  if (error.name === 'NotSupportedError' || error.name === 'DecodeError') {
+    // Expected for unsupported/corrupt source files; avoid dev error overlay noise.
+    console.warn(`${prefix}:`, error.message);
+    return;
+  }
+  console.error(`${prefix}:`, error);
 };
 
 /**
@@ -60,6 +66,14 @@ const handlePlaybackError = (
       playerActions.setPlaybackError({
         type: 'format',
         message: 'Audio format not supported by your browser',
+        recoverable: false,
+      })
+    );
+  } else if (error.name === 'DecodeError') {
+    dispatch(
+      playerActions.setPlaybackError({
+        type: 'format',
+        message: 'Unable to decode audio data (file may be corrupted or encoded with an unsupported codec)',
         recoverable: false,
       })
     );

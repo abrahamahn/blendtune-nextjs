@@ -1,11 +1,14 @@
 module.exports = {
-  apps: [{
-    name: 'blendtune',
-    script: 'yarn',
-    args: 'start',
-    interpreter: '/bin/bash',
-    env: {
-      NODE_ENV: 'production',
-    },
-  }],
-};
+    apps: [
+      {
+        name: "blendtune",
+        cwd: "/var/www/blendtune",
+        script: "pnpm",
+        args: "start",
+        env: {
+          NODE_ENV: "production",
+          PORT: 3000
+        }
+      }
+    ]
+  };

@@ -40,3 +40,6 @@ run.sh
 
 # local env
 src/shared/config/.env.development
+
+# production env (contains secrets) — keep out of git
+src/shared/config/.env.production

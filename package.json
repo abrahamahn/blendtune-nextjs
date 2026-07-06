@@ -16,9 +16,12 @@
     "test:e2e": "playwright test",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:migrate:dry": "tsx scripts/migrate.ts --dry-run",
-    "db:status": "tsx scripts/db-status.ts"
+    "db:status": "tsx scripts/db-status.ts",
+    "dev:api": "tsx watch main/apps/server/src/main.ts",
+    "start:api": "tsx main/apps/server/src/main.ts"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fortawesome/fontawesome-common-types": "^6.7.2",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
@@ -29,6 +32,8 @@
     "@tailwindcss/forms": "^0.5.11",
     "@vercel/functions": "^2.2.13",
     "bcrypt": "^5.1.1",
+    "fastify": "^5.10.0",
+    "fastify-plugin": "^5.1.0",
     "fs-extra": "^11.3.6",
     "glob": "^11.1.0",
     "lodash": "^4.18.1",

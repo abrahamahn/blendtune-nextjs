@@ -127,6 +127,70 @@ curl -X GET https://api.example.com/api/tracks \
 
 ---
 
+## Creator API
+
+Workspace-scoped endpoints for creators. Authentication is required; the active workspace is
+selected with the `x-tenant-slug` header (set automatically by middleware for `/c/:slug` pages,
+or sent directly by API clients). Membership is verified server-side, and all queries run
+tenant-scoped so Row-Level Security enforces isolation at the database.
+
+### List Workspaces
+
+Workspaces the authenticated user belongs to, with their role in each.
+
+**Endpoint**: `GET /api/creator/workspaces`
+
+**Response** (200):
+
+```json
+{
+  "workspaces": [
+    { "id": "uuid", "name": "Meekah", "slug": "meekah", "logoUrl": null, "role": "owner" }
+  ]
+}
+```
+
+### List Workspace Catalog
+
+The active workspace's own tracks (same shape as `GET /api/tracks`; `{}` for a new workspace).
+
+**Endpoint**: `GET /api/creator/tracks`
+
+**Headers**: `x-tenant-slug: <workspace-slug>` (required — 400 `TENANT_REQUIRED` without it;
+403 `TENANT_MEMBERSHIP_REQUIRED` for non-members)
+
+### Create Track
+
+Add a track's catalog metadata to the workspace (the audio file is uploaded separately).
+Viewers are read-only (403 `CATALOG_READ_ONLY`).
+
+**Endpoint**: `POST /api/creator/tracks`
+
+**Headers**: `x-tenant-slug: <workspace-slug>`
+
+**Request Body**:
+
+```json
+{
+  "catalog": "mkh063",
+  "title": "Playa",
+  "producer": "Meekah",
+  "release": "2026-07-06",
+  "duration": "3:44",
+  "bpm": 140,
+  "note": "C",
+  "scale": "minor"
+}
+```
+
+`catalog` (unique, lowercase) and `title` are required; the rest are optional.
+
+**Response** (201): `{ "id": 63, "catalog": "mkh063", "title": "Playa" }`
+
+**Errors**: 400 `INVALID_TRACK` (validation), 409 `TRACK_CATALOG_TAKEN` (duplicate catalog id)
+
+---
+
 ## Audio Streaming API
 
 ### Stream Audio File

@@ -11,7 +11,7 @@
  * (Phase 3) filter by `current_setting('app.tenant_id')`.
  */
 
-import { ForbiddenError, NotFoundError } from '../errors';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
 import type { TenantRepository } from '@server/db/repositories/tenant';
 import type { TenantRole } from '@shared/types/tenancy';
 
@@ -20,6 +20,24 @@ export interface RequestContext {
   userId: string;
   tenantId: string | null;
   role: TenantRole | null;
+}
+
+/** A context guaranteed to be scoped to a workspace. */
+export interface TenantContext {
+  userId: string;
+  tenantId: string;
+  role: TenantRole;
+}
+
+/** Narrow a context to a workspace-scoped one, or 400 for tenant-required endpoints. */
+export function requireTenant(ctx: RequestContext): TenantContext {
+  if (ctx.tenantId === null || ctx.role === null) {
+    throw new BadRequestError(
+      'Active workspace required — send the x-tenant-slug header',
+      'TENANT_REQUIRED',
+    );
+  }
+  return { userId: ctx.userId, tenantId: ctx.tenantId, role: ctx.role };
 }
 
 export interface ResolveContextInput {

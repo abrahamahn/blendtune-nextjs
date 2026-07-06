@@ -8,6 +8,7 @@
  */
 
 import type { RawDb } from '../client';
+import type { NewTrackData } from '@shared/validation/track';
 
 /** A row of meekah.track_info as returned by `pg` (snake_case). */
 export interface TrackInfoRow {
@@ -49,6 +50,11 @@ export interface TracksRepository {
   listAll(): Promise<TrackInfoRow[]>;
   /** Tracks owned by a single tenant (creator workspace view). */
   listByTenant(tenantId: string): Promise<TrackInfoRow[]>;
+  /**
+   * Insert a track's catalog metadata for a tenant. Must run on a session-scoped RawDb
+   * (`db.withSession({ tenantId, ... })`) so the RLS WITH CHECK policy admits the row.
+   */
+  createForTenant(tenantId: string, input: NewTrackData): Promise<TrackInfoRow>;
 }
 
 export function createTracksRepository(db: RawDb): TracksRepository {
@@ -64,6 +70,32 @@ export function createTracksRepository(db: RawDb): TracksRepository {
         text: 'SELECT * FROM meekah.track_info WHERE tenant_id = $1',
         values: [tenantId],
       });
+    },
+
+    async createForTenant(tenantId, input) {
+      // Legacy table: `id` is a plain integer PK with no sequence, so allocate MAX+1 inline.
+      // A concurrent-insert collision surfaces as a 23505 the service maps to Conflict.
+      const row = await db.queryOne<TrackInfoRow>({
+        text: `INSERT INTO meekah.track_info
+                 (id, tenant_id, track_catalog, track_title, track_producer,
+                  release, duration, bpm, note, scale)
+               SELECT COALESCE(MAX(id), 0) + 1, $1, $2, $3, $4, $5, $6, $7, $8, $9
+               FROM meekah.track_info
+               RETURNING *`,
+        values: [
+          tenantId,
+          input.catalog,
+          input.title,
+          input.producer ?? null,
+          input.release ?? null,
+          input.duration ?? null,
+          input.bpm ?? null,
+          input.note ?? null,
+          input.scale ?? null,
+        ],
+      });
+      if (!row) throw new Error('Failed to create track');
+      return row;
     },
   };
 }

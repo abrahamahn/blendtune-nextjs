@@ -1,6 +1,6 @@
 // src/server/core/context/requestContext.test.ts
-import { resolveRequestContext } from './requestContext';
-import { ForbiddenError, NotFoundError } from '../errors';
+import { requireTenant, resolveRequestContext } from './requestContext';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../errors';
 import type { TenantRepository } from '@server/db/repositories/tenant';
 import type { Membership, Tenant } from '@server/db/schema/tenant';
 
@@ -67,5 +67,21 @@ describe('resolveRequestContext', () => {
       { tenants },
     );
     expect(ctx).toEqual({ userId: 'u-1', tenantId: 't-1', role: 'owner' });
+  });
+});
+
+describe('requireTenant', () => {
+  it('narrows a workspace-scoped context', () => {
+    expect(requireTenant({ userId: 'u-1', tenantId: 't-1', role: 'owner' })).toEqual({
+      userId: 'u-1',
+      tenantId: 't-1',
+      role: 'owner',
+    });
+  });
+
+  it('throws BadRequest when no workspace is active', () => {
+    expect(() => requireTenant({ userId: 'u-1', tenantId: null, role: null })).toThrow(
+      BadRequestError,
+    );
   });
 });

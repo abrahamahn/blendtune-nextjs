@@ -15,6 +15,7 @@ export type {
   TenantRepository,
   TracksRepository,
 };
+export type { TenantWithRole } from './tenant';
 export type { AuthUserRow, NewAuthUser } from './users';
 export type { NewSession, SessionProfileRow } from './sessions';
 export type { BasicProfileInput, ProfileRow } from './profile';

@@ -54,12 +54,18 @@ const mapMembership = (r: MembershipRow): Membership => ({
   updatedAt: r.updated_at,
 });
 
+/** A tenant paired with the querying user's role in it. */
+export interface TenantWithRole {
+  tenant: Tenant;
+  role: TenantRole;
+}
+
 export interface TenantRepository {
   findById(id: string): Promise<Tenant | null>;
   findBySlug(slug: string): Promise<Tenant | null>;
   create(input: NewTenant): Promise<Tenant>;
-  /** Tenants the user belongs to (via memberships), newest first. */
-  listForUser(userId: string): Promise<Tenant[]>;
+  /** Tenants the user belongs to (via memberships) with their role, newest first. */
+  listForUser(userId: string): Promise<TenantWithRole[]>;
   findMembership(tenantId: string, userId: string): Promise<Membership | null>;
   createMembership(input: NewMembership): Promise<Membership>;
 }
@@ -102,14 +108,14 @@ export function createTenantRepository(db: RawDb): TenantRepository {
     },
 
     async listForUser(userId) {
-      const rows = await db.query<TenantRow>({
-        text: `SELECT t.* FROM tenants t
+      const rows = await db.query<TenantRow & { membership_role: TenantRole }>({
+        text: `SELECT t.*, m.role AS membership_role FROM tenants t
                JOIN memberships m ON m.tenant_id = t.id
                WHERE m.user_id = $1
                ORDER BY t.created_at DESC`,
         values: [userId],
       });
-      return rows.map(mapTenant);
+      return rows.map((r) => ({ tenant: mapTenant(r), role: r.membership_role }));
     },
 
     async findMembership(tenantId, userId) {

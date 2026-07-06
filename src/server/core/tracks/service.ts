@@ -81,10 +81,11 @@ export async function listPublicCatalog({ tracks }: TracksDeps): Promise<TrackCa
   return toCatalog(await tracks.listAll());
 }
 
-/** A single creator workspace's catalog. */
+/** A single creator workspace's catalog. Empty is valid — a new workspace has no tracks yet. */
 export async function listTenantCatalog(
   { tracks }: TracksDeps,
   tenantId: string,
 ): Promise<TrackCatalog> {
-  return toCatalog(await tracks.listByTenant(tenantId));
+  const rows = await tracks.listByTenant(tenantId);
+  return rows.length === 0 ? {} : toCatalog(rows);
 }

@@ -40,7 +40,12 @@ const row = (over: Partial<TrackInfoRow> = {}): TrackInfoRow =>
   }) as TrackInfoRow;
 
 function repo(over: Partial<TracksRepository> = {}): TracksRepository {
-  return { listAll: async () => [], listByTenant: async () => [], ...over };
+  return {
+    listAll: async () => [],
+    listByTenant: async () => [],
+    createForTenant: async () => row(),
+    ...over,
+  };
 }
 
 describe('tracks service', () => {
@@ -61,6 +66,10 @@ describe('tracks service', () => {
 
   it('throws NotFound when the catalog is empty', async () => {
     await expect(listPublicCatalog({ tracks: repo() })).rejects.toBeInstanceOf(NotFoundError);
+  });
+
+  it('returns an empty catalog for a tenant with no tracks yet', async () => {
+    expect(await listTenantCatalog({ tracks: repo() }, 't-new')).toEqual({});
   });
 
   it('lists a single tenant catalog via the repository', async () => {

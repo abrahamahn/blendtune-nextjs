@@ -12,8 +12,5 @@ export type {
   IsolationLevel,
 } from './client';
 
-// Legacy per-database pools (back-compat during the multi-tenancy migration).
-// These are retained so existing routes keep working until each is ported to `db`.
-// See docs/dev/multi-tenancy-plan.md — removed at the end of Phase 2.
-export { default as authPool } from './auth';
-export { default as tracksPool } from './tracks';
+// Repositories (bslt-aligned data access over RawDb).
+export { createRepositories, type Repositories } from './repositories';

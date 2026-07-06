@@ -6,7 +6,7 @@ describe('resolveDbConfig', () => {
     const config = resolveDbConfig({
       DATABASE_URL: 'postgres://u:p@h:5432/blendtune',
       PG_LOCAL_DB: 'ignored',
-    } as NodeJS.ProcessEnv);
+    });
     expect(config).toEqual({ connectionString: 'postgres://u:p@h:5432/blendtune' });
   });
 
@@ -19,7 +19,7 @@ describe('resolveDbConfig', () => {
       PG_LOCAL_PW: 'secret',
       LOCAL_PORT: '5433',
       PG_CLOUD_USER: 'cloud_user',
-    } as NodeJS.ProcessEnv);
+    });
     expect(config).toEqual({
       user: 'local_user',
       host: 'localhost',
@@ -37,7 +37,7 @@ describe('resolveDbConfig', () => {
       PG_CLOUD_DB: 'blendtune',
       PG_CLOUD_PW: 'topsecret',
       CLOUD_PORT: '25060',
-    } as NodeJS.ProcessEnv);
+    });
     expect(config).toMatchObject({
       user: 'cloud_user',
       host: 'db.example.com',
@@ -51,12 +51,12 @@ describe('resolveDbConfig', () => {
     const config = resolveDbConfig({
       NODE_ENV: 'development',
       PG_LOCAL_DB_USERS: 'blendtune_users',
-    } as NodeJS.ProcessEnv);
+    });
     expect(config).toMatchObject({ database: 'blendtune_users' });
   });
 
   it('defaults the port to 5432 when unset', () => {
-    const config = resolveDbConfig({ NODE_ENV: 'development' } as NodeJS.ProcessEnv);
+    const config = resolveDbConfig({ NODE_ENV: 'development' });
     expect(config).toMatchObject({ port: 5432 });
   });
 });

@@ -26,7 +26,9 @@ const isProd = (): boolean => process.env.NODE_ENV === 'production';
  *    `PG_{CLOUD,LOCAL}_DB`, falling back to the legacy `PG_{CLOUD,LOCAL}_DB_USERS`
  *    (meekah is migrated INTO the users database — see the consolidation runbook).
  */
-export function resolveDbConfig(env: NodeJS.ProcessEnv = process.env): PoolConfig {
+export function resolveDbConfig(
+  env: Record<string, string | undefined> = process.env,
+): PoolConfig {
   if (env.DATABASE_URL) {
     return { connectionString: env.DATABASE_URL };
   }

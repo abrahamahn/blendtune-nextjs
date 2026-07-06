@@ -1,26 +1,25 @@
-// src\server\cron\sessionExpire.ts
-const cron = require('node-cron');
-const authPool = require('../db/auth');
+// src/server/cron/sessionExpire.ts
+import cron from 'node-cron';
 
-/** 
- * Scheduled task to automatically expire user sessions
- * Runs daily at midnight UTC to deactivate sessions past their expiration
+import { db } from '@server/db';
+
+/**
+ * Daily (00:00 UTC) sweep that deactivates expired sessions.
+ * Fixes the previous target table bug (public.sessions → auth.sessions).
  */
-cron.schedule('0 0 * * *', async () => {
-  console.log('Running daily session expiration check');
-  const now = new Date().toISOString();
-  const updateQuery = `
-    UPDATE public.sessions
-    SET status = 'inactive'
-    WHERE expires_at < $1 AND status != 'inactive';
-  `;
-  try {
-    await authPool.query(updateQuery, [now]);
-    console.log('Expired sessions marked as inactive');
-  } catch (error) {
-    console.error('Session expiration update failed:', error);
-  }
-}, {
-  scheduled: true,
-  timezone: "UTC"
-});
+cron.schedule(
+  '0 0 * * *',
+  async () => {
+    console.log('Running daily session expiration check');
+    try {
+      await db.execute({
+        text: "UPDATE auth.sessions SET status = 'inactive' WHERE expires_at < $1 AND status != 'inactive'",
+        values: [new Date().toISOString()],
+      });
+      console.log('Expired sessions marked as inactive');
+    } catch (error) {
+      console.error('Session expiration update failed:', error);
+    }
+  },
+  { scheduled: true, timezone: 'UTC' },
+);

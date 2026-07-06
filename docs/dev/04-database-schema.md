@@ -406,46 +406,34 @@ CREATE INDEX idx_password_reset_expires ON auth.password_reset(expires_at);
 
 ## Schema: users (User Profiles & App Data)
 
-### Table: profile
+### Table: profile (retired — inlined on auth.users)
 
-Extended user profile information.
+Profile fields were consolidated onto `auth.users` by migration
+`0600_profile_on_users.sql` (bslt inlines profile fields on the users table).
+The `users.profile` table still exists as an inert backup but is no longer
+read or written.
+
+Columns added to `auth.users` (backfilled via `users.profile.user_id = auth.users.uuid`):
 
 ```sql
-CREATE TABLE users.profile (
-  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  first_name VARCHAR(100),
-  last_name VARCHAR(100),
-  display_name VARCHAR(100),
-  bio TEXT,
-  avatar_url VARCHAR(500),
-  country VARCHAR(100),
-  timezone VARCHAR(100),
-  language VARCHAR(10) DEFAULT 'en',
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Indexes
-CREATE INDEX idx_profile_display_name ON users.profile(display_name);
+ALTER TABLE auth.users
+  ADD COLUMN artist_creator_name text,
+  ADD COLUMN phone_number text,
+  ADD COLUMN gender text,
+  ADD COLUMN date_of_birth date,
+  ADD COLUMN city text,
+  ADD COLUMN state text,
+  ADD COLUMN country text,
+  ADD COLUMN user_type text,
+  ADD COLUMN occupation text,
+  ADD COLUMN preferred_language text,
+  ADD COLUMN marketing_consent boolean,
+  ADD COLUMN profile_created boolean; -- NULL = user never had a profile row
 ```
 
-**Example Row**:
-
-```json
-{
-  "user_id": "user-uuid",
-  "first_name": "John",
-  "last_name": "Doe",
-  "display_name": "John D.",
-  "bio": "Music enthusiast and video creator",
-  "avatar_url": "https://cdn.example.com/avatars/user.jpg",
-  "country": "United States",
-  "timezone": "America/New_York",
-  "language": "en",
-  "created_at": "2024-01-15T10:00:00Z",
-  "updated_at": "2024-01-15T10:00:00Z"
-}
-```
+`profile_created IS NULL` preserves the legacy missing-row semantics: such
+users get 401 from check-session and 404 from `/api/account`, exactly as when
+their `users.profile` row was absent.
 
 ---
 

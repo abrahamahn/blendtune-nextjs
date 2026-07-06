@@ -1,7 +1,12 @@
 // src/server/db/repositories/profile.ts
 /**
- * User profile repository over RawDb (users.profile). SQL preserved from
- * services/session/userProfile.
+ * User profile repository over RawDb. Profile fields are inlined on auth.users
+ * (migration 0600, bslt-style); the legacy users.profile table is retired.
+ *
+ * Null semantics: the legacy queries returned no row when a user had no
+ * users.profile row. That is preserved via `profile_created IS NOT NULL` —
+ * NULL marks users who never had a profile row — so check-session still 401s
+ * and /api/account still 404s for profile-less users.
  */
 
 import type { RawDb } from '../client';
@@ -48,7 +53,7 @@ export interface SessionProfileRow {
 
 export interface ProfileRepository {
   get(userId: string): Promise<ProfileRow | null>;
-  /** Full profile fields for check-session, or null when no users.profile row exists. */
+  /** Full profile fields for check-session, or null when the user has no profile. */
   findSessionProfile(userId: string): Promise<SessionProfileRow | null>;
   updateBasic(userId: string, data: BasicProfileInput): Promise<void>;
 }
@@ -57,9 +62,9 @@ export function createProfileRepository(db: RawDb): ProfileRepository {
   return {
     get(userId) {
       return db.queryOne<ProfileRow>({
-        text: `SELECT user_id, artist_creator_name, user_type, occupation, gender,
+        text: `SELECT uuid AS user_id, artist_creator_name, user_type, occupation, gender,
                       date_of_birth, marketing_consent, profile_created
-               FROM users.profile WHERE user_id = $1`,
+               FROM auth.users WHERE uuid = $1 AND profile_created IS NOT NULL`,
         values: [userId],
       });
     },
@@ -70,14 +75,15 @@ export function createProfileRepository(db: RawDb): ProfileRepository {
                       artist_creator_name, phone_number, gender, date_of_birth,
                       city, state, country, user_type, occupation,
                       preferred_language, marketing_consent
-               FROM users.profile WHERE user_id = $1`,
+               FROM auth.users WHERE uuid = $1 AND profile_created IS NOT NULL`,
         values: [userId],
       });
     },
 
     async updateBasic(userId, data) {
+      // Guard matches the legacy UPDATE, which silently no-oped without a profile row.
       await db.execute({
-        text: `UPDATE users.profile SET
+        text: `UPDATE auth.users SET
                  artist_creator_name = $1,
                  user_type = $2,
                  occupation = $3,
@@ -85,7 +91,7 @@ export function createProfileRepository(db: RawDb): ProfileRepository {
                  date_of_birth = $5,
                  marketing_consent = $6,
                  profile_created = true
-               WHERE user_id = $7`,
+               WHERE uuid = $7 AND profile_created IS NOT NULL`,
         values: [
           data.artistCreatorName,
           data.userType,

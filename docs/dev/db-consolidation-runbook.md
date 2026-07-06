@@ -74,6 +74,26 @@ Nothing in this runbook drops the original databases. To roll back, restore `.en
 two-DB values; the old `TRACKS` database is untouched. Drop the copied schema only if needed:
 `psql "$USERS_DSN" -c "DROP SCHEMA meekah CASCADE;"` (destructive — re-restore from §0 backup).
 
+## App DB role for RLS (Phase 3)
+
+Row-Level Security is bypassed for superusers and table owners, so the app must connect as a
+dedicated **non-superuser** role. After migrations (incl. `0900_rls.sql`, which creates the
+`authenticated` group role + policies) are applied:
+
+```bash
+APPW=$(openssl rand -hex 16)          # save this
+psql "$USERS_DSN" -c "CREATE ROLE blendtune_app LOGIN NOSUPERUSER NOBYPASSRLS PASSWORD '$APPW';"
+psql "$USERS_DSN" -c "GRANT authenticated TO blendtune_app;"   # inherits table grants + policies
+```
+
+Then point the app at it (`.env.production`): `PG_CLOUD_USER=blendtune_app`, `PG_CLOUD_PW=$APPW`,
+and restart. RLS: marketplace reads are open; `meekah.*` writes require `app.tenant_id` (set by
+`RawDb.withSession`). Superuser `abe` is retained for migrations only.
+
+> Gotcha: apply RLS migrations with the app briefly stopped (`pm2 stop`) — `ENABLE ROW LEVEL
+> SECURITY` needs an ACCESS EXCLUSIVE lock that starves behind live `/api/tracks` reads. And run
+> migrations via `psql -f`, not `pnpm db:migrate` (pnpm v11's pre-script deps check stalls).
+
 ## After consolidation (my follow-up work)
 
 Once you confirm §4, I will:

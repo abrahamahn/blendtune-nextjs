@@ -15,7 +15,7 @@ export type { TrackServiceType, TrackErrorInfo } from './types';
 export { TracksContext, TracksProvider, useTracksContext } from './services';
 
 // Export core functionality
-export { fetchTracks, revalidateTracks } from './core';
+export { fetchTracks } from './core';
 
 // Export keywords functionality
 export {

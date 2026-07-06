@@ -13,22 +13,9 @@ import { parseNewTrack } from '@shared/validation/track';
 import type { TenantRepository } from '@server/db/repositories/tenant';
 import type { TracksRepository } from '@server/db/repositories/tracks';
 import type { TenantRole } from '@shared/types/tenancy';
+import type { CreatedTrack, WorkspaceSummary } from '@shared/types/creator';
 
-/** A workspace as shown in the creator dashboard's switcher. */
-export interface WorkspaceSummary {
-  id: string;
-  name: string;
-  slug: string;
-  logoUrl: string | null;
-  role: TenantRole;
-}
-
-/** The created track's catalog identity, echoed back to the client. */
-export interface CreatedTrack {
-  id: number;
-  catalog: string;
-  title: string;
-}
+export type { WorkspaceSummary, CreatedTrack };
 
 /** Workspaces the user belongs to, with their role in each. */
 export async function listWorkspaces(

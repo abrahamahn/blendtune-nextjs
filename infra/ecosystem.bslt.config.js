@@ -6,13 +6,16 @@ module.exports = {
     {
       name: 'blendtune-api',
       cwd: '/var/www/blendtune',
-      script: 'node_modules/.bin/tsx',
+      // Run tsx's JS CLI via node — PM2 fork-loads `script` as a Node module, so the
+      // .bin/tsx shell wrapper can't be used directly.
+      script: 'node_modules/tsx/dist/cli.mjs',
       args: 'main/apps/server/src/main.ts',
+      interpreter: 'node',
       env: {
         NODE_ENV: 'production',
         TZ: 'UTC', // matches the date-parity assumption baked into the postgres.js client
         API_PORT: 8080,
-        API_HOST: '127.0.0.1',
+        API_HOST: '0.0.0.0',
         WEB_DIST: '/var/www/blendtune/main/apps/web/dist',
       },
       max_memory_restart: '400M',

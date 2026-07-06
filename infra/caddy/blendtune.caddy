@@ -1,0 +1,21 @@
+# infra/caddy/blendtune.caddy
+# Caddy site block for the bslt-stack cutover (M5). Add to the demo Caddyfile on the droplet.
+# Cloudflare terminates public TLS (zone SSL mode = Full); Caddy presents the existing
+# self-signed origin cert. Single upstream: the Fastify process (:8080) serves both the SPA
+# and /api, so no separate static container is needed.
+#
+# The demo Caddyfile currently has bare `:80` / `:443` blocks that catch every host (the bslt
+# demo). Named-host blocks below take precedence for blendtune.com; bslt stays the default.
+
+blendtune.com, www.blendtune.com {
+	encode gzip
+	tls /etc/caddy/origin-cert.pem /etc/caddy/origin-key.pem
+	# 172.18.0.1 = docker bridge gateway → host PM2 process (verify with:
+	#   docker exec bslt-demo-caddy-1 sh -c 'ip route | grep default')
+	reverse_proxy 172.18.0.1:8080
+}
+
+http://blendtune.com, http://www.blendtune.com {
+	encode gzip
+	reverse_proxy 172.18.0.1:8080
+}

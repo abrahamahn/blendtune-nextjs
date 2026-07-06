@@ -11,6 +11,8 @@ import react from '@vitejs/plugin-react';
 const repo = (...p: string[]) => path.resolve(__dirname, '../../..', ...p);
 
 export default defineConfig({
+  // Explicit root so the app builds the same whether vite runs here or from the repo root.
+  root: __dirname,
   plugins: [react()],
   publicDir: repo('public'),
   resolve: {

@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { Track } from '@/shared/types/track';
 import { fetchTracks } from '@tracks/core/hooks';
 
@@ -34,46 +34,40 @@ interface CatalogProviderProps {
 
 // Provider component
 export const CatalogProvider: React.FC<CatalogProviderProps> = ({ children, tracks: initialTracks }) => {
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const hasInitial = initialTracks !== undefined && initialTracks.length > 0;
+  const [fetchedTracks, setFetchedTracks] = useState<Track[]>([]);
+  const [fetchLoading, setFetchLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
+  const [filter, setFilter] = useState<{ category?: string; searchTerm?: string }>({});
 
-  // Load tracks when component mounts or when initialTracks changes
+  // Tracks come from props when provided; otherwise from the fetch below.
+  const tracks = hasInitial ? initialTracks : fetchedTracks;
+  const loading = hasInitial ? false : fetchLoading;
+
+  // Fetch only when no tracks were passed in.
   useEffect(() => {
-    // If tracks are provided as props, use them
-    if (initialTracks && initialTracks.length > 0) {
-      setTracks(initialTracks);
-      setFilteredTracks(initialTracks);
-      setLoading(false);
-      return;
-    }
-
-    // Otherwise fetch tracks
-    const loadTracks = async () => {
-      try {
-        setLoading(true);
-        const data = await fetchTracks();
-        setTracks(data);
-        setFilteredTracks(data);
+    if (hasInitial) return;
+    fetchTracks().then(
+      (data) => {
+        setFetchedTracks(data);
         setError(null);
-      } catch (err) {
+        setFetchLoading(false);
+      },
+      (err) => {
         setError('Failed to load tracks');
         console.error('Error loading tracks:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+        setFetchLoading(false);
+      },
+    );
+  }, [hasInitial]);
 
-    loadTracks();
-  }, [initialTracks]);
-
-  // Function to filter tracks based on category and search term
-  const filterTracks = (category?: string, searchTerm?: string) => {
-    let filtered = [...tracks];
+  // Filtered view derived from the current tracks + filter criteria.
+  const filteredTracks = useMemo(() => {
+    const { category, searchTerm } = filter;
+    let filtered = tracks;
 
     if (category && category !== 'all') {
-      filtered = filtered.filter(track => 
+      filtered = filtered.filter(track =>
         track.info.genre.some(g => g.maingenre === category || g.subgenre === category) ||
         track.info.mood.includes(category)
       );
@@ -81,16 +75,19 @@ export const CatalogProvider: React.FC<CatalogProviderProps> = ({ children, trac
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(track => 
-        track.metadata.title.toLowerCase().includes(term) || 
-        track.info.relatedartist.some(artist => 
+      filtered = filtered.filter(track =>
+        track.metadata.title.toLowerCase().includes(term) ||
+        track.info.relatedartist.some(artist =>
           artist.toLowerCase().includes(term)
         )
       );
     }
 
-    setFilteredTracks(filtered);
-  };
+    return filtered;
+  }, [tracks, filter]);
+
+  const filterTracks = (category?: string, searchTerm?: string) =>
+    setFilter({ category, searchTerm });
 
   return (
     <CatalogContext.Provider 

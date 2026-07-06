@@ -49,19 +49,21 @@ const Waveform: React.FC<WaveformProps> = ({
   // Store last position after drag to keep it visible during fade-out
   const [lastDragPosition, setLastDragPosition] = useState<number | null>(null);
   const [lastDragTime, setLastDragTime] = useState<string | null>(null);
-  // Local time state to allow instant rendering updates
-  const [localCurrentTime, setLocalCurrentTime] = useState<number | undefined>(currentTime);
+  // Seek override for instant rendering on drag-end, cleared when the prop catches up
+  // (React's sanctioned adjust-state-during-render pattern replaces the old prop-mirror effect).
+  const [seekTime, setSeekTime] = useState<number | null>(null);
+  const [prevPropTime, setPrevPropTime] = useState(currentTime);
+  if (currentTime !== prevPropTime) {
+    setPrevPropTime(currentTime);
+    setSeekTime(null);
+  }
+  const localCurrentTime = seekTime ?? currentTime;
 
   const barWidth = 2;
   const gapWidth = 1;
   const numBars = Math.floor((width + gapWidth) / (barWidth + gapWidth));
   // Define a transition width (in pixels) for the spatial blending effect.
   const transitionWidth = 5;
-
-  // Update local time when prop changes
-  useEffect(() => {
-    setLocalCurrentTime(currentTime);
-  }, [currentTime]);
 
   // Fetch & decode the audio offline.
   useEffect(() => {
@@ -272,19 +274,6 @@ const Waveform: React.FC<WaveformProps> = ({
     }
   };
 
-  // Handle mouse down event on the waveform canvas.
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!canvasRef.current) return;
-    // Cancel any fade (even if one is in progress).
-    cancelPendingFade();
-    setIsDragging(true);
-    setHoverTimeVisible(true);
-    setDisableTransition(true);
-    setHoverOpacity(1);
-    setFixedOpacity(1);
-    handleMouseMove(event); // Immediate response.
-  };
-
   // Update hover position and time indicator as mouse moves.
   const handleMouseMove = useCallback(
     (event: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
@@ -314,6 +303,19 @@ const Waveform: React.FC<WaveformProps> = ({
     [trackDuration]
   );
 
+  // Handle mouse down event on the waveform canvas.
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!canvasRef.current) return;
+    // Cancel any fade (even if one is in progress).
+    cancelPendingFade();
+    setIsDragging(true);
+    setHoverTimeVisible(true);
+    setDisableTransition(true);
+    setHoverOpacity(1);
+    setFixedOpacity(1);
+    handleMouseMove(event); // Immediate response.
+  };
+
   // Handle mouse up event to finalize dragging and update playback.
   const handleMouseUp = useCallback(() => {
     if (!isDragging || !canvasRef.current || !trackDuration) return;
@@ -326,7 +328,7 @@ const Waveform: React.FC<WaveformProps> = ({
     setLastDragTime(hoverTime);
 
     // Update local time immediately to update the waveform drawing
-    setLocalCurrentTime(finalTime);
+    setSeekTime(finalTime);
     
     // Update playback immediately.
     updateCurrentTime(finalTime);

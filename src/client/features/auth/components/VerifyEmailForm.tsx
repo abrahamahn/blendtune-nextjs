@@ -69,13 +69,6 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
   }, [cooldown]);
 
   /**
-   * Initializes cooldown timer on component mount
-   */
-  useEffect(() => {
-    setCooldown(60);
-  }, []);
-
-  /**
    * Handles resending verification email
    * Manages API call, response handling, and error states
    */

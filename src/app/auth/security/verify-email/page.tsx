@@ -1,10 +1,13 @@
 // src/app/auth/security/verify-email/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import Logo from "@components/common/Logo";
 import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
+
+// localStorage never notifies within this page's lifetime; read-once external store.
+const subscribeNever = () => () => {};
+const readStoredEmail = () => localStorage.getItem("userEmail") || "";
 
 /**
  * VerifyEmail component:
@@ -16,14 +19,9 @@ const VerifyEmail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cooldown, setCooldown] = useState(60);
   const [resendStatus, setResendStatus] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const router = useRouter();
 
-  // Load user email from local storage when component mounts.
-  useEffect(() => {
-    const email = localStorage.getItem("userEmail") || "";
-    setUserEmail(email);
-  }, []);
+  // User email from local storage (empty string during SSR).
+  const userEmail = useSyncExternalStore(subscribeNever, readStoredEmail, () => "");
 
   // Handle cooldown timer logic.
   useEffect(() => {
@@ -69,10 +67,6 @@ const VerifyEmail: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    setCooldown(60);
-  }, []);
 
   // Determine the message to display based on resend status.
   let message;

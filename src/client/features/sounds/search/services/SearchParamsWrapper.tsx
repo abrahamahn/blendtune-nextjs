@@ -2,7 +2,7 @@
 
 "use client";
 import React, { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "@router/index";
 
 interface SearchParamsWrapperProps {
   /**
@@ -22,7 +22,7 @@ interface SearchParamsWrapperProps {
  * @returns {null} This component does not render any UI.
  */
 const SearchParamsWrapper: React.FC<SearchParamsWrapperProps> = ({ onParamsReady }) => {
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
   // Invoke callback whenever the token parameter changes.

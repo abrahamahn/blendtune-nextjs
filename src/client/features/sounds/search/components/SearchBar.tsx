@@ -1,7 +1,7 @@
 // Directory: src/client/features/sounds/search/components/SearchBar.tsx
 
 import React, { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@router/index";
 import { useDispatch } from "react-redux";
 import {
   selectKeyword,
@@ -29,7 +29,7 @@ interface SearchBarProps {
  * @returns {JSX.Element} The rendered component.
  */
 const SearchBar: React.FC<SearchBarProps> = ({ keywords }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Manage search input state.
@@ -86,7 +86,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ keywords }) => {
   const handleSearchClick = () => {
     if (inputValue) {
       dispatch(selectKeyword(inputValue));
-      router.push("/sounds");
+      navigate("/sounds");
     }
   };
 
@@ -97,7 +97,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ keywords }) => {
   const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue) {
       dispatch(selectKeyword(inputValue));
-      router.push("/sounds");
+      navigate("/sounds");
     }
   };
 

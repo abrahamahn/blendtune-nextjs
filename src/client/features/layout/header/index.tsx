@@ -5,7 +5,7 @@
 */
 
 import React from "react";
-import Link from "next/link";
+import { Link } from "@router/index";
 import { useSession } from "@auth/services/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -90,7 +90,7 @@ const Header: React.FC = () => {
                 <>
                   {userAuthenticated ? (
                     <Link
-                      href="/welcome"
+                      to="/welcome"
                       className="font-medium flex flex-row items-center text-sm text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-200 hover:bg-neutral-100 hover:text-neutral-700 dark:hover:bg-neutral-700 py-1.5 px-4 rounded-full"
                     >
                       <FontAwesomeIcon

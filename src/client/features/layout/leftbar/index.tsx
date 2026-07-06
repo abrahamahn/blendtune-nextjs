@@ -6,8 +6,7 @@
 
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { Link, useNavigate } from "@router/index";
 import { useDispatch } from "react-redux";
 import { selectCategory, removeAllGenres } from "@/client/features/sounds/filters/store/filterSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,7 +39,7 @@ interface NavItem {
 * Provides navigation controls and genre filters
 */
 const LeftBar: React.FC = () => {
- const router = useRouter();
+ const navigate = useNavigate();
  const dispatch = useDispatch();
  const { isLoading } = useTracks();
 
@@ -70,7 +69,7 @@ const LeftBar: React.FC = () => {
   */
  const handleSoundsClick = () => {
    dispatch(removeAllGenres());
-   router.push("/sounds");
+   navigate("/sounds");
  };
 
  /**
@@ -84,7 +83,7 @@ const LeftBar: React.FC = () => {
    } else {
      dispatch(selectCategory(genre));
    }
-   router.push("/sounds");
+   navigate("/sounds");
  };
 
  return (
@@ -93,7 +92,7 @@ const LeftBar: React.FC = () => {
      <div className="bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
        <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
          <Link
-           href="./"
+           to="./"
            className="flex flex-col justify-center items-center p-3"
          >
            <FontAwesomeIcon icon={faHome} size="lg" />
@@ -133,7 +132,7 @@ const LeftBar: React.FC = () => {
          <div className="flex flex-col justify-center items-center pt-1 text-neutral-600 dark:text-neutral-300">
            {pageItems.map((page) => (
              <Link
-               href={`/${page.text.toLowerCase()}`}
+               to={`/${page.text.toLowerCase()}`}
                key={page.text}
                className="flex flex-col justify-center items-center py-3"
              >

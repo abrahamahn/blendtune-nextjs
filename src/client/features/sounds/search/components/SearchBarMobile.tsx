@@ -1,7 +1,7 @@
 // src/client/features/sounds/search/components/SearchBarMobile.tsx
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@router/index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@core/store";
 import {
@@ -36,7 +36,7 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   toggleSearchBar,
   isAnimating,
 }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Search input state management.
@@ -83,9 +83,9 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   // Redirect to the /sounds page when a keyword is selected.
   useEffect(() => {
     if (selectedKeywords.length > 0) {
-      router.push("/sounds");
+      navigate("/sounds");
     }
-  }, [selectedKeywords, router]);
+  }, [selectedKeywords, navigate]);
 
   // Focus the input field when the search bar is expanding.
   useEffect(() => {

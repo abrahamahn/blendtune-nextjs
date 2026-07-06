@@ -1,8 +1,7 @@
 // src\client\shared\components\common\Artwork.tsx
 import React from "react";
-import Image, { ImageProps } from "next/image";
 
-export interface ArtworkProps extends Omit<ImageProps, "src" | "alt"> {
+export interface ArtworkProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt"> {
   /** Descriptive alt text for the image */
   alt: string;
   /** Optional catalog value to generate the URL (if no override provided) */
@@ -11,6 +10,10 @@ export interface ArtworkProps extends Omit<ImageProps, "src" | "alt"> {
   fallback?: string;
   /** Override the generated URL with a full URL */
   srcOverride?: string;
+  /** Accepted for call-site compatibility with the former next/image API; not forwarded to the DOM. */
+  priority?: boolean;
+  /** Accepted for call-site compatibility with the former next/image API; not forwarded to the DOM. */
+  quality?: number;
 }
 
 /**
@@ -22,6 +25,8 @@ const Artwork: React.FC<ArtworkProps> = ({
   catalog,
   fallback = "default",
   srcOverride,
+  priority: _priority,
+  quality: _quality,
   ...imageProps
 }) => {
   const src =
@@ -29,7 +34,7 @@ const Artwork: React.FC<ArtworkProps> = ({
     `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${catalog ||
       fallback}.jpg`;
 
-  return <Image src={src} alt={alt} {...imageProps} crossOrigin="anonymous" />;
+  return <img src={src} alt={alt} {...imageProps} crossOrigin="anonymous" />;
 };
 
 export default Artwork;

@@ -7,7 +7,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Track } from "@/shared/types/track";
-import Link from "next/link";
+import { Link } from "@router/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
  faArrowLeft,
@@ -122,7 +122,7 @@ const Packs: React.FC<PacksProps> = ({ tracks }) => {
             </h1>
             <Link
               className="text-sm px-3 py-1.5 rounded-full font-semibold text-neutral-800 bg-neutral-100 hover:bg-neutral-300 dark:text-white  dark:bg-neutral-800 dark:hover:bg-neutral-900 md:hidden"
-              href="/sounds"
+              to="/sounds"
             >
               See All
             </Link>

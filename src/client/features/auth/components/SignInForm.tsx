@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import Link from "next/link";
+import { Link } from "@router/index";
 import Logo from "@components/common//Logo";
 import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 import useAuth from "@auth/hooks/useAuth";
@@ -160,12 +160,12 @@ const SignIn: React.FC<SignInProps> = ({
           <div className="text-xs text-center text-neutral-500 dark:gray-500 py-6 px-4">
             <p>
               By continuing, you agree to Blend&apos;s{" "}
-              <Link href="/terms" className="text-blue-500 hover:opacity-500">
+              <Link to="/terms" className="text-blue-500 hover:opacity-500">
                 Terms
               </Link>{" "}
               and{" "}
               <Link
-                href="/privacy-policy"
+                to="/privacy-policy"
                 className="text-blue-500 hover:opacity-500"
               >
                 Policy

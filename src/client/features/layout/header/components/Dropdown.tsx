@@ -5,7 +5,7 @@
 */
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '@router/index';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
  faRecordVinyl,
@@ -65,7 +65,7 @@ const DropdownMenu: React.FC = () => {
              key={index}
              className='mb-1 hover:text-neutral-200 hover:bg-neutral-200/20 rounded-lg'
            >
-             <Link className='flex flex-row px-2 py-1.5' href='/sounds'>
+             <Link className='flex flex-row px-2 py-1.5' to='/sounds'>
                <div className='flex items-center w-4 mr-2'>
                  <FontAwesomeIcon
                    icon={item.icon}
@@ -84,7 +84,7 @@ const DropdownMenu: React.FC = () => {
              key={index}
              className='mb-1 hover:text-neutral-200 hover:bg-neutral-200/20 rounded-lg'
            >
-             <Link className='flex flex-row px-2 py-1.5' href='/sounds'>
+             <Link className='flex flex-row px-2 py-1.5' to='/sounds'>
                <div className='flex items-center w-4'>
                  <FontAwesomeIcon
                    icon={item.icon}
@@ -111,7 +111,7 @@ const DropdownMenu: React.FC = () => {
              key={index}
              className='mb-1 hover:text-neutral-200 hover:bg-neutral-200/20 rounded-lg'
            >
-             <Link className='flex flex-row px-2 py-1.5' href='/sounds'>
+             <Link className='flex flex-row px-2 py-1.5' to='/sounds'>
                <div className='flex items-center w-4'>
                  <FontAwesomeIcon
                    icon={item.icon}

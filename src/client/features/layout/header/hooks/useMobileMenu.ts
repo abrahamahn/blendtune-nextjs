@@ -1,7 +1,7 @@
 // src\client\features\layout\header\hooks\useMobileMenu.ts
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@router/index";
 import { useDispatch } from "react-redux";
 import { removeAllGenres } from "@store/slices";
 
@@ -11,7 +11,7 @@ import { removeAllGenres } from "@store/slices";
 */
 const useMobileMenu = () => {
  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
- const router = useRouter();
+ const navigate = useNavigate();
  const dispatch = useDispatch();
 
  /**
@@ -34,7 +34,7 @@ const useMobileMenu = () => {
   */
  const handleSoundsClick = () => {
    dispatch(removeAllGenres());
-   router.push("/sounds");
+   navigate("/sounds");
    setIsMobileMenuOpen(false);
  };
 

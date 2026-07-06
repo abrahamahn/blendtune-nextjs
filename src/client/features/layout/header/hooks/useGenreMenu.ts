@@ -1,5 +1,5 @@
 // src\client\features\layout\header\hooks\useGenreMenu.ts
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@router/index";
 import { useDispatch } from "react-redux";
 import { selectCategory, removeAllGenres } from "@/client/features/sounds/filters/store/filterSlice";
 import { 
@@ -17,7 +17,7 @@ import {
 */
 
 const useGenreMenu = () => {
- const router = useRouter();
+ const navigate = useNavigate();
  const dispatch = useDispatch();
 
  // Map of genre menu items with their associated icons
@@ -34,10 +34,10 @@ const useGenreMenu = () => {
  const handleGenreItemClick = (genre: string) => {
    if (genre === "All") {
      dispatch(removeAllGenres());
-     router.push("/sounds");
+     navigate("/sounds");
    } else {
      dispatch(selectCategory(genre));
-     router.push("/sounds");
+     navigate("/sounds");
    }
  };
 

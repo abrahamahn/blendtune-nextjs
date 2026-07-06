@@ -5,7 +5,7 @@
  */
 
 import React from "react";
-import Link from "next/link";
+import { Link } from "@router/index";
 import Artwork from "@components/common/Artwork";
 import styles from "@styles/Home.module.css";
 
@@ -95,13 +95,13 @@ const Hero: React.FC = () => {
           <div className={`mt-2 justify-center ${styles.fadeInUp}`}>
             <Link
               className="text-sm md:text-base text-white dark:text-black rounded-lg py-3 sm:py-3 px-10 bg-black dark:bg-white hover:bg-neutral-900 dark:hover:bg-neutral-200 mr-4 dark:font-medium"
-              href="/sounds"
+              to="/sounds"
             >
               Explore
             </Link>
             <Link
               className="text-sm md:text-base text-neutral-600 dark:text-neutral-200 rounded-lg py-3 sm:py-3 px-10 dark:bg-blue-600 hover:bg-blue-500 dark:font-medium"
-              href="/auth/signup"
+              to="/auth/signup"
             >
               Try Free
             </Link>

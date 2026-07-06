@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import Link from "next/link";
+import { Link } from "@router/index";
 import Logo from "@components/common//Logo";
 import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
 
@@ -332,14 +332,14 @@ const SignUp: React.FC<SignUpProps> = ({
                 <p className="text-neutral-500 dark:text-white text-xs">
                   I agree to the{" "}
                   <Link
-                    href="/terms"
+                    to="/terms"
                     className="text-blue-500 hover:text-blue-800"
                   >
                     Terms
                   </Link>{" "}
                   and{" "}
                   <Link
-                    href="/privacy-policy"
+                    to="/privacy-policy"
                     className="text-blue-500 hover:text-blue-800"
                   >
                     Privacy Policy

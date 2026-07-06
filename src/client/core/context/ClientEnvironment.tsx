@@ -15,9 +15,9 @@ export interface ClientEnvironmentType {
 
 // Default values for the client environment
 const defaultEnvironment: ClientEnvironmentType = {
-  version: process.env.NEXT_PUBLIC_APP_VERSION || "1.0.0",
-  buildId: process.env.NEXT_PUBLIC_BUILD_ID || "development",
-  debug: process.env.NODE_ENV === "development",
+  version: import.meta.env.VITE_APP_VERSION || "1.0.0",
+  buildId: import.meta.env.VITE_BUILD_ID || "development",
+  debug: import.meta.env.DEV,
 };
 
 // Create a React context for environment variables

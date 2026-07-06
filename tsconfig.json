@@ -37,6 +37,12 @@
       "@client/*": [
         "src/client/*"
       ],
+      "@router/*": [
+        "main/client/react/src/router/*"
+      ],
+      "@router": [
+        "main/client/react/src/router"
+      ],
       "@server/db": [
         "main/server/db/src"
       ],

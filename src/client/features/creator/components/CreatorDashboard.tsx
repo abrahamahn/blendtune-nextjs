@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@router/index';
 
 import type { Track } from '@shared/types/track';
 import type { WorkspaceSummary } from '@shared/types/creator';
@@ -35,7 +35,7 @@ export const CreatorDashboard: React.FC<CreatorDashboardProps> = ({ slug }) => {
         {error.status === 401 ? (
           <p>
             Please{' '}
-            <Link href="/auth/signin" className="text-indigo-500 underline">
+            <Link to="/auth/signin" className="text-indigo-500 underline">
               sign in
             </Link>{' '}
             to manage your workspace.

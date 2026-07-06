@@ -2,7 +2,8 @@
 
 module.exports = {
   content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    require('path').join(__dirname, 'src/**/*.{js,ts,jsx,tsx,mdx}'),
+    require('path').join(__dirname, 'main/**/*.{ts,tsx}'),
   ],
   theme: {
     extend: {

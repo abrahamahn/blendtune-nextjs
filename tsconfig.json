@@ -64,6 +64,9 @@
       "@server/media/*": [
         "main/server/media/src/*"
       ],
+      "@server/system/*": [
+        "main/server/system/src/*"
+      ],
       "@server/*": [
         "src/server/*"
       ],

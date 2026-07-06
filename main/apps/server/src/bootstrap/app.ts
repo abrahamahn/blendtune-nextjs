@@ -12,6 +12,7 @@ import fastifyCookie from '@fastify/cookie';
 
 import { HttpError } from '@server/core/errors';
 import { registerRoutes } from '../http/router';
+import { registerTransparentRefresh } from './refresh';
 
 export async function createServer(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -21,6 +22,7 @@ export async function createServer(): Promise<FastifyInstance> {
   });
 
   await app.register(fastifyCookie);
+  registerTransparentRefresh(app);
 
   app.setErrorHandler((error: unknown, _req, reply) => {
     if (error instanceof HttpError) {

@@ -2,23 +2,21 @@
 import cron from 'node-cron';
 
 import { db } from '@server/db';
+import { createRefreshTokensRepository } from '@server/db/repositories/refreshTokens';
 
 /**
- * Daily (00:00 UTC) sweep that deactivates expired sessions.
- * Fixes the previous target table bug (public.sessions → auth.sessions).
+ * Daily (00:00 UTC) sweep that prunes expired and revoked refresh tokens.
+ * Rotated-but-unexpired rows are kept for token-reuse detection.
  */
 cron.schedule(
   '0 0 * * *',
   async () => {
-    console.log('Running daily session expiration check');
+    console.log('Running daily refresh token cleanup');
     try {
-      await db.execute({
-        text: "UPDATE auth.sessions SET status = 'inactive' WHERE expires_at < $1 AND status != 'inactive'",
-        values: [new Date().toISOString()],
-      });
-      console.log('Expired sessions marked as inactive');
+      const deleted = await createRefreshTokensRepository(db).deleteExpired();
+      console.log(`Pruned ${deleted} expired/revoked refresh tokens`);
     } catch (error) {
-      console.error('Session expiration update failed:', error);
+      console.error('Refresh token cleanup failed:', error);
     }
   },
   { scheduled: true, timezone: 'UTC' },

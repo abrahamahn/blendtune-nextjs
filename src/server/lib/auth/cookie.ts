@@ -25,3 +25,24 @@ export function setHttpOnlyCookie(response: NextResponse, name: string, value: s
 
     return response;
 }
+
+/**
+ * Sets both auth cookies: the access JWT in the existing `sessionToken` cookie and the
+ * opaque rotating refresh token in `refreshToken`. Both cookie lifetimes match the
+ * refresh window so browsers keep sending the (short-lived) JWT for refresh handling.
+ */
+export function setAuthCookies(
+    response: NextResponse,
+    tokens: { accessToken: string; refreshToken: string; refreshExpiresAt: Date },
+): NextResponse {
+    setHttpOnlyCookie(response, 'sessionToken', tokens.accessToken, {
+        httpOnly: true,
+        path: '/',
+        expires: tokens.refreshExpiresAt,
+    });
+    return setHttpOnlyCookie(response, 'refreshToken', tokens.refreshToken, {
+        httpOnly: true,
+        path: '/',
+        expires: tokens.refreshExpiresAt,
+    });
+}

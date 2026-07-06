@@ -1,20 +1,21 @@
 // src/server/core/auth/service.ts
 /**
- * Auth service (framework-agnostic). Behavior preserved from the previous services/auth/*
- * implementation, now over RawDb repositories. Each function keeps its original token format,
- * expiry window, and SQL so responses are byte-identical.
+ * Auth service (framework-agnostic). Response bodies/statuses are byte-identical to the
+ * previous implementation; credentials now use Argon2id (with lazy bcrypt upgrade on
+ * login) and sessions are JWT access tokens + opaque rotating refresh tokens.
  */
 
-import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@server/db';
 import { createUsersRepository, type AuthUserRow } from '@server/db/repositories/users';
-import { createSessionsRepository } from '@server/db/repositories/sessions';
+import { createRefreshTokensRepository } from '@server/db/repositories/refreshTokens';
 import { sendConfirmationEmail } from './email';
+import { hashPassword, isBcryptHash, needsRehash, verifyPassword } from './password';
+import { createAuthTokens, type AuthTokens } from './tokens';
 
-/** Client metadata captured for a session (extracted by the route adapter). */
+/** Client metadata captured for a token family (extracted by the route adapter). */
 export interface RequestMeta {
   ip: string;
   userAgent: string;
@@ -35,15 +36,13 @@ export interface SignUpResult {
   userId?: number;
 }
 
-export type LoginResult =
-  | { ok: false }
-  | { ok: true; sessionToken: string; expiresAt: Date };
+export type LoginResult = { ok: false } | { ok: true; tokens: AuthTokens };
 
 export function getUserByEmail(email: string): Promise<AuthUserRow | null> {
   return createUsersRepository(db).findByEmail(email);
 }
 
-/** Verify credentials and, on success, create a session. No throw — the route maps the result. */
+/** Verify credentials and, on success, issue auth tokens. No throw — the route maps the result. */
 export async function login(
   email: string,
   password: string,
@@ -52,22 +51,20 @@ export async function login(
   const user = await getUserByEmail(email);
   if (!user) return { ok: false };
 
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await verifyPassword(password, user.password);
   if (!valid) return { ok: false };
 
-  const sessionToken = uuidv4();
-  const refreshToken = uuidv4();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 30);
-  await createSessionsRepository(db).create({
-    userId: user.uuid,
-    sessionToken,
-    refreshToken,
-    ip: meta.ip,
-    userAgent: meta.userAgent,
-    expiresAt,
-  });
-  return { ok: true, sessionToken, expiresAt };
+  // Lazy migration: upgrade legacy bcrypt (or outdated Argon2) hashes on successful login.
+  if (isBcryptHash(user.password) || needsRehash(user.password)) {
+    await createUsersRepository(db).updatePassword(user.uuid, await hashPassword(password));
+  }
+
+  const tokens = await createAuthTokens(
+    createRefreshTokensRepository(db),
+    { userId: user.uuid, email: user.email },
+    meta,
+  );
+  return { ok: true, tokens };
 }
 
 /** Sign up a new user, or resend/conflict for an existing one (unchanged logic). */
@@ -77,7 +74,7 @@ export async function signUpUser(data: SignUpData): Promise<SignUpResult> {
 
   const existingUser = await users.findByEmail(email);
   if (existingUser) {
-    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+    const passwordMatch = await verifyPassword(password, existingUser.password);
     if (!passwordMatch) {
       return { status: 401, message: 'Incorrect password for existing email' };
     }
@@ -91,7 +88,7 @@ export async function signUpUser(data: SignUpData): Promise<SignUpResult> {
     return { status: 200, message: 'Please verify your email.', redirectToVerifyEmail: true };
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
+  const passwordHash = await hashPassword(password);
   const confirmationToken = uuidv4();
   const emailTokenExpire = new Date(Date.now() + 15 * 60000);
   const created = await users.create({
@@ -120,38 +117,25 @@ export async function requestPasswordReset(email: string): Promise<void> {
   await sendConfirmationEmail(email, resetToken, 'resetpassword');
 }
 
-export interface ResetPasswordResult {
-  sessionToken: string;
-  expiresAt: Date;
-}
-
-/** Reset a password with a valid token and start a 7-day session (transactional). */
+/** Reset a password with a valid token and issue auth tokens (transactional). */
 export function resetPassword(
   token: string,
   newPassword: string,
   meta: RequestMeta,
-): Promise<ResetPasswordResult> {
+): Promise<AuthTokens> {
   return db.transaction(async (tx) => {
     const users = createUsersRepository(tx);
     const user = await users.findByValidEmailToken(token);
     if (!user) throw new Error('Token is invalid or has expired.');
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await hashPassword(newPassword);
     await users.updatePasswordAndClearToken(user.uuid, hashedPassword);
 
-    const sessionToken = randomBytes(16).toString('hex');
-    const refreshToken = randomBytes(16).toString('hex');
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
-    await createSessionsRepository(tx).create({
-      userId: user.uuid,
-      sessionToken,
-      refreshToken,
-      ip: meta.ip,
-      userAgent: meta.userAgent,
-      expiresAt,
-    });
-    return { sessionToken, expiresAt };
+    return createAuthTokens(
+      createRefreshTokensRepository(tx),
+      { userId: user.uuid, email: user.email },
+      meta,
+    );
   });
 }
 
@@ -176,11 +160,10 @@ export function verifyResetPasswordToken(token: string): Promise<ResetVerificati
 
 export interface EmailConfirmationResult {
   alreadyConfirmed: boolean;
-  sessionToken?: string;
-  expiresAt?: Date;
+  tokens?: AuthTokens;
 }
 
-/** Confirm an email with a token and start a 30-day session (transactional). */
+/** Confirm an email with a token and issue auth tokens (transactional). */
 export function confirmEmail(token: string, meta: RequestMeta): Promise<EmailConfirmationResult> {
   return db.transaction(async (tx) => {
     const users = createUsersRepository(tx);
@@ -191,18 +174,11 @@ export function confirmEmail(token: string, meta: RequestMeta): Promise<EmailCon
 
     await users.confirmEmail(user.uuid);
 
-    const sessionToken = randomBytes(16).toString('hex');
-    const refreshToken = randomBytes(16).toString('hex');
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30);
-    await createSessionsRepository(tx).create({
-      userId: user.uuid,
-      sessionToken,
-      refreshToken,
-      ip: meta.ip,
-      userAgent: meta.userAgent,
-      expiresAt,
-    });
-    return { alreadyConfirmed: false, sessionToken, expiresAt };
+    const tokens = await createAuthTokens(
+      createRefreshTokensRepository(tx),
+      { userId: user.uuid, email: user.email },
+      meta,
+    );
+    return { alreadyConfirmed: false, tokens };
   });
 }

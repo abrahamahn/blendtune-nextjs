@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { login } from '@server/core/auth';
-import { setHttpOnlyCookie } from '@server/lib/auth/cookie';
+import { setAuthCookies } from '@server/lib/auth/cookie';
 import { extractRequestMeta } from '@server/lib/auth/request';
 import { createJsonResponse, withErrorHandling } from '@server/lib/core';
 
@@ -19,11 +19,7 @@ async function loginHandler(req: NextRequest): Promise<NextResponse> {
   }
 
   const response = createJsonResponse({ message: 'Login successful' }, 200);
-  return setHttpOnlyCookie(response, 'sessionToken', result.sessionToken, {
-    httpOnly: true,
-    path: '/',
-    expires: result.expiresAt,
-  });
+  return setAuthCookies(response, result.tokens);
 }
 
 export const POST = withErrorHandling(loginHandler);

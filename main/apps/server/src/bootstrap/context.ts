@@ -6,7 +6,7 @@
  * userId, and the x-tenant-slug header → membership-verified tenant scope for RLS.
  */
 
-import type { FastifyRequest } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import { db } from '@server/db';
 import { createTenantRepository } from '@server/db/repositories/tenant';
@@ -17,9 +17,27 @@ import {
   TENANT_SLUG_HEADER,
   type RequestContext,
 } from '@server/core/context';
-import type { RequestMeta } from '@server/core/auth';
+import type { AuthTokens, RequestMeta } from '@server/core/auth';
 
 export const SESSION_COOKIE = 'sessionToken';
+export const REFRESH_COOKIE = 'refreshToken';
+
+/**
+ * Set both auth cookies: the access JWT in the existing `sessionToken` cookie (cookie
+ * lifetime matches the refresh window so browsers keep sending it past JWT expiry, which
+ * lets the transparent-refresh hook mint a replacement) and the opaque refresh token.
+ */
+export function setAuthCookies(reply: FastifyReply, tokens: AuthTokens): void {
+  const options = {
+    httpOnly: true,
+    path: '/',
+    secure: true,
+    sameSite: 'strict',
+    expires: tokens.refreshExpiresAt,
+  } as const;
+  reply.setCookie(SESSION_COOKIE, tokens.accessToken, options);
+  reply.setCookie(REFRESH_COOKIE, tokens.refreshToken, options);
+}
 
 /** Session token from the cookie, else a Bearer Authorization header. */
 export function extractSessionToken(req: FastifyRequest): string | null {

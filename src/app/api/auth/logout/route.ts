@@ -5,16 +5,17 @@ import { logoutSession } from '@server/core/sessions';
 import { extractSessionToken } from '@server/lib/auth/session';
 import { createJsonResponse, withErrorHandling } from '@server/lib/core';
 
-/** POST /api/auth/logout — invalidate the session and clear the cookie. */
+/** POST /api/auth/logout — revoke the refresh-token family and clear both cookies. */
 async function logoutHandler(req: NextRequest): Promise<NextResponse> {
   const sessionToken = await extractSessionToken(req);
   if (!sessionToken) {
     return createJsonResponse({ success: false, message: 'Unauthorized' }, 401);
   }
 
-  await logoutSession(sessionToken);
+  const refreshToken = req.cookies.get('refreshToken')?.value;
+  if (refreshToken) await logoutSession(refreshToken);
 
-  return new NextResponse(
+  const response = new NextResponse(
     JSON.stringify({ success: true, message: 'Logged out successfully' }),
     {
       status: 200,
@@ -24,6 +25,11 @@ async function logoutHandler(req: NextRequest): Promise<NextResponse> {
       },
     },
   );
+  response.headers.append(
+    'Set-Cookie',
+    'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+  );
+  return response;
 }
 
 export const POST = withErrorHandling(logoutHandler);

@@ -1,63 +1,31 @@
 // src/server/core/sessions/service.ts
 /**
- * Session service (framework-agnostic). Behavior preserved from services/session/session.ts,
- * now over the RawDb session repository. IP / user-agent are passed as primitives.
+ * Session service (framework-agnostic). Sessions are now stateless HS256 access JWTs;
+ * `auth.sessions` is no longer read or written. Exported names/signatures are preserved
+ * where feasible so callers (Next routes, Fastify context) are unchanged.
  */
 
-import { v4 as uuidv4 } from 'uuid';
-
 import { db } from '@server/db';
-import { createSessionsRepository, type SessionProfileRow } from '@server/db/repositories/sessions';
+import { createProfileRepository, type SessionProfileRow } from '@server/db/repositories/profile';
+import { createRefreshTokensRepository } from '@server/db/repositories/refreshTokens';
+import { revokeRefreshTokenFamily, verifyAccessToken } from '../auth/tokens';
 
-/** Validated session joined to the user profile (snake_case, as consumed by the route). */
+/** Validated profile data returned to check-session (snake_case, as consumed by the route). */
 export type SessionData = SessionProfileRow;
 
-export interface CreatedSession {
-  sessionToken: string;
-  refreshToken: string;
-  expiresAt: Date;
+/** Revoke the refresh-token family behind a presented refresh token (logout). */
+export async function logoutSession(refreshToken: string): Promise<void> {
+  await revokeRefreshTokenFamily(createRefreshTokensRepository(db), refreshToken, 'User logout');
 }
 
-/** Create a 30-day session for a user. */
-export async function createSession(
-  userId: string,
-  userIp: string,
-  userAgent: string,
-): Promise<CreatedSession> {
-  const sessionToken = uuidv4();
-  const refreshToken = uuidv4();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 30);
-
-  await createSessionsRepository(db).create({
-    userId,
-    sessionToken,
-    refreshToken,
-    ip: userIp,
-    userAgent,
-    expiresAt,
-  });
-
-  return { sessionToken, refreshToken, expiresAt };
-}
-
-/** Mark a session inactive (logout). */
-export async function logoutSession(sessionToken: string): Promise<void> {
-  await createSessionsRepository(db).deactivate(sessionToken);
-}
-
-/** user_id (UUID) of an active session, or null. */
+/** user_id (UUID) from a valid access JWT, or null. */
 export function getUserIdFromSession(sessionToken: string): Promise<string | null> {
-  return createSessionsRepository(db).findActiveUserId(sessionToken);
+  return Promise.resolve(verifyAccessToken(sessionToken));
 }
 
-/** Validate an active, unexpired session and return the joined profile data, or null. */
+/** Validate an access JWT and return the user's profile data, or null. */
 export async function validateSession(sessionToken: string): Promise<SessionData | null> {
-  const row = await createSessionsRepository(db).findActiveWithProfile(sessionToken);
-  if (!row) return null;
-
-  const expiresAt = new Date(row.expires_at);
-  if (expiresAt < new Date() || row.status !== 'active') return null;
-
-  return row;
+  const userId = verifyAccessToken(sessionToken);
+  if (!userId) return null;
+  return createProfileRepository(db).findSessionProfile(userId);
 }

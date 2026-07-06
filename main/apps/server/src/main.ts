@@ -5,12 +5,15 @@
 
 import '@shared/config/loadEnv';
 
+import { getJwtSecret } from '@server/core/auth';
 import { createServer } from './bootstrap/app';
 
 const PORT = Number(process.env.API_PORT ?? 8080);
 const HOST = process.env.API_HOST ?? '127.0.0.1';
 
 async function start(): Promise<void> {
+  getJwtSecret(); // fail fast: JWT_SECRET must be set (≥32 chars) before serving traffic
+
   const app = await createServer();
 
   const shutdown = async (signal: string): Promise<void> => {

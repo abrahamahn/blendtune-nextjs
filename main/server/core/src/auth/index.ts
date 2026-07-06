@@ -11,8 +11,14 @@ export {
   type SignUpData,
   type SignUpResult,
   type LoginResult,
-  type ResetPasswordResult,
   type ResetVerificationResult,
   type EmailConfirmationResult,
 } from './service';
+export {
+  rotateAuthTokens,
+  verifyAccessToken,
+  getJwtSecret,
+  type AuthTokens,
+  type RotatedTokens,
+} from './tokens';
 export { sendConfirmationEmail, type AuthEmailAction } from './email';

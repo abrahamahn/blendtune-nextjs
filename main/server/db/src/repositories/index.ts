@@ -1,31 +1,31 @@
 // src/server/db/repositories/index.ts
 import type { RawDb } from '../client';
 import { createUsersRepository, type UsersRepository } from './users';
-import { createSessionsRepository, type SessionsRepository } from './sessions';
 import { createProfileRepository, type ProfileRepository } from './profile';
+import { createRefreshTokensRepository, type RefreshTokensRepository } from './refreshTokens';
 import { createTenantRepository, type TenantRepository } from './tenant';
 import { createTracksRepository, type TracksRepository } from './tracks';
 
-export { createUsersRepository, createSessionsRepository, createProfileRepository };
+export { createUsersRepository, createProfileRepository, createRefreshTokensRepository };
 export { createTenantRepository, createTracksRepository };
 export type {
   UsersRepository,
-  SessionsRepository,
   ProfileRepository,
+  RefreshTokensRepository,
   TenantRepository,
   TracksRepository,
 };
 export type { TenantWithRole } from './tenant';
 export type { AuthUserRow, NewAuthUser } from './users';
-export type { NewSession, SessionProfileRow } from './sessions';
-export type { BasicProfileInput, ProfileRow } from './profile';
+export type { NewRefreshToken, RefreshTokenRow } from './refreshTokens';
+export type { BasicProfileInput, ProfileRow, SessionProfileRow } from './profile';
 export type { TrackInfoRow } from './tracks';
 
 /** The full set of repositories bound to a RawDb (mirrors bslt's createRepositories). */
 export interface Repositories {
   users: UsersRepository;
-  sessions: SessionsRepository;
   profile: ProfileRepository;
+  refreshTokens: RefreshTokensRepository;
   tenants: TenantRepository;
   tracks: TracksRepository;
 }
@@ -33,8 +33,8 @@ export interface Repositories {
 export function createRepositories(db: RawDb): Repositories {
   return {
     users: createUsersRepository(db),
-    sessions: createSessionsRepository(db),
     profile: createProfileRepository(db),
+    refreshTokens: createRefreshTokensRepository(db),
     tenants: createTenantRepository(db),
     tracks: createTracksRepository(db),
   };

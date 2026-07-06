@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { confirmEmail } from '@server/core/auth';
-import { setHttpOnlyCookie } from '@server/lib/auth/cookie';
+import { setAuthCookies } from '@server/lib/auth/cookie';
 import { extractRequestMeta } from '@server/lib/auth/request';
 import { createJsonResponse, withErrorHandling } from '@server/lib/core';
 
@@ -22,11 +22,7 @@ async function confirmEmailHandler(req: NextRequest): Promise<NextResponse> {
     { success: true, message: 'Email confirmed successfully.' },
     201,
   );
-  return setHttpOnlyCookie(response, 'sessionToken', result.sessionToken!, {
-    httpOnly: true,
-    path: '/',
-    expires: result.expiresAt!,
-  });
+  return setAuthCookies(response, result.tokens!);
 }
 
 export const GET = withErrorHandling(confirmEmailHandler);

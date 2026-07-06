@@ -34,11 +34,15 @@ export interface NewAuthUser {
 
 export interface UsersRepository {
   findByEmail(email: string): Promise<AuthUserRow | null>;
+  /** Email address for a user UUID, or null. */
+  findEmailByUuid(uuid: string): Promise<string | null>;
   /** User whose email_token matches and has not expired. */
   findByValidEmailToken(token: string): Promise<AuthUserRow | null>;
   create(input: NewAuthUser): Promise<{ id: number; uuid: string }>;
   setEmailToken(email: string, token: string, expire: Date): Promise<void>;
   confirmEmail(uuid: string): Promise<void>;
+  /** Replace the stored password hash (lazy bcrypt → Argon2id upgrade). */
+  updatePassword(uuid: string, passwordHash: string): Promise<void>;
   updatePasswordAndClearToken(uuid: string, passwordHash: string): Promise<void>;
   touchLastEmailSent(email: string): Promise<void>;
 }
@@ -50,6 +54,14 @@ export function createUsersRepository(db: RawDb): UsersRepository {
         text: 'SELECT * FROM auth.users WHERE email = $1',
         values: [email],
       });
+    },
+
+    async findEmailByUuid(uuid) {
+      const row = await db.queryOne<{ email: string }>({
+        text: 'SELECT email FROM auth.users WHERE uuid = $1',
+        values: [uuid],
+      });
+      return row?.email ?? null;
     },
 
     findByValidEmailToken(token) {
@@ -96,6 +108,13 @@ export function createUsersRepository(db: RawDb): UsersRepository {
       await db.execute({
         text: 'UPDATE auth.users SET email_confirmed = TRUE WHERE uuid = $1',
         values: [uuid],
+      });
+    },
+
+    async updatePassword(uuid, passwordHash) {
+      await db.execute({
+        text: 'UPDATE auth.users SET password = $1 WHERE uuid = $2',
+        values: [passwordHash, uuid],
       });
     },
 

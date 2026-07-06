@@ -1,9 +1,11 @@
 // main/apps/server/src/http/routes/auth.ts
 /**
- * Auth routes — same wire behavior as the former Next.js /api/auth handlers.
+ * Auth routes — same wire behavior as the former Next.js /api/auth handlers. Successful
+ * auth now sets two cookies: the access JWT in `sessionToken` and the opaque rotating
+ * refresh token in `refreshToken`.
  */
 
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 
 import {
   confirmEmail,
@@ -15,17 +17,13 @@ import {
   type SignUpData,
 } from '@server/core/auth';
 import { logoutSession, validateSession, type SessionData } from '@server/core/sessions';
-import { extractRequestMeta, extractSessionToken, SESSION_COOKIE } from '../../bootstrap/context';
-
-const setSessionCookie = (reply: FastifyReply, token: string, expires: Date): void => {
-  reply.setCookie(SESSION_COOKIE, token, {
-    httpOnly: true,
-    path: '/',
-    expires,
-    secure: true,
-    sameSite: 'strict',
-  });
-};
+import {
+  extractRequestMeta,
+  extractSessionToken,
+  REFRESH_COOKIE,
+  SESSION_COOKIE,
+  setAuthCookies,
+} from '../../bootstrap/context';
 
 interface LoginBody {
   email?: string;
@@ -41,7 +39,7 @@ export function registerAuthRoutes(app: FastifyInstance): void {
     const result = await login(email, password, extractRequestMeta(req));
     if (!result.ok) return reply.status(401).send({ message: 'Invalid credentials' });
 
-    setSessionCookie(reply, result.sessionToken, result.expiresAt);
+    setAuthCookies(reply, result.tokens);
     return reply.status(200).send({ message: 'Login successful' });
   });
 
@@ -49,8 +47,10 @@ export function registerAuthRoutes(app: FastifyInstance): void {
     const token = extractSessionToken(req);
     if (!token) return reply.status(401).send({ success: false, message: 'Unauthorized' });
 
-    await logoutSession(token);
+    const refreshToken = req.cookies[REFRESH_COOKIE];
+    if (refreshToken) await logoutSession(refreshToken);
     reply.clearCookie(SESSION_COOKIE, { path: '/' });
+    reply.clearCookie(REFRESH_COOKIE, { path: '/' });
     return reply.status(200).send({ success: true, message: 'Logged out successfully' });
   });
 
@@ -102,7 +102,7 @@ export function registerAuthRoutes(app: FastifyInstance): void {
       if (result.alreadyConfirmed) {
         return reply.status(200).send({ success: true, message: 'Email is already confirmed.' });
       }
-      setSessionCookie(reply, result.sessionToken!, result.expiresAt!);
+      setAuthCookies(reply, result.tokens!);
       return reply.status(201).send({ success: true, message: 'Email confirmed successfully.' });
     },
   );
@@ -141,12 +141,8 @@ export function registerAuthRoutes(app: FastifyInstance): void {
       if (!token || !newPassword) {
         return reply.status(400).send({ message: 'Token and new password are required' });
       }
-      const { sessionToken, expiresAt } = await resetPassword(
-        token,
-        newPassword,
-        extractRequestMeta(req),
-      );
-      setSessionCookie(reply, sessionToken, expiresAt);
+      const tokens = await resetPassword(token, newPassword, extractRequestMeta(req));
+      setAuthCookies(reply, tokens);
       return reply.status(200).send({ success: true, message: 'Password reset successfully.' });
     },
   );

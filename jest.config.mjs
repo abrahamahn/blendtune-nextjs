@@ -20,6 +20,7 @@ const config = {
     '^@server/storage/(.*)$': '<rootDir>/main/server/storage/src/$1',
     '^@server/media$': '<rootDir>/main/server/media/src',
     '^@server/media/(.*)$': '<rootDir>/main/server/media/src/$1',
+    '^@server/system/(.*)$': '<rootDir>/main/server/system/src/$1',
     '^@server/(.*)$': '<rootDir>/src/server/$1',
     '^@shared/(.*)$': '<rootDir>/main/shared/src/$1',
     '^@/shared/(.*)$': '<rootDir>/main/shared/src/$1',

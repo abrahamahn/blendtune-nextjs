@@ -1,15 +1,20 @@
 // jest.config.mjs
-import nextJest from 'next/jest.js';
-
-const createJestConfig = nextJest({
-  // Load next.config.js and .env files in the test environment
-  dir: './',
-});
-
+/** @type {import('jest').Config} */
 const config = {
   coverageProvider: 'v8',
   // Unit tests are server/shared logic; e2e browser tests run via `pnpm test:e2e` (Playwright).
   testEnvironment: 'node',
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          parser: { syntax: 'typescript', tsx: true },
+          transform: { react: { runtime: 'automatic' } },
+        },
+      },
+    ],
+  },
   moduleNameMapper: {
     '^@router$': '<rootDir>/main/client/react/src/router',
     '^@router/(.*)$': '<rootDir>/main/client/react/src/router/$1',
@@ -30,4 +35,4 @@ const config = {
   testPathIgnorePatterns: ['<rootDir>/src/test/'],
 };
 
-export default createJestConfig(config);
+export default config;

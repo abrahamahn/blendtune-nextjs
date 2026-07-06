@@ -60,7 +60,7 @@ const EqualizerIcon: React.FC<EqualizerIconProps> = ({ isPlaying }) => {
           />
         ))}
       </div>
-      <style jsx>{`
+      <style>{`
         .equalizer-container {
           position: absolute;
           inset: 0;

@@ -10,9 +10,9 @@ export interface ArtworkProps extends Omit<React.ImgHTMLAttributes<HTMLImageElem
   fallback?: string;
   /** Override the generated URL with a full URL */
   srcOverride?: string;
-  /** Accepted for call-site compatibility with the former next/image API; not forwarded to the DOM. */
+  /** Accepted for call-site compatibility with the former Next.js Image API; not forwarded to the DOM. */
   priority?: boolean;
-  /** Accepted for call-site compatibility with the former next/image API; not forwarded to the DOM. */
+  /** Accepted for call-site compatibility with the former Next.js Image API; not forwarded to the DOM. */
   quality?: number;
 }
 

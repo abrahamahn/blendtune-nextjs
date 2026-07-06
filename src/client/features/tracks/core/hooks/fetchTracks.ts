@@ -22,11 +22,6 @@ export const fetchTracks = cache(async (): Promise<Track[]> => {
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
     const response = await fetch('/api/tracks', {
-      // Configure Next.js cache behavior
-      next: {
-        revalidate: 3600, // Revalidate every hour
-        tags: ['tracks'], // Allow manual revalidation
-      },
       signal: controller.signal // Add abort signal for timeout
     });
 

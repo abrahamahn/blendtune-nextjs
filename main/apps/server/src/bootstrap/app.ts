@@ -14,6 +14,7 @@ import { HttpError } from '@server/core/errors';
 import { registerRoutes } from '../http/router';
 import { registerTransparentRefresh } from './refresh';
 import { registerStaticWeb } from './static';
+import { registerCron } from './cron';
 
 export async function createServer(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -40,5 +41,6 @@ export async function createServer(): Promise<FastifyInstance> {
 
   await registerRoutes(app);
   await registerStaticWeb(app);
+  if (process.env.NODE_ENV !== 'test') registerCron();
   return app;
 }

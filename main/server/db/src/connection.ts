@@ -7,13 +7,11 @@
  * them into ONE database so that foreign keys and Row-Level Security can span the
  * `auth`, `users`, and `meekah` schemas — matching bslt's single-database model.
  *
- * This module resolves a single `PoolConfig` and exposes an HMR-safe singleton `RawDb`,
+ * This module resolves a single `DbConfig` and exposes an HMR-safe singleton `RawDb`,
  * mirroring `createDbClient` in `@bslt/db`.
  */
 
-import type { PoolConfig } from 'pg';
-
-import { createRawDb, type RawDb } from './client';
+import { createRawDb, type DbConfig, type RawDb } from './client';
 
 const isProd = (): boolean => process.env.NODE_ENV === 'production';
 
@@ -28,9 +26,9 @@ const isProd = (): boolean => process.env.NODE_ENV === 'production';
  */
 export function resolveDbConfig(
   env: Record<string, string | undefined> = process.env,
-): PoolConfig {
+): DbConfig {
   if (env.DATABASE_URL) {
-    return { connectionString: env.DATABASE_URL };
+    return { url: env.DATABASE_URL };
   }
 
   const cloud = env.NODE_ENV === 'production';
@@ -56,7 +54,7 @@ type GlobalWithDb = typeof globalThis & { __blendtuneDb?: RawDb };
  * Create the consolidated `RawDb` client. Memoized on `globalThis` in development so
  * Next.js HMR does not exhaust connections (mirrors bslt's `createDbClient`).
  */
-export function createDbClient(config: PoolConfig = resolveDbConfig()): RawDb {
+export function createDbClient(config: DbConfig = resolveDbConfig()): RawDb {
   if (!isProd()) {
     const g = globalThis as GlobalWithDb;
     g.__blendtuneDb ??= createRawDb(config);

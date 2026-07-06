@@ -7,7 +7,7 @@ describe('resolveDbConfig', () => {
       DATABASE_URL: 'postgres://u:p@h:5432/blendtune',
       PG_LOCAL_DB: 'ignored',
     });
-    expect(config).toEqual({ connectionString: 'postgres://u:p@h:5432/blendtune' });
+    expect(config).toEqual({ url: 'postgres://u:p@h:5432/blendtune' });
   });
 
   it('uses local PG_* vars when NODE_ENV is not production', () => {

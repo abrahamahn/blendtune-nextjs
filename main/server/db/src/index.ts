@@ -5,6 +5,7 @@ export { db, createDbClient, resolveDbConfig } from './connection';
 export { createRawDb } from './client';
 export type {
   RawDb,
+  DbConfig,
   QueryResult,
   QueryOptions,
   SessionContext,

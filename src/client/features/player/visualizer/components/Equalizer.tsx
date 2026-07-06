@@ -1,6 +1,6 @@
 // src/client/features/sounds/visualizer/components/Equalizer.tsx
 "use client";
-import React, { useEffect, useRef, useState, RefObject } from "react";
+import React, { useEffect, useRef, useSyncExternalStore, RefObject } from "react";
 import { Track } from "@/shared/types/track";
 import { useAudioAnalyser } from "@player/hooks/useAudioAnalyser";
 
@@ -9,18 +9,24 @@ interface EqualizerProps {
   currentTrack?: Track;
 }
 
+// No-op subscription: the canvas width is only read once (there's nothing to
+// resubscribe to), but useSyncExternalStore still gives us the SSR-safe
+// "render 203 on the server, reconcile to the real window width on the client" behavior.
+const subscribeNoop = () => () => {};
+const getCanvasWidthSnapshot = () => (window.innerWidth >= 767 ? 400 : 203);
+const getServerCanvasWidthSnapshot = () => 203;
+
 const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = useRef<number | null>(null);
   const prefersDarkMode = useRef<boolean>(false);
   const analyser = useAudioAnalyser(audioRef);
 
-  const [canvasWidth, setCanvasWidth] = useState(203);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setCanvasWidth(window.innerWidth >= 767 ? 400 : 203);
-    }
-  }, []);
+  const canvasWidth = useSyncExternalStore(
+    subscribeNoop,
+    getCanvasWidthSnapshot,
+    getServerCanvasWidthSnapshot
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");

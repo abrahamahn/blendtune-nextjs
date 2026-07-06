@@ -65,7 +65,7 @@ const InnerLayer: React.FC = () => {
   // Equalizer resize effect
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setEqualizerWidth(entry.contentRect.width);
       }
     });

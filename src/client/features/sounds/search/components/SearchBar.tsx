@@ -130,10 +130,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ keywords }) => {
 
   // Handles clicks outside the search bar to close suggestions.
   useEffect(() => {
-    if (!isFocused) {
-      setCategoryOpen(false);
-    }
-
     const handleClickOutside = (e: MouseEvent) => {
       if (categoryOpen) {
         if (categoryRef.current?.contains(e.target as Node)) {

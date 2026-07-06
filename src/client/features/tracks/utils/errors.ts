@@ -40,14 +40,14 @@ interface ErrorLogger {
    * @param error - The error to log
    * @param context - Additional context about the error
    */
-  logError(error: Error | TrackError, context?: Record<string, any>): void;
+  logError(error: Error | TrackError, context?: Record<string, unknown>): void;
 }
 
 /**
  * Default no-op logger that can be replaced with a real implementation
  */
 class DefaultErrorLogger implements ErrorLogger {
-  logError(error: Error | TrackError, context?: Record<string, any>): void {
+  logError(error: Error | TrackError, context?: Record<string, unknown>): void {
     console.error('Track Error:', error, context);
   }
 }
@@ -79,8 +79,8 @@ export class TrackError extends Error {
    */
   constructor(
     message: string, 
-    public code: TrackErrorCode = TrackErrorCode.UNKNOWN_ERROR, 
-    public details?: any
+    public code: TrackErrorCode = TrackErrorCode.UNKNOWN_ERROR,
+    public details?: unknown
   ) {
     super(message);
     this.name = 'TrackError';
@@ -96,7 +96,7 @@ export class TrackError extends Error {
    * Log the error using the current error logger
    * @param additionalContext - Optional additional context for logging
    */
-  logError(additionalContext?: Record<string, any>): void {
+  logError(additionalContext?: Record<string, unknown>): void {
     const context = {
       ...(isObject(this.details) ? this.details : { details: this.details }),
       ...additionalContext
@@ -142,7 +142,7 @@ export const isTrackError = (error: unknown): error is TrackError => {
 export const handleTrackError = (
   error: unknown, 
   defaultMessage = 'An error occurred while processing track data'
-): { message: string; code: TrackErrorCode; details?: any } => {
+): { message: string; code: TrackErrorCode; details?: unknown } => {
   // Already a TrackError, return as is
   if (isTrackError(error)) {
     return { 
@@ -195,7 +195,7 @@ export const handleTrackError = (
  * @param details - Optional error details
  * @returns TrackError with appropriate code and message
  */
-export const createFetchError = (status: number, details?: any): TrackError => {
+export const createFetchError = (status: number, details?: unknown): TrackError => {
   let code: TrackErrorCode;
   let message: string;
 
@@ -224,8 +224,8 @@ export const createFetchError = (status: number, details?: any): TrackError => {
  * @returns TrackError with appropriate code and message
  */
 export const createPlaybackError = (
-  type: 'network' | 'codec' | 'unknown' = 'unknown', 
-  details?: any
+  type: 'network' | 'codec' | 'unknown' = 'unknown',
+  details?: unknown
 ): TrackError => {
   let code: TrackErrorCode;
   let message: string;
@@ -256,7 +256,7 @@ export const createPlaybackError = (
  */
 export const createMetadataError = (
   type: 'incomplete' | 'validation' | 'unknown' = 'unknown',
-  details?: any
+  details?: unknown
 ): TrackError => {
   let code: TrackErrorCode;
   let message: string;

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 /**
  * Creates a JSON response with specified data and status code
  * 
- * @param {any} data - The data to be sent in the response body
+ * @param {unknown} data - The data to be sent in the response body
  * @param {number} [status=200] - HTTP status code (defaults to 200 OK)
  * @returns {NextResponse} Configured Next.js server response
  * @description
@@ -17,7 +17,7 @@ import { NextResponse } from 'next/server';
  * // Returns a 201 Created response with JSON body
  * createJsonResponse({ id: 123 }, 201)
  */
-export function createJsonResponse(data: any, status: number = 200): NextResponse {
+export function createJsonResponse(data: unknown, status: number = 200): NextResponse {
   return new NextResponse(JSON.stringify(data), {
     status,
     headers: { 'Content-Type': 'application/json' },

@@ -7,7 +7,7 @@ import { useTrackNavigation } from "./useTrackNavigation";
  * Shared progress control logic for clickable progress bars.
  */
 export const useProgressControl = () => {
-  const { audioRef, trackDuration } = usePlayer();
+  const { audioRef, currentTime, trackDuration } = usePlayer();
   const { seekTo } = useTrackNavigation();
 
   const handleProgressClick = useCallback(
@@ -27,11 +27,10 @@ export const useProgressControl = () => {
   );
 
   const progressPercent = useMemo(() => {
-    const duration = audioRef.current?.duration ?? trackDuration ?? 0;
-    const current = audioRef.current?.currentTime ?? 0;
+    const duration = trackDuration ?? 0;
     if (!duration) return 0;
-    return (current / duration) * 100;
-  }, [audioRef, trackDuration]);
+    return ((currentTime ?? 0) / duration) * 100;
+  }, [currentTime, trackDuration]);
 
   return { handleProgressClick, progressPercent };
 };

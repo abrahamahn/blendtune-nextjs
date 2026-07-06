@@ -1,7 +1,7 @@
 // src\client\features\sounds\pages\Sounds.tsx
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { useTracks } from "@/client/features/tracks";
 
@@ -20,12 +20,6 @@ import { Track } from "@shared/types/track";
  * - Handles UI interactions for track browsing and playing
  */
 const Sounds: React.FC = () => {
-  // Local mounting state to prevent SSR rendering issues
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   // Access player context and methods
   const { 
     currentTrack, 

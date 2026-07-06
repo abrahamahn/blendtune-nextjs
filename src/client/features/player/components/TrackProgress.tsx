@@ -42,8 +42,8 @@ export const TrackProgress: React.FC = () => {
             audioUrl={sharedAudioUrl}
             audioRef={audioRef}
             amplitude={0.5}
-            currentTime={audioRef.current?.currentTime || 0}
-            trackDuration={audioRef.current?.duration || 0}
+            currentTime={currentTime || 0}
+            trackDuration={trackDuration || 0}
             width={waveformWidth}
             updateCurrentTime={(newTime: number) => {
               seekTo(newTime);
@@ -55,7 +55,7 @@ export const TrackProgress: React.FC = () => {
       </div>
       <div className="hidden lg:flex text-xs ml-2 w-20 h-full shrink-0 items-center justify-center user-select-none">
         <p className="text-[#1F1F1F] dark:text-white">
-          {formatTime(audioRef.current?.currentTime)}
+          {formatTime(currentTime)}
           <span className="text-transparent"> / </span>
           <span className="text-[#070707] dark:text-neutral-500">
             {formatTime(trackDuration)}

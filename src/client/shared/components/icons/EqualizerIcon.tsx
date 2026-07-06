@@ -1,5 +1,5 @@
 // src\client\shared\components\icons\EqualizerIcon.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 /** Configuration for individual equalizer bar */
 interface BarConfig {
@@ -26,22 +26,24 @@ const EqualizerIcon: React.FC<EqualizerIconProps> = ({ isPlaying }) => {
 
   // Handles animation based on play state
   useEffect(() => {
-    if (isPlaying) {
-      const timeout = setTimeout(() => setAnimationActive(true), 100);
-      return () => clearTimeout(timeout);
-    } else {
+    if (!isPlaying) return;
+
+    const timeout = setTimeout(() => setAnimationActive(true), 100);
+    return () => {
+      clearTimeout(timeout);
       setAnimationActive(false);
-    }
+    };
   }, [isPlaying]);
 
-  // Generates random bar configurations
-  const barsData: BarConfig[] = useMemo(() => {
-    return Array.from({ length: 5 }).map(() => ({
+  // Generates random bar configurations once per mount (lazy initializer runs
+  // a single time, so the randomness never taints a subsequent render).
+  const [barsData] = useState<BarConfig[]>(() =>
+    Array.from({ length: 5 }).map(() => ({
       maxScale: Number((Math.random() * (1.0 - 0.6) + 0.3).toFixed(2)),
       duration: Number((Math.random() * (0.5) + 0.2).toFixed(2)),
       delay: Number((Math.random() * 0.5).toFixed(2)),
-    }));
-  }, []);
+    }))
+  );
 
   return (
     <div className="equalizer-container h-8">

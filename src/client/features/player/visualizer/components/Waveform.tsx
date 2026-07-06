@@ -79,13 +79,18 @@ const Waveform: React.FC<WaveformProps> = ({
         const response = await fetch(audioUrl, { signal: controller.signal });
         const arrayBuffer = await response.arrayBuffer();
 
-        let OfflineAudioContextClass =
-          (window as any).OfflineAudioContext ||
-          (window as any).webkitOfflineAudioContext;
+        type WindowWithVendorAudio = Window & {
+          webkitOfflineAudioContext?: typeof OfflineAudioContext;
+          webkitAudioContext?: typeof AudioContext;
+        };
+        const vendorWindow = window as WindowWithVendorAudio;
+
+        let OfflineAudioContextClass: typeof OfflineAudioContext =
+          window.OfflineAudioContext || vendorWindow.webkitOfflineAudioContext!;
 
         if (!OfflineAudioContextClass) {
           OfflineAudioContextClass =
-            window.AudioContext || (window as any).webkitAudioContext;
+            (window.AudioContext || vendorWindow.webkitAudioContext) as unknown as typeof OfflineAudioContext;
         }
 
         const offlineCtx = new OfflineAudioContextClass(2, 44100 * 600, 44100);

@@ -13,7 +13,7 @@ import { HttpError } from '@server/core/errors';
  * @param handler - Async function returning NextResponse
  * @returns Wrapped function with error catching
  */
-export function withErrorHandling<T extends (...args: any[]) => Promise<NextResponse>>(
+export function withErrorHandling<T extends (...args: never[]) => Promise<NextResponse>>(
   handler: T
 ): (...args: Parameters<T>) => Promise<NextResponse> {
   return async (...args: Parameters<T>): Promise<NextResponse> => {

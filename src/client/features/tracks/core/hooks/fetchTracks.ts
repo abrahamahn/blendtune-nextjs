@@ -1,5 +1,6 @@
 // src\client\features\tracks\core\hooks\fetchTracks.ts
 import { cache } from 'react';
+import { revalidateTag } from 'next/cache';
 import { Track } from '@/shared/types/track';
 import { 
   TrackError, 
@@ -87,6 +88,5 @@ export const fetchTracks = cache(async (): Promise<Track[]> => {
 // Optional: Add a utility for manual revalidation
 export async function revalidateTracks() {
   // This can be used in an API route or server action
-  const { revalidateTag } = require('next/cache');
-  revalidateTag('tracks');
+  revalidateTag('tracks', 'max');
 }

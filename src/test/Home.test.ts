@@ -11,7 +11,7 @@ test.describe('Homepage Tests', () => {
   });
 
   test('Mobile responsiveness', async ({ page }) => {
-    await page.emulateMedia({ deviceScaleFactor: 2 });
+    await page.setViewportSize({ width: 375, height: 667 });
   });
 });
 
@@ -22,27 +22,24 @@ test.describe('Hero component', () => {
   });
 
   test('Renders properly', async ({ page }) => {
-    const exploreLink = await page.$('a[href="/sounds"]');
-    expect(exploreLink).not.toBeNull();
-    expect(await exploreLink.getAttribute('href')).toEqual('/sounds');
+    const exploreLink = page.locator('a[href="/sounds"]').first();
+    await expect(exploreLink).toHaveAttribute('href', '/sounds');
 
-    const tryFreeLink = await page.$('a[href="/sounds"]');
-    expect(tryFreeLink).not.toBeNull();
-    expect(await tryFreeLink.getAttribute('href')).toEqual('/sounds');
+    const tryFreeLink = page.locator('a[href="/sounds"]').first();
+    await expect(tryFreeLink).toHaveAttribute('href', '/sounds');
   });
 
   test('Button leads to correct URL and redirects to /sounds', async ({ page }) => {
-    const exploreLink = await page.$('a[href="/sounds"]');
+    const exploreLink = page.locator('a[href="/sounds"]').first();
     await exploreLink.click();
 
     await expect(page).toHaveURL('/sounds');
 
     await page.goBack();
 
-    const tryFreeLink = await page.$('a[href="/auth/signup"]');
+    const tryFreeLink = page.locator('a[href="/auth/signup"]').first();
     await tryFreeLink.click();
 
     await expect(page).toHaveURL('/auth/signup');
-    
   });
 });

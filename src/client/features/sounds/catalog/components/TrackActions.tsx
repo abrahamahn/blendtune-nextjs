@@ -3,6 +3,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 export interface TrackActionsProps {
   variant?: 'mobile' | 'desktop';
@@ -67,7 +68,7 @@ const TrackActions: React.FC<TrackActionsProps> = ({
 };
 
 interface ActionButtonProps {
-  icon: any;
+  icon: IconDefinition;
   onClick?: () => void;
   className?: string;
 }

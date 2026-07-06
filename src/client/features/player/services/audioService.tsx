@@ -248,7 +248,7 @@ export const useAudioElement = (
     }
 
     // Resume AudioContext if it exists and is suspended (fix for autoplay policy)
-    const audioEl = audioRef.current as any;
+    const audioEl = audioRef.current as HTMLAudioElement & { __btAudioCtx?: AudioContext };
     if (audioEl.__btAudioCtx && audioEl.__btAudioCtx.state === 'suspended') {
       try {
         await audioEl.__btAudioCtx.resume();

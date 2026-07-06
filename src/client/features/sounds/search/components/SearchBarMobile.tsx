@@ -1,6 +1,6 @@
 // src/client/features/sounds/search/components/SearchBarMobile.tsx
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@core/store";
@@ -42,7 +42,6 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   // Search input state management.
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState("");
-  const [searchResults, setSearchResults] = useState<string[]>([]);
 
   // Retrieves selected keywords from the Redux store.
   const selectedKeywords = useSelector(
@@ -64,16 +63,12 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
     }
   };
 
-  // Updates search suggestions based on input value.
-  useEffect(() => {
-    if (inputValue) {
-      const filtered = keywords?.filter((keyword) =>
-        keyword.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      setSearchResults(filtered || []);
-    } else {
-      setSearchResults([]);
-    }
+  // Derives search suggestions from the current input value.
+  const searchResults = useMemo(() => {
+    if (!inputValue) return [];
+    return keywords?.filter((keyword) =>
+      keyword.toLowerCase().includes(inputValue.toLowerCase())
+    ) || [];
   }, [inputValue, keywords]);
 
   // Handles selection of a search keyword.

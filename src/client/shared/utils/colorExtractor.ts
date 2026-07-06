@@ -33,7 +33,7 @@ function kmeans(points: number[][], k: number, maxIterations = 10) {
       let minDistance = Infinity;
       let clusterIndex = 0;
       centroids.forEach((centroid: number[], index: number) => {
-        let distance = euclideanDistance(point, centroid);
+        const distance = euclideanDistance(point, centroid);
         if (distance < minDistance) {
           minDistance = distance;
           clusterIndex = index;
@@ -78,12 +78,12 @@ function initializeCentroids(points: number[][], k: number) {
  * @returns Clustered points
  */
 function createClusters(k: number, centroids: number[][], points: number[][]): number[][][] {
-  let clusters: number[][][] = Array.from({ length: k }, () => []);
+  const clusters: number[][][] = Array.from({ length: k }, () => []);
   points.forEach(point => {
     let minDistance = Infinity;
     let clusterIndex = 0;
     centroids.forEach((centroid, index) => {
-      let distance = euclideanDistance(point, centroid);
+      const distance = euclideanDistance(point, centroid);
       if (distance < minDistance) {
         minDistance = distance;
         clusterIndex = index;
@@ -100,7 +100,7 @@ function createClusters(k: number, centroids: number[][], points: number[][]): n
  * @returns Centroid coordinates
  */
 function calculateCentroid(cluster: number[][]): number[] {
-  let sum = cluster.reduce((acc, val) => acc.map((num, idx) => num + val[idx]), Array(cluster[0].length).fill(0));
+  const sum = cluster.reduce((acc, val) => acc.map((num, idx) => num + val[idx]), Array(cluster[0].length).fill(0));
   return sum.map(num => num / cluster.length);
 }
 

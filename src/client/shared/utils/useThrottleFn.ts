@@ -9,7 +9,7 @@ import { useRef, useCallback } from 'react';
  * @param delay The minimum delay (in ms) between calls.
  * @returns A throttled function.
  */
-export function useThrottleFn<T extends (...args: any[]) => any>(fn: T, delay: number) {
+export function useThrottleFn<T extends (...args: never[]) => unknown>(fn: T, delay: number) {
   const lastCallRef = useRef(0);
 
   return useCallback((...args: Parameters<T>) => {

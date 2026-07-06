@@ -15,6 +15,10 @@ export function useAudioAnalyser(
     __btAnalyser?: AnalyserNode;
   };
 
+  type WindowWithWebkitAudio = Window & {
+    webkitAudioContext?: typeof AudioContext;
+  };
+
   useEffect(() => {
     const audioEl = audioRef.current as ExtendedAudioEl | null;
     if (!audioEl) return;
@@ -25,7 +29,8 @@ export function useAudioAnalyser(
     }
 
     const AudioContextClass =
-      (window as any).AudioContext || (window as any).webkitAudioContext;
+      window.AudioContext ??
+      ((window as WindowWithWebkitAudio).webkitAudioContext as typeof AudioContext);
     const ctx: AudioContext =
       audioEl.__btAudioCtx || new AudioContextClass();
     const source: MediaElementAudioSourceNode =

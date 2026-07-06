@@ -21,6 +21,10 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
+      /* bslt-shaped packages under main/ (M1 migration) */
+      "@/shared/*": [
+        "main/shared/src/*"
+      ],
       "@/*": [
         "src/*"
       ],
@@ -28,16 +32,37 @@
         "./src/client/app/*"
       ],
       "@types/*": [
-        "./src/shared/types/*"
+        "./main/shared/src/types/*"
       ],
       "@client/*": [
         "src/client/*"
+      ],
+      "@server/db": [
+        "main/server/db/src"
+      ],
+      "@server/db/*": [
+        "main/server/db/src/*"
+      ],
+      "@server/core/*": [
+        "main/server/core/src/*"
+      ],
+      "@server/storage": [
+        "main/server/storage/src"
+      ],
+      "@server/storage/*": [
+        "main/server/storage/src/*"
+      ],
+      "@server/media": [
+        "main/server/media/src"
+      ],
+      "@server/media/*": [
+        "main/server/media/src/*"
       ],
       "@server/*": [
         "src/server/*"
       ],
       "@shared/*": [
-        "src/shared/*"
+        "main/shared/src/*"
       ],
       /* Feature paths */
       "@features/*": [

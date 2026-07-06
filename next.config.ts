@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 // Load environment variables
-require('./src/shared/config/loadEnv');
+require('./main/shared/src/config/loadEnv');
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

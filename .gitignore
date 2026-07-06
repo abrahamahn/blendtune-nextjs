@@ -39,7 +39,7 @@ run.sh
 .aider*
 
 # local env
-src/shared/config/.env.development
+main/shared/src/config/.env.development
 
 # production env (contains secrets) — keep out of git
-src/shared/config/.env.production
+main/shared/src/config/.env.production

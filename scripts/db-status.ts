@@ -9,9 +9,9 @@
  */
 
 // Load env the same way the app does, BEFORE the db singleton is constructed on import.
-import '../src/shared/config/loadEnv';
+import '../main/shared/src/config/loadEnv';
 
-import { db, resolveDbConfig } from '../src/server/db/connection';
+import { db, resolveDbConfig } from '../main/server/db/src/connection';
 
 async function main(): Promise<void> {
   const cfg = resolveDbConfig();

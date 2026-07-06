@@ -5,7 +5,7 @@
  * and builds the range-aware response headers. Storage access is abstracted behind StorageClient.
  */
 
-import { getContentType } from '@server/lib/media/audio';
+import { getContentType } from './contentType';
 import type { StorageClient } from '@server/storage';
 
 export interface AudioStream {

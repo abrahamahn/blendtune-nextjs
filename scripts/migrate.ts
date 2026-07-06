@@ -2,7 +2,7 @@
 /**
  * Blendtune database migration CLI.
  *
- * Applies the numbered `.sql` files in `src/server/db/migrations/` against the
+ * Applies the numbered `.sql` files in `main/server/db/src/migrations/` against the
  * consolidated database resolved from the environment. Mirrors bslt's migration flow.
  *
  * Usage:
@@ -10,15 +10,15 @@
  *   pnpm db:migrate --dry-run  # list pending migrations without applying
  */
 
-// Load env the same way the app does (src/shared/config/.env.<NODE_ENV>), BEFORE the db
-// singleton is constructed on import of ../src/server/db/connection.
-import '../src/shared/config/loadEnv';
+// Load env the same way the app does (main/shared/src/config/.env.<NODE_ENV>), BEFORE the db
+// singleton is constructed on import of ../main/server/db/src/connection.
+import '../main/shared/src/config/loadEnv';
 import path from 'path';
 
-import { db } from '../src/server/db/connection';
-import { runSqlMigrations } from '../src/server/db/migrate';
+import { db } from '../main/server/db/src/connection';
+import { runSqlMigrations } from '../main/server/db/src/migrate';
 
-const MIGRATIONS_DIR = path.resolve(process.cwd(), 'src/server/db/migrations');
+const MIGRATIONS_DIR = path.resolve(process.cwd(), 'main/server/db/src/migrations');
 
 async function main(): Promise<void> {
   const dryRun = process.argv.includes('--dry-run');

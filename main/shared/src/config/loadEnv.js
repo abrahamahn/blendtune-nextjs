@@ -1,4 +1,4 @@
-// src\shared\config\loadEnv.js
+// main/shared/src/config/loadEnv.js
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');

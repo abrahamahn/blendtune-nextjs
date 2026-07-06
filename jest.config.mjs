@@ -11,11 +11,19 @@ const config = {
   // Unit tests are server/shared logic; e2e browser tests run via `pnpm test:e2e` (Playwright).
   testEnvironment: 'node',
   moduleNameMapper: {
+    '^@server/db$': '<rootDir>/main/server/db/src',
+    '^@server/db/(.*)$': '<rootDir>/main/server/db/src/$1',
+    '^@server/core/(.*)$': '<rootDir>/main/server/core/src/$1',
+    '^@server/storage$': '<rootDir>/main/server/storage/src',
+    '^@server/storage/(.*)$': '<rootDir>/main/server/storage/src/$1',
+    '^@server/media$': '<rootDir>/main/server/media/src',
+    '^@server/media/(.*)$': '<rootDir>/main/server/media/src/$1',
     '^@server/(.*)$': '<rootDir>/src/server/$1',
-    '^@shared/(.*)$': '<rootDir>/src/shared/$1',
+    '^@shared/(.*)$': '<rootDir>/main/shared/src/$1',
+    '^@/shared/(.*)$': '<rootDir>/main/shared/src/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testMatch: ['<rootDir>/src/**/*.test.ts'],
+  testMatch: ['<rootDir>/src/**/*.test.ts', '<rootDir>/main/**/*.test.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/test/'],
 };
 

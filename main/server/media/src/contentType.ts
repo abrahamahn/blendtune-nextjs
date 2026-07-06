@@ -1,4 +1,4 @@
-// src/server/lib/media/audio.ts
+// main/server/media/src/contentType.ts
 
 /**
  * Determines the MIME content type for a given audio file extension

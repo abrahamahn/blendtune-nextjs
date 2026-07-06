@@ -1,3 +1,4 @@
 // src\client\features\layout\header\hooks\index.ts
-export * from './useGenreMenu';
-export * from './useMobileMenu';
+// Note: useGenreMenu only has a default export, so `export *` re-exported
+// nothing from it. Consumers import it directly.
+export { useMobileMenu } from './useMobileMenu';

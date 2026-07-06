@@ -1,2 +1,2 @@
 // src/client/core/services/index.ts
-export * from "./pwa";
+export { ServiceWorkerProvider } from "./pwa";

@@ -1,4 +1,4 @@
 // src\client\shared\utils\index.ts
-export * from './colorExtractor';
-export * from './useThrottleFn';
-export * from './stringHelpers';
+export { colorExtractor } from './colorExtractor';
+export { useThrottleFn } from './useThrottleFn';
+export { renderValue } from './stringHelpers';

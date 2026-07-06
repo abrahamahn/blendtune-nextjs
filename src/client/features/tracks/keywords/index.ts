@@ -7,7 +7,12 @@
  */
 
 // Export hooks for metadata management
-export * from './hooks';
+export { useTrackMetadata, useKeywords } from './hooks';
 
 // Export utilities for direct extraction
-export * from './utils';
+export {
+  extractUniqueArtists,
+  extractUniqueMoods,
+  extractUniqueInstruments,
+  extractUniqueKeywords,
+} from './utils';

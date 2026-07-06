@@ -9,16 +9,23 @@
  */
 
 // Export all types
-export * from './types';
+export type { TrackServiceType, TrackErrorInfo } from './types';
 
 // Export context and provider
-export * from './services';
+export { TracksContext, TracksProvider, useTracksContext } from './services';
 
 // Export core functionality
-export * from './core';
+export { fetchTracks, revalidateTracks } from './core';
 
 // Export keywords functionality
-export * from './keywords';
+export {
+  useTrackMetadata,
+  useKeywords,
+  extractUniqueArtists,
+  extractUniqueMoods,
+  extractUniqueInstruments,
+  extractUniqueKeywords,
+} from './keywords';
 
 // Export commonly used hooks for convenience
 export { useTracksContext as useTracks } from './services/useTracksContext';

@@ -1,2 +1,2 @@
 // src\client\features\tracks\core\hooks\index.ts
-export * from './fetchTracks';
+export { fetchTracks, revalidateTracks } from './fetchTracks';

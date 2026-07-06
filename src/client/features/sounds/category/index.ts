@@ -8,11 +8,11 @@
  */
 
 // Export components using the components index
-export * from './layout';
+export { Category } from './layout';
 
 // Export hooks using the hooks index
-export * from './hooks';
+export { useCategorySelection } from './hooks';
 
 // Export constants and types directly
 export { DEFAULT_GENRES } from './constants';
-export * from './types';
+export type { GenreItem, CategoryProps } from './types';

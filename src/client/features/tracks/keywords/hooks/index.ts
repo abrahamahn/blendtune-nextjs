@@ -4,5 +4,5 @@
  * @module sounds/keywords/hooks
  */
 
-export * from './useTrackMetadata';
-export * from './useKeywords';
+export { useTrackMetadata } from './useTrackMetadata';
+export { useKeywords } from './useKeywords';

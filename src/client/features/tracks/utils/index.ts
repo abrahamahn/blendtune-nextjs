@@ -7,4 +7,13 @@
  * @module tracks/utils
  */
 
-export * from './errors';
+export {
+  TrackErrorCode,
+  setErrorLogger,
+  TrackError,
+  isTrackError,
+  handleTrackError,
+  createFetchError,
+  createPlaybackError,
+  createMetadataError,
+} from './errors';

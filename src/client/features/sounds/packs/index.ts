@@ -1,2 +1,2 @@
 // src\client\features\sounds\packs\index.ts
-export * from './components';
+export { Packs } from './components';

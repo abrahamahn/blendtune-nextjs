@@ -4,4 +4,9 @@
  * @module sounds/keywords
  */
 
-export * from './extractors';
+export {
+  extractUniqueArtists,
+  extractUniqueMoods,
+  extractUniqueInstruments,
+  extractUniqueKeywords,
+} from './extractors';

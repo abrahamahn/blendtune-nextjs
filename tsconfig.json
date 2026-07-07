@@ -68,87 +68,12 @@
       "@features/*": [
         "main/apps/web/src/client/features/*"
       ],
-      "@auth/*": [
-        "main/apps/web/src/client/features/auth/*"
-      ],
-      "@layout/*": [
-        "main/apps/web/src/client/features/layout/*"
-      ],
-      "@player/*": [
-        "main/apps/web/src/client/features/player/*"
-      ],
-      "@sounds/*": [
-        "main/apps/web/src/client/features/sounds/*"
-      ],
-      "@home/*": [
-        "main/apps/web/src/client/features/home/*"
-      ],
-      "@tracks/*": [
-        "main/apps/web/src/client/features/tracks/*"
-      ],
-      /* Sounds feature subpaths */
-      "@filters/*": [
-        "main/apps/web/src/client/features/sounds/filters/*"
-      ],
-      "@category/*": [
-        "main/apps/web/src/client/features/sounds/category/*"
-      ],
-      "@search/*": [
-        "main/apps/web/src/client/features/sounds/search/*"
-      ],
-      "@visualizer/*": [
-        "main/apps/web/src/client/features/sounds/visualizer/*"
-      ],
-      "@keywords*": [
-        "main/apps/web/src/client/features/sounds/tracks/keywords/*"
-      ],
-      "@catalog/*": [
-        "main/apps/web/src/client/features/sounds/catalog/*"
-      ],
-      /* Layout feature subpaths */
-      "@header/*": [
-        "main/apps/web/src/client/features/layout/header/*"
-      ],
-      "@footer/*": [
-        "main/apps/web/src/client/features/layout/footer/*"
-      ],
-      "@leftbar/*": [
-        "main/apps/web/src/client/features/layout/leftbar/*"
-      ],
-      "@rightbar/*": [
-        "main/apps/web/src/client/features/layout/rightbar/*"
-      ],
       /* Core and shared paths */
       "@core/*": [
         "main/apps/web/src/client/core/*"
       ],
       "@components/*": [
         "main/apps/web/src/client/shared/components/*"
-      ],
-      "@utils/*": [
-        "main/apps/web/src/client/shared/utils/*"
-      ],
-      "@hooks/*": [
-        "main/apps/web/src/client/shared/hooks/*"
-      ],
-      "@constants/*": [
-        "main/apps/web/src/client/shared/constants/*"
-      ],
-      "@styles/*": [
-        "main/apps/web/src/client/shared/styles/*"
-      ],
-      /* Core subpaths */
-      "@providers/*": [
-        "main/apps/web/src/client/core/providers/*"
-      ],
-      "@store/*": [
-        "main/apps/web/src/client/core/store/*"
-      ],
-      "@context/*": [
-        "main/apps/web/src/client/core/context/*"
-      ],
-      "@services/*": [
-        "main/apps/web/src/client/core/services/*"
       ]
     }
   },

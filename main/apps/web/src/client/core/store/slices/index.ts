@@ -7,7 +7,7 @@ export {
   setOnline,
   setOffline,
   default as sessionReducer,
-} from "@auth/store/sessionSlice";
+} from "@features/auth/store/sessionSlice";
 
 // User profile slice
 export {
@@ -54,8 +54,8 @@ export {
 } from "@client/features/sounds/filters/store/filterSlice";
 
 // Exporting types for type safety
-export type { SessionState } from "@auth/store/sessionSlice";
-export type { UserState } from "@auth/store/userSlice";
+export type { SessionState } from "@features/auth/store/sessionSlice";
+export type { UserState } from "@features/auth/store/userSlice";
 export type {
   FilterState,
   KeyFilterCombination,

@@ -5,10 +5,10 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import { Waveform } from "@player/visualizer";
+import { Waveform } from "@features/player/visualizer";
 import { formatTime } from "../utils/formatTime";
 import { usePlayer } from "@client/features/player/services/playerService";
-import { useTrackNavigation } from "@player/hooks";
+import { useTrackNavigation } from "@features/player/hooks";
 
 /**
  * Displays track progress with waveform visualization and time display

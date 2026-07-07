@@ -1,6 +1,6 @@
 // src\client\features\sounds\filters\components\artist.tsx
 import React, { useState } from "react";
-import { FilterWrapper, SearchInput, FilterGrid, ActionButtons } from "@sounds/filters/ui";
+import { FilterWrapper, SearchInput, FilterGrid, ActionButtons } from "@features/sounds/filters/ui";
 
 /**
 * Props interface for ArtistFilter component

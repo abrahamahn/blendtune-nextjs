@@ -7,7 +7,7 @@ import React, {
   RefObject,
 } from "react";
 import { Track } from "@/shared/types/track";
-import { useAudioAnalyser } from "@player/hooks/useAudioAnalyser";
+import { useAudioAnalyser } from "@features/player/hooks/useAudioAnalyser";
 
 interface EqualizerProps {
   audioRef: RefObject<HTMLAudioElement | null>;

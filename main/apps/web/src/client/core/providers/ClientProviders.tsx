@@ -3,12 +3,12 @@
 
 import React, { ReactNode } from "react";
 import StoreProvider from "./StoreProvider";
-import SessionProvider from "@auth/services/sessionService";
+import SessionProvider from "@features/auth/services/sessionService";
 import TracksProvider from "@client/features/tracks/services/TracksContext";
-import { PlayerProvider } from "@player/services/playerService";
+import { PlayerProvider } from "@features/player/services/playerService";
 import ServiceWorkerProvider from "@core/services/pwa/ServiceWorkerService";
 import { ClientEnvironmentProvider } from "@core/context/ClientEnvironment";
-import { FilterProvider } from "@sounds/filters/context";
+import { FilterProvider } from "@features/sounds/filters/context";
 
 interface ClientProvidersProps {
   children: ReactNode;

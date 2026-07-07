@@ -2,8 +2,8 @@
 
 import { useCallback } from 'react';
 import { Track } from "@/shared/types/track";
-import { usePlayer } from "@player/services/playerService";
-import { useRightSidebar } from "@layout/rightbar/context";
+import { usePlayer } from "@features/player/services/playerService";
+import { useRightSidebar } from "@features/layout/rightbar/context";
 
 /**
  * Hook for handling track playback with integrated sidebar behavior

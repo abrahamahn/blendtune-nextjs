@@ -6,7 +6,7 @@ import {
   TrackErrorCode, 
   handleTrackError,
   createFetchError
-} from '@tracks/utils/errors';
+} from '@features/tracks/utils/errors';
 
 /**
  * Cached version of track fetching with Next.js server-side caching

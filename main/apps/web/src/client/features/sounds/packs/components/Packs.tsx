@@ -16,8 +16,8 @@ import {
  faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import Artwork from "@components/common/Artwork";
-import { useTrackNavigation } from "@player/hooks";
-import { usePlayer } from "@player/services/playerService";
+import { useTrackNavigation } from "@features/player/hooks";
+import { usePlayer } from "@features/player/services/playerService";
 
 /**
 * Props interface for Packs component

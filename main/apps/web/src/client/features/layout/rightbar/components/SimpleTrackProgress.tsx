@@ -5,7 +5,7 @@
  */
 
 import React from "react";
-import { formatTime } from "@player/utils";
+import { formatTime } from "@features/player/utils";
 
 interface SimpleTrackProgressProps {
   currentTime: number;

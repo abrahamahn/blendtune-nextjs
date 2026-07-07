@@ -9,13 +9,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { usePlayer } from "@client/features/player/services/playerService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
-import { Equalizer } from "@player/visualizer/";
-import { colorExtractor } from "@utils/colorExtractor";
+import { Equalizer } from "@features/player/visualizer/";
+import { colorExtractor } from "@client/shared/utils/colorExtractor";
 import { Artwork, Watermark } from "@components/common/";
-import { TrackMetadata } from "@layout/rightbar/components/TrackMetadata";
-import { SimpleTrackProgress } from "@layout/rightbar/components/SimpleTrackProgress";
+import { TrackMetadata } from "@features/layout/rightbar/components/TrackMetadata";
+import { SimpleTrackProgress } from "@features/layout/rightbar/components/SimpleTrackProgress";
 import InnerLayerSkeleton from "./InnerLayerSkeleton";
-import { useProgressControl } from "@player/hooks/useProgressControl";
+import { useProgressControl } from "@features/player/hooks/useProgressControl";
 
 /**
  * InnerLayer component providing track details and audio visualization

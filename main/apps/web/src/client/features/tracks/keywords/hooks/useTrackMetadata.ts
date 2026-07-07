@@ -6,7 +6,7 @@ import {
   extractUniqueMoods,
   extractUniqueInstruments,
   extractUniqueKeywords
-} from '@tracks/keywords/utils';
+} from '@features/tracks/keywords/utils';
 
 /**
  * Custom hook to extract and manage metadata from track collection

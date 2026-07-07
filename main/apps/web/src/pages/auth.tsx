@@ -5,7 +5,7 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from '@router/index';
 
-import { setAuthenticated, setUnauthenticated } from '@store/slices';
+import { setAuthenticated, setUnauthenticated } from '@core/store/slices';
 import Logo from '@components/common/Logo';
 import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
 

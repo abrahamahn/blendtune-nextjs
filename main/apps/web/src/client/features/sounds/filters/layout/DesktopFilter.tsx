@@ -20,11 +20,11 @@ import {
   faPlus,
   faMinus,
 } from "@fortawesome/free-solid-svg-icons";
-import { SortFilter } from "@sounds/filters/components";
-import { createFilterComponents, renderFilterLabel } from "@sounds/filters/utils";
-import { useFilterContext } from "@sounds/filters/context"
+import { SortFilter } from "@features/sounds/filters/components";
+import { createFilterComponents, renderFilterLabel } from "@features/sounds/filters/utils";
+import { useFilterContext } from "@features/sounds/filters/context"
 import { useTracks } from "@client/features/tracks";
-import FilterSkeleton from "@sounds/filters/components/FilterSkeleton";
+import FilterSkeleton from "@features/sounds/filters/components/FilterSkeleton";
 
 /**
  * Desktop filter component for sound browsing interface

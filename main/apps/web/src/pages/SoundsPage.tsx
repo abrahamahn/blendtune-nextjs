@@ -2,20 +2,20 @@
 import React, { useEffect } from 'react';
 
 import Header from '@client/features/layout/header';
-import LeftBar from '@layout/leftbar';
-import { RightSidebarProvider, useRightSidebar } from '@rightbar/context/useRightSidebar';
-import RightBar from '@layout/rightbar';
-import StoreProvider from '@providers/StoreProvider';
+import LeftBar from '@features/layout/leftbar';
+import { RightSidebarProvider, useRightSidebar } from '@features/layout/rightbar/context/useRightSidebar';
+import RightBar from '@features/layout/rightbar';
+import StoreProvider from '@core/providers/StoreProvider';
 
 import { usePlayer } from '@client/features/player/services/playerService';
 import { useTracks } from '@client/features/tracks';
-import { Hero } from '@sounds/hero';
-import { Category } from '@sounds/category/layout';
-import { NewTracks } from '@sounds/catalog/layouts';
-import { CatalogProvider } from '@sounds/catalog';
-import { MobileFilter, DesktopFilter } from '@sounds/filters/layout';
-import { useFilterContext } from '@sounds/filters/context';
-import { MobileCatalog, DesktopCatalog } from '@sounds/catalog';
+import { Hero } from '@features/sounds/hero';
+import { Category } from '@features/sounds/category/layout';
+import { NewTracks } from '@features/sounds/catalog/layouts';
+import { CatalogProvider } from '@features/sounds/catalog';
+import { MobileFilter, DesktopFilter } from '@features/sounds/filters/layout';
+import { useFilterContext } from '@features/sounds/filters/context';
+import { MobileCatalog, DesktopCatalog } from '@features/sounds/catalog';
 import { Track } from '@shared/types/track';
 
 /**

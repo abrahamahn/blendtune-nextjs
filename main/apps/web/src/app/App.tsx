@@ -8,9 +8,9 @@
 
 import React from 'react';
 
-import ClientProviders from '@providers/ClientProviders';
-import MusicPlayer from '@player/components/MusicPlayer';
-import { HideMobileChrome, SetViewportHeight } from '@hooks/mobile';
+import ClientProviders from '@core/providers/ClientProviders';
+import MusicPlayer from '@features/player/components/MusicPlayer';
+import { HideMobileChrome, SetViewportHeight } from '@client/shared/hooks/mobile';
 import { Route, Routes } from '@router/index';
 
 import { HomePage } from '../pages/HomePage';

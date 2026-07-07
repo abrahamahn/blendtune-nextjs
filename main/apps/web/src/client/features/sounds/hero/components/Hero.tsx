@@ -6,11 +6,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause, faMusic } from "@fortawesome/free-solid-svg-icons";
 
-import { colorExtractor } from "@utils/colorExtractor";
-import { Equalizer } from "@player/visualizer/";
+import { colorExtractor } from "@client/shared/utils/colorExtractor";
+import { Equalizer } from "@features/player/visualizer/";
 import { Watermark, Artwork } from "@client/shared/components/common";
-import { usePlayer } from "@player/services/playerService";
-import { usePlayerControls } from "@player/hooks";
+import { usePlayer } from "@features/player/services/playerService";
+import { usePlayerControls } from "@features/player/hooks";
 
 /**
  * The Hero component displays the currently playing track with dynamic UI effects.

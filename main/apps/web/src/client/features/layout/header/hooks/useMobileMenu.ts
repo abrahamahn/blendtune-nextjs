@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useNavigate } from "@router/index";
 import { useDispatch } from "react-redux";
-import { removeAllGenres } from "@store/slices";
+import { removeAllGenres } from "@core/store/slices";
 
 /**
 * Custom hook for mobile menu functionality

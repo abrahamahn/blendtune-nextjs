@@ -8,7 +8,7 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import useResponsiveLayout from "@client/features/sounds/catalog/hooks/useResponsiveLayout";
 import useImagePreloader from "@client/features/sounds/catalog/hooks/useImagePreloader";
 import { usePlayer } from "@client/features/player/services/playerService";
-import TrackCardItem from "@catalog/components/TrackCardItem";
+import TrackCardItem from "@features/sounds/catalog/components/TrackCardItem";
 import TrackCardSkeleton from "./TrackCardSkeleton";
 
 /**

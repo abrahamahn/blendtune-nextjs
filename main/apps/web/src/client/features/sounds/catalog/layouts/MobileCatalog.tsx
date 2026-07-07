@@ -4,8 +4,8 @@
 import React from "react";
 import { Track } from "@/shared/types/track";
 import { usePlayer } from "@client/features/player/services/playerService";
-import TrackArtwork from "@catalog/components/TrackArtwork";
-import TrackActions from "@catalog/components/TrackActions";
+import TrackArtwork from "@features/sounds/catalog/components/TrackArtwork";
+import TrackActions from "@features/sounds/catalog/components/TrackActions";
 import { renderValue } from "@client/features/sounds/catalog/utils/trackUtils";
 
 import MobileTrackRowSkeleton from "@client/features/sounds/catalog/components/MobileTrackRowSkeleton";

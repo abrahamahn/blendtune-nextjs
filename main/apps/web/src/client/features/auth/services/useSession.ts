@@ -2,7 +2,7 @@
 
 "use client";
 import { createContext, useContext, useMemo } from "react";
-import { useAppSelector } from "@store/hooks/useAppSelector";
+import { useAppSelector } from "@core/store/hooks/useAppSelector";
 import { RootState } from '@core/store';
 
 /**

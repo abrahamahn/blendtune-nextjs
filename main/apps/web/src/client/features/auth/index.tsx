@@ -4,10 +4,10 @@
  */
 
 import React, { useState } from "react";
-import SignIn from "@auth/components/SignInForm";
-import SignUp from "@auth/components/SignUpForm";
-import ResetPassword from "@auth/components/ResetPasswordForm";
-import VerifyEmail from "@auth/components/VerifyEmailForm";
+import SignIn from "@features/auth/components/SignInForm";
+import SignUp from "@features/auth/components/SignUpForm";
+import ResetPassword from "@features/auth/components/ResetPasswordForm";
+import VerifyEmail from "@features/auth/components/VerifyEmailForm";
 
 /**
  * Props for the authentication modal

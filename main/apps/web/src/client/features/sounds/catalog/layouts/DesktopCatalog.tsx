@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { Artwork, Watermark } from "@components/common";
-import { usePlayer } from "@player/services/playerService";
+import { usePlayer } from "@features/player/services/playerService";
 import { PlayerIcons, EqualizerIcon } from '@client/shared/components/icons';
 import { renderValue, formatDuration } from "@client/features/sounds/catalog/utils/trackUtils";
 

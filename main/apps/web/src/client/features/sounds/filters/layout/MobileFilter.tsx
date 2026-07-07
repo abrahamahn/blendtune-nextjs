@@ -20,13 +20,13 @@ import {
   faTimes,
   faAngleDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { SortFilter } from "@sounds/filters/components";
-import { createFilterComponents } from "@sounds/filters/utils/filterUI";
+import { SortFilter } from "@features/sounds/filters/components";
+import { createFilterComponents } from "@features/sounds/filters/utils/filterUI";
 import {
   hasItems,
   calculateAppliedFilterCount,
-} from "@sounds/filters/utils/filterLogic";
-import { useFilterContext } from "@sounds/filters/context";
+} from "@features/sounds/filters/utils/filterLogic";
+import { useFilterContext } from "@features/sounds/filters/context";
 import { useTracks } from "@client/features/tracks";
 import { Skeleton } from "@client/shared/components/common/Skeleton";
 

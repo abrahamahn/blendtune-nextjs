@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document provides a comprehensive overview of Blendtune's technical architecture, design decisions, and system organization.
+This document describes Blendtune's technical architecture, design decisions, and system organization.
 
 ## Table of Contents
 
@@ -16,622 +16,267 @@ This document provides a comprehensive overview of Blendtune's technical archite
 
 ### High-Level Overview
 
-Blendtune follows a modern **monolithic architecture** with clear separation between client and server code. Built on Next.js 15 with the App Router, it leverages both client-side React and server-side rendering capabilities.
+Blendtune is a **pnpm workspace monorepo** modeled on the bslt reference stack: a Vite + React 19
+single-page app served statically by a Fastify API, both from a single origin. Business logic lives
+in framework-agnostic packages under `main/server/*`; React renders and Fastify routes are thin
+adapters over them.
 
 ```
 ┌─────────────────┐
-│   Client App    │
-│  (Browser/PWA)  │
+│   Browser SPA   │
+│ (Vite + React)  │
 └────────┬────────┘
-         │
-         │ HTTPS
-         │
-┌────────▼────────┐
-│   Next.js App   │
-│  (API Routes +  │
-│   React Pages)  │
+         │ HTTPS (single origin)
+         ▼
+┌─────────────────┐
+│  Fastify server │
+│  /api/*  +  SPA │   ← serves built dist/ AND the API
 └────────┬────────┘
-         │
-    ┌────┴────┐
-    │         │
-┌───▼──┐  ┌──▼───────┐
-│  DB  │  │   CDN    │
-│(PG)  │  │(DO Space)│
-└──────┘  └──────────┘
+    ┌────┴────────────┐
+    ▼                 ▼
+┌────────┐      ┌────────────┐
+│Postgres│      │ DO Spaces  │
+│  (RLS) │      │   (CDN)    │
+└────────┘      └────────────┘
 ```
+
+### Monorepo Layout
+
+```
+main/
+├── apps/
+│   ├── web/                # Vite React 19 SPA (entry src/main.tsx, routes src/app/App.tsx)
+│   └── server/             # Fastify API — bootstrap + thin HTTP routes
+├── server/                 # framework-agnostic backend packages
+│   ├── core/               # business logic (auth, tracks, account, creator, sessions)
+│   ├── db/                 # postgres.js client, migrations, repositories
+│   ├── storage/            # object-storage port (DO Spaces)
+│   ├── media/              # audio streaming / content-type helpers
+│   └── system/             # security primitives (JWT)
+├── client/
+│   └── react/src/router/   # custom react-router-v6-style client router
+└── shared/                 # contracts, validation, config shared by web + server
+```
+
+**Dependency flow (never reversed):** `apps/*` → `server/*` or `client/*` → `shared/*`. Apps never
+import from each other.
 
 ### Technology Decisions
 
-**Why Next.js?**
-- Server-side rendering for better SEO
-- API routes eliminate need for separate backend
-- File-based routing simplifies development
-- Excellent TypeScript support
-- Built-in optimization (image, font, code splitting)
+**Why Vite + Fastify (over the previous Next.js app)?**
+- Full client control for a heavily interactive, audio-first UI (no Server Component overhead).
+- Framework-agnostic core: business logic is testable in isolation and portable into the bslt monorepo.
+- Single-origin deploy — one Fastify process serves the SPA and the API, so no CORS and no separate host.
+- Faster dev loop (Vite HMR) and a leaner runtime.
 
 **Why PostgreSQL?**
-- Robust relational data model
-- Complex querying capabilities (filters, joins)
-- Excellent JSON support for flexible metadata
-- Mature ecosystem and tooling
-- ACID compliance for transactions
+- Relational model with strong querying (multi-facet catalog filters), JSON support for flexible metadata.
+- Row-Level Security enforces tenant isolation at the database.
+- ACID transactions, mature tooling.
 
-**Why Context API over Redux?**
-- Simpler learning curve
-- Less boilerplate code
-- Sufficient for our state management needs
-- Better tree-shaking
-- More aligned with React's direction
+**Why Redux Toolkit?**
+- Predictable global client state for the catalog, filters, and player.
+- Colocated slices under `main/apps/web/src/client/core/store`.
 
 ## Frontend Architecture
 
 ### Feature-Based Organization
 
-Code is organized by **feature modules** rather than technical layers:
+The SPA lives in `main/apps/web/src`:
 
 ```
-src/client/features/
-├── auth/           # Everything related to authentication
-│   ├── components/ # Auth-specific components
-│   ├── context/    # Auth state management
-│   ├── hooks/      # Auth-related hooks
-│   └── services/   # Auth business logic
-├── player/         # Audio player feature
-├── sounds/         # Music catalog feature
-└── tracks/         # Track management feature
+main/apps/web/src/
+├── main.tsx                # React entry — mounts <App/>
+├── app/App.tsx             # provider tree + route table
+├── pages/                  # one component per route (Home, Sounds, Creator, auth, security, static)
+└── client/
+    ├── core/               # providers, context, services, Redux store
+    ├── features/           # auth, creator, home, layout, player, sounds, tracks
+    └── shared/             # cross-feature hooks/components/utilities
 ```
 
-**Benefits**:
-- Easier to locate related code
-- Better encapsulation
-- Simpler to delete features
-- Clearer dependencies
-- Team can own entire features
+Each feature owns its components, hooks, and view logic. React renders only — business rules and
+validation live in `main/shared` and `main/server/core`.
 
-### State Management Strategy
+### Routing
 
-**Three-Tier Approach**:
-
-1. **Local Component State** (`useState`, `useReducer`)
-   - UI-only state (modals, dropdowns)
-   - Form inputs
-   - Temporary view state
-
-2. **Feature Context** (React Context)
-   - Player state (`PlayerProvider`)
-   - Filter state (`FilterProvider`)
-   - Catalog state (`CatalogProvider`)
-   - Track state (`TracksProvider`)
-
-3. **Global Context**
-   - Session state (`SessionProvider`)
-   - App-wide settings
-   - Theme preferences
-
-**Redux Usage**:
-- Minimal usage in current implementation
-- Consider removing or expanding based on needs
-- Currently used for some legacy state
-
-### Component Architecture
-
-**Component Hierarchy**:
+Routing uses a small **custom client router** at `main/client/react/src/router` with a
+react-router-v6-style API (`Router`, `Routes`, `Route`, `Link`, `useNavigate`, `useParams`,
+`useSearchParams`). Routes are declared centrally in `main/apps/web/src/app/App.tsx`:
 
 ```
-<App>
-  <SessionProvider>      # User authentication
-    <TracksProvider>     # Track data
-      <Page>
-        <Header />
-        <Content>
-          <CatalogProvider>  # Catalog-specific state
-            <FilterProvider> # Filter state
-              <TrackList />
-            </FilterProvider>
-          </CatalogProvider>
-        </Content>
-        <PlayerProvider>   # Player state
-          <MusicPlayer />
-        </PlayerProvider>
-      </Page>
-    </TracksProvider>
-  </SessionProvider>
-</App>
+/                               HomePage
+/sounds                         SoundsPage (catalog)
+/c/:slug                        CreatorPage (workspace-scoped)
+/auth/signin | /auth/signup     auth pages
+/auth/reset-password            password reset request
+/auth/security/*                verify-email, new-password, confirm-email, reset-confirmed
+/welcome | /terms | /privacy-policy
 ```
 
-**Component Types**:
+The server serves `index.html` for any non-`/api` path so client-side routing works on deep links.
 
-1. **Layout Components** (`src/client/features/layout/`)
-   - Header, Footer, Sidebars
-   - Provide structure, no business logic
+### State Management
 
-2. **Feature Components** (`src/client/features/*/components/`)
-   - Domain-specific components
-   - Contain business logic
-   - Self-contained
+- **Redux Toolkit** (`react-redux`) for global client state — catalog, filters, and player.
+- **React Context** for scoped concerns (session, providers under `client/core/providers`).
+- **Local component state** for UI-only concerns (modals, inputs).
 
-3. **Shared Components** (`src/client/shared/components/`)
-   - Reusable UI elements
-   - No business logic
-   - Generic and composable
+### Path Aliases
 
-### Routing Strategy
-
-**Next.js App Router**:
-
-```
-src/app/
-├── page.tsx                # Home page (/)
-├── sounds/
-│   └── page.tsx           # Catalog (/sounds)
-├── auth/
-│   ├── signin/page.tsx    # Sign in (/auth/signin)
-│   └── signup/page.tsx    # Sign up (/auth/signup)
-└── api/
-    ├── tracks/route.ts    # API endpoint
-    └── auth/*/route.ts    # Auth endpoints
-```
-
-**Benefits of App Router**:
-- Layouts and nested routing
-- Server Components by default
-- Streaming and Suspense
-- Better data fetching patterns
+The web app uses path aliases (e.g. `@client`, `@features`, `@core`, `@shared`, `@router`) instead of
+deep relative imports; they resolve via the Vite config and `tsconfig` `paths`.
 
 ## Backend Architecture
 
-### API Layer
+### Layering
 
-**RESTful API Design**:
-
-```
-/api/tracks              # GET: List all tracks
-/api/tracks/:id          # GET: Single track details
-/api/audio/:file         # GET: Stream audio file
-/api/auth/login          # POST: User login
-/api/auth/signup         # POST: User registration
-/api/auth/logout         # POST: End session
-/api/account             # GET: User account info
-/api/account/profile     # PUT: Update profile
-```
-
-**API Route Structure**:
-
-```typescript
-// src/app/api/tracks/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { getTracksFromDB } from '@/server/services/tracks';
-
-export async function GET(request: NextRequest) {
-  try {
-    const tracks = await getTracksFromDB();
-    return NextResponse.json(tracks);
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch tracks' },
-      { status: 500 }
-    );
-  }
-}
-```
-
-### Service Layer
-
-**Business Logic Organization**:
+Fastify is a thin transport layer. Each route validates input, resolves the request context (auth,
+tenant), and delegates to a framework-agnostic core service.
 
 ```
-src/server/services/
-├── audio/
-│   └── streamingService.ts   # Audio streaming logic
-├── auth/
-│   ├── authService.ts         # Authentication
-│   └── emailService.ts        # Email verification
-├── session/
-│   └── sessionService.ts      # Session management
-└── tracks/
-    └── trackMappingService.ts # Track data mapping
+HTTP route (apps/server/src/http/routes/*.ts)
+      → core service (server/core/src/*)
+            → repository (server/db/src/repositories/*)
+                  → RawDb client (server/db/src/client.ts, postgres.js)
 ```
 
-**Service Pattern**:
-- Encapsulate business logic
-- Separate from HTTP layer
-- Reusable across API routes
-- Easy to test in isolation
+### Server Bootstrap
 
-### Database Layer
+`main/apps/server/src/main.ts` loads env, fails fast if `JWT_SECRET` is missing, builds the app, and
+listens (default `127.0.0.1:8080`). The app is assembled in `main/apps/server/src/bootstrap/`:
 
-**Connection Pooling**:
+| File          | Responsibility                                             |
+| ------------- | ---------------------------------------------------------- |
+| `app.ts`      | Create Fastify instance, register plugins and routes       |
+| `context.ts`  | Per-request context (authenticated user, active tenant)    |
+| `refresh.ts`  | Transparent server-side access-token refresh               |
+| `static.ts`   | Serve the built SPA (`main/apps/web/dist`) + SPA fallback  |
+| `cron.ts`     | Scheduled jobs (`node-cron`)                               |
 
-```typescript
-// src/server/db/tracksDbPool.ts
-import { Pool } from 'pg';
+### HTTP Routes
 
-const tracksPool = new Pool({
-  connectionString: process.env.TRACKS_DATABASE_URL,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
+Route modules in `main/apps/server/src/http/routes/`:
 
-export default tracksPool;
-```
+| Module       | Surface                                                        |
+| ------------ | ------------------------------------------------------------- |
+| `auth.ts`    | signup, login, logout, session check, email/password flows    |
+| `account.ts` | account info, profile updates                                 |
+| `tracks.ts`  | public catalog (`GET /api/tracks`)                            |
+| `creator.ts` | tenant-scoped creator surface (workspaces, workspace catalog) |
+| `media.ts`   | audio streaming with HTTP range support                      |
 
-**Multiple Database Pools**:
-- `tracksDbPool`: For track metadata (meekah schema)
-- `authDbPool`: For authentication (auth schema)
-- `usersDbPool`: For user data (users schema)
+### Core Packages
 
-**Why Separate Pools?**
-- Independent scaling
-- Fault isolation
-- Different connection requirements
+`main/server/core/src` holds the business logic — `auth`, `account`, `tracks`, `creator`,
+`sessions`, and request `context` — with no Fastify dependencies. Object storage
+(`main/server/storage`, DO Spaces) and audio/media helpers (`main/server/media`) are exposed as ports,
+so streaming and storage backends can change without touching route or core code.
 
 ## Database Design
 
-### Schema Organization
+### Client
 
-**Three-Schema Architecture**:
+A single PostgreSQL database accessed through **postgres.js** (porsager). The `RawDb` wrapper at
+`main/server/db/src/client.ts` provides parameterized queries, transactions with automatic
+commit/rollback, and RLS session scoping via `SET LOCAL app.user_id/tenant_id/role`
+(`RawDb.withSession`).
 
-1. **meekah schema** - Track Data
-   - `track_info`: Main track metadata
-   - `track_arrangement`: Song sections
-   - `track_creator`: Creator information
-   - `track_instrument`: Instrument tags
-   - `track_sample`: Sample information
+### Migrations
 
-2. **auth schema** - Authentication
-   - `users`: User credentials
-   - `sessions`: Active sessions
-   - `email_verification`: Email tokens
-   - `password_reset`: Reset tokens
-
-3. **users schema** - User Profiles
-   - `profile`: Extended user info
-   - `roles`: User role assignments
-   - `billing`: Subscription info
-   - `playlists`: User playlists (future)
-
-### Data Relationships
+Numbered SQL files in `main/server/db/src/migrations/` applied by a tiny runner
+(`pnpm db:migrate`, dry run with `pnpm db:migrate:dry`, `pnpm db:status` to inspect state):
 
 ```
-track_info (1) ──> (*) track_arrangement
-           (1) ──> (*) track_creator
-           (1) ──> (*) track_instrument
-           (1) ──> (*) track_sample
-
-auth.users (1) ──> (*) auth.sessions
-           (1) ──> (1) users.profile
-           (1) ──> (*) users.roles
+0000_baseline.sql          # consolidated schema
+0100_tenants.sql           # tenants + memberships
+0101_seed_tenants.sql
+0200_tracks_tenant_id.sql  # tenant scoping for catalog
+0300_profile_created.sql
+0500_refresh_tokens.sql    # opaque rotating refresh tokens
+0600_profile_on_users.sql
+0900_rls.sql               # Row-Level Security policies
 ```
 
-### Indexing Strategy
+### Multi-Tenancy & RLS
 
-**Primary Indexes**:
-- Primary keys on all tables
-- Foreign keys for relationships
+Tenants and memberships gate access. Every tenant-scoped query runs inside a session where
+`app.tenant_id` is set, and Postgres **Row-Level Security** enforces isolation at the database — even
+a query bug cannot leak another workspace's rows. Repositories live in
+`main/server/db/src/repositories/` (`tracks`, `users`, `profile`, `tenant`, `refreshTokens`).
 
-**Performance Indexes**:
-- `track_info.genre` - Frequent filtering
-- `track_info.tempo` - BPM range queries
-- `track_info.musical_key` - Key filtering
-- `sessions.token` - Session lookups
-- `sessions.expires_at` - Cleanup queries
-
-**Composite Indexes** (needed):
-- `(genre, tempo, musical_key)` - Multi-filter queries
+See [04-database-schema.md](./04-database-schema.md) for the full schema.
 
 ## External Services
 
 ### DigitalOcean Spaces CDN
 
-**Purpose**: Audio file storage and streaming
+Audio and image assets are stored in DO Spaces and served through its CDN. The server accesses Spaces
+through the storage port in `main/server/storage`; audio requests stream with HTTP range support via
+`main/server/media`.
 
-**Configuration**:
-```typescript
-const AUDIO_BASE_URL =
-  'https://blendtune-public.nyc3.cdn.digitaloceanspaces.com';
-```
+### Email (Nodemailer)
 
-**Benefits**:
-- Global CDN for low latency
-- Scalable storage
-- S3-compatible API
-- Built-in caching
-
-**Audio Streaming Flow**:
-```
-Client → Next.js API → DO Spaces → Client
-         (validates)   (CDN cache)
-```
-
-### Email Service (Nodemailer + Gmail)
-
-**Purpose**: Transactional emails
-
-**Email Types**:
-- Email verification
-- Password reset
-- Welcome emails
-- Security alerts
-
-**Configuration**:
-```typescript
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-```
-
-### Vercel Functions
-
-**Purpose**: IP address detection for session tracking
-
-**Usage**: Enhance security by tracking session IP addresses
+Transactional email (verification, password reset) is sent via Nodemailer for signup, verification,
+and recovery flows.
 
 ## Security Architecture
 
-### Authentication Flow
+### Authentication
 
-```
-1. User submits credentials
-   ↓
-2. Server validates (bcrypt)
-   ↓
-3. Create session record in DB
-   ↓
-4. Generate session token
-   ↓
-5. Set HttpOnly cookie
-   ↓
-6. Return success to client
-```
+- **Password hashing:** Argon2id, with lazy migration of legacy bcrypt hashes on successful login.
+- **Access tokens:** zero-dependency HS256 JWTs (`main/server/system/src/security/jwt.ts`) carried in
+  the `sessionToken` cookie; short-lived (`ACCESS_TOKEN_TTL`, default 15m).
+- **Refresh tokens:** opaque, rotating tokens in the `refreshToken` cookie, tracked as a family with
+  reuse detection — a replayed token invalidates the family.
+- **Transparent refresh:** the server refreshes an expired access token server-side (`bootstrap/refresh.ts`)
+  so clients stay signed in without a manual refresh call.
 
-### Session Management
+Auth logic lives in `main/server/core/src/auth`; `JWT_SECRET` (≥32 chars) is required at startup.
 
-**Session Security**:
-- HttpOnly cookies (prevent XSS)
-- Secure flag (HTTPS only)
-- SameSite attribute (CSRF protection)
-- Short expiration times
-- IP address tracking
-- User-Agent validation
+### Cookies
 
-**Session Storage**:
-```typescript
-interface Session {
-  id: string;
-  user_id: string;
-  token: string;
-  ip_address: string;
-  user_agent: string;
-  created_at: Date;
-  expires_at: Date;
-  last_activity: Date;
-}
-```
+Auth cookies are `HttpOnly`, `Secure` in production, and `SameSite` scoped. Sessions cannot be read
+from JavaScript.
 
-### Password Security
+### Data Protection
 
-**Hashing**:
-- bcrypt with salt rounds (10-12)
-- Never store plain text
-- Validate strength on signup
-
-**Reset Flow**:
-1. User requests reset
-2. Generate secure token
-3. Send email with time-limited link
-4. Validate token on reset
-5. Hash new password
-6. Invalidate token
-
-### API Security
-
-**Protection Mechanisms**:
-- CORS configuration
-- Rate limiting (needed)
-- Input validation
-- SQL injection prevention (parameterized queries)
-- XSS protection (Content Security Policy)
-
-**Middleware Stack**:
-```typescript
-// Planned middleware
-- Rate limiter
-- CORS handler
-- Auth validator
-- Request logger
-```
+- Parameterized queries throughout (no string-built SQL).
+- Row-Level Security for tenant isolation.
+- Runtime validation of external input with Zod schemas in `main/shared`.
 
 ## Performance Considerations
 
-### Frontend Optimizations
+### Frontend
 
-1. **Code Splitting**
-   - Route-based splitting
-   - Dynamic imports for heavy components
-   - Lazy loading visualizations
+- Vite production build with code splitting and tree-shaking.
+- Static assets served with long-lived cache headers.
 
-2. **Asset Optimization**
-   - Image optimization with Next.js Image
-   - Font optimization
-   - CSS minification
+### Backend
 
-3. **Caching Strategy**
-   - Service worker for offline
-   - Browser cache for static assets
-   - Cache API for track metadata
+- Fastify's low-overhead routing and JSON handling.
+- postgres.js connection reuse and prepared statements.
+- Audio streamed with HTTP range requests and CDN caching.
 
-### Backend Optimizations
-
-1. **Database Queries**
-   - Connection pooling
-   - Query result caching (planned)
-   - Prepared statements
-   - Proper indexing
-
-2. **API Response**
-   - Gzip compression
-   - JSON minification
-   - Pagination for large datasets
-
-3. **Audio Streaming**
-   - HTTP range requests
-   - CDN caching (1 year)
-   - Efficient buffer sizes
-
-### Caching Layers
+### Caching
 
 ```
-Browser Cache
-    ↓
-Service Worker Cache
-    ↓
-CDN Cache (DO Spaces)
-    ↓
-Application Cache (planned - Redis)
-    ↓
-Database
+Browser cache → CDN (DO Spaces) → Fastify → PostgreSQL
 ```
 
-## Scalability Considerations
+## Deployment
 
-### Current Bottlenecks
-
-1. **Database**
-   - Single PostgreSQL instance
-   - No read replicas
-   - Limited connection pool
-
-2. **Audio Streaming**
-   - All requests go through Next.js
-   - Could bypass for better performance
-
-3. **State Management**
-   - All tracks loaded client-side
-   - Need server-side pagination
-
-### Future Improvements
-
-1. **Database Scaling**
-   - Read replicas for queries
-   - Write master for mutations
-   - Connection pool tuning
-
-2. **Caching Layer**
-   - Redis for session storage
-   - Cache query results
-   - Cache track metadata
-
-3. **CDN Optimization**
-   - Direct CDN links for audio
-   - Edge caching for API responses
-   - Multi-region deployment
+A single DigitalOcean droplet runs the Fastify process (`blendtune-api`) under PM2
+(`infra/ecosystem.bslt.config.js`) on `:8080`, serving both the SPA and `/api`. Caddy (Docker)
+reverse-proxies `blendtune.com` → `:8080`, with Cloudflare in front (Full SSL). See
+[07-deployment.md](./07-deployment.md) and `bslt-cutover-runbook.md`.
 
 ## Development Principles
 
-### Code Quality
-
-- **Type Safety**: Comprehensive TypeScript usage
-- **Linting**: ESLint + Stylelint
-- **Formatting**: Prettier with consistent config
-- **Testing**: Unit + Integration + E2E tests
-
-### Best Practices
-
-1. **DRY (Don't Repeat Yourself)**
-   - Extract reusable logic
-   - Shared utilities and hooks
-   - Component composition
-
-2. **SOLID Principles**
-   - Single Responsibility
-   - Open/Closed
-   - Dependency Inversion
-
-3. **Clean Code**
-   - Meaningful names
-   - Small functions
-   - Clear comments
-   - Consistent formatting
-
-## Deployment Architecture
-
-### Production Environment
-
-```
-GitHub → Vercel Build → Vercel Edge Network
-                ↓
-         ┌──────┴───────┐
-         │              │
-    PostgreSQL    DO Spaces CDN
-  (Primary DB)   (Audio Files)
-```
-
-### Environment Variables
-
-**Required**:
-- `DATABASE_URL` - PostgreSQL connection
-- `TRACKS_DATABASE_URL` - Tracks DB
-- `AUTH_DATABASE_URL` - Auth DB
-- `DO_SPACES_*` - DigitalOcean credentials
-- `SMTP_*` - Email service credentials
-- `SESSION_SECRET` - Session encryption key
-
-### CI/CD Pipeline
-
-**Automated Checks**:
-1. Linting (ESLint)
-2. Type checking (TypeScript)
-3. Unit tests (Jest)
-4. E2E tests (Playwright)
-5. Build verification
-
-**Deployment Flow**:
-```
-PR Created → CI Checks → Review → Merge → Deploy
-```
-
-## Monitoring & Observability
-
-### Logging Strategy (Planned)
-
-- **Application Logs**: Errors, warnings, info
-- **Access Logs**: API requests, response times
-- **Audit Logs**: User actions, security events
-
-### Metrics to Track (Planned)
-
-- Request latency
-- Error rates
-- Database query performance
-- Audio streaming bandwidth
-- User engagement
-
-### Error Handling
-
-**Current Approach**:
-```typescript
-try {
-  // Operation
-} catch (error) {
-  console.error(error);
-  return error response;
-}
-```
-
-**Improved Approach** (planned):
-- Centralized error handling
-- Error categorization
-- Error tracking service (Sentry)
-- User-friendly error messages
-
-## Conclusion
-
-Blendtune's architecture balances simplicity with scalability. The monolithic Next.js approach provides rapid development while maintaining clear separation of concerns through feature-based organization. As the platform grows, consider migrating to microservices or adding caching layers for improved performance.
+- **Type safety:** strict TypeScript, no `any`; types inferred from Zod schemas.
+- **DRY:** shared contracts/validation in `main/shared`; no duplicated types.
+- **Layer separation:** React renders, Fastify routes adapt, core packages own the logic.
+- **Tests:** unit tests colocated as `*.test.ts` (Jest + `@swc/jest`).
 
 ---
 

@@ -1,7 +1,7 @@
 // src/client/features/sounds/filters/utils/filterSync.ts
 
 import { Dispatch } from 'redux';
-import { selectCategory, removeAllGenres, selectGenres } from "@store/slices";
+import { selectCategory, removeAllGenres, selectGenres } from "@core/store/slices";
 
 /**
  * Synchronizes genre selection with category selection

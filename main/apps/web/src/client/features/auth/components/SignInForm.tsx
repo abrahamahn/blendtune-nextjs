@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link } from "@router/index";
 import Logo from "@components/common//Logo";
 import LoadingIcon from "@client/shared/components/icons/LoadingIcon";
-import useAuth from "@auth/hooks/useAuth";
+import useAuth from "@features/auth/hooks/useAuth";
 
 /**
  * Props interface for the SignIn component

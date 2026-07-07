@@ -8,7 +8,7 @@
  */
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@core/store';
-import { selectCategory, removeAllGenres } from "@sounds/filters/store/filterSlice";
+import { selectCategory, removeAllGenres } from "@features/sounds/filters/store/filterSlice";
 
 /**
  * Hook that manages category selection state

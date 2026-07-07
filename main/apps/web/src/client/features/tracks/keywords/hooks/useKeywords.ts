@@ -1,7 +1,7 @@
 // src\client\features\tracks\keywords\hooks\useKeywords.ts
 import { useMemo } from "react";
 import { useTracksContext } from "@client/features/tracks/services";
-import { extractUniqueKeywords } from "@tracks/keywords/utils";
+import { extractUniqueKeywords } from "@features/tracks/keywords/utils";
 
 /**
  * Custom hook to fetch and extract unique keywords from track data.

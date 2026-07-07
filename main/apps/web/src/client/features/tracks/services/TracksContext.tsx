@@ -2,15 +2,15 @@
 "use client";
 
 import React, { useState, ReactNode, useEffect, createContext, useContext, useCallback, useRef } from "react";
-import { fetchTracks } from "@tracks/core/hooks";
+import { fetchTracks } from "@features/tracks/core/hooks";
 import { Track } from "@/shared/types/track";
-import { TrackServiceType } from "@tracks/types";
+import { TrackServiceType } from "@features/tracks/types";
 import { 
   TrackError, 
   TrackErrorCode, 
   isTrackError, 
   setErrorLogger 
-} from "@tracks/utils/errors";
+} from "@features/tracks/utils/errors";
 
 /**
  * Props type for the TracksProvider component.

@@ -2,11 +2,11 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import InnerLayer from "@rightbar/components/InnerLayer";
-import ResizableHandle from "@rightbar/context/ResizableHandle";
+import InnerLayer from "@features/layout/rightbar/components/InnerLayer";
+import ResizableHandle from "@features/layout/rightbar/context/ResizableHandle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { useRightSidebar } from "@rightbar/context/useRightSidebar";
+import { useRightSidebar } from "@features/layout/rightbar/context/useRightSidebar";
 import { usePlayer } from "@client/features/player/services/playerService";
 
 /**

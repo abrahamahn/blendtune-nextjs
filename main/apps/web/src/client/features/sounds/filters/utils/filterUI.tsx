@@ -9,7 +9,7 @@ import {
   MoodFilter,
   KeywordFilter,
 } from "../components";
-import { FilterComponentsConfig, FilterLabelProps } from "@sounds/filters/types";
+import { FilterComponentsConfig, FilterLabelProps } from "@features/sounds/filters/types";
 
 /**
  * Creates filter components based on provided configuration

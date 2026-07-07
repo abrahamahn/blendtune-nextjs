@@ -8,7 +8,7 @@ import {
   selectKeyword,
   removeAllGenres,
   removeAllKeywords,
-} from "@store/slices";
+} from "@core/store/slices";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";

@@ -1,8 +1,8 @@
 // src\client\features\auth\hooks\useAuth.ts
 
 import { useDispatch } from "react-redux";
-import { setAuthenticated, setUnauthenticated, setOffline } from "@auth/store/sessionSlice";
-import { clearUserProfile } from "@auth/store/userSlice";
+import { setAuthenticated, setUnauthenticated, setOffline } from "@features/auth/store/sessionSlice";
+import { clearUserProfile } from "@features/auth/store/userSlice";
 import { useState } from "react";
 
 /**

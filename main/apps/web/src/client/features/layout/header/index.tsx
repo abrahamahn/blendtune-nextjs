@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Link } from "@router/index";
-import { useSession } from "@auth/services/useSession";
+import { useSession } from "@features/auth/services/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -18,16 +18,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
-import SearchBar from "@search/components/SearchBar";
-import SearchBarMobile from "@search/components/SearchBarMobile";
+import SearchBar from "@features/sounds/search/components/SearchBar";
+import SearchBarMobile from "@features/sounds/search/components/SearchBarMobile";
 
 import AuthModal from "@features/auth";
-import useAuthModal from "@auth/hooks/useAuthModal";
-import useAuth from "@auth/hooks/useAuth";
-import useGenreMenu from "@header/hooks/useGenreMenu";
-import useMobileSearch from "@search/hooks/useMobileSearch";
-import { useKeywords } from "@tracks/keywords/hooks/useKeywords";
-import { useMobileMenu } from "@header/hooks/useMobileMenu";
+import useAuthModal from "@features/auth/hooks/useAuthModal";
+import useAuth from "@features/auth/hooks/useAuth";
+import useGenreMenu from "@features/layout/header/hooks/useGenreMenu";
+import useMobileSearch from "@features/sounds/search/hooks/useMobileSearch";
+import { useKeywords } from "@features/tracks/keywords/hooks/useKeywords";
+import { useMobileMenu } from "@features/layout/header/hooks/useMobileMenu";
 import Logo from "@components/common//Logo";
 import { Skeleton } from "@client/shared/components/common/Skeleton";
 

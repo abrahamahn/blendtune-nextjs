@@ -7,7 +7,7 @@
 import React from "react";
 import { Link } from "@router/index";
 import Artwork from "@components/common/Artwork";
-import styles from "@styles/Home.module.css";
+import styles from "@client/shared/styles/Home.module.css";
 
 /**
  * Hero section component with artwork grid and call-to-action

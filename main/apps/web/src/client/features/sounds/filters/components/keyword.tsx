@@ -5,7 +5,7 @@ import {
   selectKeywords,
   deselectKeyword,
   removeAllKeywords,
-} from "@store/slices";
+} from "@core/store/slices";
 
 /**
  * Props interface for the KeywordFilter component

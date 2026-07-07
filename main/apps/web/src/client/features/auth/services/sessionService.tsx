@@ -8,14 +8,14 @@
  */
 
 import React, { ReactNode, useCallback, useEffect } from "react";
-import { useAppDispatch } from "@store/hooks";
+import { useAppDispatch } from "@core/store/hooks";
 import {
   setAuthenticated,
   setUnauthenticated,
   setOnline,
   setLoading,
-} from "@auth/store/sessionSlice";
-import { clearUserProfile, setUserProfile } from "@auth/store/userSlice";
+} from "@features/auth/store/sessionSlice";
+import { clearUserProfile, setUserProfile } from "@features/auth/store/userSlice";
 
 interface SessionProviderProps {
   children: ReactNode;

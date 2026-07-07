@@ -2,7 +2,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
-import { selectGenres, removeAllGenres } from "@store/slices";
+import { selectGenres, removeAllGenres } from "@core/store/slices";
 import {
   faStar,
   faGem,
@@ -11,7 +11,7 @@ import {
   faPaw,
   faBoltLightning,
 } from "@fortawesome/free-solid-svg-icons";
-import { FilterWrapper, Item, ActionButtons } from "@sounds/filters/ui";
+import { FilterWrapper, Item, ActionButtons } from "@features/sounds/filters/ui";
 
 /**
 * Props for GenreFilter component

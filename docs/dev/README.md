@@ -1,6 +1,6 @@
 # Developer Documentation
 
-Welcome to the Blendtune developer documentation. This guide provides technical information for developers working on the platform.
+Technical documentation for developers working on Blendtune.
 
 ## Table of Contents
 
@@ -15,108 +15,113 @@ Welcome to the Blendtune developer documentation. This guide provides technical 
 ## Quick Start for Developers
 
 ### Prerequisites
-- Node.js 18+ or 20+
+- Node.js 20+
+- pnpm 9+
 - PostgreSQL 14+
 - Git
-- Code editor (VS Code recommended)
 
 ### Local Setup
 
 ```bash
-# Clone repository
+# Clone and install
 git clone https://github.com/yourusername/blendtune-nextjs.git
 cd blendtune-nextjs
+pnpm install
 
-# Install dependencies
-npm install
+# Configure environment (see main/shared/src/config)
+# Provide DATABASE_URL, JWT_SECRET (>=32 chars), DO Spaces + SMTP credentials
 
-# Set up environment variables
-cp .env.example .env.local
+# Apply database migrations
+pnpm db:migrate
 
-# Initialize database
-psql -U postgres -d blendtune < db/blendtune_tracks_backup.sql
-psql -U postgres -d blendtune < db/blendtune_users_backup.sql
-
-# Run development server
-npm run dev
+# Run the API (Fastify, :8080) and the web dev server (Vite) in separate terminals
+pnpm dev:api
+pnpm dev:web
 ```
 
 ### Development Workflow
 
-1. Create feature branch from `main`
-2. Make changes and write tests
-3. Run linters and tests locally
+1. Create a feature branch from `main`
+2. Make changes and write/update tests
+3. Run lint, type-check, and tests locally
 4. Commit with clear messages
-5. Push and create pull request
-6. Wait for code review and CI checks
+5. Push and open a pull request
+6. Wait for review and CI
 7. Merge after approval
 
 ## Technology Stack Overview
 
 ### Frontend
-- Next.js 15.1.7 (App Router)
-- React 19.0.0
-- TypeScript 5.2.2
-- TailwindCSS 3.4.17
+- Vite 6 + React 19 single-page app
+- Custom react-router-v6-style client router (`main/client/react/src/router`)
+- Redux Toolkit for global state
+- TypeScript (strict), TailwindCSS
 
 ### Backend
-- Next.js API Routes
-- PostgreSQL (3 schemas)
-- Nodemailer
-- bcrypt
+- Fastify 5 (`main/apps/server`) serving `/api/*` and the built SPA from one origin
+- Framework-agnostic core packages under `main/server/*`
+- PostgreSQL via postgres.js with Row-Level Security
+- Argon2id auth, HS256 JWT access tokens, rotating refresh tokens
+- Nodemailer for transactional email
 
 ### Infrastructure
-- DigitalOcean Spaces CDN
-- Vercel hosting (assumed)
+- Single DigitalOcean droplet, PM2 (`blendtune-api`) on :8080
+- Caddy reverse proxy, Cloudflare (Full SSL)
+- DigitalOcean Spaces CDN for audio/image assets
 
 ## Key Concepts
 
-### Feature-Based Architecture
-Code is organized by feature (auth, player, sounds) rather than by type (components, services, utils).
+### Monorepo with Framework-Agnostic Core
+Business logic lives in `main/server/*` and `main/shared`; React renders and Fastify routes are thin
+adapters. Dependency flow: `apps/*` → `server/*` or `client/*` → `shared/*`.
 
-### Context-First State Management
-Primary state management uses React Context API. Redux is minimally used.
+### Feature-Based Frontend
+The SPA is organized by feature (auth, player, sounds, creator, tracks) under
+`main/apps/web/src/client/features`.
+
+### Multi-Tenancy
+Tenants and memberships gate access; tenant-scoped queries run under Row-Level Security so isolation
+is enforced at the database.
 
 ### Type Safety
-Comprehensive TypeScript coverage with strict type checking.
-
-### Progressive Enhancement
-PWA capabilities with service worker for offline functionality.
+Strict TypeScript throughout; runtime validation with Zod schemas defined in `main/shared`.
 
 ## Project Structure
 
 ```
-src/
-├── app/              # Next.js App Router (pages & API routes)
-├── client/           # Client-side code
-│   ├── core/        # Global providers, contexts
-│   ├── features/    # Feature modules
-│   └── shared/      # Shared utilities
-├── server/          # Server-side code
-│   ├── config/      # Configuration
-│   ├── db/          # Database connections
-│   ├── lib/         # Server utilities
-│   └── services/    # Business logic
-└── shared/          # Shared types
+main/
+├── apps/
+│   ├── web/            # Vite React SPA (entry src/main.tsx, routes src/app/App.tsx)
+│   └── server/         # Fastify API (bootstrap + http/routes)
+├── server/             # framework-agnostic packages: core, db, storage, media, system
+├── client/react/src/router/   # custom client router
+└── shared/             # contracts, validation, config
 ```
 
 ## Development Commands
 
 ```bash
 # Development
-npm run dev          # Start dev server
-npm run build        # Production build
-npm start            # Start production server
+pnpm dev:api         # Fastify API with tsx watch (:8080)
+pnpm dev:web         # Vite dev server
+pnpm start:api       # Run the API without watch
+
+# Build
+pnpm build:web       # Build the SPA -> main/apps/web/dist
+
+# Database
+pnpm db:migrate      # Apply pending migrations
+pnpm db:migrate:dry  # Preview migrations
+pnpm db:status       # Inspect migration state
 
 # Code Quality
-npm run lint         # Run ESLint
-npm run stylelint    # Lint CSS/SCSS
-npm run format       # Format with Prettier
+pnpm lint            # ESLint (flat config)
+pnpm type-check      # tsc --noEmit
+pnpm format          # Prettier
 
 # Testing
-npm run test         # Run unit tests
-npm run test:watch   # Watch mode
-npm run test:e2e     # End-to-end tests
+pnpm test            # Jest unit tests
+pnpm test:watch      # Watch mode
 ```
 
 ## Important Links
@@ -132,7 +137,3 @@ npm run test:e2e     # End-to-end tests
 - Review closed issues/PRs
 - Ask in team chat/discussions
 - Contact maintainers
-
----
-
-Let's build something great together! 🚀

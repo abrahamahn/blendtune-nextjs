@@ -1,7 +1,7 @@
 // src\client\features\sounds\filters\hooks\useFilterState.ts
 import { useState } from 'react';
 import { Track } from "@/shared/types/track";
-import { useTrackMetadata } from '@tracks/keywords/hooks';
+import { useTrackMetadata } from '@features/tracks/keywords/hooks';
 
 /**
  * Custom hook to manage filter UI state

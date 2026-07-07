@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from '@router/index';
 
 import Header from '@client/features/layout/header';
-import LeftBar from '@layout/leftbar';
-import { RightSidebarProvider, useRightSidebar } from '@rightbar/context/useRightSidebar';
-import RightBar from '@layout/rightbar';
-import StoreProvider from '@providers/StoreProvider';
+import LeftBar from '@features/layout/leftbar';
+import { RightSidebarProvider, useRightSidebar } from '@features/layout/rightbar/context/useRightSidebar';
+import RightBar from '@features/layout/rightbar';
+import StoreProvider from '@core/providers/StoreProvider';
 import {
   setArtistCreatorName,
   setGender,
@@ -15,8 +15,8 @@ import {
   setOccupation,
   setDateOfBirth,
   setMarketingConsent,
-} from '@store/slices';
-import { useSession } from '@auth/services';
+} from '@core/store/slices';
+import { useSession } from '@features/auth/services';
 import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
 import { Skeleton } from '@client/shared/components/common/Skeleton';
 

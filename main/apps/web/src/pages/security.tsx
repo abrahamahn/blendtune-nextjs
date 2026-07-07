@@ -4,11 +4,11 @@ import { useDispatch } from 'react-redux';
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { useNavigate } from '@router/index';
 
-import { setAuthenticated, setUnauthenticated } from '@store/slices';
-import { useSession } from '@auth/services';
+import { setAuthenticated, setUnauthenticated } from '@core/store/slices';
+import { useSession } from '@features/auth/services';
 import Logo from '@components/common/Logo';
 import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
-import SearchParamsWrapper from '@search/services/SearchParamsWrapper';
+import SearchParamsWrapper from '@features/sounds/search/services/SearchParamsWrapper';
 
 // localStorage never notifies within this page's lifetime; read-once external store.
 const subscribeNever = () => () => {};

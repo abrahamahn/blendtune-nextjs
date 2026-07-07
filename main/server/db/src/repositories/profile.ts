@@ -11,7 +11,7 @@
 
 import type { RawDb } from '../client';
 
-export interface BasicProfileInput {
+interface BasicProfileInput {
   artistCreatorName: string;
   userType: string;
   occupation: string;

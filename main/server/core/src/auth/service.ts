@@ -29,16 +29,16 @@ export interface SignUpData {
   password: string;
 }
 
-export interface SignUpResult {
+interface SignUpResult {
   status: number;
   message: string;
   redirectToVerifyEmail?: boolean;
   userId?: number;
 }
 
-export type LoginResult = { ok: false } | { ok: true; tokens: AuthTokens };
+type LoginResult = { ok: false } | { ok: true; tokens: AuthTokens };
 
-export function getUserByEmail(email: string): Promise<AuthUserRow | null> {
+function getUserByEmail(email: string): Promise<AuthUserRow | null> {
   return createUsersRepository(db).findByEmail(email);
 }
 
@@ -139,7 +139,7 @@ export function resetPassword(
   });
 }
 
-export interface ResetVerificationResult {
+interface ResetVerificationResult {
   alreadyConfirmed: boolean;
   user: Pick<AuthUserRow, 'uuid' | 'first_name' | 'last_name' | 'email' | 'email_confirmed'>;
 }
@@ -158,7 +158,7 @@ export function verifyResetPasswordToken(token: string): Promise<ResetVerificati
   });
 }
 
-export interface EmailConfirmationResult {
+interface EmailConfirmationResult {
   alreadyConfirmed: boolean;
   tokens?: AuthTokens;
 }

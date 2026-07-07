@@ -2,7 +2,4 @@
 export {
   listPublicCatalog,
   listTenantCatalog,
-  type TrackResponse,
-  type TrackCatalog,
-  type TracksDeps,
 } from './service';

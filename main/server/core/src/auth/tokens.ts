@@ -14,7 +14,7 @@ import { sign, verify } from '@server/system/security/jwt';
 import type { RefreshTokensRepository } from '@server/db/repositories/refreshTokens';
 import type { RequestMeta } from './service';
 
-export const REFRESH_TOKEN_TTL_DAYS = 30;
+const REFRESH_TOKEN_TTL_DAYS = 30;
 const MIN_SECRET_LENGTH = 32;
 const DEFAULT_ACCESS_TOKEN_TTL = '15m';
 
@@ -25,7 +25,7 @@ export interface AuthTokens {
   refreshExpiresAt: Date;
 }
 
-export interface RotatedTokens extends AuthTokens {
+interface RotatedTokens extends AuthTokens {
   userId: string;
 }
 

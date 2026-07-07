@@ -12,7 +12,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 // Types
 // ============================================================================
 
-export interface JwtHeader {
+interface JwtHeader {
   alg: 'HS256';
   typ: 'JWT';
 }

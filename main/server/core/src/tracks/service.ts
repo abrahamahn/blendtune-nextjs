@@ -11,7 +11,7 @@
 import { NotFoundError } from '../errors';
 import type { TracksRepository, TrackInfoRow } from '@server/db/repositories/tracks';
 
-export interface TrackResponse {
+interface TrackResponse {
   id: number;
   file: string;
   metadata: { catalog: string; title: string; release: string; producer: string };
@@ -27,9 +27,9 @@ export interface TrackResponse {
 }
 
 /** Keyed-by-sequential-id map, preserving the existing /api/tracks response shape. */
-export type TrackCatalog = Record<number, TrackResponse>;
+type TrackCatalog = Record<number, TrackResponse>;
 
-export interface TracksDeps {
+interface TracksDeps {
   tracks: TracksRepository;
 }
 

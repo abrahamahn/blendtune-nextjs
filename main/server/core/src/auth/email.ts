@@ -9,7 +9,7 @@ import nodemailer from 'nodemailer';
 import { db } from '@server/db';
 import { createUsersRepository } from '@server/db/repositories/users';
 
-export type AuthEmailAction = 'signup' | 'resetpassword';
+type AuthEmailAction = 'signup' | 'resetpassword';
 
 export interface SendEmailResult {
   success: boolean;

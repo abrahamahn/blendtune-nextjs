@@ -7,13 +7,5 @@
  */
 
 /** Roles a user can hold within a tenant, most-privileged first. */
-export const TENANT_ROLES = ['owner', 'admin', 'member', 'viewer'] as const;
+const TENANT_ROLES = ['owner', 'admin', 'member', 'viewer'] as const;
 export type TenantRole = (typeof TENANT_ROLES)[number];
-
-/** Lifecycle states of a tenant invitation. */
-export const INVITATION_STATUSES = ['pending', 'accepted', 'revoked', 'expired'] as const;
-export type InvitationStatus = (typeof INVITATION_STATUSES)[number];
-
-/** True if `value` is a valid tenant role. */
-export const isTenantRole = (value: unknown): value is TenantRole =>
-  typeof value === 'string' && (TENANT_ROLES as readonly string[]).includes(value);

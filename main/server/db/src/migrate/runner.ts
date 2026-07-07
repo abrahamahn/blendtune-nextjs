@@ -13,16 +13,16 @@ import path from 'path';
 
 import type { RawDb } from '../client';
 
-export interface MigrationLogger {
+interface MigrationLogger {
   log(message?: unknown, ...optionalParams: unknown[]): void;
 }
 
-export interface MigrationRunResult {
+interface MigrationRunResult {
   applied: string[];
   skipped: string[];
 }
 
-export interface RunSqlMigrationsOptions {
+interface RunSqlMigrationsOptions {
   db: RawDb;
   migrationsDir: string;
   logger?: MigrationLogger;

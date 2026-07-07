@@ -40,14 +40,14 @@ export function requireTenant(ctx: RequestContext): TenantContext {
   return { userId: ctx.userId, tenantId: ctx.tenantId, role: ctx.role };
 }
 
-export interface ResolveContextInput {
+interface ResolveContextInput {
   /** Authenticated user id (UUID) derived from the session. */
   userId: string;
   /** Requested tenant slug from the /c/:slug path or active-workspace cookie, if any. */
   tenantSlug?: string | null;
 }
 
-export interface ContextDeps {
+interface ContextDeps {
   tenants: TenantRepository;
 }
 

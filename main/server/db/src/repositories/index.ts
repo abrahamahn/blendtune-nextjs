@@ -6,20 +6,7 @@ import { createRefreshTokensRepository, type RefreshTokensRepository } from './r
 import { createTenantRepository, type TenantRepository } from './tenant';
 import { createTracksRepository, type TracksRepository } from './tracks';
 
-export { createUsersRepository, createProfileRepository, createRefreshTokensRepository };
-export { createTenantRepository, createTracksRepository };
-export type {
-  UsersRepository,
-  ProfileRepository,
-  RefreshTokensRepository,
-  TenantRepository,
-  TracksRepository,
-};
-export type { TenantWithRole } from './tenant';
-export type { AuthUserRow, NewAuthUser } from './users';
-export type { NewRefreshToken, RefreshTokenRow } from './refreshTokens';
-export type { BasicProfileInput, ProfileRow, SessionProfileRow } from './profile';
-export type { TrackInfoRow } from './tracks';
+export { createUsersRepository, createRefreshTokensRepository };
 
 /** The full set of repositories bound to a RawDb (mirrors bslt's createRepositories). */
 export interface Repositories {

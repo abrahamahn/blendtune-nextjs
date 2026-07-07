@@ -22,7 +22,7 @@ export interface AuthUserRow {
   signup_method: string | null;
 }
 
-export interface NewAuthUser {
+interface NewAuthUser {
   firstName: string;
   lastName: string;
   email: string;

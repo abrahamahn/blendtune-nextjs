@@ -2,11 +2,10 @@
 /**
  * Category selection component for filtering tracks by genre
  * Displays a horizontally scrollable list of music genres
- * 
+ *
  * @module sounds/category/components/Category
  */
 import React from "react";
-import { GenreItem } from "../types";
 import { DEFAULT_GENRES } from "../constants";
 import { useCategorySelection } from "../hooks/useCategorySelection";
 import { CategoryItem } from "../components/Item";
@@ -17,11 +16,11 @@ import CategorySkeleton from "../components/CategorySkeleton";
  * Genre selection component for filtering tracks
  * Displays a horizontally scrollable list of music genres
  * Manages selection state through Redux store
- * 
+ *
  * @param {CategoryProps} props - Component properties
  * @returns {React.ReactElement} Rendered category component
  */
-const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({ 
+const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({
   className = "",
   genres = DEFAULT_GENRES,
   isLoading = false,
@@ -34,7 +33,7 @@ const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({
 
   return (
     <div className={`max-w-screen-xl mx-auto ${className}`}>
-      <div 
+      <div
         className="flex flex-row justify-start items-start w-full border-b border-neutral-200 dark:border-neutral-700 overflow-x-scroll"
         role="tablist"
         aria-label="Music genres"

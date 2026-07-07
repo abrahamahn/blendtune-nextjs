@@ -47,7 +47,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
       } else {
         setErrorMessage(data.message || "An unexpected error occurred");
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("Failed to reset password. Please try again later.");
     } finally {
       setIsLoading(false);
@@ -65,7 +65,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({
             Forgot Your Password?
           </h1>
           <p className="text-sm text-neutral-600 dark:text-gray-400 mt-2 text-center">
-            Enter your registered email. A confirmation link will be sent to reset your password.
+            Enter your registered email. A confirmation link will be sent to
+            reset your password.
           </p>
         </div>
         <div className="w-full mt-4">

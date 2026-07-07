@@ -1,20 +1,20 @@
 // src\client\features\layout\header\index.tsx
 /**
-* Main header component providing navigation, search functionality and auth state management.
-* Includes responsive layouts for both desktop and mobile viewports.
-*/
+ * Main header component providing navigation, search functionality and auth state management.
+ * Includes responsive layouts for both desktop and mobile viewports.
+ */
 
 import React from "react";
 import { Link } from "@router/index";
 import { useSession } from "@auth/services/useSession";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
- faBars,
- faTimes,
- faArrowRight,
- faMusic,
- faGreaterThan,
- faSearch,
+  faBars,
+  faTimes,
+  faArrowRight,
+  faMusic,
+  faGreaterThan,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 
@@ -31,35 +31,30 @@ import { useMobileMenu } from "@header/hooks/useMobileMenu";
 import Logo from "@components/common//Logo";
 import { Skeleton } from "@/client/shared/components/common/Skeleton";
 
-// Define type for AuthModal form prop
-type AuthFormType = 'signin' | 'signup';
-
-// Update AuthModal props interface
-interface AuthModalProps {
- closeAuthModal: () => void;
- form: AuthFormType;
- setForm: (form: AuthFormType) => void;
-}
-
 const Header: React.FC = () => {
- const { userAuthenticated, sessionLoading } = useSession();
+  const { userAuthenticated, sessionLoading } = useSession();
 
- const {
-   authModalOpen,
-   form,
-   openSignInModal,
-   openSignUpModal,
-   closeAuthModal,
-   setForm,
- } = useAuthModal();
+  const {
+    authModalOpen,
+    form,
+    openSignInModal,
+    openSignUpModal,
+    closeAuthModal,
+    setForm,
+  } = useAuthModal();
 
- const { logout } = useAuth();
+  const { logout } = useAuth();
 
- const { isMobileSearch, isAnimating, toggleSearchBar } = useMobileSearch();
- const { isMobileMenuOpen, openMobileMenu, closeMobileMenu, handleSoundsClick } = useMobileMenu();
+  const { isMobileSearch, isAnimating, toggleSearchBar } = useMobileSearch();
+  const {
+    isMobileMenuOpen,
+    openMobileMenu,
+    closeMobileMenu,
+    handleSoundsClick,
+  } = useMobileMenu();
 
- const { genreItems, handleGenreItemClick } = useGenreMenu();
- const { keywords } = useKeywords();
+  const { genreItems, handleGenreItemClick } = useGenreMenu();
+  const { keywords } = useKeywords();
   /*  useEffect(() => {
     checkSession();
     if (userProfileCreated === false) {
@@ -71,9 +66,11 @@ const Header: React.FC = () => {
     <header className="w-full h-full">
       <div className="h-full">
         {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center justify-between 
+        <nav
+          className="hidden md:flex items-center justify-between 
                       w-full h-full
-                      xl:px-2 lg:px-2">
+                      xl:px-2 lg:px-2"
+        >
           <div className="flex items-center justify-between mx-auto w-full px-6 h-full">
             <div className="flex items-center space-x-2 lg:space-x-4">
               <Logo />
@@ -82,10 +79,16 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2 lg:space-x-2">
               {sessionLoading ? (
-                 <div className="flex space-x-2">
-                   <Skeleton variant="rectangular" className="w-24 h-9 rounded-full" />
-                   <Skeleton variant="rectangular" className="w-24 h-9 rounded-lg" />
-                 </div>
+                <div className="flex space-x-2">
+                  <Skeleton
+                    variant="rectangular"
+                    className="w-24 h-9 rounded-full"
+                  />
+                  <Skeleton
+                    variant="rectangular"
+                    className="w-24 h-9 rounded-lg"
+                  />
+                </div>
               ) : (
                 <>
                   {userAuthenticated ? (
@@ -175,7 +178,12 @@ const Header: React.FC = () => {
                   />
                 </button>
                 {sessionLoading ? (
-                  <Skeleton variant="circular" width={20} height={20} className="mx-3" />
+                  <Skeleton
+                    variant="circular"
+                    width={20}
+                    height={20}
+                    className="mx-3"
+                  />
                 ) : (
                   <button
                     onClick={openSignInModal}

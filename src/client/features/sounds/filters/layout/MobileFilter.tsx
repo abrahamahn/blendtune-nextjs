@@ -2,10 +2,10 @@
 /**
  * Mobile Filter Component
  * Renders the mobile version of the sound filter interface
- * 
+ *
  * Provides a modal-style filter interface with expandable sections
  * Optimized for touch interactions and smaller screen sizes
- * 
+ *
  * @module layout/MobileFilter
  * @requires FontAwesomeIcon
  * @requires useFilterState
@@ -22,8 +22,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { SortFilter } from "@sounds/filters/components";
 import { createFilterComponents } from "@sounds/filters/utils/filterUI";
-import { hasItems, calculateAppliedFilterCount } from "@sounds/filters/utils/filterLogic";
-import { useFilterContext } from "@sounds/filters/context"
+import {
+  hasItems,
+  calculateAppliedFilterCount,
+} from "@sounds/filters/utils/filterLogic";
+import { useFilterContext } from "@sounds/filters/context";
 import { useTracks } from "@/client/features/tracks";
 import { Skeleton } from "@/client/shared/components/common/Skeleton";
 
@@ -59,10 +62,7 @@ const MobileFilter: React.FC = () => {
     selectedMoods,
     setSelectedMoods,
     selectedKeywords,
-    openFilter,
-    setOpenFilter,
     openSortFilter,
-    setOpenSortFilter,
     sortBy,
     setSortBy,
     toggleFilter,
@@ -74,7 +74,9 @@ const MobileFilter: React.FC = () => {
 
   // Mobile-specific state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [currentExpandedItem, setCurrentExpandedItem] = useState<string | null>(null);
+  const [currentExpandedItem, setCurrentExpandedItem] = useState<string | null>(
+    null,
+  );
   const [mobileMenu, setMobileMenu] = useState<Record<string, boolean>>({
     Sort: false,
     Tempo: false,
@@ -95,20 +97,20 @@ const MobileFilter: React.FC = () => {
   /**
    * Toggles the mobile filter panel visibility
    */
-  const toggleMobileFilter = () => setMobileFilterOpen(prev => !prev);
+  const toggleMobileFilter = () => setMobileFilterOpen((prev) => !prev);
 
   /**
    * Expands or collapses a specific filter section
    * Only one section can be expanded at a time
-   * 
+   *
    * @param {string} item - The filter section to toggle
    */
   const toggleExpand = (item: string) => {
     if (item === "Instrument") return; // Prevent expanding Instrument filter
-    
-    setMobileMenu(prev => {
+
+    setMobileMenu((prev) => {
       const updatedMenu = { ...prev };
-      
+
       if (currentExpandedItem === item) {
         updatedMenu[item] = false;
         setCurrentExpandedItem(null);
@@ -127,7 +129,7 @@ const MobileFilter: React.FC = () => {
   /**
    * Handles sort option changes in mobile view
    * Updates sort state and closes the sort menu
-   * 
+   *
    * @param {string} option - The sort option to apply
    */
 
@@ -137,7 +139,7 @@ const MobileFilter: React.FC = () => {
 
   const handleMobileSortChange = (option: string) => {
     handleSortChange(option);
-    setMobileMenu(prev => ({
+    setMobileMenu((prev) => ({
       ...prev,
       Sort: !prev.Sort,
     }));
@@ -177,7 +179,7 @@ const MobileFilter: React.FC = () => {
   /**
    * Renders filter summary text for each filter section
    * Shows selected values in a condensed format
-   * 
+   *
    * @param {string} name - The name of the filter
    * @returns {React.ReactNode} The rendered filter summary
    */
@@ -185,8 +187,12 @@ const MobileFilter: React.FC = () => {
     const renderFilterText = (selectedItems: string[]) => {
       if (hasItems(selectedItems)) {
         if (selectedItems.length > 1) {
-          return <span className="text-sm">{selectedItems[0]} +{selectedItems.length - 1}</span>;
-        } 
+          return (
+            <span className="text-sm">
+              {selectedItems[0]} +{selectedItems.length - 1}
+            </span>
+          );
+        }
         return <span className="text-sm">{selectedItems[0]}</span>;
       }
       return null;
@@ -195,12 +201,20 @@ const MobileFilter: React.FC = () => {
     switch (name) {
       case "Tempo":
         if (minTempo > 40 || maxTempo < 200) {
-          return <span className="text-sm">{minTempo} - {maxTempo}</span>;
+          return (
+            <span className="text-sm">
+              {minTempo} - {maxTempo}
+            </span>
+          );
         }
         break;
       case "Key":
         if (hasItems(selectedKeys)) {
-          return <span className="text-sm">{selectedKeys} {selectedScale.toLowerCase().substring(0, 3)}</span>;
+          return (
+            <span className="text-sm">
+              {selectedKeys} {selectedScale.toLowerCase().substring(0, 3)}
+            </span>
+          );
         }
         break;
       case "Genre":
@@ -221,13 +235,14 @@ const MobileFilter: React.FC = () => {
   /**
    * Determines if any filters are currently applied
    */
-  const filtersApplied = hasItems(selectedGenres) || 
-    hasItems(selectedArtists) || 
-    hasItems(selectedInstruments) || 
-    hasItems(selectedMoods) || 
-    hasItems(selectedKeywords) || 
-    minTempo > 40 || 
-    maxTempo < 200 || 
+  const filtersApplied =
+    hasItems(selectedGenres) ||
+    hasItems(selectedArtists) ||
+    hasItems(selectedInstruments) ||
+    hasItems(selectedMoods) ||
+    hasItems(selectedKeywords) ||
+    minTempo > 40 ||
+    maxTempo < 200 ||
     hasItems(selectedKeys);
 
   /**
@@ -263,7 +278,7 @@ const MobileFilter: React.FC = () => {
 
       {/* Mobile Filter Panel */}
       {mobileFilterOpen && (
-        <div 
+        <div
           className="mobile-filter-width mobile-filter-height block md:hidden fixed top-0 z-40 md:left-22 w-full h-screen bg-white/90 dark:bg-black/90"
           id="mobile-filter-panel"
           role="dialog"
@@ -320,7 +335,11 @@ const MobileFilter: React.FC = () => {
                       {sortBy}
                     </p>
                     <FontAwesomeIcon
-                      icon={mobileMenu.Sort && currentExpandedItem === "Sort" ? faChevronUp : faAngleDown}
+                      icon={
+                        mobileMenu.Sort && currentExpandedItem === "Sort"
+                          ? faChevronUp
+                          : faAngleDown
+                      }
                       size="xs"
                       className="text-neutral-600 dark:text-neutral-200"
                       aria-hidden="true"
@@ -328,7 +347,7 @@ const MobileFilter: React.FC = () => {
                   </div>
                 </button>
                 {mobileMenu.Sort && (
-                  <div 
+                  <div
                     className="flex w-full justify-center items-center"
                     id="mobile-sort-section"
                   >
@@ -346,14 +365,17 @@ const MobileFilter: React.FC = () => {
               {/* Filter Components */}
               {filterButtons.map(({ name, component }) => {
                 const isInstrument = name === "Instrument";
-                const itemExpanded = mobileMenu[name] && currentExpandedItem === name;
+                const itemExpanded =
+                  mobileMenu[name] && currentExpandedItem === name;
                 const sectionId = `mobile-${name.toLowerCase()}-section`;
-                
+
                 return (
                   <div
                     key={name}
                     className={`flex flex-col items-start p-4 border-b border-neutral-400 dark:border-neutral-800 ${
-                      isInstrument ? 'bg-neutral-100 dark:bg-neutral-800 cursor-not-allowed' : 'hover:cursor-pointer'
+                      isInstrument
+                        ? "bg-neutral-100 dark:bg-neutral-800 cursor-not-allowed"
+                        : "hover:cursor-pointer"
                     } dark:font-medium dark:text-neutral-200 h-auto`}
                   >
                     <button
@@ -363,9 +385,13 @@ const MobileFilter: React.FC = () => {
                       aria-expanded={itemExpanded}
                       aria-controls={sectionId}
                     >
-                      <p className={`text-sm font-semibold ${
-                        isInstrument ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-800 dark:text-neutral-200'
-                      }`}>
+                      <p
+                        className={`text-sm font-semibold ${
+                          isInstrument
+                            ? "text-neutral-400 dark:text-neutral-500"
+                            : "text-neutral-800 dark:text-neutral-200"
+                        }`}
+                      >
                         {name}
                       </p>
                       <div className="flex flex-row justify-center items-center">
@@ -382,7 +408,7 @@ const MobileFilter: React.FC = () => {
                         )}
                       </div>
                     </button>
-                    <div 
+                    <div
                       className="flex w-full justify-center items-center"
                       id={sectionId}
                     >

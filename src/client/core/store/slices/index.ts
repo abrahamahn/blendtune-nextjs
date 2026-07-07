@@ -11,22 +11,12 @@ export {
 
 // User profile slice
 export {
-  setUsername,
-  setUserEmail,
-  setUserFirstName,
-  setUserLastName,
   setArtistCreatorName,
-  setPhoneNumber,
   setGender,
   setDateOfBirth,
-  setCity,
-  setState,
-  setCountry,
   setUserType,
   setOccupation,
-  setPreferredLanguage,
   setMarketingConsent,
-  setProfileCreated,
   setUserProfile,
   clearUserProfile,
   setNoUser,
@@ -66,4 +56,7 @@ export {
 // Exporting types for type safety
 export type { SessionState } from "@auth/store/sessionSlice";
 export type { UserState } from "@auth/store/userSlice";
-export type { FilterState, KeyFilterCombination } from "@/client/features/sounds/filters/store/filterSlice";
+export type {
+  FilterState,
+  KeyFilterCombination,
+} from "@/client/features/sounds/filters/store/filterSlice";

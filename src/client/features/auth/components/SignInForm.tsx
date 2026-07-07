@@ -12,30 +12,21 @@ import useAuth from "@auth/hooks/useAuth";
  * @interface SignInProps
  * @property {() => void} openSignUp - Function to switch to signup form
  * @property {() => void} openResetPassword - Function to open reset password form
- * @property {() => void} openConfirmEmail - Function to open email confirmation
- * @property {() => void} closeAuthModal - Function to close the auth modal
  */
 interface SignInProps {
   openSignUp: () => void;
   openResetPassword: () => void;
-  openConfirmEmail: () => void;
-  closeAuthModal: () => void;
 }
 
 /**
  * SignIn component provides user authentication functionality
  * Includes email/password login and Google OAuth options
- * 
+ *
  * @component
  * @param {SignInProps} props - Component props
  * @returns {JSX.Element} Rendered component
  */
-const SignIn: React.FC<SignInProps> = ({
-  openSignUp,
-  openResetPassword,
-  openConfirmEmail,
-  closeAuthModal,
-}) => {
+const SignIn: React.FC<SignInProps> = ({ openSignUp, openResetPassword }) => {
   // Authentication hook for login functionality
   const { login, isLoading } = useAuth();
 

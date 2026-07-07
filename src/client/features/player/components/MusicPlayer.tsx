@@ -5,10 +5,9 @@
  */
 
 "use client";
-import React, { Suspense }  from "react";
+import React, { Suspense } from "react";
 import { useKeyboardShortcuts, useVolumeControl } from "../hooks";
 import { useTracks } from "@/client/features/tracks";
-import { usePlayer } from "../services/playerService";
 
 import PlayerControls from "./PlayerControls";
 import VolumeControl from "./VolumeControl";
@@ -23,10 +22,10 @@ import MusicPlayerSkeleton from "./MusicPlayerSkeleton";
  */
 const MusicPlayer: React.FC = () => {
   const { isLoading } = useTracks();
-  
+
   // Initialize keyboard shortcuts
   useKeyboardShortcuts();
-  
+
   // Get volume wheel handler
   const { handleVolumeWheel } = useVolumeControl();
 
@@ -44,12 +43,12 @@ const MusicPlayer: React.FC = () => {
 
               {/* Track Progress and Volume */}
               <div className="flex flex-row w-1/2 h-full items-center px-4">
-                <Suspense fallback={<div>Loading additional components...</div>}>
-
+                <Suspense
+                  fallback={<div>Loading additional components...</div>}
+                >
                   <TrackProgress />
                   <VolumeControl />
                 </Suspense>
-
               </div>
 
               {/* Track Info & Action Buttons */}

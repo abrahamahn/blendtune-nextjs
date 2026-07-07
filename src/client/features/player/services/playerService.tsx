@@ -15,16 +15,15 @@ import React, {
   useCallback,
   useRef,
   useMemo,
-  RefObject,
   Dispatch,
-} from 'react';
-import { Track } from '@/shared/types/track';
-import { playerReducer, initialPlayerState } from '../context/playerReducer';
-import { playerActions } from '../context/playerActions';
-import { storePlaybackTime, getPlaybackTime } from '../utils/storage';
+} from "react";
+import { Track } from "@/shared/types/track";
+import { playerReducer, initialPlayerState } from "../context/playerReducer";
+import { playerActions } from "../context/playerActions";
+import { storePlaybackTime, getPlaybackTime } from "../utils/storage";
 import { useTracks } from "@/client/features/tracks";
-import { useAudioElement, AudioEventHandlers } from '../services/audioService';
-import { PlayerContextType, PlayerAction } from '../types/contextType';
+import { useAudioElement, AudioEventHandlers } from "../services/audioService";
+import { PlayerContextType, PlayerAction } from "../types/contextType";
 import { usePlaybackPersistence } from "../hooks/usePlaybackPersistence";
 
 // Define the context
@@ -36,7 +35,7 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
  */
 const logPlaybackError = (error: Error, trackId?: number) => {
   const prefix = `Playback error for track ${trackId}`;
-  if (error.name === 'NotSupportedError' || error.name === 'DecodeError') {
+  if (error.name === "NotSupportedError" || error.name === "DecodeError") {
     // Expected for unsupported/corrupt source files; avoid dev error overlay noise.
     console.warn(`${prefix}:`, error.message);
     return;
@@ -51,39 +50,40 @@ const logPlaybackError = (error: Error, trackId?: number) => {
 const handlePlaybackError = (
   error: Error,
   dispatch: Dispatch<PlayerAction>,
-  trackId?: number
+  trackId?: number,
 ) => {
-  if (error.name === 'NotAllowedError') {
+  if (error.name === "NotAllowedError") {
     dispatch(
       playerActions.setPlaybackError({
-        type: 'permission',
-        message: 'Playback requires user interaction first',
+        type: "permission",
+        message: "Playback requires user interaction first",
         recoverable: true,
-      })
+      }),
     );
-  } else if (error.name === 'NotSupportedError') {
+  } else if (error.name === "NotSupportedError") {
     dispatch(
       playerActions.setPlaybackError({
-        type: 'format',
-        message: 'Audio format not supported by your browser',
+        type: "format",
+        message: "Audio format not supported by your browser",
         recoverable: false,
-      })
+      }),
     );
-  } else if (error.name === 'DecodeError') {
+  } else if (error.name === "DecodeError") {
     dispatch(
       playerActions.setPlaybackError({
-        type: 'format',
-        message: 'Unable to decode audio data (file may be corrupted or encoded with an unsupported codec)',
+        type: "format",
+        message:
+          "Unable to decode audio data (file may be corrupted or encoded with an unsupported codec)",
         recoverable: false,
-      })
+      }),
     );
   } else {
     dispatch(
       playerActions.setPlaybackError({
-        type: 'unknown',
+        type: "unknown",
         message: `Playback error: ${error.message}`,
         recoverable: true,
-      })
+      }),
     );
   }
   logPlaybackError(error, trackId);
@@ -93,13 +93,17 @@ const handlePlaybackError = (
  * Player Provider component that manages playback state and control functions.
  * It also memoizes the context value to prevent unnecessary re-renders of context consumers.
  */
-export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const PlayerProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   // Initialize player state and dispatch using a reducer
   const [state, dispatch] = useReducer(playerReducer, initialPlayerState);
   const { tracks } = useTracks();
 
   // State for handling track end events to avoid circular dependencies
-  const [trackEndHandler, setTrackEndHandler] = useState<() => void>(() => () => {});
+  const [trackEndHandler, setTrackEndHandler] = useState<() => void>(
+    () => () => {},
+  );
 
   // Ref to track initialization status (one-time setup)
   const isInitializedRef = useRef(false);
@@ -132,7 +136,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       dispatch(playerActions.setVolume(volume));
     },
     onError: (error: Error) => {
-      if (error.name !== 'AbortError') {
+      if (error.name !== "AbortError") {
         handlePlaybackError(error, dispatch, state.currentTrack?.id);
       }
     },
@@ -151,7 +155,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       if (shouldAutoPlayRef.current) {
         setTimeout(() => {
           play().catch((error) => {
-            if (error.name !== 'AbortError') {
+            if (error.name !== "AbortError") {
               handlePlaybackError(error, dispatch, state.currentTrack?.id);
             }
           });
@@ -162,15 +166,8 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   };
 
   // Initialize audio service using a custom hook
-  const { 
-    audioRef, 
-    play, 
-    pause, 
-    toggle, 
-    seekTo, 
-    setVolume,
-    loadTrack,
-  } = useAudioElement('', state.volume, audioEventHandlers);
+  const { audioRef, play, pause, toggle, seekTo, setVolume, loadTrack } =
+    useAudioElement("", state.volume, audioEventHandlers);
 
   // Persist/resume playback time in a single place
   usePlaybackPersistence(audioRef, state.currentTrack);
@@ -198,75 +195,87 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
    * Sets the current track in the player state.
    * Optionally triggers auto-play if the second parameter is true.
    */
-  const setCurrentTrack = useCallback((track: Track | undefined, autoPlay: boolean = false) => {
-    if (track === state.currentTrack) return;
-    shouldAutoPlayRef.current = autoPlay;
-    dispatch(playerActions.setCurrentTrack(track));
-  }, [state.currentTrack]);
+  const setCurrentTrack = useCallback(
+    (track: Track | undefined, autoPlay: boolean = false) => {
+      if (track === state.currentTrack) return;
+      shouldAutoPlayRef.current = autoPlay;
+      dispatch(playerActions.setCurrentTrack(track));
+    },
+    [state.currentTrack],
+  );
 
   /**
    * Plays a specific track.
    * If the track is already current, it toggles play/pause.
    * Otherwise, it sets the track with auto-play enabled.
    */
-  const playTrack = useCallback((track: Track) => {
-    if (track.id === state.currentTrack?.id) {
-      toggle().catch((error) => {
-        if (error.name !== 'AbortError') {
-          handlePlaybackError(error, dispatch, state.currentTrack?.id);
-        }
-      });
-      return;
-    }
-    setCurrentTrack(track, true);
-  }, [state.currentTrack, toggle, setCurrentTrack, dispatch]);
+  const playTrack = useCallback(
+    (track: Track) => {
+      if (track.id === state.currentTrack?.id) {
+        toggle().catch((error) => {
+          if (error.name !== "AbortError") {
+            handlePlaybackError(error, dispatch, state.currentTrack?.id);
+          }
+        });
+        return;
+      }
+      setCurrentTrack(track, true);
+    },
+    [state.currentTrack, toggle, setCurrentTrack, dispatch],
+  );
 
   /**
    * Updates the track list in the player state.
    */
-  const setTrackList = useCallback((tracks: Track[]) => {
-    dispatch(playerActions.setTrackList(tracks));
-  }, [dispatch]);
+  const setTrackList = useCallback(
+    (tracks: Track[]) => {
+      dispatch(playerActions.setTrackList(tracks));
+    },
+    [dispatch],
+  );
 
   /**
    * Toggles play/pause for the current track.
    */
   const handleTogglePlay = useCallback(() => {
     toggle().catch((error) => {
-      if (error.name !== 'AbortError') {
+      if (error.name !== "AbortError") {
         handlePlaybackError(error, dispatch, state.currentTrack?.id);
       }
     });
   }, [toggle, dispatch, state.currentTrack]);
 
   // Memoize the context value to prevent unnecessary re-renders of consumers.
-  const contextValue: PlayerContextType = useMemo(() => ({
-    ...state,
-    audioRef,
-    dispatch,
-    setCurrentTrack,
-    setTrackList,
-    togglePlay: handleTogglePlay,
-    play,
-    pause,
-    setVolume,
-    seekTo,
-    setTrackEndHandler,
-    playTrack,
-  }), [
-    state,
-    audioRef,
-    dispatch,
-    setCurrentTrack,
-    setTrackList,
-    handleTogglePlay,
-    play,
-    pause,
-    setVolume,
-    seekTo,
-    setTrackEndHandler,
-    playTrack,
-  ]);
+  const contextValue: PlayerContextType = useMemo(
+    () => ({
+      ...state,
+      audioRef,
+      dispatch,
+      setCurrentTrack,
+      setTrackList,
+      togglePlay: handleTogglePlay,
+      play,
+      pause,
+      setVolume,
+      seekTo,
+      setTrackEndHandler,
+      playTrack,
+    }),
+    [
+      state,
+      audioRef,
+      dispatch,
+      setCurrentTrack,
+      setTrackList,
+      handleTogglePlay,
+      play,
+      pause,
+      setVolume,
+      seekTo,
+      setTrackEndHandler,
+      playTrack,
+    ],
+  );
 
   return (
     <PlayerContext.Provider value={contextValue}>
@@ -281,10 +290,10 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 export const usePlayer = (): PlayerContextType => {
   const context = useContext(PlayerContext);
   if (!context) {
-    throw new Error('usePlayer must be used within a PlayerProvider');
+    throw new Error("usePlayer must be used within a PlayerProvider");
   }
   return context;
 };
 
 // Re-export player actions for convenience
-export { playerActions } from '../context/playerActions';
+export { playerActions } from "../context/playerActions";

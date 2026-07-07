@@ -14,15 +14,6 @@ const Watermark: React.FC<WatermarkProps> = ({ size }) => {
   let textSizeClass;
   let bgSizeClass;
 
-  // Color variations (unused but kept for potential future use)
-  const backgroundColors = [
-    "bg-blue-100",
-    "bg-green-100",
-    "bg-yellow-100",
-    "bg-red-100",
-    "bg-purple-100",
-  ];
-
   // Determine background size classes based on size prop
   switch (size) {
     case "xl":

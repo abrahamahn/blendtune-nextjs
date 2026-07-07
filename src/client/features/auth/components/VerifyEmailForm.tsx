@@ -8,13 +8,11 @@ import LoadingIcon from "@/client/shared/components/icons/LoadingIcon";
  * Props interface for the VerifyEmail component
  * @interface VerifyEmailProps
  * @property {string} userEmail - Email address of the user to verify
- * @property {'signup' | 'resetPassword'} mode - Current verification mode (signup or password reset)
  * @property {string} apiEndpoint - API endpoint for email verification and resend
  * @property {string} initialMessage - Initial message to display to the user
  */
 interface VerifyEmailProps {
   userEmail: string;
-  mode: "signup" | "resetPassword";
   apiEndpoint: string;
   initialMessage: string;
 }
@@ -25,20 +23,19 @@ interface VerifyEmailProps {
 const STATUS_MESSAGES = {
   success: `Confirmation email has been re-sent! Please check your inbox.`,
   failure: `Resend has failed. Please try after about a minute and check spam folder.`,
-  default: `Please confirm your email by going to your inbox and click confirmation link.`
+  default: `Please confirm your email by going to your inbox and click confirmation link.`,
 };
 
 /**
  * VerifyEmail component handles email verification process
  * Provides UI for email verification status and resend functionality with cooldown timer
- * 
+ *
  * @component
  * @param {VerifyEmailProps} props - Component props
  * @returns {JSX.Element} Rendered component
  */
 const VerifyEmail: React.FC<VerifyEmailProps> = ({
   userEmail,
-  mode,
   apiEndpoint,
   initialMessage,
 }) => {
@@ -53,7 +50,7 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
    */
   useEffect(() => {
     let interval: number | undefined;
-    
+
     if (cooldown > 0) {
       interval = window.setInterval(() => {
         setCooldown((prevCooldown) => prevCooldown - 1);
@@ -78,9 +75,9 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
       const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          email: userEmail, 
-          cooldown: cooldown 
+        body: JSON.stringify({
+          email: userEmail,
+          cooldown: cooldown,
         }),
       });
 
@@ -106,8 +103,8 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
   };
 
   // Determine current display message based on status
-  const message = resendStatus 
-    ? STATUS_MESSAGES[resendStatus as keyof typeof STATUS_MESSAGES] 
+  const message = resendStatus
+    ? STATUS_MESSAGES[resendStatus as keyof typeof STATUS_MESSAGES]
     : initialMessage || STATUS_MESSAGES.default;
 
   return (

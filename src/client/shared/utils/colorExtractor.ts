@@ -8,7 +8,10 @@
  */
 function euclideanDistance(point1: number[], point2: number[]): number {
   return Math.sqrt(
-    point1.reduce((sum, val, index) => sum + Math.pow(val - point2[index], 2), 0)
+    point1.reduce(
+      (sum, val, index) => sum + Math.pow(val - point2[index], 2),
+      0,
+    ),
   );
 }
 
@@ -29,7 +32,7 @@ function kmeans(points: number[][], k: number, maxIterations = 10) {
   while (moved && iterations < maxIterations) {
     clusters = new Array(k).fill(null).map(() => []);
 
-    points.forEach(point => {
+    points.forEach((point) => {
       let minDistance = Infinity;
       let clusterIndex = 0;
       centroids.forEach((centroid: number[], index: number) => {
@@ -67,31 +70,10 @@ function kmeans(points: number[][], k: number, maxIterations = 10) {
  * @returns Randomly selected initial centroids
  */
 function initializeCentroids(points: number[][], k: number) {
-  return points.slice(0).sort(() => 0.5 - Math.random()).slice(0, k);
-}
-
-/**
- * Creates clusters by assigning points to nearest centroids
- * @param k Number of clusters
- * @param centroids Cluster centroids
- * @param points Input data points
- * @returns Clustered points
- */
-function createClusters(k: number, centroids: number[][], points: number[][]): number[][][] {
-  const clusters: number[][][] = Array.from({ length: k }, () => []);
-  points.forEach(point => {
-    let minDistance = Infinity;
-    let clusterIndex = 0;
-    centroids.forEach((centroid, index) => {
-      const distance = euclideanDistance(point, centroid);
-      if (distance < minDistance) {
-        minDistance = distance;
-        clusterIndex = index;
-      }
-    });
-    clusters[clusterIndex].push(point);
-  });
-  return clusters;
+  return points
+    .slice(0)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, k);
 }
 
 /**
@@ -100,8 +82,11 @@ function createClusters(k: number, centroids: number[][], points: number[][]): n
  * @returns Centroid coordinates
  */
 function calculateCentroid(cluster: number[][]): number[] {
-  const sum = cluster.reduce((acc, val) => acc.map((num, idx) => num + val[idx]), Array(cluster[0].length).fill(0));
-  return sum.map(num => num / cluster.length);
+  const sum = cluster.reduce(
+    (acc, val) => acc.map((num, idx) => num + val[idx]),
+    Array(cluster[0].length).fill(0),
+  );
+  return sum.map((num) => num / cluster.length);
 }
 
 /**
@@ -132,7 +117,8 @@ function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h = 0, s = (max + min) / 2;
+  let h = 0,
+    s = (max + min) / 2;
   const l = (max + min) / 2;
 
   if (max === min) {
@@ -166,36 +152,52 @@ function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
  * @returns Promise resolving to a HSL color string
  */
 export async function colorExtractor(imageUrl: string, k = 5): Promise<string> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const image = new Image();
-    image.crossOrigin = 'anonymous';
+    image.crossOrigin = "anonymous";
     image.src = imageUrl;
 
-    const prefersLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const prefersLightTheme = window.matchMedia(
+      "(prefers-color-scheme: light)",
+    ).matches;
 
-    image.addEventListener('load', () => {
-      const canvas = document.createElement('canvas');
+    image.addEventListener("load", () => {
+      const canvas = document.createElement("canvas");
       canvas.width = 50; // Further reduced for performance
       canvas.height = 50;
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
 
       if (context) {
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        const imageData = context.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        ).data;
         const sampleSize = 500; // Sample size for performance
         const rgbValues = samplePixels(imageData, sampleSize);
 
         const clusters = kmeans(rgbValues, k);
-        const maxCluster = clusters.reduce((max, cluster) => cluster.length > max.length ? cluster : max, []);
+        const maxCluster = clusters.reduce(
+          (max, cluster) => (cluster.length > max.length ? cluster : max),
+          [],
+        );
 
         const averageColor = calculateCentroid(maxCluster);
-        const hslColor = rgbToHsl(averageColor[0], averageColor[1], averageColor[2]);
+        const hslColor = rgbToHsl(
+          averageColor[0],
+          averageColor[1],
+          averageColor[2],
+        );
 
         const brightness = prefersLightTheme ? 80 : 20; // Dynamically adjust based on theme
 
-        resolve(`hsl(${Math.round(hslColor[0])}, ${Math.round(hslColor[1] * 300)}%, ${brightness}%)`);
+        resolve(
+          `hsl(${Math.round(hslColor[0])}, ${Math.round(hslColor[1] * 300)}%, ${brightness}%)`,
+        );
       } else {
-        resolve('Unable to extract color');
+        resolve("Unable to extract color");
       }
     });
   });

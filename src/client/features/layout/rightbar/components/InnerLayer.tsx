@@ -1,12 +1,12 @@
 // src\client\features\layout\rightbar\components\InnerLayer.tsx
 /**
-* @fileoverview InnerLayer component for right sidebar displaying track details and visualizer
-* @module layout/rightbar/InnerLayer
-*/
+ * @fileoverview InnerLayer component for right sidebar displaying track details and visualizer
+ * @module layout/rightbar/InnerLayer
+ */
 
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { usePlayer, playerActions } from "@/client/features/player/services/playerService";
+import { usePlayer } from "@/client/features/player/services/playerService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
 import { Equalizer } from "@player/visualizer/";
@@ -18,16 +18,10 @@ import InnerLayerSkeleton from "./InnerLayerSkeleton";
 import { useProgressControl } from "@player/hooks/useProgressControl";
 
 /**
-* InnerLayer component providing track details and audio visualization
-*/
+ * InnerLayer component providing track details and audio visualization
+ */
 const InnerLayer: React.FC = () => {
-  const { 
-    audioRef, 
-    currentTrack, 
-    currentTime, 
-    trackDuration, 
-    dispatch 
-  } = usePlayer();
+  const { audioRef, currentTrack, currentTime, trackDuration } = usePlayer();
   const { handleProgressClick, progressPercent } = useProgressControl();
 
   // Theme and color state
@@ -36,12 +30,13 @@ const InnerLayer: React.FC = () => {
 
   // Equalizer dimensions
   const equalizerContainerRef = useRef<HTMLDivElement>(null);
-  const [equalizerWidth, setEqualizerWidth] = useState(0);
 
   // Theme and color effect
   useEffect(() => {
     const updateThemePreferenceAndColor = () => {
-      const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
       setThemePreference(prefersDarkMode ? "dark" : "light");
 
       if (currentTrack) {
@@ -51,7 +46,9 @@ const InnerLayer: React.FC = () => {
 
         colorExtractor(imageUrl)
           .then((color) => setDominantColor(color as string))
-          .catch((error) => console.error("Error getting dominant color:", error));
+          .catch((error) =>
+            console.error("Error getting dominant color:", error),
+          );
       }
     };
 
@@ -59,24 +56,9 @@ const InnerLayer: React.FC = () => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     mediaQuery.addEventListener("change", updateThemePreferenceAndColor);
 
-    return () => mediaQuery.removeEventListener("change", updateThemePreferenceAndColor);
+    return () =>
+      mediaQuery.removeEventListener("change", updateThemePreferenceAndColor);
   }, [currentTrack]);
-
-  // Equalizer resize effect
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setEqualizerWidth(entry.contentRect.width);
-      }
-    });
-
-    if (equalizerContainerRef.current) {
-      resizeObserver.observe(equalizerContainerRef.current);
-      setEqualizerWidth(equalizerContainerRef.current.offsetWidth);
-    }
-
-    return () => resizeObserver.disconnect();
-  }, []);
 
   // Audio time update effect
   if (!currentTrack) {
@@ -152,16 +134,12 @@ const InnerLayer: React.FC = () => {
           {/* Audio visualizer */}
           <div className="w-full h-8 mt-3 block rounded-md">
             <div className="w-full h-8" ref={equalizerContainerRef}>
-              <Equalizer
-                audioRef={audioRef}
-                currentTrack={currentTrack}
-              />
+              <Equalizer audioRef={audioRef} currentTrack={currentTrack} />
             </div>
           </div>
 
           {/* Simple Track Progress component */}
-          <SimpleTrackProgress 
-            audioRef={audioRef}
+          <SimpleTrackProgress
             currentTime={currentTime}
             trackDuration={trackDuration}
             onProgressClick={handleProgressClick}
@@ -172,7 +150,7 @@ const InnerLayer: React.FC = () => {
           <div className="w-full mt-4 border-b pb-1">
             <p className="text-neutral-500 dark:text-white">Track Details</p>
           </div>
-          
+
           {/* Track metadata component */}
           <TrackMetadata currentTrack={currentTrack} />
         </div>

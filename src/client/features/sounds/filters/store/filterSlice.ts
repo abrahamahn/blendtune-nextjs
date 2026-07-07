@@ -1,14 +1,14 @@
 // src\client\features\sounds\filters\store\filterSlice.ts
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 /**
  * Type for key filter combinations
  */
 export type KeyFilterCombination = {
   key: string | null;
-  'key.note': string | null;
-  'key.scale': string | null;
+  "key.note": string | null;
+  "key.scale": string | null;
 };
 
 /**
@@ -43,14 +43,14 @@ export interface FilterState {
  * Initial state for all filters.
  */
 const initialState: FilterState = {
-  category: 'All',
+  category: "All",
   genres: [],
   minTempo: 40,
   maxTempo: 200,
   includeHalfTime: false,
   includeDoubleTime: false,
-  selectedKeys: '',
-  selectedScale: 'Major',
+  selectedKeys: "",
+  selectedScale: "Major",
   keyFilterCombinations: [],
   selectedArtists: [],
   selectedInstruments: [],
@@ -62,7 +62,7 @@ const initialState: FilterState = {
  * Redux slice to manage all filter selections.
  */
 const filterSlice = createSlice({
-  name: 'filters',
+  name: "filters",
   initialState,
   reducers: {
     // ===== Category & Genre =====
@@ -78,16 +78,16 @@ const filterSlice = createSlice({
       } else {
         state.genres.splice(index, 1);
       }
-      state.category = state.genres.length === 1 ? state.genres[0] : 'All';
+      state.category = state.genres.length === 1 ? state.genres[0] : "All";
     },
 
     setGenres: (state, action: PayloadAction<string[]>) => {
       state.genres = action.payload;
-      state.category = action.payload.length === 1 ? action.payload[0] : 'All';
+      state.category = action.payload.length === 1 ? action.payload[0] : "All";
     },
 
     removeAllGenres: (state) => {
-      state.category = 'All';
+      state.category = "All";
       state.genres = [];
     },
 
@@ -117,7 +117,10 @@ const filterSlice = createSlice({
       state.selectedScale = action.payload;
     },
 
-    setKeyFilterCombinations: (state, action: PayloadAction<KeyFilterCombination[]>) => {
+    setKeyFilterCombinations: (
+      state,
+      action: PayloadAction<KeyFilterCombination[]>,
+    ) => {
       state.keyFilterCombinations = action.payload;
     },
 
@@ -140,11 +143,15 @@ const filterSlice = createSlice({
     },
 
     selectKeywords: (state, action: PayloadAction<string[]>) => {
-      state.keywords = Array.from(new Set([...state.keywords, ...action.payload]));
+      state.keywords = Array.from(
+        new Set([...state.keywords, ...action.payload]),
+      );
     },
 
     deselectKeyword: (state, action: PayloadAction<string>) => {
-      state.keywords = state.keywords.filter(keyword => keyword !== action.payload);
+      state.keywords = state.keywords.filter(
+        (keyword) => keyword !== action.payload,
+      );
     },
 
     removeAllKeywords: (state) => {
@@ -152,7 +159,7 @@ const filterSlice = createSlice({
     },
 
     // ===== Clear All =====
-    clearAllFilters: (state) => {
+    clearAllFilters: () => {
       return initialState;
     },
   },

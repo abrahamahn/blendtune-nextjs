@@ -24,7 +24,9 @@ const TrackInfoComponent: React.FC = () => {
   if (!currentTrack) {
     return (
       <div className="flex items-center h-full w-full max-w-90 justify-center">
-        <p className="text-neutral-500 dark:text-neutral-400">No track selected</p>
+        <p className="text-neutral-500 dark:text-neutral-400">
+          No track selected
+        </p>
       </div>
     );
   }
@@ -55,7 +57,8 @@ const TrackInfoComponent: React.FC = () => {
               {/* Extra details (mood and related artist) for medium screens and above */}
               <span className="hidden md:inline">
                 {" ["}
-                {currentTrack.info?.mood?.[1]}, {currentTrack.info?.relatedartist?.[0]}
+                {currentTrack.info?.mood?.[1]},{" "}
+                {currentTrack.info?.relatedartist?.[0]}
                 {"]"}
               </span>
             </p>
@@ -82,15 +85,24 @@ const TrackInfoComponent: React.FC = () => {
       <div className="flex flex-row justify-center items-center w-16 lg:w-28 h-full space-x-2">
         {/* Button to add the track */}
         <div className="w-8 h-8 flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-75">
-          <FontAwesomeIcon icon={faPlus} className="text-[#6D6D6D] dark:text-white" />
+          <FontAwesomeIcon
+            icon={faPlus}
+            className="text-[#6D6D6D] dark:text-white"
+          />
         </div>
         {/* Button to mark the track as favorite */}
         <div className="w-8 h-8 flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-75">
-          <FontAwesomeIcon icon={faHeart} className="text-[#6D6D6D] dark:text-white" />
+          <FontAwesomeIcon
+            icon={faHeart}
+            className="text-[#6D6D6D] dark:text-white"
+          />
         </div>
         {/* Button for additional track options */}
         <div className="w-8 h-8 flex items-center justify-center p-2 rounded-full cursor-pointer hover:opacity-75">
-          <FontAwesomeIcon icon={faEllipsisVertical} className="text-[#6D6D6D] dark:text-white" />
+          <FontAwesomeIcon
+            icon={faEllipsisVertical}
+            className="text-[#6D6D6D] dark:text-white"
+          />
         </div>
       </div>
     </div>
@@ -104,13 +116,9 @@ TrackInfoComponent.displayName = "TrackInfo";
  * Memoized version of TrackInfoComponent to prevent unnecessary re-renders.
  * Since there are currently no props, the custom comparison function always returns true.
  */
-export const TrackInfo = React.memo(
-  TrackInfoComponent,
-  (prevProps, nextProps) => {
-    // Custom comparison: currently always returns true because no props are used.
-    return true;
-  }
-);
+export const TrackInfo = React.memo(TrackInfoComponent, () => {
+  // Custom comparison: currently always returns true because no props are used.
+  return true;
+});
 
 export default TrackInfo;
-

@@ -8,7 +8,6 @@ import React from "react";
 import { formatTime } from "@player/utils";
 
 interface SimpleTrackProgressProps {
-  audioRef: React.RefObject<HTMLAudioElement | null>;
   currentTime: number;
   trackDuration: number;
   onProgressClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -20,7 +19,6 @@ interface SimpleTrackProgressProps {
  * Shares functionality with the main player but with simplified UI
  */
 export const SimpleTrackProgress: React.FC<SimpleTrackProgressProps> = ({
-  audioRef,
   currentTime,
   trackDuration,
   onProgressClick,
@@ -38,7 +36,8 @@ export const SimpleTrackProgress: React.FC<SimpleTrackProgressProps> = ({
             className="bg-black/40 dark:bg-white h-1 rounded-md shadow-md w-full transition-width duration-100 ease-in-out cursor-pointer"
             style={{
               width: `${
-                progressPercent ?? (trackDuration ? (currentTime / trackDuration) * 100 : 0)
+                progressPercent ??
+                (trackDuration ? (currentTime / trackDuration) * 100 : 0)
               }%`,
             }}
           />

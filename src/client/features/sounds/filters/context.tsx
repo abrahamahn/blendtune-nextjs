@@ -7,11 +7,11 @@ import React, {
   useMemo,
   useEffect,
   useRef,
-  ReactNode
-} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@core/store';
-import { Track } from '@/shared/types/track';
+  ReactNode,
+} from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@core/store";
+import { Track } from "@/shared/types/track";
 import {
   setMinTempo,
   setMaxTempo,
@@ -25,7 +25,7 @@ import {
   setSelectedInstruments,
   setSelectedMoods,
   clearAllFilters as clearAllFiltersAction,
-} from '@store/slices';
+} from "@store/slices";
 import {
   categoryFilter,
   keyFilter,
@@ -34,12 +34,12 @@ import {
   artistFilter,
   instrumentFilter,
   moodFilter,
-  keywordFilter
-} from '@/client/features/sounds/filters/utils/filterLogic';
-import { sortTracks } from '@/client/features/sounds/filters/utils/sortLogic';
+  keywordFilter,
+} from "@/client/features/sounds/filters/utils/filterLogic";
+import { sortTracks } from "@/client/features/sounds/filters/utils/sortLogic";
 import { useTracks } from "@/client/features/tracks";
 import { useTrackMetadata } from "@tracks/keywords/hooks";
-import type { KeyFilterCombination } from '@store/slices';
+import type { KeyFilterCombination } from "@store/slices";
 
 /**
  * Filter context state interface
@@ -56,33 +56,33 @@ interface FilterContextState {
   maxTempo: number;
   includeHalfTime: boolean;
   includeDoubleTime: boolean;
-  
+
   // Key filter state
   selectedKeys: string;
   selectedScale: string;
   keyFilterCombinations: KeyFilterCombination[];
-  
+
   // Category filter state
   selectedCategory: string;
   selectedGenres: string[];
-  
+
   // Artist filter state
   selectedArtists: string[];
-  
+
   // Instrument filter state
   selectedInstruments: string[];
-  
+
   // Mood filter state
   selectedMoods: string[];
-  
+
   // Keyword filter state
   selectedKeywords: string[];
-  
+
   // UI state
   openFilter: string | null;
   openSortFilter: boolean;
   sortBy: string;
-  
+
   // Filter state setters
   setMinTempo: (value: number) => void;
   setMaxTempo: (value: number) => void;
@@ -90,23 +90,24 @@ interface FilterContextState {
   setIncludeDoubleTime: (value: boolean) => void;
   setSelectedKeys: (value: string) => void;
   setSelectedScale: (value: string) => void;
-  setKeyFilterCombinations: React.Dispatch<React.SetStateAction<KeyFilterCombination[]>>;
+  setKeyFilterCombinations: React.Dispatch<
+    React.SetStateAction<KeyFilterCombination[]>
+  >;
   setSelectedGenres: (genres: string[]) => void;
   setSelectedArtists: (artists: string[]) => void;
   setSelectedInstruments: (instruments: string[]) => void;
   setSelectedMoods: (moods: string[]) => void;
   setSelectedKeywords: (keywords: string[]) => void;
   handleSortChange: (option: string) => void;
-  
+
   // UI state setters
   setOpenFilter: (filterName: string | null) => void;
   setOpenSortFilter: (isOpen: boolean) => void;
   setSortBy: (sortOption: string) => void;
-  
+
   // Combined actions
   clearAllFilters: () => void;
   toggleFilter: (filterName: string) => void;
-  setSelectedCategory: (category: string) => void;
 
   // Filtered and sorted tracks based on applied filters
   filteredTracks: Track[];
@@ -130,14 +131,14 @@ const FilterContext = createContext<FilterContextState | undefined>(undefined);
 export const useFilterContext = (): FilterContextState => {
   const context = useContext(FilterContext);
   if (context === undefined) {
-    throw new Error('useFilterContext must be used within a FilterProvider');
+    throw new Error("useFilterContext must be used within a FilterProvider");
   }
   return context;
 };
 
 /**
  * Provider component for the filter context
- * 
+ *
  * @param {FilterProviderProps} props - The provider props
  * @returns {JSX.Element} The provider component
  */
@@ -165,93 +166,125 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   } = useSelector((state: RootState) => state.tracks.filters);
 
   // Keep latest key combinations without forcing rerenders
-  const keyFilterCombinationsRef = useRef<KeyFilterCombination[]>(keyFilterCombinations);
+  const keyFilterCombinationsRef = useRef<KeyFilterCombination[]>(
+    keyFilterCombinations,
+  );
 
   useEffect(() => {
     keyFilterCombinationsRef.current = keyFilterCombinations;
   }, [keyFilterCombinations]);
 
   // Get track metadata using the dedicated hook from keywords feature
-  const { artistList, moodList, instrumentList, keywordList } = useTrackMetadata(tracks);
+  const { artistList, moodList, instrumentList, keywordList } =
+    useTrackMetadata(tracks);
 
   // UI state (local - not in Redux)
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [openSortFilter, setOpenSortFilter] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<string>('Newest');
+  const [sortBy, setSortBy] = useState<string>("Newest");
 
   // Create wrapper functions for Redux dispatch actions
-  const handleSetMinTempo = useCallback((value: number) => {
-    dispatch(setMinTempo(value));
-  }, [dispatch]);
+  const handleSetMinTempo = useCallback(
+    (value: number) => {
+      dispatch(setMinTempo(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetMaxTempo = useCallback((value: number) => {
-    dispatch(setMaxTempo(value));
-  }, [dispatch]);
+  const handleSetMaxTempo = useCallback(
+    (value: number) => {
+      dispatch(setMaxTempo(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetIncludeHalfTime = useCallback((value: boolean) => {
-    dispatch(setIncludeHalfTime(value));
-  }, [dispatch]);
+  const handleSetIncludeHalfTime = useCallback(
+    (value: boolean) => {
+      dispatch(setIncludeHalfTime(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetIncludeDoubleTime = useCallback((value: boolean) => {
-    dispatch(setIncludeDoubleTime(value));
-  }, [dispatch]);
+  const handleSetIncludeDoubleTime = useCallback(
+    (value: boolean) => {
+      dispatch(setIncludeDoubleTime(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedKeys = useCallback((value: string) => {
-    dispatch(setSelectedKeys(value));
-  }, [dispatch]);
+  const handleSetSelectedKeys = useCallback(
+    (value: string) => {
+      dispatch(setSelectedKeys(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedScale = useCallback((value: string) => {
-    dispatch(setSelectedScale(value));
-  }, [dispatch]);
+  const handleSetSelectedScale = useCallback(
+    (value: string) => {
+      dispatch(setSelectedScale(value));
+    },
+    [dispatch],
+  );
 
-  const handleSetKeyFilterCombinations = useCallback((value: React.SetStateAction<KeyFilterCombination[]>) => {
-    const newValue = typeof value === 'function'
-      ? value(keyFilterCombinationsRef.current)
-      : value;
+  const handleSetKeyFilterCombinations = useCallback(
+    (value: React.SetStateAction<KeyFilterCombination[]>) => {
+      const newValue =
+        typeof value === "function"
+          ? value(keyFilterCombinationsRef.current)
+          : value;
 
-    const currentValue = keyFilterCombinationsRef.current;
-    const hasChanged =
-      newValue.length !== currentValue.length ||
-      newValue.some((combo, index) =>
-        combo.key !== currentValue[index]?.key ||
-        combo['key.note'] !== currentValue[index]?.['key.note'] ||
-        combo['key.scale'] !== currentValue[index]?.['key.scale']
-      );
+      const currentValue = keyFilterCombinationsRef.current;
+      const hasChanged =
+        newValue.length !== currentValue.length ||
+        newValue.some(
+          (combo, index) =>
+            combo.key !== currentValue[index]?.key ||
+            combo["key.note"] !== currentValue[index]?.["key.note"] ||
+            combo["key.scale"] !== currentValue[index]?.["key.scale"],
+        );
 
-    if (!hasChanged) {
-      return;
-    }
+      if (!hasChanged) {
+        return;
+      }
 
-    dispatch(setKeyFilterCombinations(newValue));
-  }, [dispatch]);
+      dispatch(setKeyFilterCombinations(newValue));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedGenres = useCallback((genres: string[]) => {
-    dispatch(setGenres(genres));
-  }, [dispatch]);
+  const handleSetSelectedGenres = useCallback(
+    (genres: string[]) => {
+      dispatch(setGenres(genres));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedArtists = useCallback((artists: string[]) => {
-    dispatch(setSelectedArtists(artists));
-  }, [dispatch]);
+  const handleSetSelectedArtists = useCallback(
+    (artists: string[]) => {
+      dispatch(setSelectedArtists(artists));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedInstruments = useCallback((instruments: string[]) => {
-    dispatch(setSelectedInstruments(instruments));
-  }, [dispatch]);
+  const handleSetSelectedInstruments = useCallback(
+    (instruments: string[]) => {
+      dispatch(setSelectedInstruments(instruments));
+    },
+    [dispatch],
+  );
 
-  const handleSetSelectedMoods = useCallback((moods: string[]) => {
-    dispatch(setSelectedMoods(moods));
-  }, [dispatch]);
-
-  // For category, we'll create a simple setter (though category is derived from genres in Redux)
-  const handleSetSelectedCategory = useCallback((category: string) => {
-    // Category is automatically managed by Redux based on genres
-    // If needed, we can dispatch selectCategory here
-  }, []);
+  const handleSetSelectedMoods = useCallback(
+    (moods: string[]) => {
+      dispatch(setSelectedMoods(moods));
+    },
+    [dispatch],
+  );
 
   /**
    * Toggles a filter's open/closed state.
    */
   const toggleFilter = useCallback((filterName: string) => {
-    setOpenFilter(prev => prev === filterName ? null : filterName);
+    setOpenFilter((prev) => (prev === filterName ? null : filterName));
   }, []);
 
   /**
@@ -275,7 +308,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
   const filteredTracks = useMemo(() => {
     // Filter by category first
     const categoryFiltered = tracks.filter((track) =>
-      categoryFilter(track, selectedCategory)
+      categoryFilter(track, selectedCategory),
     );
     // Apply remaining filters
     const filtered = categoryFiltered.filter((track) => {
@@ -284,7 +317,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
         minTempo,
         maxTempo,
         includeHalfTime,
-        includeDoubleTime
+        includeDoubleTime,
       );
       const keyPass = keyFilter(track, keyFilterCombinations);
       const genrePass = genreFilter(track, selectedGenres);
@@ -316,71 +349,97 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
     selectedInstruments,
     selectedMoods,
     selectedKeywords,
-    sortBy
-  ]);
-
-  const contextValue = useMemo(() => ({
-    // Unique filter options
-    artistList,
-    moodList,
-    instrumentList,
-    keywordList,
-
-    // Filter state values
-    minTempo,
-    maxTempo,
-    includeHalfTime,
-    includeDoubleTime,
-    selectedKeys,
-    selectedScale,
-    keyFilterCombinations,
-    selectedCategory,
-    selectedGenres,
-    selectedArtists,
-    selectedInstruments,
-    selectedMoods,
-    selectedKeywords,
-    openFilter,
-    openSortFilter,
     sortBy,
-
-    // Setters and actions
-    setMinTempo: handleSetMinTempo,
-    setMaxTempo: handleSetMaxTempo,
-    setIncludeHalfTime: handleSetIncludeHalfTime,
-    setIncludeDoubleTime: handleSetIncludeDoubleTime,
-    setSelectedKeys: handleSetSelectedKeys,
-    setSelectedScale: handleSetSelectedScale,
-    setKeyFilterCombinations: handleSetKeyFilterCombinations,
-    setSelectedCategory: handleSetSelectedCategory,
-    setSelectedGenres: handleSetSelectedGenres,
-    setSelectedArtists: handleSetSelectedArtists,
-    setSelectedInstruments: handleSetSelectedInstruments,
-    setSelectedMoods: handleSetSelectedMoods,
-    setSelectedKeywords: () => {}, // Keywords managed elsewhere
-    setOpenFilter,
-    setOpenSortFilter,
-    setSortBy,
-    handleSortChange,
-    clearAllFilters,
-    toggleFilter,
-
-    // Derived filtered tracks
-    filteredTracks,
-  }), [
-    artistList, moodList, instrumentList, keywordList,
-    minTempo, maxTempo, includeHalfTime, includeDoubleTime,
-    selectedKeys, selectedScale, keyFilterCombinations,
-    selectedCategory, selectedGenres, selectedArtists, selectedInstruments, selectedMoods, selectedKeywords,
-    openFilter, openSortFilter, sortBy,
-    handleSetMinTempo, handleSetMaxTempo, handleSetIncludeHalfTime, handleSetIncludeDoubleTime,
-    handleSetSelectedKeys, handleSetSelectedScale, handleSetKeyFilterCombinations,
-    handleSetSelectedCategory, handleSetSelectedGenres, handleSetSelectedArtists,
-    handleSetSelectedInstruments, handleSetSelectedMoods,
-    handleSortChange, clearAllFilters, toggleFilter,
-    filteredTracks
   ]);
-  
+
+  const contextValue = useMemo(
+    () => ({
+      // Unique filter options
+      artistList,
+      moodList,
+      instrumentList,
+      keywordList,
+
+      // Filter state values
+      minTempo,
+      maxTempo,
+      includeHalfTime,
+      includeDoubleTime,
+      selectedKeys,
+      selectedScale,
+      keyFilterCombinations,
+      selectedCategory,
+      selectedGenres,
+      selectedArtists,
+      selectedInstruments,
+      selectedMoods,
+      selectedKeywords,
+      openFilter,
+      openSortFilter,
+      sortBy,
+
+      // Setters and actions
+      setMinTempo: handleSetMinTempo,
+      setMaxTempo: handleSetMaxTempo,
+      setIncludeHalfTime: handleSetIncludeHalfTime,
+      setIncludeDoubleTime: handleSetIncludeDoubleTime,
+      setSelectedKeys: handleSetSelectedKeys,
+      setSelectedScale: handleSetSelectedScale,
+      setKeyFilterCombinations: handleSetKeyFilterCombinations,
+      setSelectedGenres: handleSetSelectedGenres,
+      setSelectedArtists: handleSetSelectedArtists,
+      setSelectedInstruments: handleSetSelectedInstruments,
+      setSelectedMoods: handleSetSelectedMoods,
+      setSelectedKeywords: () => {}, // Keywords managed elsewhere
+      setOpenFilter,
+      setOpenSortFilter,
+      setSortBy,
+      handleSortChange,
+      clearAllFilters,
+      toggleFilter,
+
+      // Derived filtered tracks
+      filteredTracks,
+    }),
+    [
+      artistList,
+      moodList,
+      instrumentList,
+      keywordList,
+      minTempo,
+      maxTempo,
+      includeHalfTime,
+      includeDoubleTime,
+      selectedKeys,
+      selectedScale,
+      keyFilterCombinations,
+      selectedCategory,
+      selectedGenres,
+      selectedArtists,
+      selectedInstruments,
+      selectedMoods,
+      selectedKeywords,
+      openFilter,
+      openSortFilter,
+      sortBy,
+      handleSetMinTempo,
+      handleSetMaxTempo,
+      handleSetIncludeHalfTime,
+      handleSetIncludeDoubleTime,
+      handleSetSelectedKeys,
+      handleSetSelectedScale,
+      handleSetKeyFilterCombinations,
+      handleSetSelectedGenres,
+      handleSetSelectedArtists,
+      handleSetSelectedInstruments,
+      handleSetSelectedMoods,
+      handleSortChange,
+      clearAllFilters,
+      toggleFilter,
+      filteredTracks,
+    ],
+  );
+
   return (
     <FilterContext.Provider value={contextValue}>
       {children}

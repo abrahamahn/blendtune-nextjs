@@ -9,8 +9,6 @@ import SignUp from "@auth/components/SignUpForm";
 import ResetPassword from "@auth/components/ResetPasswordForm";
 import VerifyEmail from "@auth/components/VerifyEmailForm";
 
-type AuthFormType = "signin" | "signup" | "resetpassword" | "confirmsignup" | "confirmresetpw";
-
 /**
  * Props for the authentication modal
  */
@@ -24,7 +22,6 @@ interface AuthModalProps {
  * Props for email verification configuration
  */
 interface EmailApiProps {
-  mode: "signup" | "resetPassword";
   apiEndpoint: string;
   initialMessage: string;
 }
@@ -56,14 +53,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
 
   // Email verification configurations
   const verifyEmailSignupProps: EmailApiProps = {
-    mode: "signup",
     apiEndpoint: "/api/auth/security/confirm-email",
     initialMessage:
       "Please confirm your email by going to your inbox and clicking on the confirmation link.",
   };
 
   const verifyEmailResetPasswordProps: EmailApiProps = {
-    mode: "resetPassword",
     apiEndpoint: "/api/auth/security/reset-password/verify",
     initialMessage: "Please check your email to reset your password.",
   };
@@ -71,12 +66,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   // Map of form types to their respective components
   const modalMap: Record<string, React.ReactElement> = {
     signin: (
-      <SignIn
-        openSignUp={openSignUp}
-        openResetPassword={openResetPassword}
-        openConfirmEmail={openConfirmEmail}
-        closeAuthModal={closeAuthModal}
-      />
+      <SignIn openSignUp={openSignUp} openResetPassword={openResetPassword} />
     ),
     signup: (
       <SignUp

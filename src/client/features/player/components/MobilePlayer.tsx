@@ -11,14 +11,14 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import Artwork from "@components/common/Artwork";
 import { usePlayer } from "@/client/features/player/services/playerService";
 import { usePlayerControls } from "../hooks";
-import { PlayerIcons } from '@/client/shared/components/icons';
+import { PlayerIcons } from "@/client/shared/components/icons";
 import { useProgressControl } from "../hooks/useProgressControl";
 
 /**
  * Compact player version optimized for mobile screens
  */
 export const MobilePlayer: React.FC = () => {
-  const { audioRef, currentTrack, currentTime, trackDuration, isPlaying } = usePlayer();
+  const { currentTrack, isPlaying } = usePlayer();
   const { togglePlayPause, nextTrack } = usePlayerControls();
   const { handleProgressClick, progressPercent } = useProgressControl();
 
@@ -83,9 +83,7 @@ export const MobilePlayer: React.FC = () => {
           </div>
           {/* Control Buttons */}
           <div className="flex flex-row justify-center items-center w-10">
-            <button
-              className="flex w-10 h-10 items-center justify-center user-select-none p-0"
-            >
+            <button className="flex w-10 h-10 items-center justify-center user-select-none p-0">
               <div className="cursor-pointer hover:opacity-75">
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -101,8 +99,8 @@ export const MobilePlayer: React.FC = () => {
               onClick={togglePlayPause}
             >
               <div className="cursor-pointer hover:opacity-90">
-                <PlayerIcons.PlayPause 
-                  isPlaying={isPlaying} 
+                <PlayerIcons.PlayPause
+                  isPlaying={isPlaying}
                   size="lg"
                   className="text-black dark:text-white"
                 />
@@ -115,9 +113,9 @@ export const MobilePlayer: React.FC = () => {
               onClick={nextTrack}
             >
               <div className="cursor-pointer hover:opacity-90">
-                <PlayerIcons.Forward 
-                  size="lg" 
-                  onClick={nextTrack} 
+                <PlayerIcons.Forward
+                  size="lg"
+                  onClick={nextTrack}
                   className="text-black dark:text-white"
                 />
               </div>

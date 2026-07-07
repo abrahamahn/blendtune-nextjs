@@ -1,6 +1,11 @@
 // src/client/features/sounds/visualizer/components/Equalizer.tsx
 "use client";
-import React, { useEffect, useRef, useSyncExternalStore, RefObject } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+  RefObject,
+} from "react";
 import { Track } from "@/shared/types/track";
 import { useAudioAnalyser } from "@player/hooks/useAudioAnalyser";
 
@@ -25,7 +30,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
   const canvasWidth = useSyncExternalStore(
     subscribeNoop,
     getCanvasWidthSnapshot,
-    getServerCanvasWidthSnapshot
+    getServerCanvasWidthSnapshot,
   );
 
   useEffect(() => {
@@ -38,10 +43,10 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  const getBarColor = () => (prefersDarkMode.current ? "#ECECEC" : "#A9A9A9");
-
   useEffect(() => {
     if (!analyser || !canvasRef.current) return;
+
+    const getBarColor = () => (prefersDarkMode.current ? "#ECECEC" : "#A9A9A9");
 
     const setupEqualizer = () => {
       if (analyser && canvasRef.current) {
@@ -57,7 +62,9 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const barWidth = 2;
             const gapWidth = 1;
-            const numBars = Math.floor((canvas.width + gapWidth) / (barWidth + gapWidth));
+            const numBars = Math.floor(
+              (canvas.width + gapWidth) / (barWidth + gapWidth),
+            );
             for (let i = 0; i < numBars && i < fbc_array.length; i++) {
               const barHeight = -(fbc_array[i] / 2);
               const barPosX = i * (barWidth + gapWidth);
@@ -78,7 +85,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioRef, currentTrack }) => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [analyser, currentTrack, getBarColor]);
+  }, [analyser, currentTrack]);
 
   return (
     <canvas

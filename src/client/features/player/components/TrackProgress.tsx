@@ -14,7 +14,8 @@ import { useTrackNavigation } from "@player/hooks";
  * Displays track progress with waveform visualization and time display
  */
 export const TrackProgress: React.FC = () => {
-  const { audioRef, currentTrack, sharedAudioUrl, currentTime, trackDuration, dispatch } = usePlayer();
+  const { currentTrack, sharedAudioUrl, currentTime, trackDuration } =
+    usePlayer();
   const { seekTo } = useTrackNavigation();
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
@@ -26,21 +27,23 @@ export const TrackProgress: React.FC = () => {
         setWaveformWidth(entry.contentRect.width);
       }
     });
-    
+
     if (waveformContainerRef.current) {
       resizeObserver.observe(waveformContainerRef.current);
     }
-    
+
     return () => resizeObserver.disconnect();
   }, []);
 
   return (
     <>
-      <div ref={waveformContainerRef} className="flex-1 min-w-0 overflow-hidden">
+      <div
+        ref={waveformContainerRef}
+        className="flex-1 min-w-0 overflow-hidden"
+      >
         {currentTrack?.file && sharedAudioUrl ? (
           <Waveform
             audioUrl={sharedAudioUrl}
-            audioRef={audioRef}
             amplitude={0.5}
             currentTime={currentTime || 0}
             trackDuration={trackDuration || 0}

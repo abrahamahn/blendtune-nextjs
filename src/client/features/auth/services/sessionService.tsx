@@ -8,33 +8,14 @@
  */
 
 import React, { ReactNode, useCallback, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { useAppDispatch } from "@store/hooks";
 import {
   setAuthenticated,
   setUnauthenticated,
   setOnline,
   setLoading,
 } from "@auth/store/sessionSlice";
-import {
-  setUsername,
-  setUserEmail,
-  setUserFirstName,
-  setUserLastName,
-  setArtistCreatorName,
-  setPhoneNumber,
-  setGender,
-  setDateOfBirth,
-  setCity,
-  setState,
-  setCountry,
-  setUserType,
-  setOccupation,
-  setPreferredLanguage,
-  setMarketingConsent,
-  setProfileCreated,
-  clearUserProfile,
-  setUserProfile,
-} from "@auth/store/userSlice";
+import { clearUserProfile, setUserProfile } from "@auth/store/userSlice";
 
 interface SessionProviderProps {
   children: ReactNode;
@@ -69,31 +50,33 @@ const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
       if (data.authenticated) {
         dispatch(setAuthenticated());
         dispatch(setOnline(true));
-        
+
         // Single dispatch for performance optimization
-        dispatch(setUserProfile({
-          username: data.username,
-          email: data.email,
-          first_name: data.firstName,
-          last_name: data.lastName,
-          artist_creator_name: data.artistCreatorName,
-          phone_number: data.phoneNumber,
-          gender: data.gender,
-          date_of_birth: data.dateOfBirth,
-          city: data.city,
-          state: data.state,
-          country: data.country,
-          user_type: data.userType,
-          occupation: data.occupation,
-          preferred_language: data.preferredLanguage,
-          marketing_consent: data.marketingConsent,
-          profile_created: data.profileCreated,
-        }));
+        dispatch(
+          setUserProfile({
+            username: data.username,
+            email: data.email,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            artist_creator_name: data.artistCreatorName,
+            phone_number: data.phoneNumber,
+            gender: data.gender,
+            date_of_birth: data.dateOfBirth,
+            city: data.city,
+            state: data.state,
+            country: data.country,
+            user_type: data.userType,
+            occupation: data.occupation,
+            preferred_language: data.preferredLanguage,
+            marketing_consent: data.marketingConsent,
+            profile_created: data.profileCreated,
+          }),
+        );
       } else {
         dispatch(setUnauthenticated());
         dispatch(clearUserProfile());
       }
-    } catch (error) {
+    } catch {
       // Reset auth state on any errors to prevent inconsistent states
       dispatch(setUnauthenticated());
       dispatch(clearUserProfile());

@@ -85,7 +85,9 @@
   "pnpm": {
     "overrides": {
       "browserslist": "4.28.4",
-      "caniuse-lite": "1.0.30001800"
+      "caniuse-lite": "1.0.30001800",
+      "@typescript-eslint/types": "8.62.1",
+      "@typescript-eslint/tsconfig-utils": "8.62.1"
     }
   }
 }

@@ -1,0 +1,46 @@
+/* main/apps/web/src/client/features/home/components/hero.css
+ * Home hero — quiet headline + CTA on Char.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-home-hero {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--ui-gap-xl);
+  background: var(--ui-color-bg);
+}
+
+.bt-home-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-gap-lg);
+  max-width: 42rem;
+  text-align: center;
+}
+
+.bt-home-hero-title {
+  margin: 0;
+  color: var(--ui-color-text);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.bt-home-hero-sub {
+  max-width: 34rem;
+  font-size: var(--ui-font-size-md);
+  line-height: 1.55;
+}
+
+.bt-home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-gap-md);
+  margin-top: var(--ui-gap-sm);
+}

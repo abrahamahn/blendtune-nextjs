@@ -3,9 +3,13 @@
 
 import React, { useState } from 'react';
 
+import { Button, Spinner, Text } from '@ui';
+import { FormField } from '@client/components';
 import { parseNewTrack } from '@shared/validation/track';
 import type { CreatedTrack } from '@shared/types/creator';
 import { CreatorApiError, createWorkspaceTrack } from '../core/api';
+
+import './creator.css';
 
 interface AddTrackFormProps {
   slug: string;
@@ -21,9 +25,6 @@ const FIELDS = [
 ] as const;
 
 type FieldName = (typeof FIELDS)[number]['name'];
-
-const inputClass =
-  'w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1.5 text-sm text-black dark:text-white placeholder-neutral-400';
 
 /** Add-track form: validates with the shared parser before submitting to the creator API. */
 export const AddTrackForm: React.FC<AddTrackFormProps> = ({ slug, onCreated }) => {
@@ -63,29 +64,28 @@ export const AddTrackForm: React.FC<AddTrackFormProps> = ({ slug, onCreated }) =
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <form onSubmit={handleSubmit} className="creator-form">
+      <div className="creator-form-grid">
         {FIELDS.map(({ name, label, placeholder }) => (
-          <label key={name} className="flex flex-col gap-1 text-xs text-neutral-600 dark:text-neutral-400">
-            {label}
-            <input
-              value={values[name]}
-              onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
-              placeholder={placeholder}
-              className={inputClass}
-            />
-            {errors[name] && <span className="text-red-500">{errors[name]}</span>}
-          </label>
+          <FormField
+            key={name}
+            label={label}
+            type="text"
+            value={values[name]}
+            onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
+            placeholder={placeholder}
+            error={errors[name] || undefined}
+          />
         ))}
       </div>
-      {errors.form && <p className="text-sm text-red-500">{errors.form}</p>}
-      <button
-        type="submit"
-        disabled={submitting}
-        className="self-start rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-4 py-1.5 text-sm font-medium text-white"
-      >
-        {submitting ? 'Adding…' : 'Add track'}
-      </button>
+      {errors.form && (
+        <Text as="span" size="sm" tone="danger">
+          {errors.form}
+        </Text>
+      )}
+      <Button variant="primary" type="submit" disabled={submitting} className="creator-submit">
+        {submitting ? <Spinner /> : 'Add track'}
+      </Button>
     </form>
   );
 };

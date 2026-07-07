@@ -1,8 +1,11 @@
-// src\client\features\auth\components\VerifyEmailForm.tsx
-"use client";
-import React, { useState, useEffect } from "react";
-import Logo from "@components/common//Logo";
-import LoadingIcon from "@client/shared/components/icons/LoadingIcon";
+// src/client/features/auth/components/VerifyEmailForm.tsx
+'use client';
+import React, { useState, useEffect } from 'react';
+
+import { Button, Spinner, Text } from '@ui';
+import Logo from '@components/common/Logo';
+
+import '../auth.css';
 
 /**
  * Props interface for the VerifyEmail component
@@ -29,20 +32,12 @@ const STATUS_MESSAGES = {
 /**
  * VerifyEmail component handles email verification process
  * Provides UI for email verification status and resend functionality with cooldown timer
- *
- * @component
- * @param {VerifyEmailProps} props - Component props
- * @returns {JSX.Element} Rendered component
  */
-const VerifyEmail: React.FC<VerifyEmailProps> = ({
-  userEmail,
-  apiEndpoint,
-  initialMessage,
-}) => {
+const VerifyEmail: React.FC<VerifyEmailProps> = ({ userEmail, apiEndpoint, initialMessage }) => {
   // State management
   const [isLoading, setIsLoading] = useState(false);
   const [cooldown, setCooldown] = useState(60);
-  const [resendStatus, setResendStatus] = useState("");
+  const [resendStatus, setResendStatus] = useState('');
 
   /**
    * Manages the cooldown timer for email resend functionality
@@ -73,8 +68,8 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
     setIsLoading(true);
     try {
       const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: userEmail,
           cooldown: cooldown,
@@ -84,15 +79,15 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
       const data = await response.json();
 
       if (data.success) {
-        setResendStatus("success");
+        setResendStatus('success');
         setCooldown(60); // Reset cooldown timer on successful resend
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      setResendStatus("failure");
+      setResendStatus('failure');
       // Handle rate limiting errors (HTTP 429)
-      if (error instanceof Error && error.message.includes("429")) {
+      if (error instanceof Error && error.message.includes('429')) {
         setCooldown(60); // Reset cooldown on rate limit
       } else {
         setCooldown(0); // Clear cooldown for other errors
@@ -108,42 +103,23 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({
     : initialMessage || STATUS_MESSAGES.default;
 
   return (
-    <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
-      <div className="w-80 lg:w-96 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-        <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 py-8">
-          {/* Header and Logo */}
-          <div className="flex items-center pt-4 lg:pt-6 justify-center">
-            <Logo />
-          </div>
-          <div className="flex flex-col items-center mt-8">
-            <h1 className="hidden lg:flex text-base font-semibold text-black dark:text-white">
-              Check Your Email
-            </h1>
-          </div>
-
-          {/* Status Message */}
-          <div className="flex flex-col items-center w-full rounded">
-            <p className="text-sm text-neutral-600 dark:text-gray-500 w-full text-center">
-              {message}
-            </p>
-          </div>
-
-          {/* Resend Button */}
-          <button
-            onClick={handleResendEmail}
-            disabled={cooldown > 0 || isLoading}
-            className={`h-10 w-full mt-6 ${
-              cooldown > 0 ? "bg-gray-600" : "bg-blue-600 hover:bg-blue-700"
-            } text-white text-sm p-2 rounded-md cursor-pointer`}
-          >
-            {isLoading ? (
-              <LoadingIcon />
-            ) : (
-              <>Resend Email {cooldown > 0 && `(${cooldown}s)`}</>
-            )}
-          </button>
-        </div>
+    <div className="auth-card">
+      <div className="auth-head">
+        <Logo />
+        <h1 className="auth-title">Check your email</h1>
+        <Text as="p" size="sm" tone="muted" className="auth-sub">
+          {message}
+        </Text>
       </div>
+
+      <Button
+        variant="primary"
+        className="auth-submit"
+        onClick={handleResendEmail}
+        disabled={cooldown > 0 || isLoading}
+      >
+        {isLoading ? <Spinner /> : <>Resend email {cooldown > 0 && `(${cooldown}s)`}</>}
+      </Button>
     </div>
   );
 };

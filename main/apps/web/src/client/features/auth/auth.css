@@ -1,0 +1,147 @@
+/* main/apps/web/src/client/features/auth/auth.css
+ * Shared auth styling — the centered card on Char used by both the modal forms
+ * and the standalone /auth pages. Tokens only (var(--ui-*) / .bt-*); no hex,
+ * no px except 1px borders.
+ */
+
+/* Modal scrim behind the auth card (header-triggered modal). */
+.auth-modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-gap-lg);
+  background: var(--ui-color-shadow);
+}
+
+/* Full-screen wrapper for the standalone auth pages. */
+.auth-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  width: 100%;
+  padding: var(--ui-gap-lg);
+  background: var(--ui-color-bg);
+}
+
+/* The card itself. Modal forms drop it straight in; pages center it. */
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-lg);
+  width: 100%;
+  max-width: 22rem;
+  padding: var(--ui-gap-xl);
+  background: var(--ui-color-surface);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+}
+
+.auth-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+  text-align: center;
+}
+
+.auth-title {
+  font-family: var(--bt-font-display);
+  font-size: var(--ui-font-size-lg);
+  letter-spacing: -0.01em;
+  color: var(--ui-color-text);
+}
+
+.auth-sub {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-sm);
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-md);
+}
+
+/* Side-by-side fields (first / last name). */
+.auth-row {
+  display: flex;
+  gap: var(--ui-gap-md);
+}
+
+.auth-row > * {
+  flex: 1;
+}
+
+.btn.auth-google {
+  width: 100%;
+  gap: var(--ui-gap-sm);
+}
+
+/* "or continue with email" rule. */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-md);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: var(--ui-border-width);
+  background: var(--ui-color-border);
+}
+
+.btn.auth-submit {
+  width: 100%;
+}
+
+.auth-spinner-row {
+  display: flex;
+  justify-content: center;
+}
+
+.auth-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--ui-gap-xs);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.auth-forgot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth-terms {
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+  text-align: center;
+}
+
+.auth-terms a {
+  color: var(--ui-color-primary);
+}
+
+/* Consent toggle row. */
+.auth-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-gap-sm);
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+}
+
+.auth-consent a {
+  color: var(--ui-color-primary);
+}

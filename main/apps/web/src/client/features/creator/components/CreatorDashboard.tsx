@@ -4,11 +4,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from '@router/index';
 
+import {
+  Heading,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Text,
+} from '@ui';
+import { EmptyState, FactsReadout } from '@client/components';
 import type { Track } from '@shared/types/track';
 import type { WorkspaceSummary } from '@shared/types/creator';
 import { CreatorApiError, fetchWorkspaceCatalog, fetchWorkspaces } from '../core/api';
 import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 import { AddTrackForm } from './AddTrackForm';
+
+import './creator.css';
 
 interface CreatorDashboardProps {
   slug: string;
@@ -31,17 +45,13 @@ export const CreatorDashboard: React.FC<CreatorDashboardProps> = ({ slug }) => {
 
   if (error) {
     return (
-      <div className="p-8 text-center text-sm text-neutral-600 dark:text-neutral-400">
+      <div className="creator-state">
         {error.status === 401 ? (
-          <p>
-            Please{' '}
-            <Link to="/auth/signin" className="text-indigo-500 underline">
-              sign in
-            </Link>{' '}
-            to manage your workspace.
-          </p>
+          <Text as="p">
+            Please <Link to="/auth/signin">sign in</Link> to manage your workspace.
+          </Text>
         ) : (
-          <p>{error.message}</p>
+          <Text as="p">{error.message}</Text>
         )}
       </div>
     );
@@ -49,8 +59,8 @@ export const CreatorDashboard: React.FC<CreatorDashboardProps> = ({ slug }) => {
 
   if (!workspaces || !tracks) {
     return (
-      <div className="p-8 text-center text-sm text-neutral-500 animate-pulse">
-        Loading workspace…
+      <div className="creator-state">
+        <Spinner /> Loading workspace…
       </div>
     );
   }
@@ -59,57 +69,56 @@ export const CreatorDashboard: React.FC<CreatorDashboardProps> = ({ slug }) => {
   const canWrite = active !== undefined && active.role !== 'viewer';
 
   return (
-    <div className="flex flex-col gap-6 p-6 max-w-5xl mx-auto">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold text-black dark:text-white">
+    <div className="creator-dash">
+      <header className="creator-header">
+        <Heading as="h1" size="lg">
           {active?.name ?? slug}
-        </h1>
+        </Heading>
         <WorkspaceSwitcher workspaces={workspaces} activeSlug={slug} />
       </header>
 
       {canWrite && (
-        <section className="rounded-xl border border-neutral-200 dark:border-neutral-800 p-4">
-          <h2 className="mb-3 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        <section className="creator-panel">
+          <Heading as="h2" size="sm" className="creator-section-title">
             Add a track
-          </h2>
+          </Heading>
           <AddTrackForm slug={slug} onCreated={loadCatalog} />
         </section>
       )}
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+        <Heading as="h2" size="sm" className="creator-section-title">
           Catalog ({tracks.length})
-        </h2>
+        </Heading>
         {tracks.length === 0 ? (
-          <p className="text-sm text-neutral-500">No tracks yet — add your first one above.</p>
+          <EmptyState title="No tracks yet" hint="Add your first one above." />
         ) : (
-          <table className="w-full text-left text-sm text-neutral-800 dark:text-neutral-200">
-            <thead className="text-xs uppercase text-neutral-500">
-              <tr>
-                <th className="py-2 pr-4">Catalog</th>
-                <th className="py-2 pr-4">Title</th>
-                <th className="py-2 pr-4">BPM</th>
-                <th className="py-2 pr-4">Key</th>
-                <th className="py-2">Release</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Catalog</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Facts</TableHead>
+                <TableHead>Release</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {tracks.map((track) => (
-                <tr
-                  key={track.metadata.catalog}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="py-2 pr-4 font-mono text-xs">{track.metadata.catalog}</td>
-                  <td className="py-2 pr-4">{track.metadata.title}</td>
-                  <td className="py-2 pr-4">{track.info.bpm ?? '—'}</td>
-                  <td className="py-2 pr-4">
-                    {track.info.key.note ? `${track.info.key.note} ${track.info.key.scale}` : '—'}
-                  </td>
-                  <td className="py-2">{track.metadata.release ?? '—'}</td>
-                </tr>
+                <TableRow key={track.metadata.catalog}>
+                  <TableCell className="creator-catalog-code">{track.metadata.catalog}</TableCell>
+                  <TableCell>{track.metadata.title}</TableCell>
+                  <TableCell>
+                    <FactsReadout
+                      note={track.info.key.note}
+                      scale={track.info.key.scale}
+                      bpm={track.info.bpm || undefined}
+                    />
+                  </TableCell>
+                  <TableCell>{track.metadata.release || '—'}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         )}
       </section>
     </div>

@@ -3,6 +3,8 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from '@router/index';
 
+import { Button, Checkbox, Heading, Skeleton, Spinner, Text } from '@ui';
+import { FormField } from '@client/components';
 import Header from '@client/features/layout/header';
 import LeftBar from '@features/layout/leftbar';
 import StoreProvider from '@core/providers/StoreProvider';
@@ -15,31 +17,21 @@ import {
   setMarketingConsent,
 } from '@core/store/slices';
 import { useSession } from '@features/auth/services';
-import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
-import { Skeleton } from '@client/shared/components/common/Skeleton';
+
+import './static.css';
 
 /** Shared static-page layout: header, left sidebar, content area. */
 const StaticLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <StoreProvider>
-    <div className="flex flex-col h-full overflow-y-scroll">
-      {/* HEADER */}
-      <div className="h-14 shrink-0">
+    <div className="static-layout">
+      <div className="static-header">
         <Header />
       </div>
-      {/* MAIN CONTAINER */}
-      <div className="flex-auto overflow-hidden">
-        <div className="flex h-full">
-          {/* LEFT SIDEBAR */}
-          <div className="hidden md:block w-20 flex-none pl-2 p-2 h-full overflow-auto">
-            <LeftBar />
-          </div>
-          {/* MAIN CONTENT AREA */}
-          <div className="p-0 m-0 flex-auto relative overflow-hidden">
-            <div className="absolute top-0 sm:top-2 lg:top-2 left-0 right-0 md:right-2 lg:right-1 bottom-0 md:bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
-              {children}
-            </div>
-          </div>
+      <div className="static-main">
+        <div className="static-rail">
+          <LeftBar />
         </div>
+        <div className="static-content">{children}</div>
       </div>
     </div>
   </StoreProvider>
@@ -47,53 +39,22 @@ const StaticLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 /** Skeleton shown while the welcome page's session data is loading. */
 const WelcomeSkeleton: React.FC = () => (
-  <div className="w-full h-full bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
-    <div className="w-96 rounded-lg bg-gray-500 dark:bg-gray-900 flex justify-center items-center">
-      <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 lg:py-4 w-full">
-        {/* Welcome header */}
-        <div className="flex flex-col items-center p-4">
-          <Skeleton variant="text" className="h-6 w-48 mb-4" />
-          <Skeleton variant="text" className="h-3 w-64" />
+  <div className="welcome-screen">
+    <div className="welcome-card">
+      <div className="welcome-head">
+        <Skeleton width="12rem" height="1.5rem" />
+        <Skeleton width="16rem" height="0.75rem" />
+      </div>
+      <div className="welcome-form">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} height="3rem" />
+        ))}
+        <div className="welcome-dob">
+          <Skeleton height="3rem" />
+          <Skeleton height="3rem" />
+          <Skeleton height="3rem" />
         </div>
-
-        {/* Form Skeleton */}
-        <div className="flex flex-col items-center w-full">
-          {/* Input fields */}
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex flex-col w-full mt-3">
-              <Skeleton variant="rectangular" className="h-12 w-full rounded-md" />
-            </div>
-          ))}
-
-          {/* Date of Birth Selection */}
-          <div className="flex flex-row w-full justify-center items-center mt-3 relative">
-            <div className="flex flex-row w-full">
-              <div className="relative w-1/4 mr-3">
-                <Skeleton variant="rectangular" className="h-12 w-full rounded-md" />
-              </div>
-              <div className="relative w-1/4 mr-3">
-                <Skeleton variant="rectangular" className="h-12 w-full rounded-md" />
-              </div>
-              <div className="relative w-1/2">
-                <Skeleton variant="rectangular" className="h-12 w-full rounded-md" />
-              </div>
-            </div>
-          </div>
-
-          {/* Toggle Switch */}
-          <div className="flex items-center w-full mt-3">
-            <Skeleton variant="rectangular" className="w-10 h-4 rounded-full mr-2" />
-            <Skeleton variant="text" className="w-40 h-3" />
-          </div>
-
-          {/* Footer Text */}
-          <div className="flex flex-row w-full justify-center items-center mt-3">
-            <Skeleton variant="text" className="w-full h-8" />
-          </div>
-
-          {/* Submit Button */}
-          <Skeleton variant="rectangular" className="mt-4 h-10 w-full rounded-md" />
-        </div>
+        <Skeleton height="2.5rem" />
       </div>
     </div>
   </div>
@@ -156,13 +117,6 @@ const Welcome: React.FC = () => {
       ...prevState,
       [part]: parseInt(value, 10),
     }));
-  };
-
-  /**
-   * Toggles marketing email consent.
-   */
-  const toggleMarketingButton = () => {
-    dispatch(setMarketingConsent(!userMarketingConsent));
   };
 
   /**
@@ -237,199 +191,141 @@ const Welcome: React.FC = () => {
         ];
 
   return (
-    <div className="w-full h-full bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
-      <div className="w-96 rounded-lg bg-gray-500 dark:bg-gray-900 flex justify-center items-center">
-        <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 lg:py-4">
-          {/* Welcome header */}
-          <div className="flex flex-col items-center p-4">
-            <h1 className="text-xl font-semibold text-black dark:text-white">
-              Welcome to Blendtune!
-            </h1>
-            <p className="mt-4 text-xs text-neutral-200 dark:text-neutral-400">
-              Please fill out the following information below to get started.
-            </p>
-          </div>
+    <div className="welcome-screen">
+      <div className="welcome-card">
+        <div className="welcome-head">
+          <Heading as="h1" size="lg">
+            Welcome to Blendtune
+          </Heading>
+          <Text as="p" size="sm" tone="muted">
+            Tell us a little about yourself to get started.
+          </Text>
+        </div>
 
-          {/* Signup form */}
-          <form className="flex flex-col items-center w-full" onSubmit={handleProfileUpdate}>
-            {/* Artist, Creator, or Organization Name */}
-            <div className="flex flex-row w-full justify-center items-center relative">
-              <input
-                type="text"
-                value={userArtistCreatorName || ''}
-                onChange={(e) => dispatch(setArtistCreatorName(e.target.value))}
-                placeholder=" "
-                required
-                className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
-              />
-              <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                Artist, Creator, or Organization Name
-              </label>
-            </div>
+        <form className="welcome-form" onSubmit={handleProfileUpdate}>
+          <FormField
+            label="Artist, creator, or organization name"
+            type="text"
+            value={userArtistCreatorName || ''}
+            onChange={(e) => dispatch(setArtistCreatorName(e.target.value))}
+            placeholder="Your name"
+            required
+          />
 
-            {/* User Type Selection */}
-            <div className="flex flex-row w-full justify-center items-center mt-3 relative">
+          <label className="welcome-field">
+            <span className="welcome-label">Using it for…</span>
+            <select
+              value={userType || ''}
+              onChange={(e) => dispatch(setUserType(e.target.value))}
+              className="welcome-select"
+              required
+            >
+              <option value="">Select</option>
+              <option value="musician">Music Release</option>
+              <option value="video creator">Content</option>
+            </select>
+          </label>
+
+          <label className="welcome-field">
+            <span className="welcome-label">I am a…</span>
+            <select
+              value={userOccupation || ''}
+              onChange={(e) => dispatch(setOccupation(e.target.value))}
+              className="welcome-select"
+              required
+            >
+              <option value="">Select</option>
+              {occupationTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="welcome-field">
+            <span className="welcome-label">Gender</span>
+            <select
+              onChange={(e) => dispatch(setGender(e.target.value))}
+              value={userGender || ''}
+              className="welcome-select"
+              required
+            >
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </label>
+
+          <div className="welcome-field">
+            <span className="welcome-label">Date of birth</span>
+            <div className="welcome-dob">
               <select
-                value={userType || ''}
-                onChange={(e) => dispatch(setUserType(e.target.value))}
-                className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
+                value={dobState.month}
+                onChange={(e) => handleDobChange('month', e.target.value)}
+                className="welcome-select welcome-dob-month"
+                aria-label="Month"
                 required
               >
-                <option value="">Select</option>
-                <option value="musician">Music Release</option>
-                <option value="video creator">Content</option>
-              </select>
-              <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                Using it for...
-              </label>
-            </div>
-
-            {/* User Occupation Selection */}
-            <div className="flex flex-row w-full justify-center items-center mt-3 relative">
-              <select
-                value={userOccupation || ''}
-                onChange={(e) => dispatch(setOccupation(e.target.value))}
-                className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
-                required
-              >
-                <option value="">Select</option>
-                {occupationTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
+                <option value="">MM</option>
+                {[...Array(12).keys()].map((month) => (
+                  <option key={month} value={month + 1}>
+                    {month + 1}
                   </option>
                 ))}
               </select>
-              <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                I am a...
-              </label>
-            </div>
-
-            {/* Gender Selection */}
-            <div className="flex flex-row w-full justify-center items-center mt-3 relative">
               <select
-                onChange={(e) => dispatch(setGender(e.target.value))}
-                value={userGender || ''}
-                className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 pr-10 rounded-md w-full appearance-none"
+                value={dobState.day}
+                onChange={(e) => handleDobChange('day', e.target.value)}
+                className="welcome-select welcome-dob-day"
+                aria-label="Day"
                 required
               >
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="">DD</option>
+                {[...Array(31).keys()].map((day) => (
+                  <option key={day} value={day + 1}>
+                    {day + 1}
+                  </option>
+                ))}
               </select>
-              <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                Gender
-              </label>
-            </div>
-
-            {/* Date of Birth Selection */}
-            <div className="flex flex-row w-full justify-center items-center mt-3 relative">
-              <div className="flex flex-row w-full">
-                {/* Month Selection */}
-                <div className="relative w-1/4 mr-3">
-                  <select
-                    value={dobState.month}
-                    onChange={(e) => handleDobChange('month', e.target.value)}
-                    className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
-                    required
-                  >
-                    <option value="">MM</option>
-                    {[...Array(12).keys()].map((month) => (
-                      <option key={month} value={month + 1}>
-                        {month + 1}
-                      </option>
-                    ))}
-                  </select>
-                  <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                    Month
-                  </label>
-                </div>
-
-                {/* Day Selection */}
-                <div className="relative w-1/4 mr-3">
-                  <select
-                    value={dobState.day}
-                    onChange={(e) => handleDobChange('day', e.target.value)}
-                    className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
-                    required
-                  >
-                    <option value="">DD</option>
-                    {[...Array(31).keys()].map((day) => (
-                      <option key={day} value={day + 1}>
-                        {day + 1}
-                      </option>
-                    ))}
-                  </select>
-                  <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                    Day
-                  </label>
-                </div>
-
-                {/* Year Selection */}
-                <div className="relative w-1/2">
-                  <select
-                    value={dobState.year}
-                    onChange={(e) => handleDobChange('year', e.target.value)}
-                    className="h-12 bg-transparent text-neutral-600 dark:text-neutral-300 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md w-full appearance-none"
-                    required
-                  >
-                    <option value="">YYYY</option>
-                    {[...Array(2024 - 1960 + 1).keys()].map((year) => (
-                      <option key={year} value={year + 1960}>
-                        {year + 1960}
-                      </option>
-                    ))}
-                  </select>
-                  <label className="absolute left-3 top-0.5 text-xs text-neutral-600 dark:text-neutral-500">
-                    Year
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Marketing Consent Toggle */}
-            <div className="flex items-center w-full mt-3">
-              <div
-                onClick={toggleMarketingButton}
-                className={`${
-                  userMarketingConsent ? 'bg-blue-600' : 'bg-white border border-gray-400'
-                } w-10 h-4 rounded-full p-1 flex items-center cursor-pointer mr-2 transition-colors duration-300`}
+              <select
+                value={dobState.year}
+                onChange={(e) => handleDobChange('year', e.target.value)}
+                className="welcome-select welcome-dob-year"
+                aria-label="Year"
+                required
               >
-                <div
-                  className={`${
-                    userMarketingConsent ? 'bg-white' : 'bg-gray-500'
-                  } w-4 h-2.5 rounded-full transition-all duration-300 transform ${
-                    userMarketingConsent ? 'translate-x-4' : 'translate-x-0'
-                  }`}
-                ></div>
-              </div>
-              <div>
-                <p className="text-neutral-500 dark:text-white text-xs">
-                  I agree to receive new music or promo via email.
-                </p>
-              </div>
+                <option value="">YYYY</option>
+                {[...Array(2024 - 1960 + 1).keys()].map((year) => (
+                  <option key={year} value={year + 1960}>
+                    {year + 1960}
+                  </option>
+                ))}
+              </select>
             </div>
+          </div>
 
-            {/* Error Message or Additional Info */}
-            <div className="flex flex-row w-full justify-center items-center mt-3 relative">
-              {errorMessage ? (
-                <p className="mt-0 text-xs text-red-500">{errorMessage}</p>
-              ) : (
-                <p className="mt-0 text-xs text-neutral-200 dark:text-neutral-400">
-                  This information will be used to generate your personal profile page on our app
-                  and for analytics purposes.
-                </p>
-              )}
-            </div>
+          <Checkbox
+            checked={userMarketingConsent ?? false}
+            onChange={(checked) => dispatch(setMarketingConsent(checked))}
+            className="welcome-consent"
+            label="I agree to receive new music or promos via email."
+          />
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="mt-4 h-10 w-full bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-700"
-            >
-              {isLoading ? <LoadingIcon /> : 'Complete Signup'}
-            </button>
-          </form>
-        </div>
+          {errorMessage ? (
+            <Text as="span" size="sm" tone="danger">
+              {errorMessage}
+            </Text>
+          ) : (
+            <Text as="span" size="sm" tone="muted">
+              This helps generate your profile page and improve recommendations.
+            </Text>
+          )}
+
+          <Button variant="primary" type="submit" className="welcome-submit" disabled={isLoading}>
+            {isLoading ? <Spinner /> : 'Complete signup'}
+          </Button>
+        </form>
       </div>
     </div>
   );
@@ -455,11 +351,8 @@ const Terms: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-full overflow-scroll z-auto bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
-      <div className="w-4/5 h-full pt-20 text-black dark:text-white">
-        {/* Render fetched terms content */}
-        <div className="w-full" dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
-      </div>
+    <div className="static-prose">
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
     </div>
   );
 };
@@ -486,10 +379,8 @@ const PrivacyPolicy: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-full overflow-scroll z-auto bg-opacity-80 bg-neutral-200 dark:bg-gray-900 rounded-xl flex justify-center items-center">
-      <div className="w-4/5 h-full pt-20 text-black dark:text-white">
-        <div className="w-full" dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
-      </div>
+    <div className="static-prose">
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
     </div>
   );
 };

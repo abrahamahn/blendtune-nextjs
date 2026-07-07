@@ -6,25 +6,24 @@ import { useNavigate } from '@router/index';
 
 import type { WorkspaceSummary } from '@shared/types/creator';
 
+import './creator.css';
+
 interface WorkspaceSwitcherProps {
   workspaces: WorkspaceSummary[];
   activeSlug: string;
 }
 
 /** Dropdown to jump between the user's creator workspaces (/c/:slug). */
-export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({
-  workspaces,
-  activeSlug,
-}) => {
+export const WorkspaceSwitcher: React.FC<WorkspaceSwitcherProps> = ({ workspaces, activeSlug }) => {
   const navigate = useNavigate();
 
   return (
-    <label className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+    <label className="creator-switcher">
       Workspace
       <select
         value={activeSlug}
         onChange={(e) => navigate(`/c/${e.target.value}`)}
-        className="rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm text-black dark:text-white"
+        className="creator-select"
       >
         {workspaces.map((w) => (
           <option key={w.id} value={w.slug}>

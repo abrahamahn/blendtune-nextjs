@@ -15,3 +15,10 @@
   min-height: 0;
   overflow-y: auto;
 }
+
+.bt-home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}

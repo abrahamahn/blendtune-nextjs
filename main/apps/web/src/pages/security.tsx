@@ -1,14 +1,16 @@
 // main/apps/web/src/pages/security.tsx
 import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { useDispatch } from 'react-redux';
-import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { useNavigate } from '@router/index';
 
+import { Button, Spinner, Text } from '@ui';
+import { FormField } from '@client/components';
 import { setAuthenticated, setUnauthenticated } from '@core/store/slices';
 import { useSession } from '@features/auth/services';
 import Logo from '@components/common/Logo';
-import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
 import SearchParamsWrapper from '@features/sounds/search/services/SearchParamsWrapper';
+
+import '@features/auth/auth.css';
 
 // localStorage never notifies within this page's lifetime; read-once external store.
 const subscribeNever = () => () => {};
@@ -84,36 +86,24 @@ export const VerifyEmailPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
-      <div className="w-80 lg:w-96 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-        <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 py-8">
-          {/* Logo */}
-          <div className="flex items-center pt-4 lg:pt-6 justify-center">
-            <Logo />
-          </div>
-          {/* Title */}
-          <div className="flex flex-col items-center mt-8">
-            <h1 className="hidden lg:flex text-base font-semibold text-black dark:text-white">
-              Check Your Email
-            </h1>
-          </div>
-          {/* Instruction message */}
-          <div className="flex flex-col items-center w-full rounded">
-            <p className="text-sm text-neutral-600 dark:text-gray-500 w-full text-center">
-              {message}
-            </p>
-          </div>
-          {/* Resend button with cooldown handling */}
-          <button
-            onClick={handleResendEmail}
-            disabled={cooldown > 0 || isLoading}
-            className={`h-10 w-full mt-6 ${
-              cooldown > 0 ? 'bg-gray-600' : 'bg-blue-600 hover:bg-blue-700'
-            } text-white text-sm p-2 rounded-md cursor-pointer`}
-          >
-            {isLoading ? <LoadingIcon /> : <>Resend Email {cooldown > 0 && `(${cooldown}s)`}</>}
-          </button>
+    <div className="auth-screen">
+      <div className="auth-card">
+        <div className="auth-head">
+          <Logo />
+          <h1 className="auth-title">Check your email</h1>
+          <Text as="p" size="sm" tone="muted" className="auth-sub">
+            {message}
+          </Text>
         </div>
+
+        <Button
+          variant="primary"
+          className="auth-submit"
+          onClick={handleResendEmail}
+          disabled={cooldown > 0 || isLoading}
+        >
+          {isLoading ? <Spinner /> : <>Resend email {cooldown > 0 && `(${cooldown}s)`}</>}
+        </Button>
       </div>
     </div>
   );
@@ -128,7 +118,6 @@ export const VerifyEmailPage: React.FC = () => {
 export const NewPasswordPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -155,9 +144,6 @@ export const NewPasswordPage: React.FC = () => {
         });
     }
   }, [token]);
-
-  // Toggle visibility for password fields.
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   // Handle the new password form submission.
   const handleNewPassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -196,72 +182,45 @@ export const NewPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
+    <div className="auth-screen">
       <SearchParamsWrapper onParamsReady={setToken} />
-      <div className="w-80 lg:w-96 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-        <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 py-8">
-          {/* Logo */}
-          <div className="flex items-center pt-4 lg:pt-6 justify-center">
-            <Logo />
-          </div>
-          {/* Page title */}
-          <div className="flex flex-col items-center mt-8">
-            <h1 className="hidden lg:flex text-base font-semibold text-black dark:text-white">
-              Create Your New Password
-            </h1>
-          </div>
-          <form onSubmit={handleNewPassword}>
-            <div className="relative w-full">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-400 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md"
-                autoComplete="new-password"
-              />
-              <div
-                className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-neutral-600 dark:text-gray-500"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-              </div>
-            </div>
-            <div className="relative w-full">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                className={`mt-4 w-full bg-transparent text-neutral-600 dark:text-gray-500 text-sm border-neutral-600 dark:border-gray-500 p-3 rounded-md ${
-                  !passwordMatch ? 'border-red-500' : ''
-                }`}
-                autoComplete="new-password"
-              />
-              <div
-                className="absolute top-10 right-2 transform -translate-y-1/2 cursor-pointer text-neutral-600 dark:text-gray-500"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-              </div>
-            </div>
-            {errorMessage ? (
-              <p className="text-left text-red-500 text-xs mt-2">{errorMessage}</p>
-            ) : (
-              <p className="text-left text-neutral-500 dark:text-gray-500 text-2xs mt-3">
-                Must be 8+ characters, with 1+ number and special character.
-              </p>
-            )}
-            <div>
-              <button
-                type="submit"
-                className="w-full mt-6 h-10 bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-700"
-              >
-                {isLoading ? <LoadingIcon /> : 'Continue'}
-              </button>
-            </div>
-          </form>
+      <div className="auth-card">
+        <div className="auth-head">
+          <Logo />
+          <h1 className="auth-title">Create a new password</h1>
         </div>
+
+        <form className="auth-form" onSubmit={handleNewPassword}>
+          <FormField
+            label="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            placeholder="8+ chars, 1 number, 1 symbol"
+            autoComplete="new-password"
+          />
+          <FormField
+            label="Confirm password"
+            type="password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            placeholder="Re-enter your password"
+            error={!passwordMatch ? 'Passwords do not match.' : undefined}
+            autoComplete="new-password"
+          />
+          {errorMessage ? (
+            <Text as="span" size="sm" tone="danger">
+              {errorMessage}
+            </Text>
+          ) : (
+            <Text as="span" size="sm" tone="muted">
+              Must be 8+ characters, with 1+ number and special character.
+            </Text>
+          )}
+          <Button variant="primary" type="submit" className="auth-submit" disabled={isLoading}>
+            {isLoading ? <Spinner /> : 'Save password'}
+          </Button>
+        </form>
       </div>
     </div>
   );
@@ -286,19 +245,16 @@ export const ResetConfirmedPage: React.FC = () => {
   }, [userAuthenticated, navigate]);
 
   return (
-    <div className="w-full h-full bg-opacity-80 bg-gray-500 dark:bg-gray-900">
-      <div className="w-80 lg:w-96 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 py-8">
-        <div className="rounded-lg bg-neutral-100 dark:bg-gray-900 px-6 py-8">
-          {/* Logo */}
-          <div className="flex items-center pt-4 lg:pt-6 justify-center">
-            <Logo />
-          </div>
-          <p className="text-left text-neutral-600 dark:text-gray-200 text-xs mt-3">
-            Your password has been successfully changed! Now logging in...
-          </p>
-          <div className="flex justify-center items-center w-full mt-6 h-10 bg-blue-600 text-white text-sm p-2 rounded-md cursor-pointer hover:bg-blue-500 dark:hover:bg-blue-700">
-            <LoadingIcon />
-          </div>
+    <div className="auth-screen">
+      <div className="auth-card">
+        <div className="auth-head">
+          <Logo />
+        </div>
+        <Text as="p" size="sm" tone="muted" className="auth-sub">
+          Your password has been changed. Signing you in…
+        </Text>
+        <div className="auth-spinner-row">
+          <Spinner />
         </div>
       </div>
     </div>
@@ -342,13 +298,11 @@ export const ConfirmEmailPage: React.FC = () => {
   }, [token, dispatch, navigate]);
 
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center">
+    <div className="auth-screen">
       <SearchParamsWrapper onParamsReady={setToken} />
-      {loading ? (
-        <p className="text-black dark:text-white">Confirming your email...</p>
-      ) : (
-        <p className="text-black dark:text-white">Redirecting...</p>
-      )}
+      <Text as="p" tone="muted">
+        {loading ? 'Confirming your email…' : 'Redirecting…'}
+      </Text>
     </div>
   );
 };

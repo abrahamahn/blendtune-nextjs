@@ -1,0 +1,93 @@
+/* main/apps/web/src/client/features/creator/components/creator.css
+ * Creator workspace dashboard: header, add-track form, catalog table.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.creator-dash {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-xl);
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: var(--ui-gap-xl);
+}
+
+.creator-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-gap-md);
+}
+
+.creator-panel {
+  padding: var(--ui-gap-lg);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface);
+}
+
+.creator-section-title {
+  margin-bottom: var(--ui-gap-md);
+}
+
+.creator-state {
+  padding: var(--ui-gap-3xl) var(--ui-gap-lg);
+  text-align: center;
+  color: var(--ui-color-text-muted);
+}
+
+.creator-state a {
+  color: var(--ui-color-primary);
+}
+
+/* Workspace switcher */
+.creator-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.creator-select {
+  font-family: var(--ui-font-family);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text);
+  background: var(--ui-color-surface);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  padding: var(--ui-gap-xs) var(--ui-gap-sm);
+}
+
+.creator-select:focus-visible {
+  outline: var(--ui-focus);
+}
+
+/* Add-track form */
+.creator-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-md);
+}
+
+.creator-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-gap-md);
+}
+
+@media (min-width: 48rem) {
+  .creator-form-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.btn.creator-submit {
+  align-self: flex-start;
+}
+
+.creator-catalog-code {
+  font-family: var(--ui-font-family-mono);
+  font-size: var(--ui-font-size-xs);
+}

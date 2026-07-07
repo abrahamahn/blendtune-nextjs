@@ -9,6 +9,8 @@ import SignUp from "@features/auth/components/SignUpForm";
 import ResetPassword from "@features/auth/components/ResetPasswordForm";
 import VerifyEmail from "@features/auth/components/VerifyEmailForm";
 
+import "./auth.css";
+
 /**
  * Props for the authentication modal
  */
@@ -101,22 +103,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
   );
 
   return (
-    <div
-      onClick={closeAuthModal}
-      className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-opacity-60 bg-black z-40"
-    >
-      <div
-        onClick={handleModalContentClick}
-        className={`${
-          form === "signin" ||
-          form === "resetpassword" ||
-          form === "verifyemail"
-            ? "bg-gray-900"
-            : "bg-gray-900"
-        } w-80 p-4 rounded-lg border border-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50`}
-      >
-        {modalContent}
-      </div>
+    <div onClick={closeAuthModal} className="auth-modal-scrim">
+      <div onClick={handleModalContentClick}>{modalContent}</div>
     </div>
   );
 };

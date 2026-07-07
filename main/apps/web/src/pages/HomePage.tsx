@@ -5,7 +5,7 @@ import { Hero } from '@features/home';
 
 /** / — the marketing home page. */
 export const HomePage: React.FC = () => (
-  <div className="main-height flex flex-col h-screen overflow-hidden rounded-xl">
+  <div className="bt-home">
     <Hero />
   </div>
 );

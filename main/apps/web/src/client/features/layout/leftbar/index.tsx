@@ -1,150 +1,48 @@
-// src\client\features\layout\leftbar\index.tsx
+// main/apps/web/src/client/features/layout/leftbar/index.tsx
 /**
-* @fileoverview Left sidebar navigation component for main app layout
-* @module layout/LeftBar
-*/
+ * Left nav rail — navigation only, per the design direction
+ * (Sounds, Pricing, Support, Submit). Genres live in the catalog tabs.
+ */
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMusic, faFile, faCircleInfo, faUpload } from '@fortawesome/free-solid-svg-icons';
 
-"use client";
-import React from "react";
-import { Link, useNavigate } from "@router/index";
-import { useDispatch } from "react-redux";
-import { selectCategory, removeAllGenres } from "@client/features/sounds/filters/store/filterSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
- import {
- faHome,
- faMusic,
- faStar,
- faGem,
- faWater,
- faLeaf,
- faPaw,
- faBoltLightning,
- faFile,
- faCircleInfo,
- faUpload,
-} from "@fortawesome/free-solid-svg-icons";
-import { useTracks } from "@client/features/tracks";
-import LeftBarSkeleton from "./components/LeftBarSkeleton";
+import { Link, useNavigate } from '@router/index';
+import { removeAllGenres } from '@client/features/sounds/filters/store/filterSlice';
 
-/**
-* Navigation item configuration type
-*/
-interface NavItem {
- icon: typeof faHome;
- text: string;
-}
+import './leftbar.css';
 
-/**
-* Left sidebar navigation component
-* Provides navigation controls and genre filters
-*/
+const PAGE_ITEMS = [
+  { icon: faFile, text: 'Pricing', to: '/pricing' },
+  { icon: faCircleInfo, text: 'Support', to: '/support' },
+  { icon: faUpload, text: 'Submit', to: '/submit' },
+];
+
 const LeftBar: React.FC = () => {
- const navigate = useNavigate();
- const dispatch = useDispatch();
- const { isLoading } = useTracks();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
- // Genre navigation items configuration
- const genreItems: NavItem[] = [
-   { icon: faStar, text: "Pop" },
-   { icon: faGem, text: "Hiphop" },
-   { icon: faWater, text: "R&B" },
-   { icon: faLeaf, text: "Latin" },
-   { icon: faPaw, text: "Afrobeat" },
-   { icon: faBoltLightning, text: "Electronic" },
- ];
+  /** Clears genre filters and navigates to the catalog. */
+  const handleSoundsClick = () => {
+    dispatch(removeAllGenres());
+    navigate('/sounds');
+  };
 
- // Page navigation items configuration
- const pageItems: NavItem[] = [
-   { icon: faFile, text: "Pricing" },
-   { icon: faCircleInfo, text: "Support" },
-   { icon: faUpload, text: "Submit" },
- ];
-
- if (isLoading) {
-   return <LeftBarSkeleton />;
- }
- /**
-  * Handles click on sounds navigation
-  * Clears genre filters and navigates to sounds page
-  */
- const handleSoundsClick = () => {
-   dispatch(removeAllGenres());
-   navigate("/sounds");
- };
-
- /**
-  * Handles genre selection
-  * Updates genre filter and navigates to sounds page
-  * @param genre - Selected genre name
-  */
- const handleGenreItemClick = (genre: string) => {
-   if (genre === "All") {
-     dispatch(removeAllGenres());
-   } else {
-     dispatch(selectCategory(genre));
-   }
-   navigate("/sounds");
- };
-
- return (
-   <header>
-     {/* Home navigation */}
-     <div className="bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
-       <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
-         <Link
-           to="./"
-           className="flex flex-col justify-center items-center p-3"
-         >
-           <FontAwesomeIcon icon={faHome} size="lg" />
-           <p className="mt-2 text-2xs">Home</p>
-         </Link>
-       </div>
-     </div>
-
-     {/* Genre navigation */}
-     <div className="mt-2 bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
-       <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
-         <div className="flex flex-col justify-center items-center pt-1 text-neutral-600 dark:text-neutral-300">
-           <button
-             onClick={handleSoundsClick}
-             className="flex flex-col justify-center items-center p-3"
-           >
-             <FontAwesomeIcon icon={faMusic} size="lg" />
-             <p className="mt-2 text-2xs">Sounds</p>
-           </button>
-           {genreItems.map((genre) => (
-             <button
-               key={genre.text}
-               onClick={() => handleGenreItemClick(genre.text)}
-               className="flex flex-col justify-center items-center py-3"
-             >
-               <FontAwesomeIcon icon={genre.icon} size="lg" />
-               <p className="text-2xs">{genre.text}</p>
-             </button>
-           ))}
-         </div>
-       </div>
-     </div>
-
-     {/* Page navigation */}
-     <div className="mt-2 bg-white border dark:border-0 dark:bg-neutral-950 rounded-xl">
-       <div className="flex flex-col pt-1 text-neutral-600 dark:text-neutral-300">
-         <div className="flex flex-col justify-center items-center pt-1 text-neutral-600 dark:text-neutral-300">
-           {pageItems.map((page) => (
-             <Link
-               to={`/${page.text.toLowerCase()}`}
-               key={page.text}
-               className="flex flex-col justify-center items-center py-3"
-             >
-               <FontAwesomeIcon icon={page.icon} size="lg" />
-               <p className="mt-2 text-2xs">{page.text}</p>
-             </Link>
-           ))}
-         </div>
-       </div>
-     </div>
-   </header>
- );
+  return (
+    <nav className="bt-rail" aria-label="Primary">
+      <button type="button" className="bt-rail-item" onClick={handleSoundsClick}>
+        <FontAwesomeIcon icon={faMusic} size="lg" />
+        <span>Sounds</span>
+      </button>
+      {PAGE_ITEMS.map((page) => (
+        <Link to={page.to} key={page.text} className="bt-rail-item">
+          <FontAwesomeIcon icon={page.icon} size="lg" />
+          <span>{page.text}</span>
+        </Link>
+      ))}
+    </nav>
+  );
 };
 
 export default LeftBar;

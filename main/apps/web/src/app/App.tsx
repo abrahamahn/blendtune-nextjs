@@ -25,12 +25,14 @@ import {
 } from '../pages/security';
 import { PrivacyPolicyPage, TermsPage, WelcomePage } from '../pages/static';
 
+import './App.css';
+
 export const App: React.FC = () => (
   <ClientProviders>
     <HideMobileChrome />
     <SetViewportHeight />
-    <div className="flex flex-col full-viewport">
-      <div className="flex-auto overflow-y-scroll">
+    <div className="bt-app full-viewport">
+      <div className="bt-app-routes">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/sounds" element={<SoundsPage />} />
@@ -47,9 +49,7 @@ export const App: React.FC = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         </Routes>
       </div>
-      <div className="flex-none md:h-20">
-        <MusicPlayer />
-      </div>
+      <MusicPlayer />
     </div>
   </ClientProviders>
 );

@@ -1,0 +1,93 @@
+/* main/apps/web/src/client/features/sounds/search/components/search.css
+ * Search bars (desktop pill + mobile overlay) and their suggestion lists.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-search {
+  position: relative;
+  width: 15rem;
+}
+
+.bt-search[data-focused='true'] {
+  width: 22.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bt-search {
+    transition: width 0.4s ease-in-out;
+  }
+}
+
+.bt-search .input.bt-search-input {
+  width: 100%;
+  height: 2.25rem;
+  padding-right: 4rem;
+  border-radius: var(--ui-radius-full);
+}
+
+.bt-search-buttons {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding-right: var(--ui-gap-xs);
+}
+
+/* Suggestions dropdown (shared by both bars) */
+.bt-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 60;
+  min-width: 12rem;
+  margin-top: var(--ui-gap-xs);
+  padding: var(--ui-gap-xs);
+  max-height: 15rem;
+  overflow-y: auto;
+  background: var(--ui-color-surface);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  box-shadow: 0 0.5rem 1.5rem var(--ui-color-shadow);
+  list-style: none;
+}
+
+.btn.bt-search-result {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--ui-gap-sm);
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text);
+}
+
+.btn.bt-search-result:hover {
+  background: var(--ui-color-surface-strong);
+}
+
+/* Mobile overlay bar */
+.bt-search-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+  height: 3.5rem;
+  padding: 0 var(--ui-gap-md);
+  background: var(--ui-color-bg);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  color: var(--ui-color-text);
+}
+
+.bt-search-mobile .input.bt-search-input {
+  flex: 1;
+  height: 2.25rem;
+  border-radius: var(--ui-radius-full);
+}
+
+.bt-search-mobile .bt-search-results {
+  top: 3.5rem;
+  right: 0;
+}

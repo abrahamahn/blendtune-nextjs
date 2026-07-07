@@ -1,0 +1,61 @@
+/* main/apps/web/src/pages/SoundsPage.css
+ * /sounds shell: header on top, nav rail + full-width catalog below
+ * (the persistent player is owned by the app shell).
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-sounds {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.bt-sounds-header {
+  flex: none;
+  height: 3.5rem;
+}
+
+.bt-sounds-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.bt-sounds-rail {
+  display: none;
+}
+
+.bt-sounds-content {
+  min-width: 0;
+  overflow-y: auto;
+  background: var(--ui-color-bg);
+}
+
+.bt-sounds-sections {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 var(--ui-gap-md) var(--ui-gap-xl);
+}
+
+@media (min-width: 48rem) {
+  .bt-sounds-body {
+    grid-template-columns: 5rem 1fr;
+  }
+  .bt-sounds-rail {
+    display: block;
+    overflow-y: auto;
+    border-right: var(--ui-border-width) solid var(--ui-color-border);
+  }
+}
+
+/* Mobile: fixed header + filter button sit above the flow. */
+@media (max-width: 47.99rem) {
+  .bt-sounds-header {
+    height: 0;
+  }
+  .bt-sounds-content {
+    padding-top: 6rem;
+  }
+}

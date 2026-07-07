@@ -1,53 +1,53 @@
-// src\client\features\player\components\PlayerControls.tsx
-import React from "react";
-import { PlayerIcons } from '@client/shared/components/icons';
-import { usePlayer } from "@client/features/player/services/playerService";
-import { usePlayerControls } from "../hooks";
+// main/apps/web/src/client/features/player/components/PlayerControls.tsx
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBackwardStep, faForwardStep, faRepeat } from '@fortawesome/free-solid-svg-icons';
+
+import { Button } from '@ui';
+import { PlayButton } from '@client/components';
+import { usePlayer } from '@client/features/player/services/playerService';
+import { usePlayerControls } from '../hooks';
+
+import './player.css';
 
 const PlayerControls: React.FC = () => {
   const { isPlaying, loopMode } = usePlayer();
   const { togglePlayPause, previousTrack, nextTrack, loopTrack } = usePlayerControls();
 
   return (
-    <div className="flex flex-row w-32 md:w-48 h-full items-center justify-center">
-      <div className="items-center cursor-pointer hover:opacity-80 mr-4 p-2">
-        <PlayerIcons.Backward 
-          onClick={previousTrack} 
-          className="text-black dark:text-white"
-        />
-      </div>
-      <button
-        className="cursor-pointer hover:opacity-80 flex rounded-full w-10 h-10 items-center justify-center user-select-none"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          togglePlayPause();
-        }}
+    <div className="bt-player-controls">
+      <Button
+        variant="text"
+        size="inline"
+        className="bt-player-icon-btn"
+        onClick={previousTrack}
+        aria-label="Previous track"
       >
-        <div className="text-[#070707] dark:text-white">
-          <PlayerIcons.PlayPause 
-            isPlaying={isPlaying} 
-            size="xl" 
-            className="text-black dark:text-white"
-          />
-        </div>
-      </button>
-      <div className="cursor-pointer hover:opacity-80 items-center p-2 ml-4">
-        <PlayerIcons.Forward 
-          onClick={nextTrack} 
-          className="text-black dark:text-white"
-        />
-      </div>
-      <button
-        className="relative items-center p-2 ml-4 cursor-pointer focus:outline-none focus:ring-0"
+        <FontAwesomeIcon icon={faBackwardStep} />
+      </Button>
+      <PlayButton playing={isPlaying} size="md" onClick={togglePlayPause} />
+      <Button
+        variant="text"
+        size="inline"
+        className="bt-player-icon-btn"
+        onClick={nextTrack}
+        aria-label="Next track"
+      >
+        <FontAwesomeIcon icon={faForwardStep} />
+      </Button>
+      <Button
+        variant="text"
+        size="inline"
+        className="bt-player-icon-btn"
+        data-active={loopMode !== 'off'}
         onClick={loopTrack}
+        aria-label={`Loop mode: ${loopMode}`}
       >
-        <PlayerIcons.Repeat 
-          loopMode={loopMode} 
-          onClick={loopTrack} 
-          className="text-black dark:text-white"
-        />
-      </button>
+        <FontAwesomeIcon icon={faRepeat} size="sm" />
+        {loopMode !== 'off' && (
+          <span className="bt-player-loop-badge">{loopMode === 'one' ? '1' : 'all'}</span>
+        )}
+      </Button>
     </div>
   );
 };

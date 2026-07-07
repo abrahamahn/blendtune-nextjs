@@ -1,8 +1,7 @@
-// src\client\features\sounds\filters\components\genre.tsx
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
-import { selectGenres, removeAllGenres } from "@core/store/slices";
+// main/apps/web/src/client/features/sounds/filters/components/genre.tsx
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faStar,
   faGem,
@@ -10,130 +9,46 @@ import {
   faLeaf,
   faPaw,
   faBoltLightning,
-} from "@fortawesome/free-solid-svg-icons";
-import { FilterWrapper, Item, ActionButtons } from "@features/sounds/filters/ui";
+} from '@fortawesome/free-solid-svg-icons';
 
-/**
-* Props for GenreFilter component
-*/
+import { selectGenres, removeAllGenres } from '@core/store/slices';
+import { FilterWrapper, Item, ActionButtons } from '@features/sounds/filters/ui';
+
 interface GenreFilterProps {
- selectedGenres: string[];
- onClose: () => void;
+  selectedGenres: string[];
+  onClose: () => void;
 }
 
-/**
-* Available genre options with icons
-*/
-const genreItems = [
- { icon: faStar, text: "Pop" },
- { icon: faGem, text: "Hiphop" },
- { icon: faWater, text: "R&B" },
- { icon: faLeaf, text: "Latin" },
- { icon: faPaw, text: "Afrobeat" },
- { icon: faBoltLightning, text: "Electronic" },
+const GENRE_ITEMS = [
+  { icon: faStar, text: 'Pop' },
+  { icon: faGem, text: 'Hiphop' },
+  { icon: faWater, text: 'R&B' },
+  { icon: faLeaf, text: 'Latin' },
+  { icon: faPaw, text: 'Afrobeat' },
+  { icon: faBoltLightning, text: 'Electronic' },
 ];
 
-/**
-* Genre filter component with responsive layout
-* Uses Redux for state management with toggle functionality
-*/
-const GenreFilter: React.FC<GenreFilterProps> = ({
- selectedGenres,
- onClose,
-}) => {
- const dispatch = useDispatch();
+/** Genre filter panel — multi-select toggles backed by the Redux filter store. */
+const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onClose }) => {
+  const dispatch = useDispatch();
 
- /**
-  * Toggles a genre selection on/off using Redux
-  */
- const handleGenreToggle = (genre: string) => {
-   dispatch(selectGenres(genre));
- };
-
- /**
-  * Clears all selected genres using Redux
-  */
- const handleClearGenres = () => {
-   dispatch(removeAllGenres());
- };
-
- /**
-  * Determines if a genre is selected
-  */
- const isGenreSelected = (genre: string) => {
-   return selectedGenres.includes(genre);
- };
-
- return (
-   <div>
-     {/* Desktop Filter Panel */}
-     <FilterWrapper 
-       isDesktop={true}
-       className="top-0 absolute bg-white/95 dark:bg-black/90 border border-neutral-200 dark:border-neutral-700 py-4 px-2 shadow rounded-lg text-neutral-300 text-xs"
-     >
-       <div className="grid grid-cols-2 gap-2">
-         {genreItems.map((item, index) => (
-           <Item
-             key={index}
-             variant="filter"
-             size="sm"
-             selected={isGenreSelected(item.text)}
-             onClick={() => handleGenreToggle(item.text)}
-             className="px-1.5 py-1.5"
-           >
-             <div className="flex items-center justify-center w-4 mr-1">
-               <FontAwesomeIcon
-                 icon={item.icon}
-                 className="justify-center items-center mt-0.5"
-               />
-             </div>
-             <p>{item.text}</p>
-           </Item>
-         ))}
-       </div>
-       
-       {/* Desktop Control Buttons */}
-       <ActionButtons 
-         onClear={handleClearGenres}
-         onClose={onClose}
-       />
-     </FilterWrapper>
-
-     {/* Mobile Filter Panel */}
-     <FilterWrapper 
-       isDesktop={false}
-       className="z-10 top-12 py-4 px-2 text-neutral-300 text-sm"
-     >
-       <div className="grid grid-cols-3 gap-2">
-         {genreItems.map((item, index) => (
-           <Item
-             key={index}
-             variant="filter"
-             size="md"
-             selected={isGenreSelected(item.text)}
-             onClick={() => handleGenreToggle(item.text)}
-             className="px-3 py-2"
-           >
-             <div className="flex items-center justify-center w-5 mr-2">
-               <FontAwesomeIcon
-                 icon={item.icon}
-                 size="lg"
-                 className="justify-center items-center mt-0.5"
-               />
-             </div>
-             <p>{item.text}</p>
-           </Item>
-         ))}
-       </div>
-
-       {/* Mobile Clear Button */}
-       <ActionButtons 
-         onClear={handleClearGenres}
-         isMobile={true}
-       />
-     </FilterWrapper>
-   </div>
- );
+  return (
+    <FilterWrapper>
+      <div className="bt-filter-choices">
+        {GENRE_ITEMS.map((item) => (
+          <Item
+            key={item.text}
+            selected={selectedGenres.includes(item.text)}
+            onClick={() => dispatch(selectGenres(item.text))}
+          >
+            <FontAwesomeIcon icon={item.icon} />
+            {item.text}
+          </Item>
+        ))}
+      </div>
+      <ActionButtons onClear={() => dispatch(removeAllGenres())} onClose={onClose} />
+    </FilterWrapper>
+  );
 };
 
 export default GenreFilter;

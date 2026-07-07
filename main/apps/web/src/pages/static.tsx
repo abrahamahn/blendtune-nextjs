@@ -5,8 +5,6 @@ import { useNavigate } from '@router/index';
 
 import Header from '@client/features/layout/header';
 import LeftBar from '@features/layout/leftbar';
-import { RightSidebarProvider, useRightSidebar } from '@features/layout/rightbar/context/useRightSidebar';
-import RightBar from '@features/layout/rightbar';
 import StoreProvider from '@core/providers/StoreProvider';
 import {
   setArtistCreatorName,
@@ -20,40 +18,30 @@ import { useSession } from '@features/auth/services';
 import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
 import { Skeleton } from '@client/shared/components/common/Skeleton';
 
-/** Wrapper component to conditionally render the right sidebar. */
-const RightSidebarWrapper: React.FC = () => {
-  const { isOpen } = useRightSidebar();
-  return isOpen ? <RightBar /> : null;
-};
-
-/** Shared static-page layout: header, left sidebar, right sidebar, content area. */
+/** Shared static-page layout: header, left sidebar, content area. */
 const StaticLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <StoreProvider>
-    <RightSidebarProvider>
-      <div className="flex flex-col h-full overflow-y-scroll">
-        {/* HEADER */}
-        <div className="h-14 shrink-0">
-          <Header />
-        </div>
-        {/* MAIN CONTAINER */}
-        <div className="flex-auto overflow-hidden">
-          <div className="flex h-full">
-            {/* LEFT SIDEBAR */}
-            <div className="hidden md:block w-20 flex-none pl-2 p-2 h-full overflow-auto">
-              <LeftBar />
+    <div className="flex flex-col h-full overflow-y-scroll">
+      {/* HEADER */}
+      <div className="h-14 shrink-0">
+        <Header />
+      </div>
+      {/* MAIN CONTAINER */}
+      <div className="flex-auto overflow-hidden">
+        <div className="flex h-full">
+          {/* LEFT SIDEBAR */}
+          <div className="hidden md:block w-20 flex-none pl-2 p-2 h-full overflow-auto">
+            <LeftBar />
+          </div>
+          {/* MAIN CONTENT AREA */}
+          <div className="p-0 m-0 flex-auto relative overflow-hidden">
+            <div className="absolute top-0 sm:top-2 lg:top-2 left-0 right-0 md:right-2 lg:right-1 bottom-0 md:bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
+              {children}
             </div>
-            {/* MAIN CONTENT AREA */}
-            <div className="p-0 m-0 flex-auto relative overflow-hidden">
-              <div className="absolute top-0 sm:top-2 lg:top-2 left-0 right-0 md:right-2 lg:right-1 bottom-0 md:bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
-                {children}
-              </div>
-            </div>
-            {/* RIGHT SIDEBAR */}
-            <RightSidebarWrapper />
           </div>
         </div>
       </div>
-    </RightSidebarProvider>
+    </div>
   </StoreProvider>
 );
 

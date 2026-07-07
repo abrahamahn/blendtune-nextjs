@@ -1,30 +1,37 @@
-// src\client\features\sounds\catalog\components\NewTracks.tsx
+// main/apps/web/src/client/features/sounds/catalog/layouts/NewTracks.tsx
+// Horizontal new-tracks carousel built on the TrackCard composite.
+import React from 'react';
 
-import React from "react";
-import TrackCard from "@client/features/sounds/catalog/components/TrackCard";
-import { useTracks } from "@client/features/tracks";
-import useTrackPlayback from "@client/features/sounds/catalog/hooks/useTrackPlayback";
+import { TrackCard, TrackCardSkeleton } from '@client/components';
+import { useTracks } from '@client/features/tracks';
+import { usePlayer } from '@features/player/services/playerService';
+import useTrackPlayback from '@client/features/sounds/catalog/hooks/useTrackPlayback';
 
-/**
- * NewTracks Component
- * 
- * Displays a list of newly added tracks in a horizontal layout.
- * Uses context hooks directly for data access.
- */
+import './NewTracks.css';
+
+const SKELETON_CARDS = 6;
+const CAROUSEL_SIZE = 12;
+
+/** Newest tracks in a scroll-snap carousel of TrackCards. */
 const NewTracks: React.FC = () => {
-  // Get tracks directly from context
   const { tracks, isLoading } = useTracks();
-  
-  // Get playback functionality from our hook
+  const { currentTrack, isPlaying } = usePlayer();
   const { handleTrackPlay } = useTrackPlayback();
 
   return (
-    <div className="w-full">
-      <TrackCard 
-        tracks={tracks}
-        playTrack={handleTrackPlay}
-        isLoading={isLoading}
-      />
+    <div className="bt-new-tracks">
+      {isLoading
+        ? Array.from({ length: SKELETON_CARDS }).map((_, index) => (
+            <TrackCardSkeleton key={index} />
+          ))
+        : tracks.slice(0, CAROUSEL_SIZE).map((track) => (
+            <TrackCard
+              key={track.id}
+              track={track}
+              playing={isPlaying && currentTrack?.id === track.id}
+              onPlay={() => handleTrackPlay(track)}
+            />
+          ))}
     </div>
   );
 };

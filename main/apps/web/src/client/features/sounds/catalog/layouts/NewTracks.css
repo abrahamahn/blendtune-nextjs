@@ -1,0 +1,17 @@
+/* main/apps/web/src/client/features/sounds/catalog/layouts/NewTracks.css
+ * Scroll-snap carousel row for the new-tracks TrackCards.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-new-tracks {
+  display: flex;
+  gap: var(--ui-gap-md);
+  padding: var(--ui-gap-md) 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.bt-new-tracks > * {
+  flex: 0 0 9.5rem;
+  scroll-snap-align: start;
+}

@@ -1,27 +1,20 @@
-// src/client/features/sounds/category/components/Category.tsx
+// main/apps/web/src/client/features/sounds/category/layout/Category.tsx
 /**
- * Category selection component for filtering tracks by genre
- * Displays a horizontally scrollable list of music genres
- *
- * @module sounds/category/components/Category
+ * Genre tab row for filtering tracks — the only genre UI in the marketplace.
+ * Selection state lives in the Redux filter store.
  */
-import React from "react";
-import { DEFAULT_GENRES } from "../constants";
-import { useCategorySelection } from "../hooks/useCategorySelection";
-import { CategoryItem } from "../components/Item";
-import { CategoryProps } from "../types";
-import CategorySkeleton from "../components/CategorySkeleton";
+import React from 'react';
 
-/**
- * Genre selection component for filtering tracks
- * Displays a horizontally scrollable list of music genres
- * Manages selection state through Redux store
- *
- * @param {CategoryProps} props - Component properties
- * @returns {React.ReactElement} Rendered category component
- */
+import { DEFAULT_GENRES } from '../constants';
+import { useCategorySelection } from '../hooks/useCategorySelection';
+import { CategoryItem } from '../components/Item';
+import { CategoryProps } from '../types';
+import CategorySkeleton from '../components/CategorySkeleton';
+
+import '../category.css';
+
 const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({
-  className = "",
+  className = '',
   genres = DEFAULT_GENRES,
   isLoading = false,
 }) => {
@@ -32,21 +25,19 @@ const Category: React.FC<CategoryProps & { isLoading?: boolean }> = ({
   }
 
   return (
-    <div className={`max-w-screen-xl mx-auto ${className}`}>
-      <div
-        className="flex flex-row justify-start items-start w-full border-b border-neutral-200 dark:border-neutral-700 overflow-x-scroll"
-        role="tablist"
-        aria-label="Music genres"
-      >
-        {genres.map((genreItem) => (
-          <CategoryItem
-            key={genreItem.id}
-            genre={genreItem.name}
-            isSelected={isGenreSelected(genreItem.name)}
-            onClick={handleGenreSelection}
-          />
-        ))}
-      </div>
+    <div
+      className={`bt-genre-tabs ${className}`.trim()}
+      role="tablist"
+      aria-label="Music genres"
+    >
+      {genres.map((genreItem) => (
+        <CategoryItem
+          key={genreItem.id}
+          genre={genreItem.name}
+          isSelected={isGenreSelected(genreItem.name)}
+          onClick={handleGenreSelection}
+        />
+      ))}
     </div>
   );
 };

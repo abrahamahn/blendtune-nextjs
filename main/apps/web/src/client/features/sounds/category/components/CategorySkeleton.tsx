@@ -1,16 +1,17 @@
-import React from "react";
-import { Skeleton } from "@client/shared/components/common/Skeleton";
+// main/apps/web/src/client/features/sounds/category/components/CategorySkeleton.tsx
+// Loading placeholder mirroring the genre tab row.
+import React from 'react';
 
-const CategorySkeleton: React.FC = () => {
-  return (
-    <div className="max-w-screen-xl mx-auto md:px-2 lg:px-2 px-4 sm:pt-4 md:pt-0 lg:p-2">
-      <div className="flex flex-row justify-start items-start w-full border-b border-neutral-200 dark:border-neutral-700 overflow-x-hidden space-x-4 pb-2">
-        {[...Array(8)].map((_, i) => (
-            <Skeleton key={i} variant="rectangular" className="w-20 h-8 rounded-full" />
-        ))}
-      </div>
-    </div>
-  );
-};
+import { Skeleton } from '@ui';
+
+import '../category.css';
+
+const CategorySkeleton: React.FC = () => (
+  <div className="bt-genre-tabs" aria-hidden="true">
+    {Array.from({ length: 7 }).map((_, i) => (
+      <Skeleton key={i} width="4rem" height="2rem" />
+    ))}
+  </div>
+);
 
 export default CategorySkeleton;

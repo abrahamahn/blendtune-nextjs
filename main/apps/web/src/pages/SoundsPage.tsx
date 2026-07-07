@@ -3,82 +3,46 @@ import React, { useEffect } from 'react';
 
 import Header from '@client/features/layout/header';
 import LeftBar from '@features/layout/leftbar';
-import { RightSidebarProvider, useRightSidebar } from '@features/layout/rightbar/context/useRightSidebar';
-import RightBar from '@features/layout/rightbar';
 import StoreProvider from '@core/providers/StoreProvider';
 
 import { usePlayer } from '@client/features/player/services/playerService';
 import { useTracks } from '@client/features/tracks';
 import { Hero } from '@features/sounds/hero';
 import { Category } from '@features/sounds/category/layout';
-import { NewTracks } from '@features/sounds/catalog/layouts';
-import { CatalogProvider } from '@features/sounds/catalog';
+import { CatalogProvider, Catalog, NewTracks } from '@features/sounds/catalog';
 import { MobileFilter, DesktopFilter } from '@features/sounds/filters/layout';
 import { useFilterContext } from '@features/sounds/filters/context';
-import { MobileCatalog, DesktopCatalog } from '@features/sounds/catalog';
-import { Track } from '@shared/types/track';
+
+import './SoundsPage.css';
 
 /**
- * RightSidebarWrapper Component:
- * - Renders the right sidebar only when it is open.
- */
-const RightSidebarWrapper: React.FC = () => {
-  const { isOpen } = useRightSidebar();
-  return isOpen ? <RightBar /> : null;
-};
-
-/**
- * SoundsLayout Component:
- * - Provides a structured layout with a header, left sidebar, right sidebar, and content area.
- * - Uses global state providers to manage sidebar visibility.
+ * Three-zone marketplace shell per the design direction: left nav rail,
+ * full-width content, and the persistent bottom player (owned by the app shell).
+ * The former right details sidebar is gone — its content lives in the player's
+ * expanded state.
  */
 const SoundsLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <StoreProvider>
-    <RightSidebarProvider>
-      <div className="flex flex-col h-full overflow-y-scroll">
-        {/* HEADER */}
-        <div className="h-14 shrink-0">
-          <Header />
-        </div>
-
-        {/* MAIN CONTAINER */}
-        <div className="flex-auto overflow-hidden">
-          <div className="flex h-full">
-            {/* LEFT SIDEBAR (Visible on md+ screen sizes) */}
-            <div className="hidden md:block w-20 flex-none relative h-full overflow-auto">
-              <div className="absolute top-2 left-2 right-1 bottom-2 overflow-auto">
-                <LeftBar />
-              </div>
-            </div>
-
-            {/* MAIN CONTENT AREA */}
-            <div className="p-0 m-0 flex-auto relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 bottom-0">
-                <div className="absolute top-2 left-1 right-1 bottom-2 rounded-xl overflow-auto bg-white border dark:border-0 dark:bg-neutral-950">
-                  {children}
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT SIDEBAR (Renders conditionally) */}
-            <RightSidebarWrapper />
-          </div>
-        </div>
+    <div className="bt-sounds">
+      <div className="bt-sounds-header">
+        <Header />
       </div>
-    </RightSidebarProvider>
+      <div className="bt-sounds-body">
+        <aside className="bt-sounds-rail">
+          <LeftBar />
+        </aside>
+        <div className="bt-sounds-content">{children}</div>
+      </div>
+    </div>
   </StoreProvider>
 );
 
 /**
- * Sounds Component:
- * - Manages audio playback and track selection
- * - Handles UI interactions for track browsing and playing
+ * /sounds content: hero, genre tabs, new-tracks carousel, filters, and the
+ * catalog list. Keeps the player's track list in sync with the active filters.
  */
 const Sounds: React.FC = () => {
-  // Access player context and methods
-  const { setTrackList, playTrack } = usePlayer();
-
-  // Track and filter contexts
+  const { setTrackList } = usePlayer();
   const { isLoading } = useTracks();
   const { filteredTracks } = useFilterContext();
 
@@ -89,67 +53,21 @@ const Sounds: React.FC = () => {
     }
   }, [filteredTracks, setTrackList]);
 
-  // Handler for playing tracks
-  const handlePlayTrack = (track: Track) => {
-    playTrack(track);
-  };
-
-  // Handler for track title clicks
-  const handleTitleClick = (track: Track) => {
-    // Implement title click behavior if needed
-    console.log('Track title clicked:', track.metadata.title);
-  };
-
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="md:h-full overflow-y-scroll rounded-t-xl">
-        {/* Mobile filter */}
-        <MobileFilter />
-
-        {/* Hero section with playback controls */}
-        <div>
-          <Hero />
-        </div>
-
-        {/* Category selector */}
-        <div>
-          <Category isLoading={isLoading} />
-        </div>
-
-        {/* New tracks display */}
-        <div>
-          <NewTracks />
-        </div>
-
-        {/* Desktop filter */}
-        <DesktopFilter />
-
-        {/* Catalog with actual children components */}
-        <CatalogProvider tracks={filteredTracks}>
-          <div>
-            {/* Mobile catalog view */}
-            <MobileCatalog
-              tracks={filteredTracks}
-              playTrack={handlePlayTrack}
-              onTitleClick={handleTitleClick}
-              isLoading={isLoading}
-            />
-
-            {/* Desktop catalog view */}
-            <DesktopCatalog
-              tracks={filteredTracks}
-              playTrack={handlePlayTrack}
-              onTitleClick={handleTitleClick}
-              isLoading={isLoading}
-            />
-          </div>
-        </CatalogProvider>
-      </div>
+    <div className="bt-sounds-sections">
+      <MobileFilter />
+      <Hero />
+      <Category isLoading={isLoading} />
+      <NewTracks />
+      <DesktopFilter />
+      <CatalogProvider tracks={filteredTracks}>
+        <Catalog tracks={filteredTracks} isLoading={isLoading} />
+      </CatalogProvider>
     </div>
   );
 };
 
-/** /sounds — the catalog browsing page, wrapped in its own header/sidebar layout. */
+/** /sounds — the catalog browsing page, wrapped in its own header/rail layout. */
 export const SoundsPage: React.FC = () => (
   <SoundsLayout>
     <Sounds />

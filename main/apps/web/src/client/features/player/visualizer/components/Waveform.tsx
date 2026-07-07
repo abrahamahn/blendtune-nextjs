@@ -1,6 +1,8 @@
-"use client";
+// main/apps/web/src/client/features/player/visualizer/components/Waveform.tsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { getCachedBuffer, setCachedBuffer } from "../utils/audioBufferCache";
+
+import "./Waveform.css";
 
 interface WaveformProps {
   audioUrl: string;
@@ -127,6 +129,12 @@ const Waveform: React.FC<WaveformProps> = ({
       const sampleSize = Math.floor(data.length / numBars);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Colors come from the theme tokens (resolved per draw so the canvas
+      // follows theme changes): VU amber for played bars, Seam for unplayed.
+      const styles = getComputedStyle(canvas);
+      const playedColor = styles.getPropertyValue("--ui-color-primary").trim();
+      const unplayedColor = styles.getPropertyValue("--ui-color-border").trim();
+
       // Determine positions in pixels.
       const playbackPosition = (time! / (trackDuration || 1)) * canvas.width;
 
@@ -144,134 +152,31 @@ const Waveform: React.FC<WaveformProps> = ({
         const offsetY = (canvas.height - baseBarHeight) / 2;
         const barX = i * (barWidth + gapWidth);
 
-        // Create a vertical gradient (color B) for a fully played bar.
-        const gradient = ctx.createLinearGradient(
-          0,
-          offsetY,
-          0,
-          offsetY + baseBarHeight,
-        );
-        // (Note: we reverse the color stops so that when blended, the alpha "fades in"—adjust as desired.)
-        gradient.addColorStop(1, "rgb(0,60,255)");
-        gradient.addColorStop(0, "rgb(0,120,255)");
-        // Create a grey gradient for the unplayed region.
-        const greyGradient = ctx.createLinearGradient(
-          0,
-          offsetY,
-          0,
-          offsetY + baseBarHeight,
-        );
+        /** Fills the current bar with a color at the given opacity. */
+        const fillBar = (color: string, alpha = 1) => {
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = color;
+          ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
+          ctx.globalAlpha = 1;
+        };
 
-        // Check if the user prefers dark mode.
-        const isDarkMode =
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        // While dragging, the span between the playhead and the hover position
+        // is a half-strength amber highlight; it wins over the played blend.
+        const highlightStart = Math.min(hoverPosition, playbackPosition);
+        const highlightEnd = Math.max(hoverPosition, playbackPosition);
 
-        if (isDarkMode) {
-          // Use your current dark mode colors.
-          greyGradient.addColorStop(1, "rgb(100,100,100)");
-          greyGradient.addColorStop(0, "rgb(150,150,150)");
+        if (isDragging && barX >= highlightStart && barX < highlightEnd) {
+          fillBar(playedColor, 0.5);
+        } else if (barX < playbackPosition - transitionWidth) {
+          // Fully played.
+          fillBar(playedColor);
+        } else if (barX < playbackPosition) {
+          // Transition region: unplayed base with the played color fading in.
+          fillBar(unplayedColor);
+          fillBar(playedColor, (playbackPosition - barX) / transitionWidth);
         } else {
-          // Lighter colors for light mode (adjust these values as desired).
-          greyGradient.addColorStop(1, "rgb(180,180,180)");
-          greyGradient.addColorStop(0, "rgb(190,190,190)");
-        }
-
-        if (!isDragging) {
-          // Not dragging: smoothly blend from played (gradient) to unplayed (greyGradient)
-          if (barX < playbackPosition - transitionWidth) {
-            // Fully played.
-            ctx.fillStyle = gradient;
-            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-          } else if (
-            barX >= playbackPosition - transitionWidth &&
-            barX < playbackPosition
-          ) {
-            // In the transition region: first draw greyGradient, then overlay gradient with alpha.
-            ctx.fillStyle = greyGradient;
-            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            const alpha = (playbackPosition - barX) / transitionWidth; // goes 0->1 as barX goes from playbackPosition to playbackPosition - transitionWidth
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = gradient;
-            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            ctx.globalAlpha = 1;
-          } else {
-            // Unplayed.
-            ctx.fillStyle = greyGradient;
-            ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-          }
-        } else {
-          // Dragging: we also show a highlight region.
-          if (hoverPosition > playbackPosition) {
-            // Dragging forward:
-            if (barX < playbackPosition - transitionWidth) {
-              ctx.fillStyle = gradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            } else if (
-              barX >= playbackPosition - transitionWidth &&
-              barX < playbackPosition
-            ) {
-              ctx.fillStyle = greyGradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-              const alpha = (playbackPosition - barX) / transitionWidth;
-              ctx.globalAlpha = alpha;
-              ctx.fillStyle = gradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-              ctx.globalAlpha = 1;
-            } else if (barX >= playbackPosition && barX < hoverPosition) {
-              // Highlighted (tertiary) region.
-              ctx.fillStyle = "rgba(0,120,255,0.5)";
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            } else {
-              ctx.fillStyle = greyGradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            }
-          } else if (hoverPosition < playbackPosition) {
-            // Dragging backward:
-            if (barX < hoverPosition) {
-              if (barX < playbackPosition - transitionWidth) {
-                ctx.fillStyle = gradient;
-                ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-              } else if (
-                barX >= playbackPosition - transitionWidth &&
-                barX < playbackPosition
-              ) {
-                ctx.fillStyle = greyGradient;
-                ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-                const alpha = (playbackPosition - barX) / transitionWidth;
-                ctx.globalAlpha = alpha;
-                ctx.fillStyle = gradient;
-                ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-                ctx.globalAlpha = 1;
-              }
-            } else if (barX >= hoverPosition && barX < playbackPosition) {
-              ctx.fillStyle = "rgba(0,120,255,0.5)";
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            } else {
-              ctx.fillStyle = greyGradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            }
-          } else {
-            // hoverPosition equals playbackPosition.
-            if (barX < playbackPosition - transitionWidth) {
-              ctx.fillStyle = gradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            } else if (
-              barX >= playbackPosition - transitionWidth &&
-              barX < playbackPosition
-            ) {
-              ctx.fillStyle = greyGradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-              const alpha = (playbackPosition - barX) / transitionWidth;
-              ctx.globalAlpha = alpha;
-              ctx.fillStyle = gradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-              ctx.globalAlpha = 1;
-            } else {
-              ctx.fillStyle = greyGradient;
-              ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
-            }
-          }
+          // Unplayed.
+          fillBar(unplayedColor);
         }
       }
     },
@@ -418,15 +323,9 @@ const Waveform: React.FC<WaveformProps> = ({
           .padStart(2, "0")}`;
 
   return (
-    <div
-      className="relative w-full h-full cursor-pointer"
-      onMouseDown={handleMouseDown}
-    >
+    <div className="bt-wave" onMouseDown={handleMouseDown}>
       <canvas ref={canvasRef} />
-      <div
-        ref={overlayRef}
-        className="absolute top-0 bottom-0 left-0 right-0 pointer-events-none"
-      />
+      <div ref={overlayRef} className="bt-wave-overlay" />
       {/* During dragging, render two overlays:
           1. The hover indicator (line and text) following the mouse (at ~75% opacity).
           2. A fixed currentTime indicator at playbackPosition (with its text 5px to the right).
@@ -437,7 +336,7 @@ const Waveform: React.FC<WaveformProps> = ({
           {/* Hover indicator (following mouse) */}
           <div
             ref={lineRef}
-            className="absolute top-0 bottom-0 border-l border-black dark:border-white pointer-events-none"
+            className="bt-wave-line"
             style={{
               left: `${activePosition}px`,
               opacity: hoverOpacity,
@@ -446,7 +345,7 @@ const Waveform: React.FC<WaveformProps> = ({
           />
           <div
             ref={textRef}
-            className="absolute top-0 mt-1 text-black dark:text-white text-2xs pointer-events-none"
+            className="bt-wave-text"
             style={{
               left: `${activePosition + 5}px`,
               opacity: hoverOpacity,
@@ -459,7 +358,8 @@ const Waveform: React.FC<WaveformProps> = ({
           {/* Fixed currentTime indicator */}
           <div
             ref={currentLineRef}
-            className="absolute top-0 bottom-0 border-l border-white/50 pointer-events-none"
+            className="bt-wave-line"
+            data-fixed="true"
             style={{
               left: `${playbackPositionPx}px`,
               opacity: fixedOpacity,
@@ -468,7 +368,8 @@ const Waveform: React.FC<WaveformProps> = ({
           />
           <div
             ref={currentTextRef}
-            className="absolute top-0 mt-1 text-white/50 text-2xs pointer-events-none"
+            className="bt-wave-text"
+            data-fixed="true"
             style={{
               left: `${playbackPositionPx + 5}px`,
               opacity: fixedOpacity,

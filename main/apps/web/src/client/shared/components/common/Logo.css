@@ -1,0 +1,12 @@
+/* main/apps/web/src/client/shared/components/common/Logo.css
+ * Wordmark. Tokens only (var(--ui-*) / .bt-*).
+ */
+
+.bt-logo {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--ui-font-size-lg);
+  font-weight: 500;
+  color: var(--ui-color-text);
+  text-decoration: none;
+}

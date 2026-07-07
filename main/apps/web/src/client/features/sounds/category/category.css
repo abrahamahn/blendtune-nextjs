@@ -1,0 +1,38 @@
+/* main/apps/web/src/client/features/sounds/category/category.css
+ * Genre tabs above the catalog — the only genre UI.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-genre-tabs {
+  display: flex;
+  gap: var(--ui-gap-sm);
+  overflow-x: auto;
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.btn.bt-genre-tab {
+  padding: var(--ui-gap-sm) var(--ui-gap-sm);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+  border-radius: 0;
+  border-bottom: 0.125rem solid transparent;
+  margin-bottom: calc(-1 * var(--ui-border-width));
+  white-space: nowrap;
+}
+
+.btn.bt-genre-tab:hover {
+  color: var(--ui-color-text);
+}
+
+.btn.bt-genre-tab[aria-selected='true'] {
+  color: var(--ui-color-primary);
+  border-bottom-color: var(--ui-color-primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn.bt-genre-tab {
+    transition:
+      color 180ms ease,
+      border-color 180ms ease;
+  }
+}

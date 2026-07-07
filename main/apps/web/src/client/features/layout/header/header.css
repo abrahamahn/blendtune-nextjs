@@ -1,0 +1,124 @@
+/* main/apps/web/src/client/features/layout/header/header.css
+ * Header: wordmark, search, auth actions; mobile top bar + menu sheet.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-header {
+  width: 100%;
+  height: 100%;
+}
+
+/* Desktop bar */
+.bt-header-desktop {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .bt-header-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-gap-lg);
+    height: 100%;
+    padding: 0 var(--ui-gap-xl);
+    border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+    background: var(--ui-color-bg);
+  }
+}
+
+.bt-header-cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-lg);
+}
+
+.bt-header-auth {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+}
+
+/* Mobile bar */
+.bt-header-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.5rem;
+  padding: 0 var(--ui-gap-sm);
+  background: var(--ui-color-bg);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+@media (min-width: 48rem) {
+  .bt-header-mobile {
+    display: none;
+  }
+}
+
+.bt-header-mobile-cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+}
+
+.btn.bt-header-icon-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-color-text);
+}
+
+/* Mobile menu sheet */
+.bt-header-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--ui-color-shadow);
+}
+
+.bt-header-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 51;
+  background: var(--ui-color-surface);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg) var(--ui-radius-lg) 0 0;
+  padding: var(--ui-gap-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-md);
+}
+
+.bt-header-sheet-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bt-header-sheet-actions {
+  display: flex;
+  gap: var(--ui-gap-sm);
+}
+
+.bt-header-sheet-actions > * {
+  flex: 1;
+}
+
+.btn.bt-header-sheet-link {
+  justify-content: flex-start;
+  gap: var(--ui-gap-md);
+  width: 100%;
+  padding: var(--ui-gap-md);
+  color: var(--ui-color-text);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: 0;
+}

@@ -1,0 +1,17 @@
+/* main/apps/web/src/app/App.css
+ * App shell: scrollable route area over the persistent bottom player.
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-app {
+  display: flex;
+  flex-direction: column;
+  background: var(--ui-color-bg);
+  color: var(--ui-color-text);
+}
+
+.bt-app-routes {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}

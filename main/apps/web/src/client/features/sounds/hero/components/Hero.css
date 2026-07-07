@@ -1,0 +1,55 @@
+/* main/apps/web/src/client/features/sounds/hero/components/Hero.css
+ * Now-playing hero for the catalog page (mobile-first surface).
+ * Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-lg);
+  padding: var(--ui-gap-lg);
+  margin: var(--ui-gap-md) 0;
+  background: var(--ui-color-surface);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+}
+
+.bt-hero-art {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 7rem;
+}
+
+.bt-hero-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.bt-hero-id {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-xs);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.bt-hero-title {
+  font-size: var(--ui-font-size-lg);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bt-hero-tags {
+  display: flex;
+  gap: var(--ui-gap-sm);
+}
+
+/* Desktop keeps the catalog itself as the hero; this surface is mobile-only. */
+@media (min-width: 48rem) {
+  .bt-hero {
+    display: none;
+  }
+}

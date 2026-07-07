@@ -1,36 +1,26 @@
-// src/client/features/sounds/search/components/SearchBarMobile.tsx
+// main/apps/web/src/client/features/sounds/search/components/SearchBarMobile.tsx
+/**
+ * Mobile search overlay: full-width bar with keyword suggestions.
+ * Selecting a suggestion dispatches the keyword and routes to /sounds.
+ */
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useNavigate } from "@router/index";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@core/store";
-import {
-  selectKeyword,
-  removeAllGenres,
-  removeAllKeywords,
-} from "@core/store/slices";
+import { Button, Input } from '@ui';
+import { useNavigate } from '@router/index';
+import { RootState } from '@core/store';
+import { selectKeyword, removeAllGenres, removeAllKeywords } from '@core/store/slices';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
+import './search.css';
 
 interface SearchBarMobileProps {
-  keywords?: string[]; // List of available keywords for search suggestions.
-  toggleSearchBar: () => void; // Function to toggle search bar visibility.
-  isAnimating: boolean; // Controls the animation state of the search bar.
+  keywords?: string[];
+  toggleSearchBar: () => void;
+  isAnimating: boolean;
 }
 
-/**
- * SearchBarMobile Component
- *
- * A mobile-friendly search bar that allows users to filter tracks using keywords.
- * Features include:
- * - Search suggestions from available keywords.
- * - Clear input and close functionality.
- * - Auto-focus on animation trigger.
- *
- * @param {SearchBarMobileProps} props - Component properties.
- * @returns {JSX.Element} The rendered component.
- */
 const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   keywords,
   toggleSearchBar,
@@ -39,55 +29,45 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Search input state management.
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
-  // Retrieves selected keywords from the Redux store.
-  const selectedKeywords = useSelector(
-    (state: RootState) => state.tracks.filters.keywords
-  );
+  const selectedKeywords = useSelector((state: RootState) => state.tracks.filters.keywords);
 
-  // Handles changes in the search input field.
-  const handleInputChange = (value: string) => {
-    setInputValue(value);
-  };
-
-  // Clears the input field or toggles search bar visibility.
+  /** Clears the input, or closes the bar when already empty. */
   const handleClearInput = () => {
     if (inputValue) {
-      setInputValue("");
+      setInputValue('');
     } else {
       toggleSearchBar();
       dispatch(removeAllKeywords());
     }
   };
 
-  // Derives search suggestions from the current input value.
   const searchResults = useMemo(() => {
     if (!inputValue) return [];
-    return keywords?.filter((keyword) =>
-      keyword.toLowerCase().includes(inputValue.toLowerCase())
-    ) || [];
+    return (keywords ?? []).filter((keyword) =>
+      keyword.toLowerCase().includes(inputValue.toLowerCase()),
+    );
   }, [inputValue, keywords]);
 
-  // Handles selection of a search keyword.
+  /** Applies a keyword: resets genres, selects it, and closes the bar. */
   const resultSelection = (keyword: string) => {
     setInputValue(keyword);
-    dispatch(removeAllGenres()); // Reset genres on keyword selection.
+    dispatch(removeAllGenres());
     dispatch(selectKeyword(keyword));
     handleClearInput();
     toggleSearchBar();
   };
 
-  // Redirect to the /sounds page when a keyword is selected.
+  // Route to the catalog once a keyword filter is active.
   useEffect(() => {
     if (selectedKeywords.length > 0) {
-      navigate("/sounds");
+      navigate('/sounds');
     }
   }, [selectedKeywords, navigate]);
 
-  // Focus the input field when the search bar is expanding.
+  // Focus the input while the bar is expanding.
   useEffect(() => {
     if (isAnimating && inputRef.current) {
       inputRef.current.focus();
@@ -95,65 +75,42 @@ const SearchBarMobile: React.FC<SearchBarMobileProps> = ({
   }, [isAnimating]);
 
   return (
-    <div
-      className="block md:hidden fixed top-0 right-0 w-full bg-white dark:bg-black group h-14 z-50 animating border dark:border-neutral-800 border-neutral-200"
-      style={{
-        animation: isAnimating
-          ? "expandMobile 0.4s ease-in-out forwards"
-          : "shrinkMobile 0.4s ease-in-out forwards",
-      }}
-      data-testid="mobile-searchbar"
-    >
-      <div className="flex flex-row justify-center items-center w-full h-full">
-        {/* Search Icon */}
-        <FontAwesomeIcon
-          icon={faSearch}
-          size="sm"
-          className="text-neutral-800 dark:text-white pl-4 pr-2"
-        />
-
-        {/* Search Input Field */}
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-          onChange={(e) => handleInputChange(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-          className="focus:outline-none h-full w-full text-base rounded-2xl text-neutral-800 dark:text-neutral-200 bg-transparent border"
-          placeholder="Search..."
-          style={{
-            outline: "none",
-            borderColor: "transparent",
-            boxShadow: "none",
-          }}
-        />
-
-        {/* Clear/Search Toggle Button */}
-        <button className="p-2 cursor-pointer" onClick={handleClearInput}>
-          <FontAwesomeIcon
-            icon={faTimes}
-            size="lg"
-            className="text-neutral-700 dark:text-neutral-200 rounded-full pr-4"
-          />
-        </button>
-
-        {/* Displaying search suggestions only when input is active */}
-        {inputValue && (
-          <div className="absolute block lg:hidden top-full left-0 right-0 bg-white dark:bg-black border dark:border-neutral-800 border-neutral-200">
-            <ul className="flex flex-col max-h-60 overflow-y-auto">
-              {searchResults?.map((keyword, index) => (
-                <li
-                  key={index}
-                  className="flex items-center text-center p-2 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-200 cursor-pointer"
-                  onClick={() => resultSelection(keyword)}
-                >
-                  {keyword}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+    <div className="bt-search-mobile" data-testid="mobile-searchbar">
+      <FontAwesomeIcon icon={faSearch} size="sm" />
+      <Input
+        ref={inputRef}
+        className="bt-search-input"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        placeholder="Search…"
+        aria-label="Search sounds"
+      />
+      <Button
+        variant="text"
+        size="inline"
+        className="bt-header-icon-btn"
+        onClick={handleClearInput}
+        aria-label="Close search"
+      >
+        <FontAwesomeIcon icon={faTimes} size="lg" />
+      </Button>
+      {inputValue !== '' && searchResults.length > 0 && (
+        <ul className="bt-search-results">
+          {searchResults.map((keyword) => (
+            <li key={keyword}>
+              <Button
+                variant="text"
+                size="inline"
+                className="bt-search-result"
+                onClick={() => resultSelection(keyword)}
+              >
+                {keyword}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

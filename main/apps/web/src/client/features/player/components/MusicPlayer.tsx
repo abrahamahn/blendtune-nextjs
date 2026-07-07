@@ -1,65 +1,57 @@
-// src\client\features\player\components\MusicPlayer.tsx
+// main/apps/web/src/client/features/player/components/MusicPlayer.tsx
 /**
- * @fileoverview Main music player component orchestrating the player UI and functionality
- * @module features/player/components/MusicPlayer
+ * Persistent bottom player: desktop bar + mobile bar sharing one expanded
+ * details panel (the panel replaced the old right sidebar). Playback logic
+ * lives in playerService and the player hooks — this file is presentation.
  */
+import React, { Suspense, useState } from 'react';
 
-"use client";
-import React, { Suspense } from "react";
-import { useKeyboardShortcuts, useVolumeControl } from "../hooks";
-import { useTracks } from "@client/features/tracks";
+import { useKeyboardShortcuts, useVolumeControl } from '../hooks';
+import { usePlayer } from '@client/features/player/services/playerService';
+import { useTracks } from '@client/features/tracks';
 
-import PlayerControls from "./PlayerControls";
-import VolumeControl from "./VolumeControl";
-import TrackInfo from "./TrackInfo";
-import TrackProgress from "./TrackProgress";
-import MobilePlayer from "./MobilePlayer";
-import MusicPlayerSkeleton from "./MusicPlayerSkeleton";
+import PlayerControls from './PlayerControls';
+import VolumeControl from './VolumeControl';
+import TrackInfo from './TrackInfo';
+import TrackProgress from './TrackProgress';
+import MobilePlayer from './MobilePlayer';
+import MusicPlayerSkeleton from './MusicPlayerSkeleton';
+import PlayerDetails from './PlayerDetails';
 
-/**
- * Main music player component
- * Orchestrates audio playback, controls, and visualization
- */
+import './player.css';
+
 const MusicPlayer: React.FC = () => {
   const { isLoading } = useTracks();
+  const { currentTrack, isPlaying } = usePlayer();
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  // Initialize keyboard shortcuts
   useKeyboardShortcuts();
-
-  // Get volume wheel handler
   const { handleVolumeWheel } = useVolumeControl();
 
+  const toggleDetails = () => setDetailsOpen((prev) => !prev);
+
+  if (isLoading) {
+    return <MusicPlayerSkeleton />;
+  }
+
   return (
-    <div onWheelCapture={handleVolumeWheel}>
-      {isLoading ? (
-        <MusicPlayerSkeleton />
-      ) : (
-        <>
-          {/* DESKTOP PLAYER */}
-          <div className="hidden md:block fixed bottom-0 left-0 w-full flex justify-center items-center">
-            <div className="flex flex-row items-center justify-center w-full h-20 border-t dark:border-neutral-800 bg-white dark:bg-transparent border-neutral-300 backdrop-blur-md lg:px-6 px-0">
-              {/* Playback Controls */}
-              <PlayerControls />
-
-              {/* Track Progress and Volume */}
-              <div className="flex flex-row w-1/2 h-full items-center px-4">
-                <Suspense
-                  fallback={<div>Loading additional components...</div>}
-                >
-                  <TrackProgress />
-                  <VolumeControl />
-                </Suspense>
-              </div>
-
-              {/* Track Info & Action Buttons */}
-              <TrackInfo />
-            </div>
-          </div>
-
-          {/* MOBILE PLAYER */}
-          <MobilePlayer />
-        </>
+    <div className="bt-player" onWheelCapture={handleVolumeWheel}>
+      {detailsOpen && currentTrack != null && (
+        <PlayerDetails track={currentTrack} playing={isPlaying} onClose={toggleDetails} />
       )}
+
+      <div className="bt-player-bar">
+        <PlayerControls />
+        <div className="bt-player-progress">
+          <Suspense fallback={null}>
+            <TrackProgress />
+            <VolumeControl />
+          </Suspense>
+        </div>
+        <TrackInfo detailsOpen={detailsOpen} onToggleDetails={toggleDetails} />
+      </div>
+
+      <MobilePlayer detailsOpen={detailsOpen} onToggleDetails={toggleDetails} />
     </div>
   );
 };

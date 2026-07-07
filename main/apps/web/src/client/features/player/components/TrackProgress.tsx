@@ -1,26 +1,23 @@
-// src\client\features\player\components\TrackProgress.tsx
+// main/apps/web/src/client/features/player/components/TrackProgress.tsx
 /**
- * @fileoverview Component for track waveform and time display
- * @module features/player/components/TrackProgress
+ * Waveform + time display for the desktop player bar.
  */
+import React, { useState, useRef, useEffect } from 'react';
 
-import React, { useState, useRef, useEffect } from "react";
-import { Waveform } from "@features/player/visualizer";
-import { formatTime } from "../utils/formatTime";
-import { usePlayer } from "@client/features/player/services/playerService";
-import { useTrackNavigation } from "@features/player/hooks";
+import { Waveform } from '@features/player/visualizer';
+import { formatTime } from '../utils/formatTime';
+import { usePlayer } from '@client/features/player/services/playerService';
+import { useTrackNavigation } from '@features/player/hooks';
 
-/**
- * Displays track progress with waveform visualization and time display
- */
+import './player.css';
+
 const TrackProgress: React.FC = () => {
-  const { currentTrack, sharedAudioUrl, currentTime, trackDuration } =
-    usePlayer();
+  const { currentTrack, sharedAudioUrl, currentTime, trackDuration } = usePlayer();
   const { seekTo } = useTrackNavigation();
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const [waveformWidth, setWaveformWidth] = useState<number>(0);
 
-  // Resize observer for waveform width
+  // Track the container width so the waveform redraws on resize.
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -37,10 +34,7 @@ const TrackProgress: React.FC = () => {
 
   return (
     <>
-      <div
-        ref={waveformContainerRef}
-        className="flex-1 min-w-0 overflow-hidden"
-      >
+      <div ref={waveformContainerRef} className="bt-player-wave">
         {currentTrack?.file && sharedAudioUrl ? (
           <Waveform
             audioUrl={sharedAudioUrl}
@@ -52,19 +46,11 @@ const TrackProgress: React.FC = () => {
               seekTo(newTime);
             }}
           />
-        ) : (
-          <p />
-        )}
+        ) : null}
       </div>
-      <div className="hidden lg:flex text-xs ml-2 w-20 h-full shrink-0 items-center justify-center user-select-none">
-        <p className="text-[#1F1F1F] dark:text-white">
-          {formatTime(currentTime)}
-          <span className="text-transparent"> / </span>
-          <span className="text-[#070707] dark:text-neutral-500">
-            {formatTime(trackDuration)}
-          </span>
-        </p>
-      </div>
+      <p className="bt-player-time">
+        {formatTime(currentTime)} <span>/ {formatTime(trackDuration)}</span>
+      </p>
     </>
   );
 };

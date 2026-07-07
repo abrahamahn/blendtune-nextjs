@@ -8,9 +8,8 @@ import { createRoot } from 'react-dom/client';
 
 import { Router } from '@router/index';
 import { App } from './app/App';
-// Shared with the Next app until cutover (M5); moves into this app when Next is removed.
+// Global reset + fonts, then the vendored @ui design system (tokens first), then the brand theme.
 import './globals.css';
-// Vendored bslt design system (theme tokens first) — coexists with tailwind during conversion.
 import '@ui/styles/theme.css';
 import '@ui/styles/elements.css';
 import '@ui/styles/components.css';

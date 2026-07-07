@@ -1,10 +1,7 @@
 // main/apps/web/postcss.config.js
-// Vite runs with this app as CWD; point tailwind at the repo-root config explicitly.
-const path = require('path');
-
+// Autoprefixer only — Tailwind removed (UI-5). Vite runs CSS through this.
 module.exports = {
   plugins: {
-    tailwindcss: { config: path.resolve(__dirname, '../../../tailwind.config.js') },
     autoprefixer: {},
   },
 };

@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { Track } from '@/shared/types/track';
 import { fetchTracks } from '@features/tracks/core/hooks';
 
@@ -23,9 +23,6 @@ const CatalogContext = createContext<CatalogContextType>({
   filterTracks: () => {},
   filteredTracks: []
 });
-
-// Hook to use the catalog context
-export const useCatalog = () => useContext(CatalogContext);
 
 interface CatalogProviderProps {
   children?: ReactNode;

@@ -3,7 +3,7 @@ import React from "react";
 import { Artwork, Watermark } from "@components/common";
 import { PlayerIcons } from "@client/shared/components/icons";
 
-export interface TrackArtworkProps {
+interface TrackArtworkProps {
   catalog?: string;
   title: string;
   width: number;

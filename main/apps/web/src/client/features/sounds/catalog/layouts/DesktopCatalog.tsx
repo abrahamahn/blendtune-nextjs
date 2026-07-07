@@ -17,7 +17,7 @@ import TrackRowSkeleton from "@client/features/sounds/catalog/components/TrackRo
 /**
  * Props definition for the DesktopCatalog component.
  */
-export interface DesktopCatalogProps {
+interface DesktopCatalogProps {
   tracks: Track[]; // List of tracks to display
   playTrack: (selectedTrack: Track) => void; // Function to play a track
   onTitleClick: (selectedTrack: Track) => void; // Function to handle title clicks

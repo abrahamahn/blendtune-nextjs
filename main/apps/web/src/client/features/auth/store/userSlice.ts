@@ -9,7 +9,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 /**
  * User state interface defining all user profile fields
  */
-export interface UserState {
+interface UserState {
   username: string | null;
   email: string | null;
   first_name: string | null;
@@ -86,10 +86,6 @@ const userSlice = createSlice({
     clearUserProfile: () => {
       return { ...initialState };
     },
-    // Legacy support
-    setNoUser: () => {
-      return { ...initialState };
-    },
   },
 });
 
@@ -102,7 +98,6 @@ export const {
   setMarketingConsent,
   setUserProfile,
   clearUserProfile,
-  setNoUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

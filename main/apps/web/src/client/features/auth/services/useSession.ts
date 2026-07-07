@@ -52,7 +52,7 @@ interface SessionStatus {
  * @extends UserProfileFields
  * @extends UserPreferences
  */
-export interface SessionContextValue extends 
+interface SessionContextValue extends
   SessionStatus,
   UserProfileFields,
   UserPreferences {
@@ -63,7 +63,7 @@ export interface SessionContextValue extends
  * Session context
  * Provides session information throughout the application
  */
-export const SessionContext = createContext<SessionContextValue | undefined>(
+const SessionContext = createContext<SessionContextValue | undefined>(
   undefined
 );
 

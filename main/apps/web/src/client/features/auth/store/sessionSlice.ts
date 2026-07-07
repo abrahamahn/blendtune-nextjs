@@ -9,7 +9,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 /**
 * Session state interface
 */
-export interface SessionState {
+interface SessionState {
  status: boolean;
  authenticated: boolean;
  loading: boolean;

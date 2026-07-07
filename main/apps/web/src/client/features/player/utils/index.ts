@@ -5,4 +5,3 @@
  */
 
 export { formatTime } from './formatTime';
-export { storePlaybackTime, resetPlaybackTime, getPlaybackTime } from './storage';

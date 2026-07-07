@@ -10,7 +10,7 @@ import { renderValue } from "@client/features/sounds/catalog/utils/trackUtils";
 
 import MobileTrackRowSkeleton from "@client/features/sounds/catalog/components/MobileTrackRowSkeleton";
 
-export interface MobileCatalogProps {
+interface MobileCatalogProps {
   tracks: Track[];
   playTrack: (track: Track) => void;
   onTitleClick: (selectedTrack: Track) => void;

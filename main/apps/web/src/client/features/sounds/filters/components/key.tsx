@@ -10,12 +10,6 @@ import React, { useState, useEffect } from "react";
  * Props interface for KeyFilter component
  */
 
-export type KeyFilterCombination = {
-  key: string | null;
-  'key.note': string | null;
-  'key.scale': string | null;
-};
-
 interface KeyFilterProps {
   selectedKeys: string;
   setSelectedKeys(selectedKeys: string): void;

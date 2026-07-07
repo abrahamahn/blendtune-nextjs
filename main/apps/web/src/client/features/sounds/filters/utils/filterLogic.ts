@@ -18,43 +18,6 @@ export const hasItems = (item: string | string[] | undefined): boolean => {
 };
 
 /**
- * Determines if any filters are applied
- * 
- * @param {Object} params - Filter parameter object
- * @returns {boolean} Whether any filters are applied
- */
-export const calculateFiltersApplied = ({
-  minTempo,
-  maxTempo,
-  selectedKeys,
-  selectedGenres,
-  selectedArtists,
-  selectedInstruments,
-  selectedMoods,
-  selectedKeywords,
-}: {
-  minTempo: number;
-  maxTempo: number;
-  selectedKeys: string;
-  selectedGenres: string[];
-  selectedArtists: string[];
-  selectedInstruments: string[];
-  selectedMoods: string[];
-  selectedKeywords: string[];
-}): boolean => {
-  return (
-    minTempo > 40 ||
-    maxTempo < 200 ||
-    hasItems(selectedKeys) ||
-    hasItems(selectedGenres) ||
-    hasItems(selectedArtists) ||
-    hasItems(selectedInstruments) ||
-    hasItems(selectedMoods) ||
-    hasItems(selectedKeywords)
-  );
-};
-
-/**
  * Calculates the count of applied filters for UI display
  * 
  * @param {Object} params - Filter parameter object 
@@ -251,51 +214,4 @@ export const keywordFilter = (track: Track, selectedKeywords: string[] | null): 
       ) ?? false)
     );
   });
-};
-
-/**
- * Applies all filter criteria to a set of tracks
- * 
- * @param {Track[]} tracks - Array of tracks to filter
- * @param {Object} filterCriteria - Object containing all filter settings
- * @returns {Track[]} - Filtered tracks
- */
-export const applyAllFilters = (
-  tracks: Track[],
-  {
-    minTempo,
-    maxTempo,
-    includeHalfTime,
-    includeDoubleTime,
-    keyFilterCombinations,
-    selectedCategory,
-    selectedGenres,
-    selectedArtists,
-    selectedInstruments,
-    selectedMoods,
-    selectedKeywords
-  }: {
-    minTempo: number;
-    maxTempo: number;
-    includeHalfTime: boolean;
-    includeDoubleTime: boolean;
-    keyFilterCombinations: Array<{key: string | null; 'key.note': string | null; 'key.scale': string | null;}>;
-    selectedCategory: string;
-    selectedGenres: string[];
-    selectedArtists: string[];
-    selectedInstruments: string[];
-    selectedMoods: string[];
-    selectedKeywords: string[] | null;
-  }
-): Track[] => {
-  return tracks.filter(track => 
-    tempoFilter(track, minTempo, maxTempo, includeHalfTime, includeDoubleTime) &&
-    keyFilter(track, keyFilterCombinations) &&
-    categoryFilter(track, selectedCategory) &&
-    genreFilter(track, selectedGenres) &&
-    artistFilter(track, selectedArtists) &&
-    instrumentFilter(track, selectedInstruments) &&
-    moodFilter(track, selectedMoods) &&
-    keywordFilter(track, selectedKeywords)
-  );
 };

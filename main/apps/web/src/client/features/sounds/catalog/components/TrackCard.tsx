@@ -14,7 +14,7 @@ import TrackCardSkeleton from "./TrackCardSkeleton";
 /**
  * Props definition for the TrackCard component.
  */
-export interface TrackCardProps {
+interface TrackCardProps {
   tracks: Track[]; // List of tracks to display
   currentTrack?: Track; // The currently playing track
   playTrack: (track: Track) => void; // Function to play a selected track

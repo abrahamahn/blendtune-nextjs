@@ -4,9 +4,6 @@
 export {
   setAuthenticated,
   setUnauthenticated,
-  setOnline,
-  setOffline,
-  default as sessionReducer,
 } from "@features/auth/store/sessionSlice";
 
 // User profile slice
@@ -17,10 +14,6 @@ export {
   setUserType,
   setOccupation,
   setMarketingConsent,
-  setUserProfile,
-  clearUserProfile,
-  setNoUser,
-  default as userReducer,
 } from "../../../features/auth/store/userSlice";
 
 // Filter management slice
@@ -28,7 +21,6 @@ export {
   // Category & Genre
   selectGenres,
   setGenres,
-  selectCategory,
   removeAllGenres,
   // Tempo
   setMinTempo,
@@ -50,13 +42,9 @@ export {
   removeAllKeywords,
   // Clear All
   clearAllFilters,
-  default as filterReducer,
 } from "@client/features/sounds/filters/store/filterSlice";
 
 // Exporting types for type safety
-export type { SessionState } from "@features/auth/store/sessionSlice";
-export type { UserState } from "@features/auth/store/userSlice";
 export type {
-  FilterState,
   KeyFilterCombination,
 } from "@client/features/sounds/filters/store/filterSlice";

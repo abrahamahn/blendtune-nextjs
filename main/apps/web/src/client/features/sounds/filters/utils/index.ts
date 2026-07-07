@@ -5,28 +5,8 @@
  * 
 */
 
-// Export all filter logic functions
-export {
-  hasItems,
-  calculateFiltersApplied,
-  calculateAppliedFilterCount,
-  tempoFilter,
-  keyFilter,
-  categoryFilter,
-  genreFilter,
-  artistFilter,
-  instrumentFilter,
-  moodFilter,
-  keywordFilter,
-  applyAllFilters,
-} from './filterLogic';
-
-export { sortByCriteria, shuffleArray, sortTracks } from './sortLogic';
-
 // Export all filter UI helper functions
 export {
   createFilterComponents,
   renderFilterLabel,
-  isFilterActive,
-  getFilterButtonClass,
 } from './filterUI';

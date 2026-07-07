@@ -30,7 +30,7 @@ interface RightSidebarContextType {
 }
 
 // Initialize context with undefined default - forces consumers to use provider
-export const RightSidebarContext = createContext<RightSidebarContextType | undefined>(undefined);
+const RightSidebarContext = createContext<RightSidebarContextType | undefined>(undefined);
 
 /**
  * Provider component that manages the right sidebar state and makes it available

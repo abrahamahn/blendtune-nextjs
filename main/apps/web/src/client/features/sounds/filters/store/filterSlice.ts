@@ -14,7 +14,7 @@ export type KeyFilterCombination = {
 /**
  * Defines the structure of the state for all filters in the music streaming app.
  */
-export interface FilterState {
+interface FilterState {
   // Category & Genre
   category: string;
   genres: string[];

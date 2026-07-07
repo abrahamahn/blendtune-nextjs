@@ -5,7 +5,7 @@ import { faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-export interface TrackActionsProps {
+interface TrackActionsProps {
   variant?: 'mobile' | 'desktop';
   onFavorite?: () => void;
   onAddToPlaylist?: () => void;

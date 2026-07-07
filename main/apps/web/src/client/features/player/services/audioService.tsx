@@ -6,7 +6,7 @@
 
 import { useRef, useCallback, useEffect, useState } from 'react';
 
-export interface AudioState {
+interface AudioState {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
@@ -16,7 +16,7 @@ export interface AudioState {
   error: Error | null;
 }
 
-export interface AudioActions {
+interface AudioActions {
   play: () => Promise<void>;
   pause: () => void;
   toggle: () => Promise<void>;

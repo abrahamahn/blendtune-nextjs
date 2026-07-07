@@ -12,7 +12,7 @@ import React from 'react';
  * Props for the ActionButtons component
  * @interface ActionButtonsProps
  */
-export interface ActionButtonsProps {
+interface ActionButtonsProps {
   /** Callback function triggered when clear button is clicked */
   onClear: () => void;
   

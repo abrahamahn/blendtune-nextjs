@@ -8,7 +8,7 @@ import { renderValue } from "@client/features/sounds/catalog/utils/trackUtils";
 /**
  * Props definition for the TrackCardItem component.
  */
-export interface TrackCardItemProps {
+interface TrackCardItemProps {
   track: Track;
   isCurrentlyPlaying: boolean;
   isMobile: boolean;

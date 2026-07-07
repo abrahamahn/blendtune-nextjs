@@ -7,8 +7,7 @@
  * @module filters/ui
  */
 
-export { ActionButtons, type ActionButtonsProps } from './ActionButtons';
-export { Checkbox } from './Checkbox';
+export { ActionButtons } from './ActionButtons';
 export { FilterGrid } from './FilterGrid';
 export { FilterWrapper } from './FilterWrapper';
 export { Item } from './Item';

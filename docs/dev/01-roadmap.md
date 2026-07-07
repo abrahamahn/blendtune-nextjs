@@ -34,10 +34,10 @@ The current version includes core functionality:
 - [ ] Create collaborative playlists feature
 
 **Files to modify**:
-- `db/` - Add playlist tables to user schema
-- `src/app/api/playlists/` - New API routes
-- `src/client/features/playlists/` - New feature module
-- `src/shared/types/playlist.ts` - Type definitions
+- `main/server/db/src/migrations/` - Add playlist tables
+- `main/apps/server/src/http/routes/` + `main/server/core/src/playlists/` - Routes and logic
+- `main/apps/web/src/client/features/playlists/` - New feature module
+- `main/shared/src/types/playlist.ts` - Type definitions
 
 #### Favorites/Likes System
 **Status**: Not started
@@ -53,10 +53,10 @@ The current version includes core functionality:
 - [ ] Add favorites count to tracks
 
 **Files to modify**:
-- `db/` - Add favorites/likes table
-- `src/app/api/favorites/` - New API routes
-- `src/client/features/tracks/` - Add favorite button component
-- `src/server/services/favorites/` - Business logic
+- `main/server/db/src/migrations/` - Add favorites/likes table
+- `main/apps/server/src/http/routes/` - New API routes
+- `main/apps/web/src/client/features/tracks/` - Add favorite button component
+- `main/server/core/src/favorites/` - Business logic
 
 #### Download Management
 **Status**: Not started
@@ -72,10 +72,10 @@ The current version includes core functionality:
 - [ ] Generate watermarked preview downloads
 
 **Files to modify**:
-- `src/app/api/downloads/` - Download endpoints
-- `src/server/services/licensing/` - License validation
-- `src/client/features/downloads/` - Download UI
-- `db/` - Download history table
+- `main/apps/server/src/http/routes/` - Download endpoints
+- `main/server/core/src/licensing/` - License validation
+- `main/apps/web/src/client/features/downloads/` - Download UI
+- `main/server/db/src/migrations/` - Download history table
 
 ### Priority 2: Search & Discovery
 
@@ -93,10 +93,10 @@ The current version includes core functionality:
 - [ ] Implement search analytics
 
 **Files to modify**:
-- `src/app/api/search/` - Enhanced search endpoints
-- `src/client/features/sounds/search/` - Improved search UI
-- `src/server/services/search/` - Search algorithms
-- `db/` - Search indexes
+- `main/apps/server/src/http/routes/` - Enhanced search endpoints
+- `main/apps/web/src/client/features/sounds/search/` - Improved search UI
+- `main/server/core/src/search/` - Search algorithms
+- `main/server/db/src/migrations/` - Search indexes
 
 #### Personalized Recommendations
 **Status**: Not started
@@ -112,10 +112,10 @@ The current version includes core functionality:
 - [ ] A/B test recommendation algorithms
 
 **Files to modify**:
-- `src/server/services/recommendations/` - New service
-- `src/app/api/recommendations/` - API endpoints
-- `src/client/features/home/` - Recommendations UI
-- `db/` - User behavior tracking tables
+- `main/server/core/src/recommendations/` - New service
+- `main/apps/server/src/http/routes/` - API endpoints
+- `main/apps/web/src/client/features/home/` - Recommendations UI
+- `main/server/db/src/migrations/` - User behavior tracking tables
 
 ### Priority 3: Performance & Optimization
 
@@ -133,10 +133,9 @@ The current version includes core functionality:
 - [ ] Add service worker audio caching
 
 **Files to modify**:
-- `src/client/features/player/services/AudioService.ts`
-- `src/client/features/player/visualizer/Waveform.tsx`
-- `src/app/api/audio/[file]/route.ts`
-- `public/sw.js` - Service worker
+- `main/apps/web/src/client/features/player/services/AudioService.ts`
+- `main/apps/web/src/client/features/player/visualizer/Waveform.tsx`
+- `main/apps/server/src/http/routes/media.ts` + `main/server/media/` - Audio streaming
 
 #### Database Query Optimization
 **Status**: Not started
@@ -153,8 +152,8 @@ The current version includes core functionality:
 
 **Files to modify**:
 - `db/` - Add indexes to schema
-- `src/server/db/` - Connection pooling
-- `src/server/services/tracks/` - Query optimization
+- `main/server/db/src/client.ts` - Connection handling
+- `main/server/core/src/tracks/` - Query optimization
 - Add Redis caching layer (new dependency)
 
 #### Bundle Size Reduction
@@ -171,8 +170,8 @@ The current version includes core functionality:
 - [ ] Implement dynamic imports
 
 **Files to modify**:
-- `next.config.js` - Build optimizations
-- `src/client/features/*/` - Dynamic imports
+- `main/apps/web/vite.config.ts` - Build optimizations
+- `main/apps/web/src/client/features/*/` - Dynamic imports
 - `package.json` - Audit dependencies
 
 ## Medium-Term Goals (Q2-Q3 2025)
@@ -288,7 +287,7 @@ The current version includes core functionality:
 ### Infrastructure
 
 #### Microservices Architecture
-**Status**: Monolithic currently
+**Status**: Single Fastify process currently
 **Priority**: Low
 **Description**: Consider breaking into microservices
 
@@ -317,27 +316,24 @@ The current version includes core functionality:
    - Inconsistent error handling across API routes
    - Need centralized error logging
    - Improve user-facing error messages
-   - **Files**: `src/app/api/*/`, `src/server/lib/core/`
+   - **Files**: `main/apps/server/src/http/routes/`, `main/server/core/src/errors.ts`
 
 2. **Test Coverage**
    - Current coverage is minimal
-   - Need unit tests for services
-   - Add integration tests for API routes
-   - E2E tests for critical user flows
-   - **Files**: All `*.test.ts` files needed
+   - Need unit tests for core services
+   - Add repository/integration tests against a test database
+   - **Files**: Colocated `*.test.ts` files across `main/`
 
-3. **TypeScript Strict Mode**
-   - Enable strict mode in tsconfig
-   - Fix any type errors
-   - Remove `any` types
-   - **Files**: `tsconfig.json`, various files with loose types
+3. **Type Safety Hardening**
+   - Strict mode is enabled; keep it zero-`any`
+   - Continue inferring types from Zod schemas in `main/shared`
+   - **Files**: `tsconfig.json`, any remaining loosely-typed modules
 
 4. **Authentication Security Audit**
-   - Review session management
-   - Implement refresh tokens properly
+   - Refresh tokens (rotating, reuse-detected) are implemented — keep auditing the family logic
    - Add rate limiting to auth endpoints
    - Review CSRF protection
-   - **Files**: `src/server/lib/auth/`, `src/app/api/auth/`
+   - **Files**: `main/server/core/src/auth/`, `main/apps/server/src/http/routes/auth.ts`
 
 ### Medium Priority
 
@@ -347,11 +343,10 @@ The current version includes core functionality:
    - Create inline code comments
    - **Files**: All source files
 
-6. **Redux Usage Review**
-   - Minimal Redux usage currently
-   - Consider removing entirely in favor of Context
-   - Or expand usage for consistency
-   - **Files**: `src/client/core/store/`
+6. **State Management Consistency**
+   - Redux Toolkit is the primary global store (catalog, filters, player)
+   - Keep scoped concerns in React Context; avoid duplicating state across both
+   - **Files**: `main/apps/web/src/client/core/store/`
 
 7. **CSS Architecture**
    - Inconsistent use of Tailwind utilities vs custom CSS
@@ -394,8 +389,8 @@ Track user-requested features here:
 
 ### Database Schema Changes
 - Normalize track metadata (breaking change)
-- Migrate from multiple schemas to single schema
 - Add proper foreign key constraints
+- (Done: consolidated to a single schema with Row-Level Security)
 
 ### API Changes
 - Version API endpoints (v1, v2)

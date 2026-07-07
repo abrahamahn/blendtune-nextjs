@@ -37,11 +37,11 @@ Thank you for considering contributing to Blendtune! This document provides guid
 
 Before contributing, ensure you have:
 
-- Node.js 18+ or 20+ installed
+- Node.js 20+ and pnpm 9+ installed
 - PostgreSQL 14+ running locally
 - Git configured with your name and email
 - A code editor (VS Code recommended)
-- Basic understanding of Next.js, React, and TypeScript
+- Basic understanding of Vite, React, Fastify, and TypeScript
 
 ### Setting Up Development Environment
 
@@ -63,15 +63,13 @@ git fetch upstream
 3. **Install Dependencies**
 
 ```bash
-npm install
+pnpm install
 ```
 
 4. **Set Up Environment Variables**
 
-```bash
-cp .env.example .env.local
-# Edit .env.local with your local configuration
-```
+Configure the environment used by `main/shared/src/config` — provide `DATABASE_URL`,
+`JWT_SECRET` (≥32 chars), and DO Spaces + SMTP credentials for local development.
 
 5. **Initialize Database**
 
@@ -79,20 +77,20 @@ cp .env.example .env.local
 # Create database
 createdb blendtune
 
-# Import schemas
-psql -d blendtune < db/blendtune_tracks_backup.sql
-psql -d blendtune < db/blendtune_users_backup.sql
+# Apply migrations
+pnpm db:migrate
 ```
 
-6. **Run Development Server**
+6. **Run the API and Web Dev Server** (separate terminals)
 
 ```bash
-npm run dev
+pnpm dev:api   # Fastify API on :8080
+pnpm dev:web   # Vite dev server
 ```
 
 7. **Verify Setup**
 
-- Open http://localhost:3000
+- Open the Vite dev server URL
 - Sign up for a test account
 - Try playing a track
 - Ensure no console errors
@@ -137,18 +135,14 @@ git checkout -b fix/bug-description
 ### 4. Test Your Changes
 
 ```bash
-# Run linters
-npm run lint
-npm run stylelint
+# Run linter
+pnpm lint
 
 # Run type checking
-npm run type-check
+pnpm type-check
 
 # Run tests
-npm run test
-
-# Run E2E tests
-npm run test:e2e
+pnpm test
 ```
 
 ### 5. Push and Create Pull Request
@@ -231,7 +225,7 @@ export function Button(props: any) {
 
 **Feature-based structure**:
 ```
-src/client/features/player/
+main/apps/web/src/client/features/player/
 ├── components/
 │   ├── PlayerControls.tsx
 │   └── VolumeSlider.tsx
@@ -291,12 +285,12 @@ type PlayerState = { };
 
 **Use Prettier** (automatic formatting):
 ```bash
-npm run format
+pnpm format
 ```
 
-**ESLint rules** (enforced):
+**ESLint rules** (enforced, flat config):
 ```bash
-npm run lint
+pnpm lint
 ```
 
 **Line length**: Maximum 100 characters (soft limit)
@@ -305,14 +299,14 @@ npm run lint
 ```typescript
 // 1. External libraries
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
-// 2. Internal modules
-import { TrackCard } from '@/client/features/tracks';
-import { usePlayer } from '@/client/features/player';
+// 2. Internal modules (path aliases, not deep relative imports)
+import { useNavigate } from '@router/index';
+import { TrackCard } from '@features/tracks';
+import { usePlayer } from '@features/player';
 
 // 3. Types
-import type { Track } from '@/shared/types';
+import type { Track } from '@shared/types';
 
 // 4. Styles
 import styles from './TrackList.module.css';
@@ -374,64 +368,36 @@ setIsPlaying(true);
 
 **Test file naming**: `ComponentName.test.tsx` or `functionName.test.ts`
 
+Tests are Jest unit tests colocated next to the source they cover.
+
 **Example**:
 ```typescript
-// src/client/shared/utils/formatDuration.test.ts
-import { formatDuration } from './formatDuration';
+// main/shared/src/validation/track.test.ts
+import { trackSchema } from './track';
 
-describe('formatDuration', () => {
-  it('formats seconds into MM:SS', () => {
-    expect(formatDuration(65)).toBe('1:05');
-    expect(formatDuration(3599)).toBe('59:59');
+describe('trackSchema', () => {
+  it('accepts a valid track payload', () => {
+    expect(trackSchema.safeParse({ catalog: 'mkh063', title: 'Playa' }).success).toBe(true);
   });
 
-  it('handles zero and negative values', () => {
-    expect(formatDuration(0)).toBe('0:00');
-    expect(formatDuration(-10)).toBe('0:00');
+  it('rejects a missing catalog id', () => {
+    expect(trackSchema.safeParse({ title: 'Playa' }).success).toBe(false);
   });
 });
 ```
 
-### Integration Tests
+### Core & Repository Tests
 
-**Test interactions between**:
-- API routes and database
-- Components and contexts
-- Services and external APIs
-
-### End-to-End Tests
-
-**Test critical user flows**:
-- Sign up and email verification
-- Sign in and session creation
-- Browse catalog and apply filters
-- Play tracks and use player controls
-
-**Example**:
-```typescript
-// e2e/auth.spec.ts
-import { test, expect } from '@playwright/test';
-
-test('user can sign up', async ({ page }) => {
-  await page.goto('/auth/signup');
-  await page.fill('input[name="email"]', 'test@example.com');
-  await page.fill('input[name="password"]', 'TestPass123!');
-  await page.click('button[type="submit"]');
-
-  await expect(page).toHaveURL('/auth/verify-email');
-});
-```
+Test core services (`main/server/core`) by passing fake/mock repositories rather than booting
+Fastify or hitting a real database. Scope any true database-integration test to a test database and
+clean up afterward. See [06-testing.md](./06-testing.md) for details.
 
 ### Test Coverage
 
-**Aim for**:
-- 80% coverage for utils and services
-- 70% coverage for components
-- 100% coverage for critical paths (auth, payments)
+Prioritize coverage of critical paths — auth, tracks, and catalog/tenant logic. Run the suite with:
 
-**Run coverage report**:
 ```bash
-npm run test:coverage
+pnpm test
 ```
 
 ## Pull Request Process
@@ -462,7 +428,6 @@ Closes #123
 
 ## Testing
 - [ ] Unit tests added/updated
-- [ ] E2E tests added/updated
 - [ ] Manual testing completed
 
 ## Screenshots (if applicable)

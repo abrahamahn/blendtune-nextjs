@@ -2,9 +2,20 @@
 
 > Complete technology stack for BlendTune - A beat marketplace and DAW platform
 
-**Version:** 2.0 (Migration Architecture)
+**Version:** 2.0 (Target Architecture)
 **Last Updated:** December 2025
-**Platform:** Web, Mobile (iOS/Android), Desktop (Windows/Mac/Linux)
+**Platform:** Web (shipped), Mobile (iOS/Android), Desktop (Windows/Mac/Linux) — planned
+
+---
+
+> **Shipped vs. planned.** The web + API foundation already runs as a
+> **pnpm-workspace monorepo** (`main/`): a **Vite + React 19 SPA** served by a **Fastify** API from a
+> single origin, with framework-agnostic core packages, **PostgreSQL via postgres.js** (Row-Level
+> Security), and Argon2id + JWT auth. See [dev/02-architecture.md](./dev/02-architecture.md) for the
+> as-built system. This document is the broader **target** stack (adds mobile, desktop, DAW, search,
+> queues, cache); sections below marked as recommendations/future are aspirational, not yet adopted.
+> Notably, the shipped SPA uses a small custom router and **Redux Toolkit** rather than the
+> TanStack Router / Zustand / Tamagui listed as targets here.
 
 ---
 
@@ -1161,21 +1172,15 @@ logger.info({
 | **Testing** | Vitest + Playwright | Fast, modern, excellent TypeScript support |
 | **Deployment** | Railway/Render + Vercel | Easy setup, affordable, scalable |
 
-### Why Not Next.js?
+### Why Vite + React
 
-While the current stack uses Next.js, we're migrating away because:
-
-❌ **Cons for this use case:**
-- Server Components add complexity for real-time audio
-- SSR benefits minimal for logged-in audio app
-- Heavier than needed for client-heavy DAW
-- Harder to share code with mobile/desktop
+The web app runs on Vite + React for these reasons:
 
 ✅ **Vite + React Benefits:**
 - Faster development (HMR)
-- Better for real-time audio (full client control)
+- Better for real-time audio (full client control, no Server Component overhead)
 - Easier code sharing across platforms
-- Simpler deployment (separate frontend/backend)
+- Single-origin deploy — one Fastify process serves the SPA and the API
 - Lower latency for audio processing
 
 ### When to Scale/Upgrade
@@ -1191,15 +1196,15 @@ While the current stack uses Next.js, we're migrating away because:
 
 ---
 
-## Migration Path (from current Next.js app)
+## Migration Path
 
-### Phase 1: Foundation (Months 1-2)
-- [ ] Set up Turborepo monorepo
-- [ ] Create Vite + React web app
-- [ ] Migrate marketplace UI (browse, search, player)
-- [ ] Set up Fastify backend
-- [ ] Migrate API endpoints
-- [ ] Test audio playback with Web Audio API
+### Phase 1: Foundation — ✅ shipped
+- [x] Set up the pnpm-workspace monorepo (`main/`)
+- [x] Create the Vite + React web app (SPA)
+- [x] Migrate marketplace UI (browse, search, player)
+- [x] Set up the Fastify backend (single-origin: SPA + `/api`)
+- [x] Migrate API endpoints to framework-agnostic core packages
+- [x] PostgreSQL via postgres.js with Row-Level Security; Argon2id + JWT auth
 
 ### Phase 2: DAW Features (Months 3-4)
 - [ ] Implement audio engine (Web Audio API + Tone.js)

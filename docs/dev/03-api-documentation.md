@@ -4,26 +4,31 @@ Complete reference for all Blendtune API endpoints.
 
 ## Base URL
 
+The API is served from the same origin as the SPA (Fastify serves both `/api/*` and the app).
+
 ```
-Development: http://localhost:3000/api
-Production: https://yourdomain.com/api
+Development: http://localhost:8080/api   (Fastify)
+Production:  https://blendtune.com/api
 ```
 
 ## Authentication
 
-Most endpoints require authentication via session cookies.
+Most endpoints require authentication via HTTP-only cookies.
 
 **Authentication Method**: HTTP-only cookies
-**Session Duration**: Configurable (default: 7 days)
-**Token Format**: Secure random string
+**Access token**: short-lived HS256 JWT in the `sessionToken` cookie (`ACCESS_TOKEN_TTL`, default 15m)
+**Refresh token**: opaque, rotating token in the `refreshToken` cookie (reuse-detected token family)
 
-### Session Cookie
+The server refreshes an expired access token transparently on the next request, so clients do not
+call a refresh endpoint manually.
+
+### Session Cookies
 
 ```
-Cookie: session=<token>
+Cookie: sessionToken=<jwt>; refreshToken=<opaque>
 HttpOnly: true
 Secure: true (production)
-SameSite: Lax
+SameSite: Strict
 ```
 
 ## Response Format
@@ -334,9 +339,10 @@ Authenticate a user and create a session.
 }
 ```
 
-**Set-Cookie Header**:
+**Set-Cookie Headers**:
 ```
-Set-Cookie: session=<token>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800
+Set-Cookie: sessionToken=<jwt>; HttpOnly; Secure; SameSite=Strict; Path=/
+Set-Cookie: refreshToken=<opaque>; HttpOnly; Secure; SameSite=Strict; Path=/
 ```
 
 **Error Responses**:
@@ -376,9 +382,10 @@ End the current user session.
 }
 ```
 
-**Set-Cookie Header**:
+**Set-Cookie Headers**:
 ```
-Set-Cookie: session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
+Set-Cookie: sessionToken=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0
+Set-Cookie: refreshToken=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0
 ```
 
 **Error Responses**:

@@ -63,8 +63,8 @@ import from each other.
 
 ### Technology Decisions
 
-**Why Vite + Fastify (over the previous Next.js app)?**
-- Full client control for a heavily interactive, audio-first UI (no Server Component overhead).
+**Why Vite + Fastify?**
+- Full client control for a heavily interactive, audio-first UI (no server-rendering overhead).
 - Framework-agnostic core: business logic is testable in isolation and portable into the bslt monorepo.
 - Single-origin deploy — one Fastify process serves the SPA and the API, so no CORS and no separate host.
 - Faster dev loop (Vite HMR) and a leaner runtime.

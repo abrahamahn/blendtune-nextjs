@@ -1,5 +1,7 @@
 # Phase 1: Next.js to React/Vite Migration Plan
 
+> Historical (pre-bslt-migration). Superseded — see docs/dev/02-architecture.md.
+
 > Complete migration guide from Next.js to vanilla React with Vite, maintaining all functionality
 
 **Start Date:** TBD

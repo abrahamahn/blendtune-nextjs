@@ -7,5 +7,4 @@
  */
 
 /** Roles a user can hold within a tenant, most-privileged first. */
-const TENANT_ROLES = ['owner', 'admin', 'member', 'viewer'] as const;
-export type TenantRole = (typeof TENANT_ROLES)[number];
+export type TenantRole = 'owner' | 'admin' | 'member' | 'viewer';

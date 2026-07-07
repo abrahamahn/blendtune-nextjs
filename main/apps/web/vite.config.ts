@@ -25,6 +25,7 @@ export default defineConfig({
       '@core': repo('main/apps/web/src/client/core'),
       '@components': repo('main/apps/web/src/client/shared/components'),
       '@router': repo('main/client/react/src/router'),
+      '@ui': repo('main/client/ui/src'),
     },
   },
   server: {

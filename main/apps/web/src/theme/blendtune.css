@@ -1,0 +1,113 @@
+/* main/apps/web/src/theme/blendtune.css
+ * Blendtune brand theme — token overrides on top of the vendored @ui theme.css.
+ * Direction: docs/dev/design-direction.md ("studio at night": warm char + VU amber).
+ * Load order: @ui/styles/theme.css first, then this file.
+ */
+
+@font-face {
+  font-family: 'Akzidenz Extended';
+  src: url('/fonts/Berthold Akzidenz Grotesk Medium Extended.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-latin-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-latin-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/ibm-plex-mono-latin-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --ui-font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --ui-font-family-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  /* Brand-only additions (bt- prefix so they never collide with vendored tokens) */
+  --bt-font-display: 'Akzidenz Extended', 'Archivo', sans-serif;
+  --bt-readout-glow: 0 0 0.5rem rgb(242 163 60 / 45%);
+}
+
+/* Dark is the designed-for mode. */
+:root[data-theme='dark'],
+:root:not([data-theme]) {
+  --ui-color-bg: #131014; /* Char */
+  --ui-color-surface: #1b171d; /* Booth */
+  --ui-color-surface-strong: #241f26; /* Console */
+  --ui-color-border: #2e2830; /* Seam */
+  --ui-color-text: #ede9e3; /* Bone */
+  --ui-color-text-muted: #9c948e; /* Smoke */
+  --ui-color-muted: #9c948e;
+  --ui-color-primary: #f2a33c; /* VU Amber */
+  --ui-color-primary-muted: #6b4c22;
+  --ui-color-accent: #f2a33c;
+  --ui-color-text-inverse: #131014;
+  --ui-color-success: #63c68c; /* Meter Green */
+  --ui-color-danger: #e5604c; /* Clip Red */
+  --ui-color-shadow: rgb(0 0 0 / 50%);
+}
+
+/* Light theme: same voices, daylight values. Functional, not the hero. */
+:root[data-theme='light'] {
+  --ui-color-bg: #faf8f5;
+  --ui-color-surface: #ffffff;
+  --ui-color-surface-strong: #f1ede8;
+  --ui-color-border: #e2dcd4;
+  --ui-color-text: #201c1e;
+  --ui-color-text-muted: #6f6862;
+  --ui-color-muted: #6f6862;
+  --ui-color-primary: #c67816; /* amber, tuned for light-bg contrast */
+  --ui-color-primary-muted: #f2dfc2;
+  --ui-color-accent: #c67816;
+  --ui-color-text-inverse: #ffffff;
+  --ui-color-success: #1f8a56;
+  --ui-color-danger: #c23f2d;
+}
+
+/* Signature: the facts readout (key · BPM · duration). One consistent treatment. */
+.bt-readout {
+  font-family: var(--ui-font-family-mono);
+  font-size: var(--ui-font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ui-color-text-muted);
+  background: var(--ui-color-surface-strong);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+  padding: 0.125rem 0.5rem;
+  white-space: nowrap;
+}
+.bt-readout[data-playing='true'] {
+  color: var(--ui-color-primary);
+  border-color: var(--ui-color-primary);
+  box-shadow: var(--bt-readout-glow);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bt-readout {
+    transition:
+      color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+}
+
+/* Display type: wordmark, page titles, hero. Use sparingly — it is the brand voice. */
+.bt-display {
+  font-family: var(--bt-font-display);
+  letter-spacing: -0.01em;
+}

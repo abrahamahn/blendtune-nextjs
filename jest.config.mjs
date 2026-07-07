@@ -18,6 +18,8 @@ const config = {
   moduleNameMapper: {
     '^@router$': '<rootDir>/main/client/react/src/router',
     '^@router/(.*)$': '<rootDir>/main/client/react/src/router/$1',
+    '^@ui$': '<rootDir>/main/client/ui/src',
+    '^@ui/(.*)$': '<rootDir>/main/client/ui/src/$1',
     '^@server/db$': '<rootDir>/main/server/db/src',
     '^@server/db/(.*)$': '<rootDir>/main/server/db/src/$1',
     '^@server/core/(.*)$': '<rootDir>/main/server/core/src/$1',

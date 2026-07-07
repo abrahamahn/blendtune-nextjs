@@ -1,0 +1,76 @@
+/* main/apps/web/src/client/components/components.css
+ * Shared styles for the small composite components (Tag, Artwork, PlayButton,
+ * EmptyState). Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+/* Quiet mood/type tag — plain muted text so the readout stays the loud one. */
+.bt-tag {
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+  white-space: nowrap;
+}
+
+/* Square artwork; the amber-on-console monogram is the intentional empty face. */
+.bt-artwork {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-color-surface-strong);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  color: var(--ui-color-primary);
+}
+.bt-artwork > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.bt-artwork > svg {
+  width: 40%;
+  height: 40%;
+  opacity: 0.55;
+}
+
+/* Round play/pause button on top of @ui .btn-primary. */
+.bt-play {
+  border-radius: var(--ui-radius-full);
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.bt-play[data-size='sm'] {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.bt-play[data-size='lg'] {
+  width: 3rem;
+  height: 3rem;
+}
+.bt-play > svg {
+  width: 50%;
+  height: 50%;
+}
+
+/* Empty state: centered, quiet, inviting. */
+.bt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-gap-sm);
+  padding: var(--ui-gap-3xl) var(--ui-gap-lg);
+  text-align: center;
+}
+.bt-empty-icon {
+  display: inline-flex;
+  color: var(--ui-color-text-muted);
+}
+.bt-empty-icon > svg {
+  width: 2rem;
+  height: 2rem;
+}
+.bt-empty-title {
+  font-weight: 500;
+}

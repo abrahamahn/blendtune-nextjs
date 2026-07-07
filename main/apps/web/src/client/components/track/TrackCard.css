@@ -1,0 +1,67 @@
+/* main/apps/web/src/client/components/track/TrackCard.css
+ * Carousel card. Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-track-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap-xs);
+  width: 10rem;
+  flex: none;
+  padding: var(--ui-gap-sm);
+  border-radius: var(--ui-radius-md);
+}
+.bt-track-card:hover {
+  background: var(--ui-color-surface);
+}
+.bt-track-card[data-playing='true'] {
+  background: var(--ui-color-surface-strong);
+}
+
+.bt-track-card-art {
+  position: relative;
+  display: block;
+}
+.bt-track-card-play {
+  position: absolute;
+  right: var(--ui-gap-sm);
+  bottom: var(--ui-gap-sm);
+  opacity: 0;
+}
+.bt-track-card:hover .bt-track-card-play,
+.bt-track-card:focus-within .bt-track-card-play,
+.bt-track-card[data-playing='true'] .bt-track-card-play {
+  opacity: 1;
+}
+@media (hover: none) {
+  .bt-track-card-play {
+    opacity: 1;
+  }
+}
+
+.bt-track-card-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bt-track-card-producer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bt-track-card-readout {
+  align-self: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bt-track-card,
+  .bt-track-card-play {
+    transition:
+      background-color 180ms ease,
+      opacity 180ms ease;
+  }
+}

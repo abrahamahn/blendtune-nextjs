@@ -1,0 +1,93 @@
+/* main/apps/web/src/client/components/track/TrackRow.css
+ * Catalog row. Tokens only (var(--ui-*) / .bt-*); no hex, no px except 1px borders.
+ */
+
+.bt-track-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-md);
+  padding: var(--ui-gap-sm) var(--ui-gap-md);
+  border-radius: var(--ui-radius-md);
+}
+.bt-track-row:hover {
+  background: var(--ui-color-surface);
+}
+.bt-track-row[data-playing='true'] {
+  background: var(--ui-color-surface-strong);
+}
+
+.bt-track-row-art {
+  position: relative;
+  display: block;
+  width: 3rem;
+}
+.bt-track-row-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  opacity: 0;
+}
+.bt-track-row:hover .bt-track-row-play,
+.bt-track-row:focus-within .bt-track-row-play,
+.bt-track-row[data-playing='true'] .bt-track-row-play {
+  opacity: 1;
+}
+
+.bt-track-row-id {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.bt-track-row-title {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bt-track-row-producer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bt-track-row-tags {
+  display: flex;
+  gap: var(--ui-gap-sm);
+}
+
+.bt-track-row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-xs);
+  opacity: 0;
+}
+.bt-track-row:hover .bt-track-row-actions,
+.bt-track-row:focus-within .bt-track-row-actions {
+  opacity: 1;
+}
+
+/* Touch devices have no hover: keep play and actions reachable. */
+@media (hover: none) {
+  .bt-track-row-play,
+  .bt-track-row-actions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bt-track-row,
+  .bt-track-row-play,
+  .bt-track-row-actions {
+    transition:
+      background-color 180ms ease,
+      opacity 180ms ease;
+  }
+}
+
+/* Narrow viewports: tags yield first — the readout stays. */
+@media (max-width: 48rem) {
+  .bt-track-row-tags {
+    display: none;
+  }
+}

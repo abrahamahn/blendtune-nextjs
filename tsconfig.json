@@ -25,17 +25,11 @@
       "@/shared/*": [
         "main/shared/src/*"
       ],
-      "@/*": [
-        "src/*"
-      ],
-      "@app/*": [
-        "./src/client/app/*"
-      ],
       "@types/*": [
         "./main/shared/src/types/*"
       ],
       "@client/*": [
-        "src/client/*"
+        "main/apps/web/src/client/*"
       ],
       "@router/*": [
         "main/client/react/src/router/*"
@@ -67,97 +61,94 @@
       "@server/system/*": [
         "main/server/system/src/*"
       ],
-      "@server/*": [
-        "src/server/*"
-      ],
       "@shared/*": [
         "main/shared/src/*"
       ],
       /* Feature paths */
       "@features/*": [
-        "src/client/features/*"
+        "main/apps/web/src/client/features/*"
       ],
       "@auth/*": [
-        "src/client/features/auth/*"
+        "main/apps/web/src/client/features/auth/*"
       ],
       "@layout/*": [
-        "src/client/features/layout/*"
+        "main/apps/web/src/client/features/layout/*"
       ],
       "@player/*": [
-        "src/client/features/player/*"
+        "main/apps/web/src/client/features/player/*"
       ],
       "@sounds/*": [
-        "src/client/features/sounds/*"
+        "main/apps/web/src/client/features/sounds/*"
       ],
       "@home/*": [
-        "src/client/features/home/*"
+        "main/apps/web/src/client/features/home/*"
       ],
       "@tracks/*": [
-        "src/client/features/tracks/*"
+        "main/apps/web/src/client/features/tracks/*"
       ],
       /* Sounds feature subpaths */
       "@filters/*": [
-        "src/client/features/sounds/filters/*"
+        "main/apps/web/src/client/features/sounds/filters/*"
       ],
       "@category/*": [
-        "src/client/features/sounds/category/*"
+        "main/apps/web/src/client/features/sounds/category/*"
       ],
       "@search/*": [
-        "src/client/features/sounds/search/*"
+        "main/apps/web/src/client/features/sounds/search/*"
       ],
       "@visualizer/*": [
-        "src/client/features/sounds/visualizer/*"
+        "main/apps/web/src/client/features/sounds/visualizer/*"
       ],
       "@keywords*": [
-        "src/client/features/sounds/tracks/keywords/*"
+        "main/apps/web/src/client/features/sounds/tracks/keywords/*"
       ],
       "@catalog/*": [
-        "src/client/features/sounds/catalog/*"
+        "main/apps/web/src/client/features/sounds/catalog/*"
       ],
       /* Layout feature subpaths */
       "@header/*": [
-        "src/client/features/layout/header/*"
+        "main/apps/web/src/client/features/layout/header/*"
       ],
       "@footer/*": [
-        "src/client/features/layout/footer/*"
+        "main/apps/web/src/client/features/layout/footer/*"
       ],
       "@leftbar/*": [
-        "src/client/features/layout/leftbar/*"
+        "main/apps/web/src/client/features/layout/leftbar/*"
       ],
       "@rightbar/*": [
-        "src/client/features/layout/rightbar/*"
+        "main/apps/web/src/client/features/layout/rightbar/*"
       ],
       /* Core and shared paths */
       "@core/*": [
-        "src/client/core/*"
+        "main/apps/web/src/client/core/*"
       ],
       "@components/*": [
-        "src/client/shared/components/*"
+        "main/apps/web/src/client/shared/components/*"
       ],
       "@utils/*": [
-        "src/client/shared/utils/*"
+        "main/apps/web/src/client/shared/utils/*"
       ],
       "@hooks/*": [
-        "src/client/shared/hooks/*"
+        "main/apps/web/src/client/shared/hooks/*"
       ],
       "@constants/*": [
-        "src/client/shared/constants/*"
+        "main/apps/web/src/client/shared/constants/*"
       ],
       "@styles/*": [
-        "src/client/shared/styles/*"
+        "main/apps/web/src/client/shared/styles/*"
       ],
       /* Core subpaths */
       "@providers/*": [
-        "src/client/core/providers/*"
+        "main/apps/web/src/client/core/providers/*"
       ],
       "@store/*": [
-        "src/client/core/store/*"
+        "main/apps/web/src/client/core/store/*"
       ],
       "@context/*": [
-        "src/client/core/context/*"
+        "main/apps/web/src/client/core/context/*"
       ],
       "@services/*": [
-        "src/client/core/services/*"
+        "main/apps/web/src/client/core/services/*"
       ]
     }
   },

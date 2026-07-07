@@ -2,7 +2,7 @@
 /** @type {import('jest').Config} */
 const config = {
   coverageProvider: 'v8',
-  // Unit tests are server/shared logic; e2e browser tests run via `pnpm test:e2e` (Playwright).
+  // Unit tests for server/shared/client logic (transformed by @swc/jest).
   testEnvironment: 'node',
   transform: {
     '^.+\\.(t|j)sx?$': [
@@ -26,13 +26,10 @@ const config = {
     '^@server/media$': '<rootDir>/main/server/media/src',
     '^@server/media/(.*)$': '<rootDir>/main/server/media/src/$1',
     '^@server/system/(.*)$': '<rootDir>/main/server/system/src/$1',
-    '^@server/(.*)$': '<rootDir>/src/server/$1',
     '^@shared/(.*)$': '<rootDir>/main/shared/src/$1',
     '^@/shared/(.*)$': '<rootDir>/main/shared/src/$1',
-    '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testMatch: ['<rootDir>/src/**/*.test.ts', '<rootDir>/main/**/*.test.ts'],
-  testPathIgnorePatterns: ['<rootDir>/src/test/'],
+  testMatch: ['<rootDir>/main/**/*.test.ts'],
 };
 
 export default config;

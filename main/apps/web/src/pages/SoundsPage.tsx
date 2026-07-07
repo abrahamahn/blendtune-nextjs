@@ -1,14 +1,14 @@
 // main/apps/web/src/pages/SoundsPage.tsx
 import React, { useEffect } from 'react';
 
-import Header from '@/client/features/layout/header';
+import Header from '@client/features/layout/header';
 import LeftBar from '@layout/leftbar';
 import { RightSidebarProvider, useRightSidebar } from '@rightbar/context/useRightSidebar';
 import RightBar from '@layout/rightbar';
 import StoreProvider from '@providers/StoreProvider';
 
-import { usePlayer } from '@/client/features/player/services/playerService';
-import { useTracks } from '@/client/features/tracks';
+import { usePlayer } from '@client/features/player/services/playerService';
+import { useTracks } from '@client/features/tracks';
 import { Hero } from '@sounds/hero';
 import { Category } from '@sounds/category/layout';
 import { NewTracks } from '@sounds/catalog/layouts';

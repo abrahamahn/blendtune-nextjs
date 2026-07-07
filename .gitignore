@@ -7,12 +7,11 @@
 # testing
 /coverage
 
-# next.js
+# build output
 /.next/
 /out/
-
-# production
 /build
+main/apps/web/dist/
 
 # misc
 .DS_Store
@@ -33,7 +32,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 run.sh
 .aider*
@@ -43,6 +41,3 @@ main/shared/src/config/.env.development
 
 # production env (contains secrets) — keep out of git
 main/shared/src/config/.env.production
-
-# vite build output
-main/apps/web/dist/

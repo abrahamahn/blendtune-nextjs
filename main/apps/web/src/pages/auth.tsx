@@ -7,7 +7,7 @@ import { Link, useNavigate } from '@router/index';
 
 import { setAuthenticated, setUnauthenticated } from '@store/slices';
 import Logo from '@components/common/Logo';
-import LoadingIcon from '@/client/shared/components/icons/LoadingIcon';
+import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
 
 /**
  * SignInPage:

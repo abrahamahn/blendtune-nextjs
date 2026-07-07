@@ -3,7 +3,7 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from '@router/index';
 
-import Header from '@/client/features/layout/header';
+import Header from '@client/features/layout/header';
 import LeftBar from '@layout/leftbar';
 import { RightSidebarProvider, useRightSidebar } from '@rightbar/context/useRightSidebar';
 import RightBar from '@layout/rightbar';
@@ -17,8 +17,8 @@ import {
   setMarketingConsent,
 } from '@store/slices';
 import { useSession } from '@auth/services';
-import LoadingIcon from '@/client/shared/components/icons/LoadingIcon';
-import { Skeleton } from '@/client/shared/components/common/Skeleton';
+import LoadingIcon from '@client/shared/components/icons/LoadingIcon';
+import { Skeleton } from '@client/shared/components/common/Skeleton';
 
 /** Wrapper component to conditionally render the right sidebar. */
 const RightSidebarWrapper: React.FC = () => {

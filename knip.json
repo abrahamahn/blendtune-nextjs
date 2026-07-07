@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "main/apps/server/src/main.ts",
+    "main/apps/web/src/main.tsx",
+    "main/apps/web/vite.config.ts",
+    "main/apps/web/postcss.config.js",
+    "infra/ecosystem.bslt.config.js",
+    "scripts/*.ts",
+    "jest.config.mjs",
+    "eslint.config.mjs",
+    "**/*.test.ts",
+    "public/sw.js"
+  ],
+  "project": ["main/**/*.{ts,tsx}", "scripts/**/*.ts"],
+  "ignore": ["main/apps/web/dist/**"]
+}

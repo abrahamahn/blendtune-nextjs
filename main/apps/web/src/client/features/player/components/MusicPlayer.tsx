@@ -5,10 +5,14 @@
  * lives in playerService and the player hooks — this file is presentation.
  */
 import React, { Suspense, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 
+import { Button } from '@ui';
 import { useKeyboardShortcuts, useVolumeControl } from '../hooks';
 import { usePlayer } from '@client/features/player/services/playerService';
 import { useTracks } from '@client/features/tracks';
+import { useNowPlaying } from '@features/layout/rightbar';
 
 import PlayerControls from './PlayerControls';
 import VolumeControl from './VolumeControl';
@@ -23,6 +27,7 @@ import './player.css';
 const MusicPlayer: React.FC = () => {
   const { isLoading } = useTracks();
   const { currentTrack, isPlaying } = usePlayer();
+  const { isOpen: nowPlayingOpen, toggle: toggleNowPlaying } = useNowPlaying();
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   useKeyboardShortcuts();
@@ -49,6 +54,16 @@ const MusicPlayer: React.FC = () => {
           </Suspense>
         </div>
         <TrackInfo detailsOpen={detailsOpen} onToggleDetails={toggleDetails} />
+        <Button
+          variant="text"
+          size="inline"
+          className={`bt-player-queue-btn${nowPlayingOpen ? ' bt-player-queue-btn-active' : ''}`}
+          onClick={toggleNowPlaying}
+          aria-label="Toggle now playing"
+          aria-pressed={nowPlayingOpen}
+        >
+          <FontAwesomeIcon icon={faBarsStaggered} />
+        </Button>
       </div>
 
       <MobilePlayer detailsOpen={detailsOpen} onToggleDetails={toggleDetails} />

@@ -9,6 +9,7 @@ import { PlayerProvider } from "@features/player/services/playerService";
 import ServiceWorkerProvider from "@core/services/pwa/ServiceWorkerService";
 import { ClientEnvironmentProvider } from "@core/context/ClientEnvironment";
 import { FilterProvider } from "@features/sounds/filters/context";
+import { NowPlayingProvider } from "@features/layout/rightbar";
 
 interface ClientProvidersProps {
   children: ReactNode;
@@ -27,8 +28,10 @@ const ClientProviders: React.FC<ClientProvidersProps> = ({ children }) => (
         <TracksProvider>
           <FilterProvider>
             <PlayerProvider>
-              <ServiceWorkerProvider />
-              {children}
+              <NowPlayingProvider>
+                <ServiceWorkerProvider />
+                {children}
+              </NowPlayingProvider>
             </PlayerProvider>
           </FilterProvider>
         </TracksProvider>

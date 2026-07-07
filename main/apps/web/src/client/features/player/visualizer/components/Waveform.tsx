@@ -130,9 +130,11 @@ const Waveform: React.FC<WaveformProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Colors come from the theme tokens (resolved per draw so the canvas
-      // follows theme changes): VU amber for played bars, Seam for unplayed.
+      // follows theme changes): a vertical amber gradient for played bars
+      // (lighter crest → deeper base), Seam for unplayed.
       const styles = getComputedStyle(canvas);
-      const playedColor = styles.getPropertyValue("--ui-color-primary").trim();
+      const waveTop = styles.getPropertyValue("--bt-wave-top").trim();
+      const waveBottom = styles.getPropertyValue("--bt-wave-bottom").trim();
       const unplayedColor = styles.getPropertyValue("--ui-color-border").trim();
 
       // Determine positions in pixels.
@@ -152,10 +154,15 @@ const Waveform: React.FC<WaveformProps> = ({
         const offsetY = (canvas.height - baseBarHeight) / 2;
         const barX = i * (barWidth + gapWidth);
 
-        /** Fills the current bar with a color at the given opacity. */
-        const fillBar = (color: string, alpha = 1) => {
+        // Per-bar vertical amber gradient for the played state.
+        const playedFill = ctx.createLinearGradient(0, offsetY, 0, offsetY + baseBarHeight);
+        playedFill.addColorStop(0, waveTop);
+        playedFill.addColorStop(1, waveBottom);
+
+        /** Fills the current bar with a color/gradient at the given opacity. */
+        const fillBar = (fill: string | CanvasGradient, alpha = 1) => {
           ctx.globalAlpha = alpha;
-          ctx.fillStyle = color;
+          ctx.fillStyle = fill;
           ctx.fillRect(barX, offsetY, barWidth, baseBarHeight);
           ctx.globalAlpha = 1;
         };
@@ -166,14 +173,14 @@ const Waveform: React.FC<WaveformProps> = ({
         const highlightEnd = Math.max(hoverPosition, playbackPosition);
 
         if (isDragging && barX >= highlightStart && barX < highlightEnd) {
-          fillBar(playedColor, 0.5);
+          fillBar(playedFill, 0.5);
         } else if (barX < playbackPosition - transitionWidth) {
           // Fully played.
-          fillBar(playedColor);
+          fillBar(playedFill);
         } else if (barX < playbackPosition) {
-          // Transition region: unplayed base with the played color fading in.
+          // Transition region: unplayed base with the played gradient fading in.
           fillBar(unplayedColor);
-          fillBar(playedColor, (playbackPosition - barX) / transitionWidth);
+          fillBar(playedFill, (playbackPosition - barX) / transitionWidth);
         } else {
           // Unplayed.
           fillBar(unplayedColor);

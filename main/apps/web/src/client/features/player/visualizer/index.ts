@@ -1,2 +1,2 @@
-// src\client\features\sounds\visualizer\index.ts
-export { Waveform } from './components';
+// main/apps/web/src/client/features/player/visualizer/index.ts
+export { Waveform, Equalizer } from './components';

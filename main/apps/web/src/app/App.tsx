@@ -10,6 +10,7 @@ import React from 'react';
 
 import ClientProviders from '@core/providers/ClientProviders';
 import MusicPlayer from '@features/player/components/MusicPlayer';
+import RightBar from '@features/layout/rightbar';
 import { HideMobileChrome, SetViewportHeight } from '@client/shared/hooks/mobile';
 import { Route, Routes } from '@router/index';
 
@@ -32,8 +33,9 @@ export const App: React.FC = () => (
     <HideMobileChrome />
     <SetViewportHeight />
     <div className="bt-app full-viewport">
-      <div className="bt-app-routes">
-        <Routes>
+      <div className="bt-app-body">
+        <div className="bt-app-routes">
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/sounds" element={<SoundsPage />} />
           <Route path="/c/:slug" element={<CreatorPage />} />
@@ -47,7 +49,9 @@ export const App: React.FC = () => (
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-        </Routes>
+          </Routes>
+        </div>
+        <RightBar />
       </div>
       <MusicPlayer />
     </div>

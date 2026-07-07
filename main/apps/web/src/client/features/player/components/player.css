@@ -317,3 +317,20 @@
     padding: 0 var(--ui-gap-md);
   }
 }
+
+/* Now-playing sidebar toggle (desktop only; mobile uses the slide-up details). */
+.bt-player-queue-btn {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-md);
+}
+.bt-player-queue-btn:hover {
+  color: var(--ui-color-text);
+}
+.bt-player-queue-btn-active {
+  color: var(--ui-color-primary);
+}
+@media (max-width: 64rem) {
+  .bt-player-queue-btn {
+    display: none;
+  }
+}

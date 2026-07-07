@@ -10,8 +10,16 @@
   color: var(--ui-color-text);
 }
 
+/* Body row: scrollable routes + the fixed-width now-playing sidebar. */
+.bt-app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
 .bt-app-routes {
   flex: 1;
+  min-width: 0;
   min-height: 0;
   overflow-y: auto;
 }

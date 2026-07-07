@@ -60,6 +60,9 @@
   --ui-color-success: #63c68c; /* Meter Green */
   --ui-color-danger: #e5604c; /* Clip Red */
   --ui-color-shadow: rgb(0 0 0 / 50%);
+  /* Waveform played-bar gradient — lighter amber at the crest → primary at the base */
+  --bt-wave-top: #f9c069;
+  --bt-wave-bottom: #e08a1f;
 }
 
 /* Light theme: same voices, daylight values. Functional, not the hero. */
@@ -77,6 +80,8 @@
   --ui-color-text-inverse: #ffffff;
   --ui-color-success: #1f8a56;
   --ui-color-danger: #c23f2d;
+  --bt-wave-top: #e6a640;
+  --bt-wave-bottom: #b56b12;
 }
 
 /* Signature: the facts readout (key · BPM · duration). One consistent treatment. */

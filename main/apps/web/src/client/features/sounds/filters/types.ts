@@ -1,6 +1,6 @@
 // src\client\features\sounds\filters\types.ts
 
-export interface BaseFilterProps {
+interface BaseFilterProps {
   minTempo: number;
   setMinTempo: (val: number) => void;
   maxTempo: number;
@@ -49,12 +49,4 @@ export interface FilterLabelProps {
   selectedMoods?: string[];
   selectedKeywords?: string[];
 }
-
-export interface SortFilterProps {
-    openSortFilter: boolean;
-    mobileFilterOpen?: boolean;
-    sortBy: string | null;
-    handleSortChange: (option: string) => void;
-    handleMobileSortChange?: (option: string) => void;
-  }
 

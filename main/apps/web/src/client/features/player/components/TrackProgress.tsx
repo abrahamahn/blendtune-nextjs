@@ -13,7 +13,7 @@ import { useTrackNavigation } from "@features/player/hooks";
 /**
  * Displays track progress with waveform visualization and time display
  */
-export const TrackProgress: React.FC = () => {
+const TrackProgress: React.FC = () => {
   const { currentTrack, sharedAudioUrl, currentTime, trackDuration } =
     usePlayer();
   const { seekTo } = useTrackNavigation();

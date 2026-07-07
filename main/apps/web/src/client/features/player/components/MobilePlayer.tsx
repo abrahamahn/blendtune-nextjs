@@ -17,7 +17,7 @@ import { useProgressControl } from "../hooks/useProgressControl";
 /**
  * Compact player version optimized for mobile screens
  */
-export const MobilePlayer: React.FC = () => {
+const MobilePlayer: React.FC = () => {
   const { currentTrack, isPlaying } = usePlayer();
   const { togglePlayPause, nextTrack } = usePlayerControls();
   const { handleProgressClick, progressPercent } = useProgressControl();

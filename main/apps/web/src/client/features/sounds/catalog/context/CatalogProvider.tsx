@@ -30,7 +30,7 @@ interface CatalogProviderProps {
 }
 
 // Provider component
-export const CatalogProvider: React.FC<CatalogProviderProps> = ({ children, tracks: initialTracks }) => {
+const CatalogProvider: React.FC<CatalogProviderProps> = ({ children, tracks: initialTracks }) => {
   const hasInitial = initialTracks !== undefined && initialTracks.length > 0;
   const [fetchedTracks, setFetchedTracks] = useState<Track[]>([]);
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);

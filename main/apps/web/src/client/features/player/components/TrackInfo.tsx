@@ -116,7 +116,7 @@ TrackInfoComponent.displayName = "TrackInfo";
  * Memoized version of TrackInfoComponent to prevent unnecessary re-renders.
  * Since there are currently no props, the custom comparison function always returns true.
  */
-export const TrackInfo = React.memo(TrackInfoComponent, () => {
+const TrackInfo = React.memo(TrackInfoComponent, () => {
   // Custom comparison: currently always returns true because no props are used.
   return true;
 });

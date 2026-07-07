@@ -190,5 +190,3 @@ export const useSession = () => {
     userProfileCreated,
   ]);
 };
-
-export default useSession;

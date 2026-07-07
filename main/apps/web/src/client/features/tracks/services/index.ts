@@ -8,6 +8,4 @@
  * @module tracks/context
  */
 
-export { TracksContext} from './TracksContext';
-export { default as TracksProvider } from './TracksContext';
 export { useTracksContext } from './useTracksContext';

@@ -14,7 +14,7 @@ import { useTrackNavigation } from "./useTrackNavigation";
  * - Arrow Left/Right: Seek -/+ 10s (with Shift: Previous/Next track)
  * - Arrow Up/Down: Volume +/- (with Shift: Max/Min)
  */
-export const useKeyboardShortcuts = () => {
+const useKeyboardShortcuts = () => {
   const { audioRef, volume, setVolume } = usePlayer();
   const { 
     togglePlayPause, 

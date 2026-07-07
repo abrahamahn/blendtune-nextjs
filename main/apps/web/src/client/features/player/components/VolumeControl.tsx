@@ -8,7 +8,7 @@ import { useThrottleFn } from "@client/shared/utils/useThrottleFn";
  * Displays and controls the volume level with a slider.
  * This version uses a throttled mouse–move handler (at ~60fps) to reduce frequent DOM measurements.
  */
-export const VolumeControl: React.FC = () => {
+const VolumeControl: React.FC = () => {
   const { 
     volume, 
     setVolume, 

@@ -4,7 +4,7 @@ import { PlayerIcons } from '@client/shared/components/icons';
 import { usePlayer } from "@client/features/player/services/playerService";
 import { usePlayerControls } from "../hooks";
 
-export const PlayerControls: React.FC = () => {
+const PlayerControls: React.FC = () => {
   const { isPlaying, loopMode } = usePlayer();
   const { togglePlayPause, previousTrack, nextTrack, loopTrack } = usePlayerControls();
 

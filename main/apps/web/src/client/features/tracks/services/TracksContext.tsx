@@ -1,7 +1,7 @@
 // src\client\features\tracks\services\TracksContext.tsx
 "use client";
 
-import React, { useState, ReactNode, useEffect, createContext, useContext, useCallback, useRef } from "react";
+import React, { useState, ReactNode, useEffect, createContext, useCallback, useRef } from "react";
 import { fetchTracks } from "@features/tracks/core/hooks";
 import { Track } from "@/shared/types/track";
 import { TrackServiceType } from "@features/tracks/types";
@@ -194,20 +194,6 @@ const TracksProvider: React.FC<TracksProviderProps> = ({ children }) => {
       {children}
     </TracksContext.Provider>
   );
-};
-
-/**
- * Custom hook for accessing tracks context
- * Provides a convenient way to consume tracks state and methods
- * @throws {Error} If used outside of TracksProvider
- * @returns {ExtendedTrackServiceType} Tracks context with state and methods
- */
-export const useTracks = (): ExtendedTrackServiceType => {
-  const context = useContext(TracksContext);
-  if (!context) {
-    throw new Error('useTracks must be used within a TracksProvider');
-  }
-  return context;
 };
 
 export default TracksProvider;

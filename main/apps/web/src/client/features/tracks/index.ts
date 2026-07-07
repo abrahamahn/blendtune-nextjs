@@ -8,24 +8,5 @@
  * @module tracks
  */
 
-// Export all types
-export type { TrackServiceType, TrackErrorInfo } from './types';
-
-// Export context and provider
-export { TracksContext, TracksProvider, useTracksContext } from './services';
-
-// Export core functionality
-export { fetchTracks } from './core';
-
-// Export keywords functionality
-export {
-  useTrackMetadata,
-  useKeywords,
-  extractUniqueArtists,
-  extractUniqueMoods,
-  extractUniqueInstruments,
-  extractUniqueKeywords,
-} from './keywords';
-
 // Export commonly used hooks for convenience
 export { useTracksContext as useTracks } from './services/useTracksContext';

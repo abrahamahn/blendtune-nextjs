@@ -5,4 +5,3 @@
  */
 
 export { useTrackMetadata } from './useTrackMetadata';
-export { useKeywords } from './useKeywords';

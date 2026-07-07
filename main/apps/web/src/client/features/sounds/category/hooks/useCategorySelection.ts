@@ -75,5 +75,3 @@ export const useCategorySelection = () => {
     isGenreSelected
   };
 };
-
-export default useCategorySelection;

@@ -7,7 +7,7 @@ import React, { createContext, useContext, ReactNode } from "react";
  * Type definition for client environment variables.
  * These values can be accessed throughout the app.
  */
-export interface ClientEnvironmentType {
+interface ClientEnvironmentType {
   version: string; // Application version
   buildId: string; // Build identifier (useful for debugging)
   debug: boolean;  // Flag for development/debug mode

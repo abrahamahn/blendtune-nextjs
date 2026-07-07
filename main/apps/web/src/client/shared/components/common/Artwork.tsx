@@ -1,7 +1,7 @@
 // src\client\shared\components\common\Artwork.tsx
 import React from "react";
 
-export interface ArtworkProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt"> {
+interface ArtworkProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt"> {
   /** Descriptive alt text for the image */
   alt: string;
   /** Optional catalog value to generate the URL (if no override provided) */

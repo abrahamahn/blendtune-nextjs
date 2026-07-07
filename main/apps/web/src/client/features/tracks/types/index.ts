@@ -12,11 +12,3 @@ import { Track } from '@/shared/types/track';
 export interface TrackServiceType {
   tracks: Track[];
 }
-
-/**
- * Extended Track Error information
- */
-export interface TrackErrorInfo {
-  message: string;
-  code: string;
-}

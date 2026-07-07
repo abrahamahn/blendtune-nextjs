@@ -136,5 +136,3 @@ export const PlayerIcons = {
     />
   )
 };
-
-export default PlayerIcon;

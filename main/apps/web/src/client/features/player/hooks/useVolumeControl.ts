@@ -7,7 +7,7 @@ import { usePlayer, playerActions } from "@client/features/player/services/playe
 /**
  * Manages core volume state and basic operations
  */
-export const useVolumeState = (initialVolume = 0.5) => {
+const useVolumeState = (initialVolume = 0.5) => {
   const { audioRef, volume: storedVolume, dispatch } = usePlayer();
   const [localVolume, setLocalVolume] = useState(storedVolume);
   
@@ -82,7 +82,7 @@ export const useVolumeState = (initialVolume = 0.5) => {
 /**
  * Provides volume-related UI icon and transform calculations
  */
-export const useVolumeDisplay = (volume: number) => {
+const useVolumeDisplay = (volume: number) => {
   /**
    * Determine appropriate volume icon based on level
    */
@@ -113,7 +113,7 @@ export const useVolumeDisplay = (volume: number) => {
 /**
  * Manages volume drag interactions
  */
-export const useVolumeDrag = (
+const useVolumeDrag = (
   volume: number, 
   setVolume: (newVolume: number) => void
 ) => {
@@ -207,7 +207,7 @@ export const useVolumeDrag = (
 /**
  * Manages volume wheel interactions
  */
-export const useVolumeWheel = (
+const useVolumeWheel = (
   volume: number, 
   setVolume: (newVolume: number) => void,
   toggleVolumeVisibility: () => void
@@ -291,7 +291,7 @@ export const useVolumeWheel = (
 /**
  * Manages volume visibility and outside click
  */
-export const useVolumeVisibility = () => {
+const useVolumeVisibility = () => {
   const { isVolumeVisible, dispatch } = usePlayer();
   
   // Flag to prevent circular updates
@@ -358,7 +358,7 @@ export const useVolumeVisibility = () => {
  * @param rect The bounding rectangle of the volume bar element.
  * @returns A clamped volume value between 0 and 1.
  */
-export const calculateVolume = (clientY: number, rect: DOMRect): number => {
+const calculateVolume = (clientY: number, rect: DOMRect): number => {
   const newVolume = 1 - (clientY - rect.top) / rect.height;
   return Math.max(0, Math.min(1, newVolume));
 };
@@ -366,7 +366,7 @@ export const calculateVolume = (clientY: number, rect: DOMRect): number => {
 /**
  * Combines all volume control hooks
  */
-export const useVolumeControl = () => {
+const useVolumeControl = () => {
   const volumeState = useVolumeState();
   const volumeDisplay = useVolumeDisplay(volumeState.volume);
   const volumeVisibility = useVolumeVisibility();

@@ -15,18 +15,7 @@ export enum TrackErrorCode {
   // Processing errors
   INVALID_FORMAT = 'TRACK_INVALID_FORMAT',
   MISSING_DATA = 'TRACK_MISSING_DATA',
-  PARSING_ERROR = 'TRACK_PARSING_ERROR',
-  
-  // Runtime errors
-  PLAYBACK_ERROR = 'TRACK_PLAYBACK_ERROR',
-  PLAYBACK_NETWORK_ERROR = 'TRACK_PLAYBACK_NETWORK_ERROR',
-  PLAYBACK_CODEC_ERROR = 'TRACK_PLAYBACK_CODEC_ERROR',
-  
-  // Metadata errors
-  METADATA_ERROR = 'TRACK_METADATA_ERROR',
-  METADATA_INCOMPLETE = 'TRACK_METADATA_INCOMPLETE',
-  METADATA_VALIDATION_ERROR = 'TRACK_METADATA_VALIDATION_ERROR',
-  
+
   // Fallback
   UNKNOWN_ERROR = 'TRACK_UNKNOWN_ERROR'
 }
@@ -216,64 +205,3 @@ export const createFetchError = (status: number, details?: unknown): TrackError 
   return new TrackError(message, code, details);
 };
 
-/**
- * Creates a new TrackError for playback issues
- * 
- * @param type - Type of playback error
- * @param details - Optional error details
- * @returns TrackError with appropriate code and message
- */
-export const createPlaybackError = (
-  type: 'network' | 'codec' | 'unknown' = 'unknown',
-  details?: unknown
-): TrackError => {
-  let code: TrackErrorCode;
-  let message: string;
-
-  switch (type) {
-    case 'network':
-      code = TrackErrorCode.PLAYBACK_NETWORK_ERROR;
-      message = 'Network error during track playback';
-      break;
-    case 'codec':
-      code = TrackErrorCode.PLAYBACK_CODEC_ERROR;
-      message = 'Codec error during track playback';
-      break;
-    default:
-      code = TrackErrorCode.PLAYBACK_ERROR;
-      message = 'Error playing track audio';
-  }
-
-  return new TrackError(message, code, details);
-};
-
-/**
- * Creates a new TrackError for metadata-related issues
- * 
- * @param type - Type of metadata error
- * @param details - Optional error details
- * @returns TrackError with appropriate code and message
- */
-export const createMetadataError = (
-  type: 'incomplete' | 'validation' | 'unknown' = 'unknown',
-  details?: unknown
-): TrackError => {
-  let code: TrackErrorCode;
-  let message: string;
-
-  switch (type) {
-    case 'incomplete':
-      code = TrackErrorCode.METADATA_INCOMPLETE;
-      message = 'Incomplete track metadata';
-      break;
-    case 'validation':
-      code = TrackErrorCode.METADATA_VALIDATION_ERROR;
-      message = 'Track metadata validation failed';
-      break;
-    default:
-      code = TrackErrorCode.METADATA_ERROR;
-      message = 'Error processing track metadata';
-  }
-
-  return new TrackError(message, code, details);
-};

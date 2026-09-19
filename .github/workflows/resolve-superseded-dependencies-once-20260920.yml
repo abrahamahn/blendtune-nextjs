@@ -1,0 +1,71 @@
+name: Consolidate verified superseded dependency branches
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/resolve-superseded-dependencies-once-20260920.yml]
+permissions:
+  contents: write
+jobs:
+  resolve:
+    if: github.repository == 'abrahamahn/blendtune-nextjs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify newer active dependencies before integrating branch histories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          git clone --quiet https://github.com/abrahamahn/blendtune-nextjs.git "$RUNNER_TEMP/blendtune-resolve"
+          cd "$RUNNER_TEMP/blendtune-resolve"
+          git checkout main
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json, pathlib, re, subprocess, os
+          def git(*args, check=True):
+              return subprocess.run(['git', *args], check=check, text=True, capture_output=True)
+          targets = {
+              'dependabot/npm_and_yarn/brace-expansion-5.0.6': '52260b31f50436d052aa7c7cb18c0a741c15fd76',
+              'dependabot/npm_and_yarn/lodash-4.18.1': '898d872a215de7427f8709bf61fcd9c6d284c45b',
+              'dependabot/npm_and_yarn/next-16.2.6': '30fdb00e98c215044abce40e448a0537a2152d1a',
+              'dependabot/npm_and_yarn/postcss-8.5.10': '9ff68356e605bd78dd7d3f43160b2f3aaffb9b67'}
+          for branch, sha in targets.items():
+              current = git('ls-remote', 'origin', 'refs/heads/' + branch).stdout.split()
+              assert current and current[0] == sha, 'Branch moved: ' + branch
+              base = git('merge-base', 'HEAD', sha).stdout.strip()
+              files = set(git('diff', '--name-only', base, sha).stdout.splitlines())
+              assert files <= {'package.json', 'pnpm-lock.yaml'}, files
+          package = json.loads(pathlib.Path('package.json').read_text())
+          def version(value):
+              match = re.fullmatch(r'[~^]?(\d+)\.(\d+)\.(\d+)', value)
+              assert match, value
+              return tuple(map(int, match.groups()))
+          assert version(package['dependencies']['lodash']) >= (4, 18, 1)
+          assert version(package['devDependencies']['postcss']) >= (8, 5, 10)
+          assert all('next' not in package.get(section, {}) for section in ('dependencies', 'devDependencies', 'optionalDependencies'))
+          assert 'vite' in package['scripts']['build']
+          lock = pathlib.Path('pnpm-lock.yaml').read_text()
+          brace = re.findall(r'^  brace-expansion@(5\.\d+\.\d+):', lock, re.MULTILINE)
+          assert brace and all(version(v) >= (5, 0, 6) for v in brace)
+          before = git('rev-parse', 'HEAD').stdout.strip()
+          git('merge', '--no-commit', '--no-ff', '-s', 'ours', *targets.values())
+          git('update-index', '--chmod=-x', 'package.json')
+          git('diff', '--cached', '--check')
+          git('commit', '-m', 'Merge dependency fixes already superseded by the current Vite application', '-m', 'Verified lodash >=4.18.1, postcss >=8.5.10, and brace-expansion 5.x >=5.0.6 in the active manifest/lockfile. Next.js was removed by the newer Vite migration and is not reintroduced. Preserve all four source histories and normalize the package.json mode; retain newer main contents.')
+          push = ['push', '--atomic']
+          push.extend('--force-with-lease=refs/heads/' + b + ':' + s for b, s in targets.items())
+          push.extend(['origin', 'HEAD:refs/heads/main'])
+          prefix = 'branch-cleanup-20260920-' + os.environ['GITHUB_RUN_ID'] + '/superseded/'
+          for branch, sha in targets.items():
+              push.extend([sha + ':refs/tags/' + prefix + branch, ':refs/heads/' + branch])
+          git(*push)
+          report = {'previous_main': before, 'main': git('rev-parse', 'HEAD').stdout.strip(),
+                    'integrated_superseded_branches': list(targets), 'backup_tag_prefix': prefix,
+                    'resolution': 'Preserve newer active dependency versions and the completed Next.js-to-Vite migration; keep source histories as merge parents.'}
+          print(json.dumps(report, indent=2))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as out:
+              out.write('```json\n' + json.dumps(report, indent=2) + '\n```\n')
+          PY

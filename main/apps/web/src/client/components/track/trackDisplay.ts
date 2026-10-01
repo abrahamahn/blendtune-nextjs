@@ -1,12 +1,19 @@
 // main/apps/web/src/client/components/track/trackDisplay.ts
 // Pure Track → display-prop mapping shared by TrackRow and TrackCard.
-import type { Track } from '@/shared/types/track';
+import type { Track } from "@/shared/types/track";
 
-const ARTWORK_CDN = 'https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork';
+const ARTWORK_CDN = "https://blendtune.com/media/artwork";
+
+export function hostedMediaUrl(url: string): string {
+  return url.replace(
+    /^https:\/\/blendtune-public\.nyc3\.(?:cdn\.)?digitaloceanspaces\.com\//,
+    "https://blendtune.com/media/",
+  );
+}
 
 /** Returns the value when it carries information; catalog uses "n/a" and "" as null. */
 export function present(value: string | null | undefined): string | undefined {
-  return value != null && value !== '' && value !== 'n/a' ? value : undefined;
+  return value != null && value !== "" && value !== "n/a" ? value : undefined;
 }
 
 export interface TrackFacts {
@@ -28,12 +35,15 @@ export function trackFacts(track: Track): TrackFacts {
 
 /** At most three quiet mood tags (design direction: "moods become at most three quiet tags"). */
 export function trackTags(track: Track): string[] {
-  return track.info.mood.map(present).filter((mood): mood is string => mood != null).slice(0, 3);
+  return track.info.mood
+    .map(present)
+    .filter((mood): mood is string => mood != null)
+    .slice(0, 3);
 }
 
 /** Artwork URL: explicit imageUrl wins, then the catalog-derived CDN path. */
 export function artworkSrc(track: Track): string | undefined {
-  if (present(track.imageUrl) != null) return track.imageUrl;
+  if (present(track.imageUrl) != null) return hostedMediaUrl(track.imageUrl!);
   const catalog = present(track.metadata.catalog);
   return catalog != null ? `${ARTWORK_CDN}/${catalog}.jpg` : undefined;
 }

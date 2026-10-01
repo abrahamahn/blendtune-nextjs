@@ -1,7 +1,11 @@
 // src\client\shared\components\common\Artwork.tsx
 import React from "react";
+import { hostedMediaUrl } from "@client/components/track/trackDisplay";
 
-interface ArtworkProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt"> {
+interface ArtworkProps extends Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  "src" | "alt"
+> {
   /** Descriptive alt text for the image */
   alt: string;
   /** Optional catalog value to generate the URL (if no override provided) */
@@ -29,10 +33,10 @@ const Artwork: React.FC<ArtworkProps> = ({
   quality: _quality,
   ...imageProps
 }) => {
-  const src =
+  const src = hostedMediaUrl(
     srcOverride ||
-    `https://blendtune-public.nyc3.cdn.digitaloceanspaces.com/artwork/${catalog ||
-      fallback}.jpg`;
+      `https://blendtune.com/media/artwork/${catalog || fallback}.jpg`,
+  );
 
   return <img src={src} alt={alt} {...imageProps} crossOrigin="anonymous" />;
 };

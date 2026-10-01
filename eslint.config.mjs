@@ -40,6 +40,8 @@ const config = [
   // CommonJS runtime loaders are plain .js files outside the TypeScript module graph, so
   // require() is expected there.
   { files: ['**/*.js'], languageOptions: { globals: globals.node }, rules: { '@typescript-eslint/no-require-imports': 'off' } },
+  // The public service worker runs in a browser worker, not the Node runtime.
+  { files: ['public/sw.js'], languageOptions: { globals: globals.serviceworker } },
 ];
 
 export default config;

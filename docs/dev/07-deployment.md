@@ -28,8 +28,8 @@ Cloudflare (Full SSL)
                             │        serves /api/* AND the SPA (main/apps/web/dist)
                      ┌──────┴───────┐
                      ▼              ▼
-                PostgreSQL     DO Spaces (CDN)
-                  (RLS)        audio + images
+                PostgreSQL     Droplet /media files
+                  (RLS)        audio + images via Caddy
 ```
 
 There is no separate frontend host or build step. The SPA is a static Vite bundle; the server hosts
@@ -42,30 +42,24 @@ it directly.
 ### Prerequisites
 
 1. DigitalOcean droplet with SSH access
-2. Node.js 20+ and pnpm 9+ on the droplet
+2. Node.js 24 and the pinned pnpm 10.26.2 on the build workstation
 3. PostgreSQL (reachable from the droplet)
-4. DigitalOcean Spaces (audio/image storage + CDN)
+4. Droplet-hosted public audio/images at `https://blendtune.com/media`
 5. SMTP credentials (transactional email)
 6. Caddy (Docker) and Cloudflare for the domain
 
 ## Build & Release
 
-Deploy by syncing the repo to the droplet and building the SPA there. Do not commit
-`main/apps/web/dist` or the production env file.
+Push to `main`. The workstation's `droplet-app-deploy.timer` polls accepted GitHub
+commits, performs a frozen dependency install, type/lint/unit/build checks, and
+publishes immutable artifacts over SSH to `digital-ocean` (`143.198.174.88`).
+No GitHub Actions or on-droplet build is needed. WSL must be online; the queue
+catches missed pushes when it resumes. Do not commit built output or production
+environment files. A failed gate keeps the current app unchanged.
 
 ```bash
-# From local: sync source (exclude build artifacts and secrets)
-rsync -az --delete -e ssh \
-  --exclude node_modules --exclude .git \
-  --exclude 'main/apps/web/dist' \
-  --exclude 'main/shared/src/config/.env.production' \
-  ./ blendtune-droplet:/var/www/blendtune/
-
-# On the droplet
-cd /var/www/blendtune
-pnpm install
-pnpm build:web        # -> main/apps/web/dist
-pnpm db:migrate       # apply any pending migrations
+bash /home/abe/projects/ops/auto-deploy/run.sh status blendtune
+bash /home/abe/projects/ops/auto-deploy/run.sh run blendtune --force
 ```
 
 ## Process Management (PM2)
@@ -82,8 +76,11 @@ pm2 save
 
 ### Rollback
 
-Restart the previous release's process (or redeploy the prior commit) and reload Caddy. Additive
-migrations (no drops) require no rollback.
+The installer retains prior releases and restores the prior application on failed
+public checks. `/var/www/blendtune` selects an immutable private release, and its
+existing runtime environment is preserved. Caddy does not change during app
+deployment. SQL migration changes are held for backup/review rather than applied
+automatically; an application rollback never undoes database changes.
 
 ## Reverse Proxy (Caddy + Cloudflare)
 
@@ -96,7 +93,7 @@ Caddy (running in Docker) proxies `blendtune.com` → `:8080`. The route block l
 ## Database
 
 Single PostgreSQL database with Row-Level Security. Migrations are numbered SQL files in
-`main/server/db/src/migrations/` applied by the runner:
+`main/server/db/src/migrations/`. Review and back up the database before applying them:
 
 ```bash
 pnpm db:migrate       # apply pending
@@ -124,11 +121,8 @@ ACCESS_TOKEN_TTL=15m
 API_PORT=8080
 API_HOST=127.0.0.1
 
-# Object storage (DigitalOcean Spaces)
-DO_SPACES_KEY=...
-DO_SPACES_SECRET=...
-DO_SPACES_ENDPOINT=nyc3.digitaloceanspaces.com
-DO_SPACES_BUCKET=...
+# Public file origin (default; no Spaces credentials required)
+MEDIA_ORIGIN=https://blendtune.com/media
 
 # Email (SMTP)
 SMTP_HOST=smtp.gmail.com
@@ -163,8 +157,8 @@ openssl rand -hex 32
 - Confirm migrations are applied: `pnpm db:status`.
 
 ### Audio not loading
-- Check DO Spaces credentials and CDN URL.
-- Verify Spaces CORS allows the origin.
+- Check `https://blendtune.com/media` and the local `blendtune-media-publish.timer`.
+- New files under the sibling `blendtune-s3` public directories sync over SSH every 15 minutes.
 - Inspect the browser console and the `/api/media` (streaming) responses.
 
 ### Domain not resolving / TLS errors

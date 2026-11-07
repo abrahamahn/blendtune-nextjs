@@ -16,7 +16,7 @@
  * previous node-postgres implementation when serialized (e.g. /api/tracks).
  */
 
-import postgres, { type ParameterOrJSON, type Sql, type TransactionSql } from 'postgres';
+import postgres, { type Sql, type TransactionSql } from 'postgres';
 
 /** A prepared query: parameterized text plus positional values. */
 export interface QueryResult {
@@ -228,7 +228,7 @@ export function createDbFromSql(sql: PostgresClient, session?: SessionContext): 
   };
 
   const run = async (text: string, values: readonly unknown[]): Promise<postgres.RowList<postgres.Row[]>> => {
-    const params = [...values] as ParameterOrJSON<never>[];
+    const params = [...values] as NonNullable<Parameters<Sql['unsafe']>[1]>;
     const begin = scoped ? beginOf(sql) : undefined;
     if (begin) {
       // Wrap in a transaction so SET LOCAL RLS variables are connection-isolated and reset.

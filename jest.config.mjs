@@ -5,7 +5,7 @@ const config = {
   // Unit tests for server/shared/client logic (transformed by @swc/jest).
   testEnvironment: 'node',
   transform: {
-    '^.+\\.(t|j)sx?$': [
+    '^.+\\.tsx?$': [
       '@swc/jest',
       {
         jsc: {
@@ -14,7 +14,17 @@ const config = {
         },
       },
     ],
+    '^.+\\.jsx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          parser: { syntax: 'ecmascript', jsx: true },
+          transform: { react: { runtime: 'automatic' } },
+        },
+      },
+    ],
   },
+  transformIgnorePatterns: ['/node_modules/(?!(\\.pnpm/postgres@|postgres/))'],
   moduleNameMapper: {
     '^@router$': '<rootDir>/main/client/react/src/router',
     '^@router/(.*)$': '<rootDir>/main/client/react/src/router/$1',

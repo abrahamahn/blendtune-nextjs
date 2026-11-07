@@ -18,68 +18,71 @@
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
+    "types": [
+      "node",
+      "jest"
+    ],
     "incremental": true,
-    "baseUrl": "./",
     "paths": {
       /* bslt-shaped packages under main/ (M1 migration) */
       "@/shared/*": [
-        "main/shared/src/*"
+        "./main/shared/src/*"
       ],
       "@types/*": [
         "./main/shared/src/types/*"
       ],
       "@client/*": [
-        "main/apps/web/src/client/*"
+        "./main/apps/web/src/client/*"
       ],
       "@router/*": [
-        "main/client/react/src/router/*"
+        "./main/client/react/src/router/*"
       ],
       "@router": [
-        "main/client/react/src/router"
+        "./main/client/react/src/router"
       ],
       "@ui": [
-        "main/client/ui/src"
+        "./main/client/ui/src"
       ],
       "@ui/*": [
-        "main/client/ui/src/*"
+        "./main/client/ui/src/*"
       ],
       "@server/db": [
-        "main/server/db/src"
+        "./main/server/db/src"
       ],
       "@server/db/*": [
-        "main/server/db/src/*"
+        "./main/server/db/src/*"
       ],
       "@server/core/*": [
-        "main/server/core/src/*"
+        "./main/server/core/src/*"
       ],
       "@server/storage": [
-        "main/server/storage/src"
+        "./main/server/storage/src"
       ],
       "@server/storage/*": [
-        "main/server/storage/src/*"
+        "./main/server/storage/src/*"
       ],
       "@server/media": [
-        "main/server/media/src"
+        "./main/server/media/src"
       ],
       "@server/media/*": [
-        "main/server/media/src/*"
+        "./main/server/media/src/*"
       ],
       "@server/system/*": [
-        "main/server/system/src/*"
+        "./main/server/system/src/*"
       ],
       "@shared/*": [
-        "main/shared/src/*"
+        "./main/shared/src/*"
       ],
       /* Feature paths */
       "@features/*": [
-        "main/apps/web/src/client/features/*"
+        "./main/apps/web/src/client/features/*"
       ],
       /* Core and shared paths */
       "@core/*": [
-        "main/apps/web/src/client/core/*"
+        "./main/apps/web/src/client/core/*"
       ],
       "@components/*": [
-        "main/apps/web/src/client/shared/components/*"
+        "./main/apps/web/src/client/shared/components/*"
       ]
     }
   },

@@ -6,16 +6,16 @@
  * ($2…) are still verifiable so logins can lazily upgrade them to Argon2id.
  */
 
-import argon2, { type Options } from 'argon2';
+import argon2 from 'argon2';
 import bcrypt from 'bcrypt';
 
 /** OWASP-recommended Argon2id parameters. */
-const ARGON2_OPTIONS: Options = {
+const ARGON2_OPTIONS = {
   type: argon2.argon2id,
   memoryCost: 19456, // 19 MiB
   timeCost: 2,
   parallelism: 1,
-};
+} as const;
 
 /** Hash a password using Argon2id (OWASP recommended). */
 export function hashPassword(password: string): Promise<string> {

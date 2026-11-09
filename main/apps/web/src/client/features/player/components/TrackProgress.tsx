@@ -4,10 +4,10 @@
  */
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Waveform } from '@features/player/visualizer';
+import Waveform from '@features/player/visualizer/components/Waveform';
 import { formatTime } from '../utils/formatTime';
 import { usePlayer } from '@client/features/player/services/playerService';
-import { useTrackNavigation } from '@features/player/hooks';
+import { useTrackNavigation } from '@features/player/hooks/useTrackNavigation';
 
 import './player.css';
 

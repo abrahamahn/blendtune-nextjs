@@ -1,14 +1,12 @@
 // src/client/features/sounds/filters/utils/filterUI.ts
 import React from 'react';
-import {
-  GenreFilter,
-  TempoFilter,
-  KeyFilter,
-  ArtistFilter,
-  InstrumentFilter,
-  MoodFilter,
-  KeywordFilter,
-} from "../components";
+import ArtistFilter from "../components/artist";
+import GenreFilter from "../components/genre";
+import InstrumentFilter from "../components/instrument";
+import KeyFilter from "../components/key";
+import KeywordFilter from "../components/keyword";
+import MoodFilter from "../components/mood";
+import TempoFilter from "../components/tempo";
 import { FilterComponentsConfig, FilterLabelProps } from "@features/sounds/filters/types";
 
 /**

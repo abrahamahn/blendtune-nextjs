@@ -9,10 +9,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '@ui';
-import { SortFilter } from '@features/sounds/filters/components';
-import { createFilterComponents, renderFilterLabel } from '@features/sounds/filters/utils';
+import SortFilter from '@features/sounds/filters/components/sort';
+import { createFilterComponents, renderFilterLabel } from '@features/sounds/filters/utils/filterUI';
 import { useFilterContext } from '@features/sounds/filters/context';
-import { useTracks } from '@client/features/tracks';
+import { useTracksContext as useTracks } from '@client/features/tracks/services/useTracksContext';
 import FilterSkeleton from '@features/sounds/filters/components/FilterSkeleton';
 
 import '../filters.css';

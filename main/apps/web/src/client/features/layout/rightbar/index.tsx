@@ -40,4 +40,3 @@ const RightBar: React.FC = () => {
 };
 
 export default RightBar;
-export { NowPlayingProvider, useNowPlaying } from './context/useNowPlaying';

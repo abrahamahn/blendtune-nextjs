@@ -6,7 +6,8 @@
  */
 
 import { useCallback, useEffect, useRef } from "react";
-import { usePlayer, playerActions } from "@client/features/player/services/playerService";
+import { usePlayer } from "@client/features/player/services/playerService";
+import { playerActions } from "@client/features/player/context/playerActions";
 import { resetPlaybackTime, storePlaybackTime } from "../utils/storage";
 import { Track } from "@/shared/types/track";
 

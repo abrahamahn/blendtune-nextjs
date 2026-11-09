@@ -7,7 +7,10 @@
 import React from 'react';
 
 import { CloseButton, Text } from '@ui';
-import { Artwork, FactsReadout, Tag, artworkSrc, present, trackFacts } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { FactsReadout } from '@client/components/track/FactsReadout';
+import { Tag } from '@client/components/track/Tag';
+import { artworkSrc, present, trackFacts } from '@client/components/track/trackDisplay';
 
 import './player.css';
 

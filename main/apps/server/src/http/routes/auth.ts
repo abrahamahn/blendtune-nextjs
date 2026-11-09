@@ -15,8 +15,8 @@ import {
   signUpUser,
   verifyResetPasswordToken,
   type SignUpData,
-} from '@server/core/auth';
-import { logoutSession, validateSession, type SessionData } from '@server/core/sessions';
+} from '@server/core/auth/service';
+import { logoutSession, validateSession, type SessionData } from '@server/core/sessions/service';
 import {
   extractRequestMeta,
   extractSessionToken,

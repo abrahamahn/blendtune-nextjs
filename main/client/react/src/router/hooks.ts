@@ -8,7 +8,8 @@ import { useCallback, useMemo } from 'react';
 
 import { useRouterContext } from './context';
 
-import type { NavigateFunction, RouterLocation } from './context';
+import type { NavigateFunction } from './context';
+import type { RouterLocation } from './history';
 
 // ============================================================================
 // useNavigate

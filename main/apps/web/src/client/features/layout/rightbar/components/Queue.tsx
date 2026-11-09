@@ -3,7 +3,8 @@
 
 import React from 'react';
 
-import { Artwork, artworkSrc, present } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { artworkSrc, present } from '@client/components/track/trackDisplay';
 import { usePlayer } from '@client/features/player/services/playerService';
 
 /** Up-next queue: the current track list, current one highlighted, click to play. */

@@ -11,8 +11,10 @@ import {
   faBoltLightning,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { selectGenres, removeAllGenres } from '@core/store/slices';
-import { FilterWrapper, Item, ActionButtons } from '@features/sounds/filters/ui';
+import { selectGenres, removeAllGenres } from '@features/sounds/filters/store/filterSlice';
+import { ActionButtons } from '@features/sounds/filters/ui/ActionButtons';
+import { FilterWrapper } from '@features/sounds/filters/ui/FilterWrapper';
+import { Item } from '@features/sounds/filters/ui/Item';
 
 interface GenreFilterProps {
   selectedGenres: string[];

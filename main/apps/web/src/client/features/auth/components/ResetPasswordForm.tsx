@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 import { Button, Spinner } from '@ui';
-import { FormField } from '@client/components';
+import { FormField } from '@client/components/form/FormField';
 import Logo from '@components/common/Logo';
 
 import '../auth.css';

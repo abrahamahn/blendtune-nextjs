@@ -16,29 +16,16 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
+import {
+  createKey,
+  getBrowserHistory,
+  type History,
+  type NavigationType,
+  type RouterLocation,
+  type RouterState,
+} from './history';
 
 import type { ReactElement, ReactNode } from 'react';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-/** Navigation action type - matches react-router pattern */
-export type NavigationType = 'PUSH' | 'POP' | 'REPLACE';
-
-export interface RouterLocation {
-  pathname: string;
-  search: string;
-  hash: string;
-  state: unknown;
-  /** Unique key for this location entry */
-  key: string;
-}
-
-export interface RouterState {
-  location: RouterLocation;
-  navigationType: NavigationType;
-}
 
 export interface NavigateOptions {
   replace?: boolean;
@@ -57,166 +44,7 @@ export interface RouterContextValue {
   setLocation?: (location: RouterLocation) => void;
 }
 
-// ============================================================================
-// History Abstraction
-// ============================================================================
-
-interface HistoryState {
-  key: string;
-  scrollX?: number;
-  scrollY?: number;
-  usr?: unknown; // user state
-}
-
-function createKey(): string {
-  return Math.random().toString(36).substring(2, 10);
-}
-
-function getHistoryState(): HistoryState {
-  const state = window.history.state as HistoryState | null;
-  return state ?? { key: createKey() };
-}
-
-export interface History {
-  readonly location: RouterLocation;
-  readonly navigationType: NavigationType;
-  push(to: string, state?: unknown): void;
-  replace(to: string, state?: unknown): void;
-  go(delta: number): void;
-  back(): void;
-  forward(): void;
-  listen(callback: () => void): () => void;
-  /** Save current scroll position */
-  saveScrollPosition(): void;
-  /** Restore scroll position for current location */
-  restoreScrollPosition(): void;
-}
-
-function createBrowserHistory(): History {
-  let currentNavigationType: NavigationType = 'POP';
-  const listeners = new Set<() => void>();
-  const scrollPositions = new Map<string, { x: number; y: number }>();
-
-  // Cache the current location - only updated on navigation events
-  // This is critical for useSyncExternalStore to work correctly
-  let cachedLocation: RouterLocation = buildLocation();
-
-  function buildLocation(): RouterLocation {
-    const historyState = getHistoryState();
-    return {
-      pathname: window.location.pathname,
-      search: window.location.search,
-      hash: window.location.hash,
-      state: historyState.usr ?? null,
-      key: historyState.key,
-    };
-  }
-
-  function updateCachedLocation(): void {
-    cachedLocation = buildLocation();
-  }
-
-  function notify(): void {
-    updateCachedLocation();
-    listeners.forEach((listener) => {
-      listener();
-    });
-  }
-
-  function saveScrollPosition(): void {
-    const key = getHistoryState().key;
-    if (key !== '') {
-      scrollPositions.set(key, { x: window.scrollX, y: window.scrollY });
-      // Also save to history state for persistence across page reloads
-      const currentState = getHistoryState();
-      window.history.replaceState(
-        { ...currentState, scrollX: window.scrollX, scrollY: window.scrollY },
-        '',
-      );
-    }
-  }
-
-  function restoreScrollPosition(): void {
-    const historyState = getHistoryState();
-    const saved = scrollPositions.get(historyState.key);
-    if (saved !== undefined) {
-      window.scrollTo(saved.x, saved.y);
-    } else if (historyState.scrollX !== undefined && historyState.scrollY !== undefined) {
-      window.scrollTo(historyState.scrollX, historyState.scrollY);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }
-
-  // Handle browser back/forward
-  window.addEventListener('popstate', () => {
-    currentNavigationType = 'POP';
-    notify();
-  });
-
-  return {
-    get location(): RouterLocation {
-      return cachedLocation;
-    },
-    get navigationType(): NavigationType {
-      return currentNavigationType;
-    },
-    push(to: string, state?: unknown): void {
-      saveScrollPosition();
-      const key = createKey();
-      const historyState: HistoryState = { key, usr: state };
-      window.history.pushState(historyState, '', to);
-      currentNavigationType = 'PUSH';
-      notify();
-    },
-    replace(to: string, state?: unknown): void {
-      const currentKey = getHistoryState().key;
-      const key = currentKey !== '' ? currentKey : createKey();
-      const historyState: HistoryState = { key, usr: state };
-      window.history.replaceState(historyState, '', to);
-      currentNavigationType = 'REPLACE';
-      notify();
-    },
-    go(delta: number): void {
-      window.history.go(delta);
-    },
-    back(): void {
-      window.history.back();
-    },
-    forward(): void {
-      window.history.forward();
-    },
-    listen(callback: () => void): () => void {
-      listeners.add(callback);
-      return (): void => {
-        listeners.delete(callback);
-      };
-    },
-    saveScrollPosition,
-    restoreScrollPosition,
-  };
-}
-
-// Singleton browser history instance
-let browserHistory: History | null = null;
-
-function getBrowserHistory(): History {
-  if (browserHistory === null && typeof window !== 'undefined') {
-    browserHistory = createBrowserHistory();
-  }
-  if (browserHistory === null) throw new Error('Browser history not initialized');
-  return browserHistory;
-}
-
-// ============================================================================
-// Context
-// ============================================================================
-
 export const RouterContext = createContext<RouterContextValue | null>(null);
-
-// ============================================================================
-// Browser Router Store (using History abstraction)
-// ============================================================================
 
 function createBrowserRouterStore(): {
   getSnapshot: () => RouterState;
@@ -226,8 +54,6 @@ function createBrowserRouterStore(): {
 } {
   const history = getBrowserHistory();
 
-  // Cache the state object - only updated when history notifies
-  // This is critical for useSyncExternalStore to work correctly
   let cachedState: RouterState = {
     location: history.location,
     navigationType: history.navigationType,
@@ -249,7 +75,6 @@ function createBrowserRouterStore(): {
     getServerSnapshot: (): RouterState => serverSnapshot,
     subscribe: (callback: () => void): (() => void) => {
       return history.listen(() => {
-        // Update cached state before notifying React
         cachedState = {
           location: history.location,
           navigationType: history.navigationType,
@@ -262,10 +87,6 @@ function createBrowserRouterStore(): {
 }
 
 const browserStore = typeof window !== 'undefined' ? createBrowserRouterStore() : null;
-
-// ============================================================================
-// Browser Router Provider
-// ============================================================================
 
 export interface RouterProps {
   children?: ReactNode;
@@ -306,21 +127,17 @@ export const Router = ({ children, scrollRestoration = true }: RouterProps): Rea
     }
   }, []);
 
-  // Handle scroll restoration
   useEffect(() => {
     if (!scrollRestoration || browserStore === null) return;
 
     if (state.navigationType === 'POP') {
-      // Back/forward navigation - restore previous scroll position
       browserStore.history.restoreScrollPosition();
     } else if (!preventScrollRef.current) {
-      // New navigation - scroll to top (unless prevented)
       window.scrollTo(0, 0);
     }
     preventScrollRef.current = false;
   }, [state.location.key, state.navigationType, scrollRestoration]);
 
-  // Disable browser's native scroll restoration (we handle it ourselves)
   useEffect(() => {
     if (!scrollRestoration || !('scrollRestoration' in window.history)) {
       return;
@@ -345,10 +162,6 @@ export const Router = ({ children, scrollRestoration = true }: RouterProps): Rea
   );
 };
 
-// ============================================================================
-// Memory Router Provider (for tests)
-// ============================================================================
-
 export interface MemoryRouterProps {
   children?: ReactNode;
   initialEntries?: (string | { pathname: string; state?: unknown })[];
@@ -366,9 +179,6 @@ export const MemoryRouter = ({
   initialEntries = ['/'],
   initialIndex,
 }: MemoryRouterProps): ReactElement => {
-  // Initialize state once on mount using lazy useState initializer.
-  // Props like `initialEntries = ['/']` create new array references on every render,
-  // so we capture them at mount time via the lazy initializer to prevent loops.
   const [state, setState] = useState<{
     entries: MemoryEntry[];
     index: number;
@@ -445,10 +255,6 @@ export const MemoryRouter = ({
   );
 };
 
-// ============================================================================
-// Hooks
-// ============================================================================
-
 /** Access the full router context */
 export function useRouterContext(): RouterContextValue {
   const context = useContext(RouterContext);
@@ -466,6 +272,5 @@ export function useNavigationType(): NavigationType {
 
 /** Get the history object for advanced navigation control */
 export function useHistory(): History | null {
-  // Only available in browser environment
   return browserStore?.history ?? null;
 }

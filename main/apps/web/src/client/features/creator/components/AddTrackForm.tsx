@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 
 import { Button, Spinner, Text } from '@ui';
-import { FormField } from '@client/components';
+import { FormField } from '@client/components/form/FormField';
 import { parseNewTrack } from '@shared/validation/track';
 import type { CreatedTrack } from '@shared/types/creator';
 import { CreatorApiError, createWorkspaceTrack } from '../core/api';

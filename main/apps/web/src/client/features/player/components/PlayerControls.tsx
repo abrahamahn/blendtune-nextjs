@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faForwardStep, faRepeat } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '@ui';
-import { PlayButton } from '@client/components';
+import { PlayButton } from '@client/components/player/PlayButton';
 import { usePlayer } from '@client/features/player/services/playerService';
-import { usePlayerControls } from '../hooks';
+import { usePlayerControls } from '../hooks/usePlayerControls';
 
 import './player.css';
 

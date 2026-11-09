@@ -1,7 +1,7 @@
 // main/apps/web/src/pages/CreatorPage.tsx
 import React from 'react';
 
-import { CreatorDashboard } from '@client/features/creator';
+import { CreatorDashboard } from '@client/features/creator/components/CreatorDashboard';
 import { useParams } from '@router/index';
 
 /** /c/:slug — the creator workspace dashboard. */

@@ -7,7 +7,7 @@ import React, { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Button } from '@ui';
-import { useVolumeControl } from '../hooks';
+import useVolumeControl from '../hooks/useVolumeControl';
 import { useThrottleFn } from '@client/shared/utils/useThrottleFn';
 
 import './player.css';

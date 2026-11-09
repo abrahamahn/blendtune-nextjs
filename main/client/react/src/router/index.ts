@@ -37,16 +37,18 @@
 // Context and providers
 export { MemoryRouter, Router, RouterContext, useHistory, useNavigationType } from './context';
 export type {
-  History,
   MemoryRouterProps,
   NavigateFunction,
   NavigateOptions,
-  NavigationType,
   RouterContextValue,
-  RouterLocation,
   RouterProps,
-  RouterState,
 } from './context';
+export type {
+  History,
+  NavigationType,
+  RouterLocation,
+  RouterState,
+} from './history';
 
 // Hooks
 export { useLocation, useNavigate, useSearchParams } from './hooks';

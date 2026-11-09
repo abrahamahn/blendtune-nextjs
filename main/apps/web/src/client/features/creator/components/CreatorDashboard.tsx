@@ -15,7 +15,8 @@ import {
   TableRow,
   Text,
 } from '@ui';
-import { EmptyState, FactsReadout } from '@client/components';
+import { EmptyState } from '@client/components/EmptyState';
+import { FactsReadout } from '@client/components/track/FactsReadout';
 import type { Track } from '@shared/types/track';
 import type { WorkspaceSummary } from '@shared/types/creator';
 import { CreatorApiError, fetchWorkspaceCatalog, fetchWorkspaces } from '../core/api';

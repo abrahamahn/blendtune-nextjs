@@ -10,7 +10,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { db } from '@server/db';
 import { createRefreshTokensRepository, createUsersRepository } from '@server/db/repositories';
-import { rotateAuthTokens, verifyAccessToken } from '@server/core/auth';
+import { rotateAuthTokens, verifyAccessToken } from '@server/core/auth/tokens';
 import {
   extractRequestMeta,
   extractSessionToken,

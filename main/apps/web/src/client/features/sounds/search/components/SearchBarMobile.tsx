@@ -11,7 +11,7 @@ import { faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input } from '@ui';
 import { useNavigate } from '@router/index';
 import { RootState } from '@core/store';
-import { selectKeyword, removeAllGenres, removeAllKeywords } from '@core/store/slices';
+import { selectKeyword, removeAllGenres, removeAllKeywords } from '@features/sounds/filters/store/filterSlice';
 
 import './search.css';
 

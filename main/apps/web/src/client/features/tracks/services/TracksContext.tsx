@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, ReactNode, useEffect, createContext, useCallback, useRef } from "react";
-import { fetchTracks } from "@features/tracks/core/hooks";
+import { fetchTracks } from "@features/tracks/core/hooks/fetchTracks";
 import { Track } from "@/shared/types/track";
 import { TrackServiceType } from "@features/tracks/types";
 import { 

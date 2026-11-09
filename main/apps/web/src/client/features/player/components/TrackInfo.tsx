@@ -6,7 +6,9 @@
 import React from 'react';
 
 import { Button, Text } from '@ui';
-import { Artwork, FactsReadout, artworkSrc, trackFacts } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { FactsReadout } from '@client/components/track/FactsReadout';
+import { artworkSrc, trackFacts } from '@client/components/track/trackDisplay';
 import { usePlayer } from '@client/features/player/services/playerService';
 
 import './player.css';

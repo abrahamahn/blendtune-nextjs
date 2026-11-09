@@ -25,7 +25,8 @@ import {
   setSelectedInstruments,
   setSelectedMoods,
   clearAllFilters as clearAllFiltersAction,
-} from "@core/store/slices";
+  type KeyFilterCombination,
+} from "@features/sounds/filters/store/filterSlice";
 import {
   categoryFilter,
   keyFilter,
@@ -37,9 +38,8 @@ import {
   keywordFilter,
 } from "@client/features/sounds/filters/utils/filterLogic";
 import { sortTracks } from "@client/features/sounds/filters/utils/sortLogic";
-import { useTracks } from "@client/features/tracks";
-import { useTrackMetadata } from "@features/tracks/keywords/hooks";
-import type { KeyFilterCombination } from "@core/store/slices";
+import { useTracksContext as useTracks } from "@client/features/tracks/services/useTracksContext";
+import { useTrackMetadata } from "@features/tracks/keywords/hooks/useTrackMetadata";
 
 /**
  * Filter context state interface

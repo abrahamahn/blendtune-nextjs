@@ -3,7 +3,8 @@
 export { AppShell } from './AppShell';
 export { BottombarLayout } from './BottombarLayout';
 export { LeftSidebarLayout } from './LeftSidebarLayout';
-export { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from './ResizablePanel';
+export { ResizablePanel, ResizablePanelGroup } from './ResizablePanel';
+export { ResizableSeparator } from './ResizableSeparator';
 export { RightSidebarLayout } from './RightSidebarLayout';
 export { TopbarLayout } from './TopbarLayout';
 

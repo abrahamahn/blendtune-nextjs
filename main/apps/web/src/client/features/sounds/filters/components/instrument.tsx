@@ -12,7 +12,9 @@ import {
   faLinesLeaning,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { FilterWrapper, Item, ActionButtons } from '@client/features/sounds/filters/ui';
+import { ActionButtons } from '@client/features/sounds/filters/ui/ActionButtons';
+import { FilterWrapper } from '@client/features/sounds/filters/ui/FilterWrapper';
+import { Item } from '@client/features/sounds/filters/ui/Item';
 
 interface InstrumentFilterProps {
   selectedInstruments: string[];

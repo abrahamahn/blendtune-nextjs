@@ -4,7 +4,7 @@
 
 import React, { createContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { Track } from '@/shared/types/track';
-import { fetchTracks } from '@features/tracks/core/hooks';
+import { fetchTracks } from '@features/tracks/core/hooks/fetchTracks';
 
 // Define the context shape
 interface CatalogContextType {

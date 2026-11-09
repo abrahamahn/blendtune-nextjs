@@ -6,9 +6,13 @@
 import React from 'react';
 
 import { Text } from '@ui';
-import { Artwork, FactsReadout, PlayButton, Tag, artworkSrc, present, trackFacts, trackTags } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { FactsReadout } from '@client/components/track/FactsReadout';
+import { PlayButton } from '@client/components/player/PlayButton';
+import { Tag } from '@client/components/track/Tag';
+import { artworkSrc, present, trackFacts, trackTags } from '@client/components/track/trackDisplay';
 import { usePlayer } from '@features/player/services/playerService';
-import { usePlayerControls } from '@features/player/hooks';
+import { usePlayerControls } from '@features/player/hooks/usePlayerControls';
 
 import './Hero.css';
 

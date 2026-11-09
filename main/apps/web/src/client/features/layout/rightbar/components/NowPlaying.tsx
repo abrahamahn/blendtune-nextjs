@@ -6,16 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardStep, faForwardStep, faRepeat, faShuffle } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '@ui';
-import { Artwork, FactsReadout, PlayButton, artworkSrc, present } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { FactsReadout } from '@client/components/track/FactsReadout';
+import { PlayButton } from '@client/components/player/PlayButton';
+import { artworkSrc, present } from '@client/components/track/trackDisplay';
 import { usePlayer } from '@client/features/player/services/playerService';
-import { usePlayerControls } from '@features/player/hooks';
-import { Equalizer } from '@features/player/visualizer';
-
-/** m:ss from seconds. */
-const mmss = (s: number | undefined): string => {
-  const t = Math.max(0, Math.floor(s ?? 0));
-  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-};
+import { usePlayerControls } from '@features/player/hooks/usePlayerControls';
+import Equalizer from '@features/player/visualizer/components/Equalizer';
+import { formatTime } from '@features/player/utils/formatTime';
 
 /** The now-playing surface: artwork, transport, progress — Spotify-mobile in a desktop panel. */
 const NowPlaying: React.FC = () => {
@@ -80,8 +78,8 @@ const NowPlaying: React.FC = () => {
           </div>
         </div>
         <div className="bt-np-times">
-          <span>{mmss(currentTime)}</span>
-          <span>{mmss(duration)}</span>
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
         </div>
       </div>
 

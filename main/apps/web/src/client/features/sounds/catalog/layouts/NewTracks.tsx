@@ -2,8 +2,9 @@
 // Horizontal new-tracks carousel built on the TrackCard composite.
 import React from 'react';
 
-import { TrackCard, TrackCardSkeleton } from '@client/components';
-import { useTracks } from '@client/features/tracks';
+import { TrackCard } from '@client/components/track/TrackCard';
+import { TrackCardSkeleton } from '@client/components/track/TrackCardSkeleton';
+import { useTracksContext as useTracks } from '@client/features/tracks/services/useTracksContext';
 import { usePlayer } from '@features/player/services/playerService';
 import useTrackPlayback from '@client/features/sounds/catalog/hooks/useTrackPlayback';
 

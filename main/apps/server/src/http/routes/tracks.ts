@@ -7,7 +7,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { db } from '@server/db';
 import { createTracksRepository } from '@server/db/repositories/tracks';
-import { listPublicCatalog } from '@server/core/tracks';
+import { listPublicCatalog } from '@server/core/tracks/service';
 
 export function registerTracksRoutes(app: FastifyInstance): void {
   app.get('/tracks', async (_req, reply) => {

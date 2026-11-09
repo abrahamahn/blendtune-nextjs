@@ -1,7 +1,11 @@
 // main/apps/web/src/client/features/sounds/filters/components/artist.tsx
 import React, { useState } from 'react';
 
-import { FilterWrapper, SearchInput, FilterGrid, Item, ActionButtons } from '@features/sounds/filters/ui';
+import { ActionButtons } from '@features/sounds/filters/ui/ActionButtons';
+import { FilterGrid } from '@features/sounds/filters/ui/FilterGrid';
+import { FilterWrapper } from '@features/sounds/filters/ui/FilterWrapper';
+import { Item } from '@features/sounds/filters/ui/Item';
+import { SearchInput } from '@features/sounds/filters/ui/SearchInput';
 
 interface ArtistFilterProps {
   artists: string[];

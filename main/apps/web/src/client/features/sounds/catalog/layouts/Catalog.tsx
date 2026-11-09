@@ -3,7 +3,9 @@
 // handles narrow viewports), skeletons while loading, inviting empty state.
 import React from 'react';
 
-import { EmptyState, TrackRow, TrackRowSkeleton } from '@client/components';
+import { EmptyState } from '@client/components/EmptyState';
+import { TrackRow } from '@client/components/track/TrackRow';
+import { TrackRowSkeleton } from '@client/components/track/TrackRowSkeleton';
 import { usePlayer } from '@features/player/services/playerService';
 
 import type { Track } from '@/shared/types/track';

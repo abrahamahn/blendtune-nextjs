@@ -8,7 +8,7 @@
  */
 
 import React, { ReactNode, useCallback, useEffect } from "react";
-import { useAppDispatch } from "@core/store/hooks";
+import { useAppDispatch } from "@core/store/hooks/useAppDispatch";
 import {
   setAuthenticated,
   setUnauthenticated,

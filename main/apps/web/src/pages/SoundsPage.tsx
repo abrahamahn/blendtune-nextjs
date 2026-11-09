@@ -6,11 +6,14 @@ import LeftBar from '@features/layout/leftbar';
 import StoreProvider from '@core/providers/StoreProvider';
 
 import { usePlayer } from '@client/features/player/services/playerService';
-import { useTracks } from '@client/features/tracks';
-import { Hero } from '@features/sounds/hero';
-import { Category } from '@features/sounds/category/layout';
-import { CatalogProvider, Catalog, NewTracks } from '@features/sounds/catalog';
-import { MobileFilter, DesktopFilter } from '@features/sounds/filters/layout';
+import { useTracksContext as useTracks } from '@client/features/tracks/services/useTracksContext';
+import Hero from '@features/sounds/hero/components/Hero';
+import Category from '@features/sounds/category/layout/Category';
+import CatalogProvider from '@features/sounds/catalog/context/CatalogProvider';
+import Catalog from '@features/sounds/catalog/layouts/Catalog';
+import NewTracks from '@features/sounds/catalog/layouts/NewTracks';
+import DesktopFilter from '@features/sounds/filters/layout/DesktopFilter';
+import MobileFilter from '@features/sounds/filters/layout/MobileFilter';
 import { useFilterContext } from '@features/sounds/filters/context';
 
 import './SoundsPage.css';

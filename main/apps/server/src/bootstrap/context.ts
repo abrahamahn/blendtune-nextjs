@@ -10,14 +10,15 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import { db } from '@server/db';
 import { createTenantRepository } from '@server/db/repositories/tenant';
-import { getUserIdFromSession } from '@server/core/sessions';
+import { getUserIdFromSession } from '@server/core/sessions/service';
 import { UnauthorizedError } from '@server/core/errors';
 import {
   resolveRequestContext,
-  TENANT_SLUG_HEADER,
   type RequestContext,
-} from '@server/core/context';
-import type { AuthTokens, RequestMeta } from '@server/core/auth';
+} from '@server/core/context/requestContext';
+import { TENANT_SLUG_HEADER } from '@server/core/context/header';
+import type { RequestMeta } from '@server/core/auth/service';
+import type { AuthTokens } from '@server/core/auth/tokens';
 
 export const SESSION_COOKIE = 'sessionToken';
 export const REFRESH_COOKIE = 'refreshToken';

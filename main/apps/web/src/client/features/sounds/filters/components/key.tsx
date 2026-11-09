@@ -7,7 +7,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, Checkbox } from '@ui';
-import { FilterWrapper, ActionButtons } from '@features/sounds/filters/ui';
+import { ActionButtons } from '@features/sounds/filters/ui/ActionButtons';
+import { FilterWrapper } from '@features/sounds/filters/ui/FilterWrapper';
 
 interface KeyFilterProps {
   selectedKeys: string;

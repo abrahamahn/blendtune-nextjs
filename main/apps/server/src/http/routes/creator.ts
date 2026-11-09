@@ -9,9 +9,9 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { db } from '@server/db';
 import { createTenantRepository } from '@server/db/repositories/tenant';
 import { createTracksRepository } from '@server/db/repositories/tracks';
-import { requireTenant, type TenantContext } from '@server/core/context';
-import { createTrack, listWorkspaces } from '@server/core/creator';
-import { listTenantCatalog } from '@server/core/tracks';
+import { requireTenant, type TenantContext } from '@server/core/context/requestContext';
+import { createTrack, listWorkspaces } from '@server/core/creator/service';
+import { listTenantCatalog } from '@server/core/tracks/service';
 import { getRequestContext } from '../../bootstrap/context';
 
 const scopedTracksRepo = (ctx: TenantContext) =>

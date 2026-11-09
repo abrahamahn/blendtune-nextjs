@@ -2,8 +2,12 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { selectKeywords, deselectKeyword, removeAllKeywords } from '@core/store/slices';
-import { FilterWrapper, SearchInput, FilterGrid, Item, ActionButtons } from '@features/sounds/filters/ui';
+import { selectKeywords, deselectKeyword, removeAllKeywords } from '@features/sounds/filters/store/filterSlice';
+import { ActionButtons } from '@features/sounds/filters/ui/ActionButtons';
+import { FilterGrid } from '@features/sounds/filters/ui/FilterGrid';
+import { FilterWrapper } from '@features/sounds/filters/ui/FilterWrapper';
+import { Item } from '@features/sounds/filters/ui/Item';
+import { SearchInput } from '@features/sounds/filters/ui/SearchInput';
 
 interface KeywordFilterProps {
   keywords: string[];

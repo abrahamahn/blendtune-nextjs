@@ -8,9 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faForwardStep } from '@fortawesome/free-solid-svg-icons';
 
 import { Button, Text } from '@ui';
-import { Artwork, FactsReadout, PlayButton, artworkSrc, present, trackFacts } from '@client/components';
+import { Artwork } from '@client/components/track/Artwork';
+import { FactsReadout } from '@client/components/track/FactsReadout';
+import { PlayButton } from '@client/components/player/PlayButton';
+import { artworkSrc, present, trackFacts } from '@client/components/track/trackDisplay';
 import { usePlayer } from '@client/features/player/services/playerService';
-import { usePlayerControls } from '../hooks';
+import { usePlayerControls } from '../hooks/usePlayerControls';
 import { useProgressControl } from '../hooks/useProgressControl';
 
 import './player.css';

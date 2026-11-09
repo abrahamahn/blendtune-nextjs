@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { Button, Heading, Skeleton } from '@ui';
-import { SortFilter } from '@features/sounds/filters/components';
+import SortFilter from '@features/sounds/filters/components/sort';
 import { createFilterComponents } from '@features/sounds/filters/utils/filterUI';
 import { hasItems, calculateAppliedFilterCount } from '@features/sounds/filters/utils/filterLogic';
 import { useFilterContext } from '@features/sounds/filters/context';
-import { useTracks } from '@client/features/tracks';
+import { useTracksContext as useTracks } from '@client/features/tracks/services/useTracksContext';
 
 import '../filters.css';
 

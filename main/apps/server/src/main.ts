@@ -5,7 +5,7 @@
 
 import '@shared/config/loadEnv';
 
-import { getJwtSecret } from '@server/core/auth';
+import { getJwtSecret } from '@server/core/auth/tokens';
 import { createServer } from './bootstrap/app';
 
 const PORT = Number(process.env.API_PORT ?? 8080);

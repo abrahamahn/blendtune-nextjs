@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 
 import { Button, Checkbox, Spinner, Text } from '@ui';
-import { FormField } from '@client/components';
+import { FormField } from '@client/components/form/FormField';
 import { Link } from '@router/index';
 import Logo from '@components/common/Logo';
 

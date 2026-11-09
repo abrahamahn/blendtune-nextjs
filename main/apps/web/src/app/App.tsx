@@ -11,20 +11,22 @@ import React from 'react';
 import ClientProviders from '@core/providers/ClientProviders';
 import MusicPlayer from '@features/player/components/MusicPlayer';
 import RightBar from '@features/layout/rightbar';
-import { HideMobileChrome, SetViewportHeight } from '@client/shared/hooks/mobile';
+import HideMobileChrome from '@client/shared/hooks/mobile/HideMobileChrome';
+import SetViewportHeight from '@client/shared/hooks/mobile/SetViewportHeight';
 import { Route, Routes } from '@router/index';
 
 import { HomePage } from '../pages/HomePage';
 import { SoundsPage } from '../pages/SoundsPage';
 import { CreatorPage } from '../pages/CreatorPage';
-import { SignInPage, SignUpPage, ResetPasswordPage } from '../pages/auth';
-import {
-  ConfirmEmailPage,
-  NewPasswordPage,
-  ResetConfirmedPage,
-  VerifyEmailPage,
-} from '../pages/security';
-import { PrivacyPolicyPage, TermsPage, WelcomePage } from '../pages/static';
+import { SignInPage } from '../pages/auth/SignInPage';
+import { SignUpPage } from '../pages/auth/SignUpPage';
+import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage';
+import { ConfirmEmailPage } from '../pages/security/ConfirmEmailPage';
+import { NewPasswordPage } from '../pages/security/NewPasswordPage';
+import { ResetConfirmedPage } from '../pages/security/ResetConfirmedPage';
+import { VerifyEmailPage } from '../pages/security/VerifyEmailPage';
+import { WelcomePage } from '../pages/static/WelcomePage';
+import { PrivacyPolicyPage, TermsPage } from '../pages/static/LegalPages';
 
 import './App.css';
 

@@ -21,7 +21,7 @@ import { Track } from "@/shared/types/track";
 import { playerReducer, initialPlayerState } from "../context/playerReducer";
 import { playerActions } from "../context/playerActions";
 import { storePlaybackTime, getPlaybackTime } from "../utils/storage";
-import { useTracks } from "@client/features/tracks";
+import { useTracksContext as useTracks } from "@client/features/tracks/services/useTracksContext";
 import { useAudioElement, AudioEventHandlers } from "../services/audioService";
 import { PlayerContextType, PlayerAction } from "../types/contextType";
 import { usePlaybackPersistence } from "../hooks/usePlaybackPersistence";
@@ -294,6 +294,3 @@ export const usePlayer = (): PlayerContextType => {
   }
   return context;
 };
-
-// Re-export player actions for convenience
-export { playerActions } from "../context/playerActions";

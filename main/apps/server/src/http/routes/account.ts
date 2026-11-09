@@ -5,7 +5,7 @@
 
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 
-import { getProfile, updateBasicProfile, type BasicProfileData } from '@server/core/account';
+import { getProfile, updateBasicProfile, type BasicProfileData } from '@server/core/account/service';
 import { requireSession } from '../../bootstrap/context';
 
 export function registerAccountRoutes(app: FastifyInstance): void {

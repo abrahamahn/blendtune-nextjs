@@ -9,10 +9,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 
 import { Button } from '@ui';
-import { useKeyboardShortcuts, useVolumeControl } from '../hooks';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
+import useVolumeControl from '../hooks/useVolumeControl';
 import { usePlayer } from '@client/features/player/services/playerService';
-import { useTracks } from '@client/features/tracks';
-import { useNowPlaying } from '@features/layout/rightbar';
+import { useTracksContext as useTracks } from '@client/features/tracks/services/useTracksContext';
+import { useNowPlaying } from '@features/layout/rightbar/context/useNowPlaying';
 
 import PlayerControls from './PlayerControls';
 import VolumeControl from './VolumeControl';
